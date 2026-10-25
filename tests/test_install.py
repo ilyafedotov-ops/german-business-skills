@@ -4,6 +4,7 @@ import importlib.util
 from pathlib import Path
 import tempfile
 import unittest
+from unittest import mock
 
 
 SCRIPT = Path(__file__).absolute().parents[1] / "tools" / "install.py"
@@ -77,6 +78,20 @@ class InstallerTests(unittest.TestCase):
         paths = self.run_install(dry_run=True)
         self.assertEqual(len(paths), 2)
         self.assertEqual(list(self.project.iterdir()), [])
+
+    def test_install_does_not_try_to_create_existing_drive_root(self):
+        original_mkdir = Path.mkdir
+
+        def windows_root_mkdir(path, *args, **kwargs):
+            if path == Path(path.anchor):
+                raise PermissionError("Windows denies mkdir on an existing drive root")
+            return original_mkdir(path, *args, **kwargs)
+
+        with mock.patch.object(Path, "mkdir", windows_root_mkdir):
+            destinations = self.run_install()
+        for destination in destinations:
+            self.assertEqual((destination / "SKILL.md").read_bytes(),
+                             (self.source / "SKILL.md").read_bytes())
 
     def test_user_scope_accepts_explicit_home_without_global_changes(self):
         test_home = self.root / "test-home"

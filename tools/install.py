@@ -80,6 +80,11 @@ def _read_package(source: Path) -> Tuple[List[Path], List[Tuple[Path, bytes, boo
 
 def _make_parents(path: Path, created: List[Path]) -> None:
     for item in reversed((path, *path.parents)):
+        # Windows may report access denied, not FileExistsError, for mkdir
+        # on an existing drive root. Validate existing ancestors without writing.
+        if item.exists() or item.is_symlink():
+            _check_directory_chain(item)
+            continue
         try:
             item.mkdir()
             created.append(item)
