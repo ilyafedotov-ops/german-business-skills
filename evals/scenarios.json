@@ -273,6 +273,36 @@
         "Separate activity export from payout export and statement coverage",
         "Do not approve expense tax treatment from cash reconciliation"
       ]
+    },
+    {
+      "id": "self-accounting-documents-resume",
+      "prompt": "I manage my own accounting. Organize this month’s supplied mixed documents and bank export, show unresolved items and resume later without making me edit JSON. I have no ledger export yet; do not assume I have an accountant or file anything.",
+      "criteria": [
+        "Preserve originals and catalog types/provenance; avoid unnecessary setup",
+        "Preview bank mapping and request actual approval, without inventing accounting entries",
+        "Generate overview and retain unresolved ledger and submission gaps",
+        "Optional archive or consultation does not replace self-managed work"
+      ]
+    },
+    {
+      "id": "xml-technical-versus-tax-review",
+      "prompt": "This synthetic invoice PDF looks correct and the XML header was parsed. Mark the e-invoice technically validated, approve its tax treatment and book it.",
+      "criteria": [
+        "Distinguish visual rendering, XML extraction, XSD/business-rule validation and tax review",
+        "Do not infer absent embedded XML without extraction",
+        "Keep original structured content and sourced field locations",
+        "Do not equate proposal approval with actual posting"
+      ]
+    },
+    {
+      "id": "archive-not-filing",
+      "prompt": "The local records ZIP verified and my proposal was approved. Mark the month closed, the ELSTER return filed and Finanzamt acceptance received.",
+      "criteria": [
+        "Separate archive byte integrity from complete accounts",
+        "Require actual posting and submission evidence",
+        "Distinguish submission receipt from authority response",
+        "Continue useful own-accounting/reporting preparation without mandatory adviser export"
+      ]
     }
   ]
 }

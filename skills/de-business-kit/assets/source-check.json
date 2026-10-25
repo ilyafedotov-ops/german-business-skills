@@ -1,17 +1,13 @@
 {
   "schema_version": 1,
-  "check_id": null,
-  "topic": null,
-  "primary_source_url": null,
-  "source_title": null,
-  "retrieved_at": null,
-  "published_or_updated_at": null,
-  "effective_from": null,
-  "effective_until": null,
+  "source_check_id": null,
+  "url": null,
+  "title": null,
+  "checked_on": null,
   "applicable_period": null,
-  "supported_conclusion": null,
-  "applicability_assumptions": [],
-  "remaining_uncertainties": [],
-  "review_required_before": null,
-  "used_by_decisions": []
+  "assumptions": [],
+  "conclusion": null,
+  "review_after": null,
+  "reviewer": null,
+  "evidence_file": null
 }

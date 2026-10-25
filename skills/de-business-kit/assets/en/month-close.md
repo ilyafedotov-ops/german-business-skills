@@ -24,14 +24,16 @@ Previous report / revision reason:
 | Unpaid invoices / partial payments / refunds / fees | unknown | |
 | Foreign transactions and unresolved tax treatment | unknown | |
 | Provider state compared with local preparation | unknown | |
-| Accountant export includes intended documents | unknown | |
-| Transfer actually confirmed received | unknown | |
+| Actual accounting entries and period review evidenced | unknown | |
+| Relevant return draft and user approval recorded | unknown | |
+| Actual submission receipt retained, if submitted | unknown | |
+| Finanzamt response recorded separately, if received | unknown | |
 
 ## Exceptions and next actions
 
 | ID | Issue | Affected evidence | Owner | Next action / due date source |
 |---|---|---|---|---|
 
-## Handoff manifest
+## Optional archive or consultation
 
-List included files, exclusions, pending questions, agreed export method and observed transfer evidence. Local preparation is not a submitted return or a completed statutory closing.
+Only if requested, list included files, exclusions and unresolved questions. An archive is not required to manage your own accounts. Local preparation is not a submitted return or a completed statutory closing.

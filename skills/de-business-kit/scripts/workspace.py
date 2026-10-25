@@ -273,7 +273,7 @@ def _evidence_path(root: Path, value: str) -> Path:
         raise WorkspaceError("Evidence must be a relative private-workspace file.")
     path = _inside(root, value)
     mutable = {PROFILE, DOCUMENTS, EVENTS, MARKER, RUNTIME, LOCK,
-               "00_admin/tasks.json", "00_admin/questions.json", "00_admin/decisions.json"}
+               "00_admin/tasks.json", "00_admin/questions.json", "00_admin/decisions.json", "00_admin/casework.json"}
     if (path.relative_to(root).as_posix() in mutable
             or path.exists() and any((root / item).exists() and path.samefile(root / item) for item in mutable)):
         raise WorkspaceError("Use a preserved evidence document or history snapshot, not a mutable administrative file.")
@@ -700,6 +700,8 @@ def record_fact(root: PathInput, record: Dict[str, Any]) -> Dict[str, Any]:
         raise WorkspaceError("Unknown facts must use null value and null source kind/ref.")
     if status == "verified" and source["kind"].lower() in {"llm", "model", "inference", "confidence", "ai"}:
         raise WorkspaceError("Verified requires checked evidence; model confidence is not evidence.")
+    if status == "verified" and source["kind"] != "file":
+        raise WorkspaceError("Verified facts require source.kind=file and a preserved private evidence path in source.ref.")
     if status != "unknown":
         _fact_value(field, record["value"])
     effective = record.get("effective_from")
@@ -721,6 +723,14 @@ def record_fact(root: PathInput, record: Dict[str, Any]) -> Dict[str, Any]:
         after = json.loads(json.dumps(before))
         after["facts"][field] = {"value": record["value"], "status": status, "source": source,
                                  "recorded_at": _now(), "effective_from": effective, "note": note}
+        if status == "verified":
+            evidence_path = _evidence_path(location, source["ref"])
+            evidence_data = _read_regular(evidence_path)
+            if not evidence_data.strip():
+                raise WorkspaceError("Verified fact evidence must not be empty.")
+            after["facts"][field]["evidence"] = {"path": evidence_path.relative_to(location).as_posix(),
+                                                  "sha256": hashlib.sha256(evidence_data).hexdigest()}
+            after["facts"][field]["source"] = {"kind": "file", "ref": evidence_path.relative_to(location).as_posix()}
         history_id = uuid.uuid4().hex
         history_path = _inside(location, f"09_audit/history/{history_id}.json")
         snapshot = {"schema_version": VERSION, "action": "record_fact", "field": field,
@@ -909,7 +919,8 @@ def _identifier(value: str) -> str:
     return value
 
 
-def reconcile(root: PathInput, bank: PathInput, ledger: PathInput, period: str) -> Dict[str, Any]:
+def reconciliation_report(root: PathInput, bank: PathInput, ledger: PathInput, period: str) -> Dict[str, Any]:
+    """Recompute a report from supplied bytes without writing workspace state."""
     location = _workspace(root)
     period = _period(period)
     bank_path, ledger_path = _inside(location, bank), _inside(location, ledger)
@@ -987,6 +998,15 @@ def reconcile(root: PathInput, bank: PathInput, ledger: PathInput, period: str) 
               "unmatched_ledger": unmatched_ledger, "unlinked_ledger_entries": unlinked,
               "totals_by_currency": totals_out, "coverage": coverage, "review_notes": review_notes,
               "note": "Derived review report only; no entries posted, tax treatment inferred, or period closed."}
+    return report
+
+
+def reconcile(root: PathInput, bank: PathInput, ledger: PathInput, period: str) -> Dict[str, Any]:
+    location = _workspace(root)
+    report = reconciliation_report(location, bank, ledger, period)
+    outcome, coverage, review_notes = report["status"], report["coverage"], report["review_notes"]
+    matches, differences = report["matches"], report["differences"]
+    unmatched_bank, unmatched_ledger, unlinked = report["unmatched_bank"], report["unmatched_ledger"], report["unlinked_ledger_entries"]
     with _locked(location):
         _check_audit(location)
         relative = f"07_exports/{period}/reconciliation-{uuid.uuid4().hex}.json"
@@ -1010,10 +1030,20 @@ def workspace_status(root: PathInput) -> Dict[str, Any]:
         raise WorkspaceError("Business profile is invalid.")
     counts = {status: 0 for status in sorted(STATUSES)}
     invalid_fields = []
+    evidence_issues = []
     for field, fact in profile["facts"].items():
         if not isinstance(fact, dict) or fact.get("status") not in STATUSES:
             raise WorkspaceError("Fact status is invalid.")
         counts[fact["status"]] += 1
+        if fact["status"] == "verified":
+            try:
+                evidence = fact.get("evidence")
+                if (not isinstance(evidence, dict) or set(evidence) != {"path", "sha256"}
+                        or fact.get("source") != {"kind": "file", "ref": evidence["path"]}
+                        or hashlib.sha256(_read_regular(_evidence_path(location, evidence["path"]))).hexdigest() != evidence["sha256"]):
+                    raise WorkspaceError("Verified evidence missing or changed.")
+            except (OSError, WorkspaceError, TypeError, KeyError):
+                evidence_issues.append(field)
         try:
             if field not in FIELDS:
                 raise WorkspaceError("Unknown field")
@@ -1026,6 +1056,8 @@ def workspace_status(root: PathInput) -> Dict[str, Any]:
     invalid_fields.extend(sorted(set(FIELDS) - set(profile["facts"])))
     lists = {}
     issues = ["invalid_profile_values"] if invalid_fields else []
+    if evidence_issues:
+        issues.append("verified_fact_evidence_needs_review")
     if profile.get("schema_version") != VERSION:
         issues.append("profile_schema_invalid")
     try:
@@ -1052,6 +1084,7 @@ def workspace_status(root: PathInput) -> Dict[str, Any]:
     return {"status": result_status, "workspace_health": "needs_attention" if issues else "ok",
             "data_processing_review": review_status, "setup_missing": missing, "issues": issues,
             "invalid_profile_fields": sorted(invalid_fields), "synthetic_work_available": not issues,
+            "verified_fact_evidence_issues": sorted(evidence_issues),
             "next_action": "Review the listed issues without reinitializing." if issues else
                            "Review the actual data-processing route; use synthetic data meanwhile." if missing else
                            "Check the recorded assessment scope and current capabilities for this task.",

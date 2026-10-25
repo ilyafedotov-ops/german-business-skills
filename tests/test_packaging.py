@@ -59,7 +59,7 @@ class PackagingTests(unittest.TestCase):
                 manifest_path = "plugin.json" if host == "codex" else ".claude-plugin/plugin.json"
                 manifest = json.loads((plugin / manifest_path).read_text(encoding="utf-8"))
                 self.assertEqual(manifest["name"], entry["name"])
-                self.assertEqual(manifest["version"], "0.4.0-preview")
+                self.assertEqual(manifest["version"], "0.5.0-preview")
                 for readme in ("README.md", "README.ru.md"):
                     content = (plugin / readme).read_bytes()
                     self.assertEqual(content, (ROOT / "packaging" / readme).read_bytes())
@@ -89,6 +89,14 @@ class PackagingTests(unittest.TestCase):
                         capture_output=True, text=True, encoding="utf-8")
                     self.assertEqual(status.returncode, 0, status.stderr)
                     self.assertEqual(json.loads(status.stdout)["language"], language)
+                    overview = subprocess.run(
+                        [sys.executable, "-B", str(skill / "scripts/desk.py"), "overview", "--root", str(private), "--period", "2026-10"],
+                        cwd=self.base, capture_output=True, text=True, encoding="utf-8")
+                    self.assertEqual(overview.returncode, 0, overview.stderr)
+                    view = json.loads(overview.stdout)
+                    self.assertTrue((private / view["html_path"]).is_file())
+                    snapshot = json.loads((private / "00_admin/overview.json").read_text(encoding="utf-8"))
+                    self.assertEqual(snapshot["capabilities"]["elster_submission"], "not_implemented")
                     seed = subprocess.run(
                         [sys.executable, "-B", str(skill / "scripts/workflows.py"), "template", "--kind", "classification"],
                         cwd=self.base, capture_output=True, text=True, encoding="utf-8")

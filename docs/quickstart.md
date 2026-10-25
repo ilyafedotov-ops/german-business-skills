@@ -2,7 +2,7 @@
 
 [English](quickstart.md) | [Русский](quickstart.ru.md)
 
-Version 0.4.0 preview helps you organize your own German sole-trader business. You can prepare registration documents, organize a month for your accountant, and research tax questions. It does not replace the accounting system, a licensed adviser, or official submission receipts.
+Version 0.5.0 preview supports managing your own German sole-trader bookkeeping/accounting and tax reporting. You can prepare registration documents, organize your records, reconcile payments and research tax questions. Complete ledger functionality and ELSTER submission integration are core capabilities still to be completed: the current utilities prepare evidence, proposals and form worksheets. Optional accountant consultation or export addresses a specific need; it is not a required stage.
 
 ## Choose the app you already use
 
@@ -25,7 +25,7 @@ The demonstration uses invented data. It finds three matching payment groups and
 ## Everyday requests
 
 - **Set up my business:** “Help me prepare the next registration step. I already have these activities: …”
-- **Organize this month:** “Prepare October for my accountant. Show missing documents and unresolved payments.”
+- **Manage this month:** “Help me manage October myself. Organize receipts, reconcile payments, prepare records for my review and show missing evidence and remaining posting or filing steps.”
 - **Tax questions and preparation:** “Explain this tax question using the relevant year's official sources. Show assumptions and anything needing review.”
 - **Continue:** “Continue work in my existing private folder. Show what is done, what needs attention, and the next action.”
 
@@ -40,7 +40,7 @@ The tax-workflow ID remains `tax-consultant` for compatibility. The visible labe
 | Configuration recorded | An assessment was saved. It is limited to its stated scope; it is not legal certification or permission for every action. |
 | Needs review on a reconciliation | Some supplied records do not match or coverage needs attention. A successful command does not mean bookkeeping is complete. |
 
-Before anything is sent or changed in an external account, review the concrete destination and action. Authentication, certificates and TANs remain in the official login flow. A draft is not a submission, and a submission receipt is not acceptance of its tax treatment.
+Preparation, your approval, evidence of actual posting/submission and the Finanzamt response are separate stages. A records archive marked `prepared_with_open_items` or `prepared_for_self_review` describes local preparation; neither status means monthly closing or filing completion. Before anything is sent or changed in an external account, review the concrete destination and action. Authentication, certificates and TANs remain in the official login flow. A draft is not a submission, and a submission receipt is not acceptance of its tax treatment.
 
 ## When something goes wrong
 
@@ -50,4 +50,4 @@ Do not delete an existing folder, originals or a lock just because setup stopped
 
 Native Windows/macOS utility CI has passed; desktop-app acceptance remains pending in [validation](validation.md). This guide describes the intended supported workflow, not evidence that every app version has passed it.
 
-Next: [international transactions, payment systems and ELSTER preparation](workflows.md).
+Next: [document workflow](document-workflow.md), [international transactions, payment systems and ELSTER preparation](workflows.md), and the [documentation index](index.md).

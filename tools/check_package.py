@@ -32,6 +32,11 @@ def main():
         "skills/de-business-kit/references/preparation.md", "skills/de-business-kit/references/international.md",
         "skills/de-business-kit/references/payments.md", "skills/de-business-kit/references/classification.md",
         "docs/workflows.md", "docs/workflows.ru.md",
+        "docs/index.md", "docs/index.ru.md", "docs/document-workflow.md", "docs/document-workflow.ru.md",
+        "docs/core-capabilities.md", "docs/core-capabilities.ru.md",
+        "skills/de-business-kit/scripts/desk.py", "skills/de-business-kit/scripts/casefiles/archive.py",
+        "skills/de-business-kit/references/document-workflow.md", "skills/de-business-kit/references/task-recipes.md",
+        "skills/de-business-kit/assets/casework-messages.json",
     ]
     for name in required:
         if not (ROOT / name).is_file():
@@ -46,7 +51,7 @@ def main():
         locales = manifest["languages"]
         if set(locales) != {"en", "ru"}:
             errors.append("Complete English and Russian locale definitions are required")
-        roles = {"bookkeeping_workflow", "month_close", "form_worksheet", "tax_consultation"}
+        roles = {"bookkeeping_workflow", "month_close", "form_worksheet", "tax_consultation", "overview"}
         for language, locale in locales.items():
             templates = locale["templates"]
             if set(templates) != roles:

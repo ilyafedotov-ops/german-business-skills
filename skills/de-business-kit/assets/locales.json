@@ -9,7 +9,8 @@
         "bookkeeping_workflow": "en/bookkeeping-workflow.md",
         "month_close": "en/month-close.md",
         "form_worksheet": "en/form-worksheet.md",
-        "tax_consultation": "en/tax-consultation.md"
+        "tax_consultation": "en/tax-consultation.md",
+        "overview": "en/overview.md"
       }
     },
     "ru": {
@@ -18,7 +19,8 @@
         "bookkeeping_workflow": "ru/bookkeeping-workflow.md",
         "month_close": "ru/month-close.md",
         "form_worksheet": "ru/form-worksheet.md",
-        "tax_consultation": "ru/tax-consultation.md"
+        "tax_consultation": "ru/tax-consultation.md",
+        "overview": "ru/overview.md"
       }
     }
   }

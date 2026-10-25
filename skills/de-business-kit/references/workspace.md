@@ -36,8 +36,8 @@ All relative input paths below are relative to `--root`, not the current shell d
 | `03_banking/`, `04_accounting/` | Provider requirements, statements/normalized files, workflow agreements |
 | `06_bookkeeping/YYYY/MM/originals/` | Immutable-by-workflow original copies; no legal immutability guarantee |
 | `06_bookkeeping/YYYY/MM/derived/` | OCR, extracted facts and normalized data |
-| `06_bookkeeping/YYYY/MM/proposals/` | Unposted proposals and review records |
-| `07_exports/YYYY-MM/` | Generated reconciliation and handoff files |
+| `06_bookkeeping/YYYY/MM/proposals/` | Legacy proposal files; new validated records use `00_admin/casework.json` |
+| `07_exports/YYYY-MM/` | Generated reconciliation and optional records archives |
 | `08_correspondence/` | Relevant correspondence |
 | `09_audit/events.json`, `09_audit/history/` | Local events and before/after profile snapshots |
 
@@ -142,7 +142,7 @@ Each fact has this shape:
 }
 ```
 
-Supported states: `unknown`, `declared`, `proposed`, `verified`, `needs_review`. A nonunknown fact needs a value and evidence source. `verified` means evidence was actually inspected; the script cannot validate the truth of a document or legal conclusion. Record money as decimal strings with currency and period identified, not binary floats.
+Supported states: `unknown`, `declared`, `proposed`, `verified`, `needs_review`. A nonunknown fact needs a value and evidence source. `verified` requires an inspected private file source; the writer stores its hash, and status detects missing/changed evidence. The script cannot validate document truth or a legal conclusion. Legacy verified facts without fingerprints require review, not silent migration. Record money as decimal strings with currency and period identified, not binary floats.
 
 New writes validate profile field types. VAT regime is `Kleinunternehmer`, `Regelbesteuerung` or `unresolved`; accounting method is `EÜR`, `Bilanzierung` or `unresolved`. Employee/cash/cross-border/existing-VAT flags are booleans. Dates use `YYYY-MM-DD`; `vat_prior_year` is an integer year. Client/country lists are string arrays. Activities are arrays with unique `activity_id`, optional text `description`, `classification` (`freiberuflich`, `gewerblich`, `mixed`, `unresolved`) and date/null `commenced_at`. VAT-history items contain `regime`, `effective_from`, and `source_ref`. Provider/bank requirements are objects; remaining text fields require nonempty strings. Unknown facts remain null.
 
@@ -234,3 +234,7 @@ External operation states may be `draft`, `ready_for_review`, `authorized`, `sub
 - `2`: invalid/unsafe input, schema issue or filesystem error; inspect before retry.
 
 The utilities refuse symlink paths, path traversal, existing content during initialization and work inside Git or skill directories. They use owner-only POSIX modes where supported, without Windows ACL or encryption guarantees. Public repository files and private business files remain separate.
+
+## Document review desk
+
+Use [document workflow](document-workflow.md) for `desk.py` commands and additive casework schema 1. Proposal template schema 2 and source checks have validated writers; external-operation templates do not execute integrations. The complete accounting ledger and ELSTER submission remain core gaps.

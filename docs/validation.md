@@ -1,10 +1,41 @@
-# Validation status — v0.4.0 preview
+# Validation status — v0.5.0 preview
 
 [English](validation.md) | [Русский](validation.ru.md)
 
 Checked **2026-10-25**. Tests use synthetic temporary data, never live business records or accounts.
 
-## Automated local checks
+## Current local validation (v0.5, 2026-10-25)
+
+`python3 -B -m unittest discover -s tests -v` — **140 passed**, macOS / Python **3.14.6**. This includes 33 new document/review/bank/archive/XML/evidence/journey tests and the 107-test baseline. Extracted Codex/Claude packages run the desk overview in both languages after the source copy is removed. No new production dependencies were added.
+
+`python3 tools/check_package.py`, `git diff --check`, and the installed skill-creator `quick_validate.py` with PyYAML passed. Structural checks do not establish tax correctness. New behavior regressions were observed failing before implementation/fixes; low-impact copy changes use existing checks.
+
+| Evidence | Observed result |
+| --- | --- |
+| Synthetic CLI journey (`tests/synthetic_journey.py`, English and Russian) | Three mixed originals, invoice extraction and draft proposal, reviewed bank mapping, two explicit matches and one unmatched payment, sourced letter task, overview, resume and optional verified archive; open work remains visible |
+| Independent read-only review | Found duplicate bank import via mapping renaming/overlap, contradictory line/rate arithmetic, excluded originals reintroduced through evidence, and modified reconciliation hiding discrepancies. Regressions and fixes verified; final focused review found no remaining blocking findings |
+| Local dashboard browser | Chromium **156.0.8078.48**, **1440×900** and **390×844**, English/Russian populated views: five navigation destinations, evidence disclosure, archive-link retrieval, no horizontal page overflow, no page errors/failed requests/error responses. Screenshots visually checked against the written requirements; no pre-existing pixel baseline |
+| Empty/corrupt view | Utility regressions and final browser checks at both widths show empty or explicit error state, with Not assessed before reconciliation |
+| Proposal/evidence boundaries | Finalized proposal corrections preserve prior records; reviewed field/source hashes and dates remain distinct from provider observation; verified profile facts require preserved file evidence |
+| XML boundaries | Standalone UBL Invoice/CII candidate fields only; DTD/entity/unsupported encoding limits; gross and amount due distinct; schema/business-rule/tax validation explicitly not performed; PDF embedded XML requires separate tooling |
+
+Browser rendering used a temporary loopback static server serving only synthetic fixtures because the automation tool blocks `file://`. The product itself remains a generated local page with no application server or write actions. This does not prove direct-file behavior in every browser, desktop plugin discovery, native Windows operation, or usability with nontechnical participants. Hosted Windows/macOS CI has **not** run for these local v0.5 changes. Earlier CI evidence below belongs to v0.3.
+
+The current evaluation catalog contains **30 scenarios**. They are not all executed or an automated tax-correctness certificate. Fresh-session trial evidence is recorded separately below; no without-skill baseline comparison or automatic activation acceptance is claimed.
+
+Self-managed accounting/reporting is the primary scope. The document desk is implemented; the complete accounting ledger, reporting calculation engine and ELSTER transmission remain core work in [the capability plan](core-capabilities.md). Optional archive verification proves packaged bytes, not complete accounts, filing or Finanzamt acceptance. Updater/restore/migration automation, integrated e-invoice validation, release publication and native desktop acceptance also remain incomplete.
+
+## Fresh self-accounting trial (v0.5)
+
+A new Codex subagent session received the skill location and a Russian synthetic request to organize the three fixtures in `tests/fixtures/month`, explain the user's own accounting/reporting next steps, create no archive and execute no postings/submissions. It received no evaluation criteria, implementation diff or intended answer. This is a concrete-file variant of `self-accounting-documents-resume`, not an automatic activation test. Host: macOS, Python 3.14.6; exact desktop/model build not exposed or pinned. Parent inspected the output records and verification log.
+
+Observed: three preserved originals, one draft proposal, bank-mapping preview without invented approval, five tasks, two questions, Russian overview and monthly/reporting guidance; **zero approved bank imports, no reconciliation, no archive, no postings or filings**. It explained that cash movements total EUR 102 without calling that profit, retained the missing EUR 12 receipt as an open task and requested the actual bookkeeping method/VAT facts and independent accounting records. Original verification reported three indexed files, no unindexed originals and no errors. Synthetic work continued despite `setup_incomplete` for real-data processing assessment.
+
+The trial recovered from three rejected inputs: macOS `/tmp` symlink (used the same physical directory), relative source paths (used absolute fixture paths), and null grouping separator (used the documented empty string). No destructive reset or false completion followed. The agent's guidance was useful but not a first-attempt error-free usability result. The reference now explains source-path and separator conventions. Inspection also exposed a misleading zero unmatched count before any reconciliation: a failing regression led to `null` / localized **Not assessed**, and the original trial overview was regenerated to verify the correction. Empty/error browser states were rechecked at both widths after this fix.
+
+No without-skill comparison, nontechnical-user study, real accounting ledger, official transmission or authority-response integration was exercised.
+
+## Previous automated baseline (v0.4)
 
 The integrated Python suite contains **107 passing tests**: 11 installer, 37 original workspace, 15 onboarding/readiness, 14 register, 8 packaging and 22 preparation/payment tests. Executed on macOS with Python 3.14.6. New regressions were observed failing before their corresponding implementation/fix.
 

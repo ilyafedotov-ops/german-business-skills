@@ -116,7 +116,14 @@ def snapshot(source: Path) -> Dict[str, bytes]:
             files[entry.relative_to(source).as_posix()] = read_file(entry)
 
     prefix = f"skills/{NAME}/"
-    required = {"SKILL.md", "scripts/workspace.py", "agents/openai.yaml", "assets/locales.json"}
+    required = {
+        "SKILL.md", "agents/openai.yaml", "scripts/workspace.py", "scripts/desk.py",
+        "scripts/workflows.py", "scripts/payments.py", "assets/locales.json",
+        "assets/casework-messages.json", "assets/proposal.json", "assets/source-check.json",
+        "assets/extracted-field.json",
+        *("scripts/casefiles/" + name + ".py" for name in (
+            "__init__", "storage", "documents", "reviews", "bank", "summary", "overview", "archive", "invoice_xml")),
+    }
     if not all(prefix + name in files for name in required):
         raise BuildError("The canonical skill is missing a required runtime resource.")
     locales = json.loads(files[prefix + "assets/locales.json"])

@@ -25,3 +25,4 @@ dist/
 07_exports/
 08_correspondence/
 09_audit/
+.playwright-mcp/

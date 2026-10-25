@@ -1,4 +1,4 @@
-# German Business Kit — local preview 0.4.0
+# German Business Kit — local preview 0.5.0
 
 [English](README.md) | [Русский](README.ru.md)
 

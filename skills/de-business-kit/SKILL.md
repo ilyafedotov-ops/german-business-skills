@@ -4,7 +4,7 @@ description: >-
   Organize a user's own German Freiberufler or Einzelunternehmen/Gewerbe business:
   English/Russian intake, private files, registration and ELSTER worksheets,
   guided setup, international payments, reverse charge, Gewerbe/Freiberufler clarification,
-  bookkeeping preparation, tax questions, Lexware Office handoff, and bank/software
+  self-managed bookkeeping, document review, tax reporting preparation, Lexware Office, and bank/software
   comparisons. Use for German sole-trader tax questions, receipts, reconciliation,
   starting or running a business; русский: бухгалтерия, налоговые вопросы,
   налоги, открытие и ведение Gewerbe/Freiberufler. Provide sourced analysis and
@@ -13,7 +13,9 @@ description: >-
 
 # German Business Kit
 
-Use one private workspace per natural-person entrepreneur. Keep multiple activities in that profile, with activity IDs. Support **English (`en`) and Russian (`ru`)** throughout conversation and user-facing reports; retain official German form labels. Version: **0.4.0 preview**, source review **2026-10-25**.
+Use one private workspace per natural-person entrepreneur. Keep multiple activities in that profile, with activity IDs. Support **English (`en`) and Russian (`ru`)** throughout conversation and user-facing reports; retain official German form labels. Version: **0.5.0 preview**, source review **2026-10-25**.
+
+Self-managed accounting and tax reporting are the primary workflow. Accountant consultation and export are optional. Complete ledger posting and ELSTER transmission are core capabilities still to implement; local preparation does not replace them.
 
 ## Language and working mode
 
@@ -51,7 +53,8 @@ For first use, setup confusion, a demonstration or “continue,” follow [guide
 | Tax questions, choices and estimates (`tax-consultant`) | [tax preparation](references/tax-consultant.md) | Direct answer; applicable sources; calculations/assumptions; consultation record |
 | Non-tax legal questions, disputes or services for other people | [legal boundaries](references/legal-boundaries.md) | Factual preparation, precise review issue and qualified handoff when needed |
 | Receipts, invoices and monthly close preparation | [bookkeeping](references/bookkeeping.md) | Evidence index, proposals, reconciliation and exception list |
-| Lexware Office and Steuerberater export | [Lexware](references/lexware.md) | Status checks and reconciled handoff |
+| Lexware Office and optional exports | [Lexware](references/lexware.md) | Actual accounting-state checks; export only when useful/requested |
+| Mixed documents, review, bank mapping, monthly overview or resume | [document workflow](references/document-workflow.md), [task recipes](references/task-recipes.md) | Preserved catalog, proposals, reconciliation and next self-accounting action |
 | Choose banking or bookkeeping software | [providers](references/providers.md) | Requirements and current sourced shortlist |
 | Browser-assisted ELSTER or other forms | [forms](references/forms.md) | Field worksheet, verified draft and submission evidence if authorized |
 | Data handling and credentials | [privacy](references/privacy.md) | Minimal approved data scope and configuration evidence |
@@ -78,7 +81,9 @@ For first use, setup confusion, a demonstration or “continue,” follow [guide
 
 `scripts/workflows.py` prepares international, activity-classification and ELSTER worksheets with validated evidence links, source-period checks and localized reports. `scripts/payments.py` reconciles normalized payment events and a strict subset of Stripe activity exports by currency and explicit payout IDs. Keep raw exports and mapping evidence. Payment matches do not approve tax treatment; all form preparations remain unsubmitted. See [preparation](references/preparation.md) and [payments](references/payments.md).
 
-v0.4 contains no production banking, ELSTER, Lexware or tax-filing connector and no complete personal-tax calculation engine. Consultations use current sources and explicit, reproducible calculations where the facts support them. Browser work uses only tools actually provided by the host and permitted for this task; the skill does not grant capabilities. Do not claim a connection, scheduled reminder, external update, or end-to-end desktop test happened without evidence.
+`scripts/desk.py` supplies the validated document catalog, receipt events, proposals, source checks, reviewed bank mappings, bounded XML field inspection and local English/Russian overview. Use [document workflow](references/document-workflow.md); an optional `archive` preserves selected records and unresolved questions. It does not post entries, close accounts or file returns.
+
+v0.5 contains no complete accounting ledger and no production banking, ELSTER, Lexware or tax-filing connector and no complete personal-tax calculation engine. Consultations use current sources and explicit, reproducible calculations where the facts support them. Browser work uses only tools actually provided by the host and permitted for this task; the skill does not grant capabilities. Do not claim a connection, scheduled reminder, external update, or end-to-end desktop test happened without evidence.
 
 ## Finish and resume
 

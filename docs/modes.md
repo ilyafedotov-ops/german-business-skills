@@ -5,14 +5,14 @@
 
 The user-facing tax mode is **Tax questions and preparation**. Its existing machine ID `tax-consultant` is retained for compatibility; it does not describe licensed professional status.
 
-Version **0.3.0 preview** provides one portable skill with an explicit focus for each task. Bookkeeping and tax analysis use the same private profile, evidence index and decision history; they do not create separate versions of the business.
+Version **0.5.0 preview** provides one portable skill with an explicit focus for each task. Self-managed bookkeeping/accounting and tax reporting are the primary workflow. Bookkeeping and tax analysis use the same private profile, evidence index and decision history; they do not create separate versions of the business. Accountant consultation and exports are optional branches for a specific need.
 
 ## Select a mode and language
 
 | Setting | Purpose |
 | --- | --- |
 | `general` | Onboarding, registration, provider choice and general administration |
-| `bookkeeping` | Documents, proposed entries, payment reconciliation, monthly reporting and handoff |
+| `bookkeeping` | Documents, proposed entries, payment reconciliation, monthly status and self-review |
 | `tax-consultant` | Sourced analysis of a concrete tax question, scenarios, calculations and next actions |
 | `en` / `ru` | User-facing language and localized Markdown templates |
 
@@ -39,27 +39,28 @@ Preserve official German labels in both languages. Translate their explanations,
 
 ### Purpose
 
-Turn the available receipts, invoices and payment records into an organized, reviewable monthly work package. Continue useful processing while isolating the particular transactions that need clarification.
+Help the entrepreneur manage their own books and tax reporting, starting with an organized, reviewable record of receipts, invoices and payments. Continue useful processing while isolating transactions that need clarification. Current utilities provide preparation, proposals, reconciliation and form worksheets. A complete accounting ledger and ELSTER submission integration remain core implementation gaps; a monthly package does not fill those gaps.
 
 ### Workflow
 
-1. **Establish coverage and responsibility.** Identify the entrepreneur, period, accounts, bookkeeping software, VAT profile and division of work with a bookkeeper or Steuerberater. Save the working agreement in `04_accounting/workflow.md`.
+1. **Establish coverage and responsibility.** Identify the entrepreneur, period, accounts, bookkeeping software and VAT profile. Start from the user managing their own books; record a division of work only if they involve another person. Save the workflow in `04_accounting/workflow.md`.
 2. **Capture evidence.** Preserve originals, index their provenance and hashes, and store OCR or extracted information separately. Keep document, service and payment dates distinct.
-3. **Prepare proposals.** Extract the relevant fields, identify the business purpose, propose categories/tax treatment, and show the source and reason for each uncertain item. Save proposals under `06_bookkeeping/YYYY/MM/proposals/`.
+3. **Prepare proposals.** Extract the relevant fields, identify the business purpose, propose categories/tax treatment, and show the source and reason for each uncertain item. Save validated proposals with `desk.py proposal-save` in `00_admin/casework.json`; preserve legacy proposal files separately.
 4. **Review exceptions.** Group missing receipts, conflicting information, possible duplicates and tax-sensitive cases into concrete questions. Do not silently turn an unresolved case into an approved entry.
 5. **Reconcile payments.** Use verified transaction references and exact decimal arithmetic. The supplied utility compares normalized CSVs; it does not create those references, infer exchanges or post entries. Empty inputs and differences require review.
-6. **Report the month.** Record account/statement coverage, reconciled totals, missing evidence, unresolved decisions and observed provider state. Save `06_bookkeeping/YYYY/MM/close.md` using the localized monthly template.
-7. **Prepare the handoff.** Build the agreed package under `07_exports/YYYY-MM/`, with a manifest of included/excluded records and remaining questions. Record delivery only when there is actual evidence of delivery.
+6. **Report the monthly status.** Record account/statement coverage, reconciled totals, missing evidence, unresolved decisions, actual posting evidence and remaining work. Save `06_bookkeeping/YYYY/MM/close.md` using the localized monthly template; the filename does not establish that the month is closed.
+7. **Prepare records for self-review.** Use `desk.py archive` and `verify-archive` for a records archive under `07_exports/YYYY-MM/`, with a manifest of included/excluded records and remaining questions. `prepared_with_open_items` and `prepared_for_self_review` describe preparation; neither means a closed month or completed filing. Share an export only if requested, and record delivery only with evidence.
+8. **Continue posting and reporting with evidence.** Keep preparation, user approval, actual posting/submission evidence and the Finanzamt response separate. The present utilities do not perform ledger posting or ELSTER submission; show the remaining actions and preserve the results of actions actually completed in the chosen system. Request expert assistance for a specific uncertainty when useful, while continuing unaffected work.
 
 Use the localized `bookkeeping-workflow.md` and `month-close.md` templates. Keep proposals in the shared `proposal.json` schema, with explanatory text in the selected language. Apply the [bookkeeping reference](../skills/de-business-kit/references/bookkeeping.md) and provider-specific rules, including the [Lexware reference](../skills/de-business-kit/references/lexware.md).
 
 ### Example
 
-> Use bookkeeping mode in English for October. My receipts and bank export are in the private workspace. Prepare the workflow agreement, identify missing evidence, propose categories, reconcile verified payment references and produce a monthly report. Explain any transaction that needs a tax decision and prepare a focused question about it.
+> Use bookkeeping mode in English for October. I manage my own accounting and reporting; receipts and the bank export are in my private workspace. Identify missing evidence, propose categories, reconcile verified payment references and prepare the monthly status and records archive for my review. Show the remaining posting and filing actions, explain uncertain tax treatment and identify any specific issue where expert advice could help.
 
 ### Expected result
 
-A month report should state what was processed, what matches, what remains unresolved and what the user or adviser needs to do next. “Amounts match” is a reconciliation result; it does not establish the correctness of every tax decision or the completeness of the entire month's source records.
+A month report should state what was processed, what matches, what remains unresolved and what the user needs to do next, including any specifically requested adviser input. “Amounts match” is a reconciliation result; it does not establish the correctness of every tax decision or the completeness of the entire month's source records.
 
 ## Tax questions and preparation
 
@@ -81,7 +82,7 @@ For Russian output, use `assets/ru/tax-consultation.md`. The consultation should
 
 ### Example
 
-> Use tax-consultant mode in English. I am adding a new business activity to an existing freelance business. Establish the relevant VAT history and figures, explain which rules apply, compare the available scenarios and document calculations with their assumptions. Save the consultation and list the specific evidence or adviser decision still needed.
+> Use tax-consultant mode in English. I am adding a new business activity to an existing freelance business. Establish the relevant VAT history and figures, explain which rules apply, compare the available scenarios and document calculations with their assumptions. Save the consultation, list the evidence or decisions still needed, and identify any specific uncertainty where expert advice could help.
 
 ## General mode and moving between modes
 
@@ -91,6 +92,6 @@ A bookkeeping question may reveal a tax issue. Create a linked consultation for 
 
 ## What modes do not change
 
-Mode and language settings do not grant tools, change permissions, establish consent to publish private data or authorize filings, contracts or payments. There are no production provider connectors in this preview. Local preparation and analysis remain useful without those connectors; externally observed actions must be recorded only when they actually occur.
+Mode and language settings do not grant tools, change permissions, establish consent to publish private data or authorize filings, contracts or payments. There are no production provider connectors in this preview. Complete ledger functionality and ELSTER submission are core capabilities still to be completed. Local preparation and analysis remain useful without those connectors; externally observed actions must be recorded only when they actually occur. See the [document workflow](document-workflow.md) for these evidence boundaries.
 
 Use the shared [workspace](../skills/de-business-kit/references/workspace.md), [privacy](../skills/de-business-kit/references/privacy.md), [German rules](../skills/de-business-kit/references/german-rules.md) and [form workflow](../skills/de-business-kit/references/forms.md) for the relevant task.

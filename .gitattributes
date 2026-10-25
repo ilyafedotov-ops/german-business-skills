@@ -1,0 +1,2 @@
+# Preserve PDF bytes; line-oriented whitespace checks do not apply.
+*.pdf binary

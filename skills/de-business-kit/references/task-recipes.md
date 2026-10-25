@@ -1,0 +1,13 @@
+# Common tasks / Частые задачи
+
+Use the requested language and existing private workspace. Ask only for missing facts that affect the next step. Do not make setup, an accountant or an export a prerequisite for useful answers. See [document workflow](document-workflow.md) for commands and [onboarding](onboarding.md) for missing runtime/tools.
+
+| User request / Запрос | Minimum input | Tools and saved result | Completion evidence / fallback |
+| --- | --- | --- | --- |
+| “Organize these documents.” / «Организуй эти документы» | Chosen private location, files, organizational period | `desk.py receive`, catalog and original verification; unknown types stay visible | Per-file receipt results and original hashes; unavailable OCR/PDF extraction stays pending |
+| “Help me do this month's bookkeeping.” / «Помоги самостоятельно вести учёт за месяц» | Period, supplied accounts and actual accounting records, relevant treatment facts | Document review, bank preview/approval, explicit reconciliation, `overview`; sourced questions and draft proposals | Evidence coverage, reviewed/unreviewed items, next posting/reporting action; missing ledger or connector is reported, never replaced by mandatory handoff |
+| “Explain this authority letter.” / «Объясни письмо ведомства и следующий шаг» | Letter, receipt/notification facts, relevant history | Preserve original, extract stated request/date, inspect applicable current rules, save linked task/question and draft response | Distinguish stated date from verified legal deadline; no automatic objection or claim of submission; if letter missing, request necessary content and prioritize apparent urgency |
+| “Answer this tax question for this year.” / «Ответь на налоговый вопрос за этот год» | Actual question, applicable period and material facts | Tax-consultant reference, primary-source research, consultation and applicable source checks | Direct conditional answer, reproducible calculation where supported, assumptions and source dates; uncertainty produces a precise open issue, not generic deferral |
+| “Continue where we stopped.” / «Продолжим с прошлого раза» | Existing workspace and task/period if ambiguous | Read preferences, open registers and relevant evidence; `start` resumes, `overview` refreshes | Saved facts preserved, next unresolved useful action identified; diagnose missing/corrupt records without reinitializing or claiming previous approvals |
+
+Normal completion is useful self-managed work plus explicit remaining steps. An archive or professional consultation is an optional branch. The user reviews decisions in conversation; the assistant operates validated records behind it. Never mark approval, posting, ELSTER submission or Finanzamt acceptance from a plan or template alone.
