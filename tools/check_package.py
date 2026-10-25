@@ -22,6 +22,11 @@ def main():
         "skills/de-business-kit/references/tax-consultant.md",
         "skills/de-business-kit/references/language-and-modes.md",
         "skills/de-business-kit/assets/locales.json",
+        "plugin.json", ".claude-plugin/plugin.json", "tools/build_package.py",
+        "packaging/README.md", "packaging/README.ru.md",
+        "docs/quickstart.md", "docs/quickstart.ru.md", "docs/distribution.md", "docs/distribution.ru.md",
+        "skills/de-business-kit/references/onboarding.md",
+        "skills/de-business-kit/references/legal-boundaries.md",
     ]
     for name in required:
         if not (ROOT / name).is_file():

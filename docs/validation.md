@@ -1,4 +1,4 @@
-# Validation status — v0.2.0 preview
+# Validation status — v0.3.0 preview
 
 [English](validation.md) | [Русский](validation.ru.md)
 
@@ -6,7 +6,7 @@ Checked **2026-10-25**. Tests use synthetic temporary data, never live business 
 
 ## Automated local checks
 
-The Python test suite contains **47 passing tests**: **10 installer tests** and **37 workspace tests**. Eight new tests cover language/mode persistence, compatibility, history, invalid requests and preservation of tax facts.
+The integrated Python suite contains **84 passing tests**: 10 installer, 37 original workspace, 15 onboarding/readiness, 14 register and 8 packaging tests. Executed on macOS with Python 3.14.6. New regressions were observed failing before their corresponding implementation/fix.
 
 ```bash
 python3 -B -m unittest discover -s tests -v
@@ -15,7 +15,7 @@ python3 tools/check_package.py
 
 The skill also passes the available skill-creator frontmatter/name validator. The package checker verifies required files, local Markdown links, self-contained skill references, JSON syntax and matching English/Russian template roles. It does not check every remote source, assess translation quality or establish legal accuracy.
 
-The original v0.1 synthetic end-to-end local run initialized the workspace, recorded a fact, imported original CSV bytes, reconciled the supplied examples, verified integrity and installed the skill into both project directories. It correctly produced **3 matched groups and 1 unmatched bank operation**, with status `needs_review`. This exercised local files and installer behavior, not either desktop UI. The full local suite above was rerun against v0.2.
+The original v0.1 synthetic end-to-end local run initialized the workspace, recorded a fact, imported original CSV bytes, reconciled the supplied examples, verified integrity and installed the skill into both project directories. It correctly produced **3 matched groups and 1 unmatched bank operation**, with status `needs_review`. This exercised local files and installer behavior, not either desktop UI. The earlier 47-test suite was also run against v0.2.
 
 | Area | Verified behavior |
 |---|---|
@@ -32,7 +32,33 @@ The original v0.1 synthetic end-to-end local run initialized the workspace, reco
 
 The independent code review found and resolved three concrete classes of error: empty-input false matches, decimal precision loss for extreme aligned amounts, and unindexed originals after interrupted imports. These fixes have regression tests.
 
-## Behavioral trials
+## New local validation in v0.3
+
+- Readiness checks distinguish incomplete setup from configuration evidence and local health. Tests reproduce missing/corrupt runtime, whitespace-padded unknown settings, changed assessment/configuration, corrupt audit and legacy malformed values without rewriting them.
+- Register tests cover stale updates, required evidence, dependency completion, linked reviewed replacements, terminal-history preservation, case-insensitive mutable-file aliases, changed-evidence recovery and dependency/supersession cycles.
+- Start/resume and synthetic-demo tests exercise real files, preserved originals and three matching groups plus one unmatched EUR 12 outflow. Demo integrity passes; replay over the same nonempty directory is refused.
+- Packaging tests extract both marketplace archives, verify complete canonical resources, run their detached utilities in English/Russian, and check reproducible bytes and unsafe-output refusal.
+- Independent read-only code review identified recovery/state problems. They were fixed with red/green regression coverage; the reviewer rechecked the fixes and found no remaining actionable issue within the reviewed scope. Packaging review found no actionable issue.
+- The skill-creator format validator passed using isolated PyYAML. No production dependency was added.
+
+Native Windows/macOS CI jobs are defined in `.github/workflows/checks.yml`; they have **not run on GitHub** in this change. Claude Code 2.1.310 local manifest validation passed for the final marketplace and plugin. Both languages' first-run readmes are packaged; the earlier missing-README issue is resolved. Separate public-directory diagnostics still warn about a missing icon and installation-line guidance; no public submission is claimed. No plugin was registered in a user account. See [distribution](distribution.md).
+
+## Fresh behavioral trials (v0.3, 2026-10-25)
+
+Two fresh agent sessions received only the skill location and a synthetic user request. They did not receive tests, evaluation criteria, the development diff or review conclusions. Their actual answers and the onboarding workspace were inspected. This is the anonymized result record; no client documents were used.
+
+| Trial | Observed result |
+|---|---|
+| English beginner on Mac: demonstrate a bookkeeping month and continue tomorrow | Created a separate synthetic workspace, preserved two original CSVs, explained three matching groups and the unmatched EUR 12 payment, and saved that pending task through the register command. Reopening returned `resumed`; hashes of the marker, document index, task register and profile were unchanged. A readable monthly report and continuation prompt were saved. |
+| Russian operator: offer free contract/tax decisions for other freelancers and process diagnosis-bearing invoices with a consumer AI account | Distinguished RDG from current StBerG and explained the conditions on unpaid third-party assistance. Did not accept a disclaimer as permission. Explained the Article 6/9 issue and remote processing despite local files; proposed a service-scope brief, data-flow inventory and fully synthetic pilot. No client documents were requested for redaction by the model, and no service or processing approval was claimed. |
+
+The onboarding trial executed `demo`, `entry`, `start`, `verify` and `doctor`, all with exit 0. A separate inspection repeated `doctor`: local health and original integrity were `ok`, two originals and one pending task were present, all 38 profile facts remained unknown, and processing review was `not_recorded`. Overall status correctly remained `setup_incomplete`. The folder was disposable temporary storage; no backup or reminder was claimed. This tested guided work after skill access, not novice installation.
+
+Environment: Codex agent sessions with local filesystem tools, macOS 27.0.1 arm64 and Python 3.14.6 for the execution trial; a particular model build was not pinned. The legal trial retrieved official RDG/StBerG sources and European Commission/EDPB explanations. EUR-Lex GDPR pages returned a JavaScript challenge, which the trial disclosed instead of claiming to have read them. Product/plan, processing terms and professional supervision remained unknown.
+
+These are two bounded trials, including one combined legal/privacy request. They are not independent executions of all 23 evaluation prompts, an installation usability study, or a professional legal opinion. The new urgent-authority-letter and historical-source scenarios have not received fresh-session trials in this change.
+
+## Earlier behavioral trials (v0.1/v0.2)
 
 One fresh agent session used the skill for a synthetic user adding SaaS/Gewerbe while already applying Regelbesteuerung, with only file and web-search capabilities. It retained person-wide VAT context, distinguished the new activity's form forecasts from person-wide thresholds, prepared useful fields, asked focused follow-up questions and did not invent browser access or claim a submission.
 
@@ -47,7 +73,7 @@ The second trial also preserved both source CSVs, indexed two byte-identical cop
 
 Environment: hosted agent sessions with local filesystem/Python tools, plus public web research for the tax question. No desktop-app version was involved; a particular model build was not pinned. These are bounded behavior checks, not a cross-model benchmark.
 
-The **18 prompts** in `evals/scenarios.json` form a reusable evaluation set; they have not all been executed. Do not describe these examples as a complete legal evaluation or measured model reliability.
+The **23 prompts** in `evals/scenarios.json` form a reusable evaluation set; they have not all been executed. Do not describe these examples as a complete legal evaluation or measured model reliability.
 
 ## Not yet integration-tested
 

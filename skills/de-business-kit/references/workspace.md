@@ -41,7 +41,75 @@ All relative input paths below are relative to `--root`, not the current shell d
 
 The initializer creates all twelve months for the chosen year. Later intake may create a further period. A folder period is not a tax-period determination. Keep invoice, service, receipt and payment dates in extracted records. Missing values stay unknown.
 
-The task/question/decision files start as empty arrays. Maintain them with a narrow, reviewed local edit, preserving existing IDs and records. There is no general-purpose task API in v0.2. Stop if a script writer is active. Do not call a task “completed” without its completion evidence. A due date in a file does not create an actual reminder.
+The task/question/decision files start as empty arrays. Use the validated `entry` command below to preserve IDs, transitions, locks and history. Legacy untyped records are flagged for reviewed conversion; never silently clear or migrate them. A due date in a file does not create an actual reminder.
+
+## Guided start and demonstration
+
+```bash
+python3 <skill-directory>/scripts/workspace.py start --root <private-folder> --year 2026 --language en --mode general
+python3 <skill-directory>/scripts/workspace.py demo --root <new-private-demo-folder> --year 2026 --language ru
+python3 <skill-directory>/scripts/workspace.py doctor --root <private-folder>
+```
+
+Use [onboarding](onboarding.md) to guide the user instead of making them type commands. `start` resumes an existing workspace without changing preferences or year; arguments select defaults only for a new workspace. `demo` requires a new/empty folder and creates synthetic CSVs, preserved originals, a real reconciliation and localized `START-HERE.md`. It never fills a real business profile. Inspect interrupted demonstrations with `start`/`doctor`; do not rerun initialization over them.
+
+## Runtime review and diagnostics
+
+`status` reports `setup_incomplete`, `needs_attention`, or `configured`, with separate health, assessment status, missing fields and next action. It does not display profile values. `doctor` also checks original integrity and reports local Python/platform; browser, host discovery and account capabilities remain `not_probed`. Exit zero means the diagnostic ran, not that everything is ready.
+
+Use `00_admin/runtime.json` as the starting format. Record actual product/version, local/cloud/hybrid execution, model provider, authentication route, plan, training-policy check date (`YYYY-MM-DD`), DPA assessment, retention reference, residency scope, and connector names/references. Leave unknowns null or `unknown`. `third_party_connectors` is a string array, never account tokens.
+
+For a recorded assessment, set `client_data_mode` to `review_recorded` and add:
+
+```json
+"review": {
+  "reviewed_by": "identified reviewer",
+  "reviewed_at": "2026-10-25",
+  "scope": "Specific data categories and workflow assessed",
+  "evidence_file": "00_admin/processing-assessment.md"
+}
+```
+
+The nonempty private evidence file explains the actual assessment, sources, limitations and scope. It cannot be a mutable configuration/register file. Missing settings cannot be marked reviewed. Save the full proposed runtime object as a private input file, then run:
+
+```bash
+python3 <skill-directory>/scripts/workspace.py runtime --root <private-folder> --input 00_admin/inbox/runtime-review.json
+```
+
+The writer stores assessment/configuration hashes and history under the workspace lock. A changed evidence file or configuration edited outside the command invalidates the recorded review. A changed provider, plan, connector, purpose or data category requires reconsideration; the command cannot decide legal suitability. To proceed without an assessment, retain `synthetic_or_redacted_until_reviewed`. Follow [privacy](privacy.md) before real personal-data processing. This is not a compliance checkbox.
+
+## Task, question and decision registers
+
+Every entry needs `schema_version: 1`, an opaque `id` (letters/digits/underscore/hyphen, at most 64 characters), `title`, `owner`, and `status`. New tasks start `pending`, questions `open`, decisions `proposed`. Optional fields are `depends_on` (IDs in the same register), `due_date`, `deadline_source`, `evidence_file`, `reviewer`, `supersedes`, `superseded_by`, and `note`. Unknown fields are rejected. Use the active language for title/note; retain machine identifiers.
+
+```json
+{
+  "schema_version": 1,
+  "id": "task-check-001",
+  "title": "Check the unmatched synthetic payment",
+  "owner": "user",
+  "status": "pending",
+  "depends_on": []
+}
+```
+
+```bash
+python3 <skill-directory>/scripts/workspace.py entry --root <private-folder> --collection tasks --input 00_admin/inbox/task.json
+python3 <skill-directory>/scripts/workspace.py entry --root <private-folder> --collection tasks --id task-check-001
+python3 <skill-directory>/scripts/workspace.py entry --root <private-folder> --collection tasks --input 00_admin/inbox/task-update.json --expected-sha256 <current-entry-hash>
+```
+
+Inspection returns state, evidence health and the version hash without the title/evidence content. Updates require that exact previous hash. Writes preserve unrelated entries and history; they never schedule reminders or perform external actions.
+
+| Register | States | Requirements |
+|---|---|---|
+| `tasks` | `pending`, `in_progress`, `blocked`, `completed`, `cancelled` | Completion requires evidence and completed dependencies with valid evidence. A deadline needs a source or explicit user-target reference. |
+| `questions` | `open`, `deferred`, `resolved` | Resolution requires evidence. |
+| `decisions` | `proposed`, `approved`, `rejected`, `superseded` | Approval requires reviewer/evidence. Supersession requires an approved replacement linked to the old decision. |
+
+Preserve terminal entries and create linked corrections. For an approved decision, create and approve its replacement with `supersedes=<old-id>`, then change only the old state to `superseded` and add `superseded_by=<replacement-id>`. Its content and reviewer evidence remain unchanged. Dependency and supersession cycles are rejected.
+
+Evidence paths are relative private files; mutable administration files cannot serve as evidence. Hashes detect changes, not document truth. Changed evidence stays flagged, while inspection, unrelated work and linked corrections remain possible. Never rehash just to hide a discrepancy. Preserve legacy registers with incompatible shapes/broken links and prepare a reviewed conversion before using the writer.
 
 ## Language and working mode
 
@@ -73,6 +141,10 @@ Each fact has this shape:
 ```
 
 Supported states: `unknown`, `declared`, `proposed`, `verified`, `needs_review`. A nonunknown fact needs a value and evidence source. `verified` means evidence was actually inspected; the script cannot validate the truth of a document or legal conclusion. Record money as decimal strings with currency and period identified, not binary floats.
+
+New writes validate profile field types. VAT regime is `Kleinunternehmer`, `Regelbesteuerung` or `unresolved`; accounting method is `EÜR`, `Bilanzierung` or `unresolved`. Employee/cash/cross-border/existing-VAT flags are booleans. Dates use `YYYY-MM-DD`; `vat_prior_year` is an integer year. Client/country lists are string arrays. Activities are arrays with unique `activity_id`, optional text `description`, `classification` (`freiberuflich`, `gewerblich`, `mixed`, `unresolved`) and date/null `commenced_at`. VAT-history items contain `regime`, `effective_from`, and `source_ref`. Provider/bank requirements are objects; remaining text fields require nonempty strings. Unknown facts remain null.
+
+Person-wide turnover/forecast fields use `{"amount":"1234.56","currency":"EUR","period":"2026"}` with a nonnegative decimal string and explicit year. Preserve original foreign amounts separately and substantiate conversion. This storage format does not calculate qualifying statutory turnover. Legacy values are flagged without rewriting; correct individual fields with evidence through `record`.
 
 Save a one-field update in `00_admin/inbox/fact.json`:
 
@@ -151,7 +223,7 @@ Copy only needed templates into the private workspace:
 
 Create unique IDs. Do not reuse null IDs as real identifiers. Monetary fields in proposals are decimal strings; null means unknown. The templates are workflow schemas, not a provider's API request body.
 
-External operation states may be `draft`, `ready_for_review`, `authorized`, `submitted`, `submission_unconfirmed`, `authority_response_received` or `cancelled`. Use only the state the evidence supports. Bind authorization to the exact recipient, period and payload; a significant payload change invalidates the old scope. Maintain prior linked operations when correcting. No external execution engine is shipped in v0.2.
+External operation states may be `draft`, `ready_for_review`, `authorized`, `submitted`, `submission_unconfirmed`, `authority_response_received` or `cancelled`. Use only the state the evidence supports. Bind authorization to the exact recipient, period and payload; a significant payload change invalidates the old scope. Maintain prior linked operations when correcting. No external execution engine is shipped in v0.3.
 
 ## Exit codes and recovery
 

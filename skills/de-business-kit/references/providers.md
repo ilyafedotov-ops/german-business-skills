@@ -1,6 +1,6 @@
 # Select banking and accounting providers
 
-Use a requirements-led comparison. This skill prepares recommendations and opening/setup checklists; **v0.2 does not open accounts, buy subscriptions or provide production bank/accounting connectors**. Do not create an application or transmit identity documents as a side effect of comparison.
+Use a requirements-led comparison. This skill prepares recommendations and opening/setup checklists; **v0.3 does not open accounts, buy subscriptions or provide production bank/accounting connectors**. Do not create an application or transmit identity documents as a side effect of comparison.
 
 ## Collect requirements before selecting candidates
 

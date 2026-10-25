@@ -4,9 +4,15 @@
 
 Open-source assistance for starting and running a sole-trader business in Germany, including **Freiberufler** and **Einzelunternehmen/Gewerbe**. One portable skill for Codex and Claude Code provides a shared business profile, organized private files and three explicit working modes.
 
-**Version 0.2.0 — preview.** User documentation, conversations and generated documents are supported in **English and Russian**. Official German form labels remain in German so users can find the corresponding fields. Internal agent references and machine-readable JSON keys remain in English; human-readable content follows the chosen language.
+**Version 0.3.0 — preview.** User documentation, conversations and generated documents are supported in **English and Russian**. Official German form labels remain in German so users can find the corresponding fields. Internal agent references and machine-readable JSON keys remain in English; human-readable content follows the chosen language.
 
 The source and documentation are MIT-licensed. AI services, bank accounts and accounting products follow their own subscription terms.
+
+## Start here
+
+New to skills or terminal tools? Read the [beginner guide](docs/quickstart.md), select the installed **German Business Kit** in your app, and say: “Guide me through setup in English and show the synthetic demo before using real documents.” The assistant checks the actual tools and helps you choose a private folder. You do not need to edit JSON.
+
+Version 0.3 adds safe start/resume, a synthetic demonstration, local diagnostics, recorded processing assessments and validated profile/register updates. [Local plugin bundles](docs/distribution.md) package the same skill for Codex and Claude. They are preview distribution artifacts, not a published one-click listing or a bundled Python runtime. Native Windows/desktop acceptance remains pending; see [validation](docs/validation.md).
 
 ## Choose a working mode
 
@@ -14,7 +20,7 @@ The source and documentation are MIT-licensed. AI services, bank accounts and ac
 | --- | --- | --- |
 | `general` | Collect initial facts, plan registration or an additional activity, compare banks/software, prepare forms and ELSTER worksheets | Business profile, registration plan and concrete next steps |
 | `bookkeeping` | Capture evidence, prepare accounting proposals, review exceptions, reconcile payments, prepare a monthly report and adviser handoff | Organized records, reconciliation and a documented month-end status |
-| `tax-consultant` | Analyse a tax question using actual business facts and current official sources, explain the conclusion, compare scenarios and calculate from explicit assumptions | A sourced consultation with conclusions, calculations, open questions and actions |
+| Tax questions and preparation (`tax-consultant`) | Analyse a tax question using actual business facts and current official sources, explain the conclusion, compare scenarios and calculate from explicit assumptions | Sourced analysis with conclusions, calculations, open questions and actions |
 
 The modes share one workspace and evidence history. Switching mode does not create a second tax profile or change a recorded tax treatment. See the detailed [English mode guide](docs/modes.md) or [Russian guide](docs/modes.ru.md).
 
@@ -27,6 +33,8 @@ The modes share one workspace and evidence history. Switching mode does not crea
 | Staged intake and resuming work | Workflow instructions and a JSON profile with evidence and status for each fact |
 | Language and mode preferences | Saved in `00_admin/workspace.json`, configurable without reinitializing the workspace |
 | Private folder structure | Executable offline initializer |
+| First use and recovery | Safe start/resume, synthetic demo, local doctor and explicit setup issues |
+| Shared records | Typed profile facts and locked, evidence-backed task/question/decision updates with history |
 | Original-document intake | Byte-preserving copy, SHA-256 index and exact-content duplicate detection |
 | Original verification | Integrity checks and detection of unexpected files in originals folders |
 | CSV reconciliation | Exact Decimal arithmetic, explicit transaction IDs, currency-separated totals and exceptions |
@@ -99,7 +107,7 @@ The installer does not change tool permissions or host settings, download depend
 
 > Use de-business-kit in bookkeeping mode for October. My accounting system is Lexware Office. Establish who does what with my Steuerberater, organize the receipts, prepare categories for review, reconcile the payments and produce the monthly report and handoff package.
 
-**Tax consultant**
+**Tax questions and preparation**
 
 > Use de-business-kit in tax-consultant mode. I already have a freelance activity and want to add an online service. Use my existing VAT history and actual figures, check current official sources, explain the applicable treatment and compare realistic scenarios. Save the conclusions, calculation assumptions and next actions as a consultation.
 

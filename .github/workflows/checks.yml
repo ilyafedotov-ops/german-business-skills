@@ -1,0 +1,38 @@
+name: Offline package checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  native-utilities:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # setup-python has no macOS ARM64 build for Python 3.9.
+          - os: macos-latest
+            python: '3.10'
+          - os: macos-latest
+            python: '3.14'
+          - os: windows-latest
+            python: '3.9'
+          - os: windows-latest
+            python: '3.14'
+    env:
+      PYTHONUTF8: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Test offline workspace, installer and extracted packages
+        run: python -B -m unittest discover -s tests -v
+      - name: Validate package structure and local references
+        run: python -B tools/check_package.py

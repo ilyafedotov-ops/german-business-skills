@@ -47,7 +47,7 @@ Use `workspace.py record --root <path> --input <local-answer.json>` for known pr
 
 `verified` requires actual evidence supporting the fact, not an AI inference. Keep disputed facts with `needs_review`; never promote them silently. A chat statement can be recorded as `declared`. Do not put secrets in the `note` or `source.ref` fields.
 
-Maintain `00_admin/questions.json` with IDs, the fact blocked, why it matters, requested evidence, owner and state. Maintain `00_admin/tasks.json` with action, dependency IDs, due date, source for that deadline, owner, status and completion evidence. A task file is not a scheduled notification.
+Use `workspace.py entry` for questions/tasks with the [register contract](workspace.md#task-question-and-decision-registers). Put the blocked fact, reason and requested evidence in `title`/`note`; use stable IDs, owner, status and `depends_on`. A due date requires `deadline_source`; completion requires an evidence file. Inspect the current entry hash before updating. A task file is not a scheduled notification.
 
 ## Completion
 

@@ -3,16 +3,16 @@ name: de-business-kit
 description: >-
   Organize a user's own German Freiberufler or Einzelunternehmen/Gewerbe business:
   English/Russian intake, private files, registration and ELSTER worksheets,
-  bookkeeping mode, tax-consultant mode, Lexware Office handoff, and bank/software
+  guided setup, bookkeeping preparation, tax questions, Lexware Office handoff, and bank/software
   comparisons. Use for German sole-trader tax questions, receipts, reconciliation,
-  starting or running a business; русский: бухгалтерия, налоговый консультант,
+  starting or running a business; русский: бухгалтерия, налоговые вопросы,
   налоги, открытие и ведение Gewerbe/Freiberufler. Provide sourced analysis and
   reviewable work; do not claim licensed Steuerberater status or automatic filings.
 ---
 
 # German Business Kit
 
-Use one private workspace per natural-person entrepreneur. Keep multiple activities in that profile, with activity IDs. Support **English (`en`) and Russian (`ru`)** throughout conversation and user-facing reports; retain official German form labels. Version: **0.2.0 preview**, source review **2026-10-25**.
+Use one private workspace per natural-person entrepreneur. Keep multiple activities in that profile, with activity IDs. Support **English (`en`) and Russian (`ru`)** throughout conversation and user-facing reports; retain official German form labels. Version: **0.3.0 preview**, source review **2026-10-25**.
 
 ## Language and working mode
 
@@ -22,11 +22,13 @@ Apply [language and mode rules](references/language-and-modes.md). Read `00_admi
 |---|---|---|
 | `general` | Startup, intake, registration, providers and routing | Select the relevant module below |
 | `bookkeeping` / «Ведение бухгалтерии» | Ongoing receipts, income/expense records, proposals, reconciliation and month preparation | [bookkeeping](references/bookkeeping.md) |
-| `tax-consultant` / «Налоговый консультант» | Explain tax consequences, compare options, estimate supported scenarios and prepare decisions | [tax consultant](references/tax-consultant.md) |
+| Tax questions and preparation / «Налоговые вопросы и подготовка» (`tax-consultant`) | Explain tax consequences, compare options, estimate supported scenarios and prepare decisions | [tax preparation](references/tax-consultant.md) |
 
 Follow the user's concrete task without forcing a mode menu. An explicit mode switch or durable language preference may be saved with `workspace.py configure`; reuse the existing authorization to make that requested local change. A one-task language override or a related subtask does not rewrite defaults. Without a workspace, apply the choice in the session and continue useful work. Switching modes never changes `vat_current_regime`, bookkeeping method, prior decisions, authority filings or professional status.
 
 ## Start each task
+
+For first use, setup confusion, a demonstration or “continue,” follow [guided onboarding](references/onboarding.md). Use outcomes in the user's language; keep technical commands and mode IDs behind the conversation. `start` safely creates or resumes; `doctor` diagnoses local health. A recorded configuration is not legal certification.
 
 1. Identify the requested result, entrepreneur, year/period, workspace and actual runtime capabilities. Reuse confirmed session context. Do useful preparation before asking questions; ask at most 3 related questions at a time.
 2. Read `00_admin/workspace.json`, `00_admin/runtime.json`, `01_profile/business.json`, and the relevant open questions/tasks if the workspace exists. Load only relevant records, never the entire client archive. Do not borrow personal facts from other clients or unrelated memory.
@@ -39,9 +41,11 @@ Follow the user's concrete task without forcing a mode menu. An explicit mode sw
 | Task | Read | Produce |
 |---|---|---|
 | First use, collect facts, establish work split | [intake](references/intake.md) | Provenanced profile; prioritized missing facts |
+| Setup, demonstration, resume or recovery | [onboarding](references/onboarding.md) | Guided first task, truthful setup status and next action |
 | Open, extend or change an activity | [formation](references/formation.md) | Registration plan; form worksheet; unresolved choices |
 | Explain German rules and identify exceptions | [German rules](references/german-rules.md) | Sources, applicability, explicit assumptions and review questions |
-| Tax-consultant mode; tax questions, choices and estimates | [tax consultant](references/tax-consultant.md) | Direct answer; applicable sources; calculations/assumptions; consultation record |
+| Tax questions, choices and estimates (`tax-consultant`) | [tax preparation](references/tax-consultant.md) | Direct answer; applicable sources; calculations/assumptions; consultation record |
+| Non-tax legal questions, disputes or services for other people | [legal boundaries](references/legal-boundaries.md) | Factual preparation, precise review issue and qualified handoff when needed |
 | Receipts, invoices and monthly close preparation | [bookkeeping](references/bookkeeping.md) | Evidence index, proposals, reconciliation and exception list |
 | Lexware Office and Steuerberater export | [Lexware](references/lexware.md) | Status checks and reconciled handoff |
 | Choose banking or bookkeeping software | [providers](references/providers.md) | Requirements and current sourced shortlist |
@@ -65,9 +69,9 @@ Follow the user's concrete task without forcing a mode menu. An explicit mode sw
 
 ## Available implementation
 
-`scripts/workspace.py` supplies **offline** initialization, persisted language/mode configuration, provenanced profile updates, byte-preserving intake, original integrity checks and explicit-reference CSV reconciliation. Run `python3 <skill-directory>/scripts/workspace.py --help` and read [workspace](references/workspace.md) before use. Use `python` on Windows when that is the installed Python 3 command.
+`scripts/workspace.py` supplies **offline** start/resume, synthetic demo, diagnosis, recorded runtime assessment, validated profile/register updates, byte-preserving intake, integrity checks and explicit-reference CSV reconciliation. Use `entry` for task/question/decision updates; preserve unresolved legacy records rather than silently converting them. Run `python3 <skill-directory>/scripts/workspace.py --help` and read [workspace](references/workspace.md) before use. Use the actual Python 3 launcher on Windows.
 
-v0.2 contains no production banking, ELSTER, Lexware or tax-filing connector and no complete personal-tax calculation engine. Consultations use current sources and explicit, reproducible calculations where the facts support them. Browser work uses only tools actually provided by the host and permitted for this task; the skill does not grant capabilities. Do not claim a connection, scheduled reminder, external update, or end-to-end desktop test happened without evidence.
+v0.3 contains no production banking, ELSTER, Lexware or tax-filing connector and no complete personal-tax calculation engine. Consultations use current sources and explicit, reproducible calculations where the facts support them. Browser work uses only tools actually provided by the host and permitted for this task; the skill does not grant capabilities. Do not claim a connection, scheduled reminder, external update, or end-to-end desktop test happened without evidence.
 
 ## Finish and resume
 

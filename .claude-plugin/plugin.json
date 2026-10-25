@@ -1,0 +1,7 @@
+{
+  "name": "de-business-kit",
+  "version": "0.3.0-preview",
+  "description": "English and Russian workflows for German sole traders: private setup, bookkeeping preparation and evidence-based tax research.",
+  "author": {"name": "German Business Kit contributors"},
+  "license": "MIT"
+}

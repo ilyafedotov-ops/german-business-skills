@@ -2,7 +2,7 @@
 
 [English](architecture.md) · [Русский](architecture.ru.md)
 
-Project version: **0.2.0 preview**. Source review: **2026-10-25**.
+Project version: **0.3.0 preview**. Source review: **2026-10-25**.
 
 ## Intended result
 
@@ -12,7 +12,7 @@ The supported scope is a natural person operating in Germany: Freiberufler, Einz
 
 ## One entry point, shared state
 
-The portable entry point is `de-business-kit`. Its `SKILL.md` routes to **12 reference modules**, loaded as the task requires. The business profile, VAT history, evidence, questions and decisions are shared, which avoids creating conflicting records for separate modes or languages. Independent skills could be extracted later while preserving the common data contract.
+The portable entry point is `de-business-kit`. Its `SKILL.md` routes to task-specific reference modules, loaded as the task requires. The business profile, VAT history, evidence, questions and decisions are shared, which avoids creating conflicting records for separate modes or languages. Independent skills could be extracted later while preserving the common data contract.
 
 | Layer | Responsibility |
 |---|---|
@@ -28,7 +28,7 @@ The skill cannot create browser tools, API access or permissions. Availability d
 
 ## Languages and modes
 
-The two named working modes are `bookkeeping` and `tax-consultant`; `general` covers startup, organization and routing. Bookkeeping prepares evidence, records, reconciliation and monthly handoff. Tax-consultant mode produces sourced explanations, comparisons, estimates and proposed decisions. A tax issue encountered during bookkeeping can use the consultation module without abandoning the other work or changing the saved default. See the [mode guide](modes.md) for usage rather than a second implementation of those workflows here.
+The two named working modes are `bookkeeping` and `tax-consultant`; `general` covers startup, organization and routing. Bookkeeping prepares evidence, records, reconciliation and monthly handoff. Tax questions and preparation (`tax-consultant`) produces sourced explanations, comparisons, estimates and proposed decisions. A tax issue encountered during bookkeeping can use the consultation module without abandoning the other work or changing the saved default. See the [mode guide](modes.md) for usage rather than a second implementation of those workflows here.
 
 `00_admin/workspace.json` stores the default `language` and `mode`. The `configure` command persists an explicit preference change with history and an audit event; `status` exposes the current values. An explicit one-task request takes priority in the conversation. A request to translate one report does not replace the saved language or rewrite historical records.
 
@@ -56,7 +56,7 @@ Hashes, history and procedures support record organization; compliance of the co
 
 ## Current limits and future work
 
-Version 0.2 adds language and mode support. It contains no production bank, Lexware or ELSTER connector, automatic filings, complete personal-tax engine, integrated OCR/XML validator or scheduler. Browser instructions use only capabilities actually available in the host. No end-to-end desktop integration test is implied by local tests.
+Version 0.3 adds guided setup, synthetic demo, runtime assessment records, typed profile values and validated register writes while preserving language/mode support. It contains no production bank, Lexware or ELSTER connector, automatic filings, complete personal-tax engine, integrated OCR/XML validator or scheduler. Browser instructions use only capabilities actually available in the host. No end-to-end desktop integration test is implied by local tests.
 
 | Future work | Evidence needed before claiming support |
 |---|---|
@@ -64,10 +64,15 @@ Version 0.2 adds language and mode support. It contains no production bank, Lexw
 | Lexware Office read-only adapter | Verified API version, minimum permissions, test environment and reconciled objects |
 | Draft writes and assisted forms | Concrete preview, scoped authorization, readback, timeout handling and duplicate prevention |
 | Additional accounting products and e-invoice validation | Verified supported formats, actual validators and shared behavioral cases |
-| Distribution plugins or additional jurisdictions | Separate requirements, maintenance process and service-model review |
+| Local plugin distribution | Bundles are built from one canonical skill; actual desktop discovery and account policy remain separate checks |
+| Additional jurisdictions or hosted services | Separate requirements, maintenance process and service-model review |
 
 ## Maintenance and validation
 
 Record URLs, check dates, applicable periods and supported conclusions for material decisions. Recheck laws for the relevant period, forms before filling them and provider terms before a recommendation or contract. Release sources are starting points rather than permanent authority to apply old rules.
 
 Keep English/Russian template roles and user guides aligned while leaving machine identifiers stable. Distinguish code tests, behavioral skill trials and live integration tests. Reproduce defects with synthetic data and add a check that catches the actual failure. See [validation](validation.md) for the work actually performed.
+
+## Guided setup and validated records
+
+Use the [beginner guide](quickstart.md) and [distribution guide](distribution.md). `start` resumes without changing preferences; `demo` uses a separate synthetic workspace; `doctor` checks local health. Processing assessment is a recorded, scoped review with configuration/evidence hashes, not legal certification. Profile values have field-specific validation. `entry` updates tasks/questions/decisions under the same lock with history, explicit transitions, evidence and an expected prior hash. Legacy malformed records are reported without silent migration. Proposal/operation JSON files remain instruction templates; no external execution engine or provider-state validator is implied.

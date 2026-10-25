@@ -1,8 +1,8 @@
-# Tax consultation
+# Tax questions and preparation
 
 - Consultation ID:
 - Language: en
-- Mode: tax-consultant
+- Workflow: Tax questions and preparation (tax-consultant)
 - Status: draft analysis — no election or filing made
 - Question:
 - Entrepreneur / activity reference:

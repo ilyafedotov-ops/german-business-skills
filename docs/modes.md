@@ -2,7 +2,10 @@
 
 **English** · [Русский](modes.ru.md) · [Project README](../README.md)
 
-Version **0.2.0 preview** provides one portable skill with an explicit focus for each task. Bookkeeping and tax analysis use the same private profile, evidence index and decision history; they do not create separate versions of the business.
+
+The user-facing tax mode is **Tax questions and preparation**. Its existing machine ID `tax-consultant` is retained for compatibility; it does not describe licensed professional status.
+
+Version **0.3.0 preview** provides one portable skill with an explicit focus for each task. Bookkeeping and tax analysis use the same private profile, evidence index and decision history; they do not create separate versions of the business.
 
 ## Select a mode and language
 
@@ -58,7 +61,7 @@ Use the localized `bookkeeping-workflow.md` and `month-close.md` templates. Keep
 
 A month report should state what was processed, what matches, what remains unresolved and what the user or adviser needs to do next. “Amounts match” is a reconciliation result; it does not establish the correctness of every tax decision or the completeness of the entire month's source records.
 
-## Tax-consultant mode
+## Tax questions and preparation
 
 ### Purpose
 

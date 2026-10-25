@@ -1,4 +1,4 @@
-# Tax-consultant mode
+# Tax questions and preparation
 
 Use mode ID `tax-consultant` for sourced tax explanations, comparisons, estimates and proposed treatment of the user's own German sole-trader business. Give a useful answer to the actual question, with a clear conclusion and the facts that could change it. This workflow provides decision support; it does not confer the professional status of a Steuerberater or authority to represent the user.
 
@@ -60,7 +60,7 @@ Use [English consultation template](../assets/en/tax-consultation.md) or [Russia
 
 Include the question, known facts and evidence, assumptions, conclusion, sources and dates, any calculation, options, precise review issues and next action. Preserve consultation IDs when changing language. A translated copy is another rendering of the same analysis, not a new tax decision. A later substantive correction should reference the earlier report instead of erasing it.
 
-Link unresolved questions or an actual decision to `00_admin/questions.json` / `00_admin/decisions.json` using their existing structure and preserving records. Store concise user-facing conclusions and evidence, not hidden reasoning or complete chats. A draft conclusion must not silently become a `verified` profile fact or an approved decision.
+Link unresolved questions or an actual decision with the `entry` command and [register contract](workspace.md#task-question-and-decision-registers). Preserve existing records and use the current entry hash for updates. Store concise user-facing conclusions and evidence, not hidden reasoning or complete chats. A draft conclusion must not silently become a `verified` profile fact or an approved decision.
 
 End the chat with the result, its practical effect, what remains unresolved and the next concrete action. If a saved report exists, identify it. If no report was saved or no external operation occurred, do not imply otherwise.
 

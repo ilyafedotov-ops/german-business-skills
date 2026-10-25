@@ -1,4 +1,4 @@
 interface:
   display_name: "German Business Kit"
-  short_description: "German bookkeeping & taxes · Бухгалтерия и налоги"
-  default_prompt: "Use $de-business-kit for my German business in English or Russian, using bookkeeping or tax-consultant mode for the task."
+  short_description: "German business setup, records and tax preparation"
+  default_prompt: "Use $de-business-kit to guide me through setup or continue my German business work. Offer English or Russian, check the actual tools and private workspace, and explain the next useful step."

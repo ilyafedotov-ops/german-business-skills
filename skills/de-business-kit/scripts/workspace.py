@@ -36,6 +36,7 @@ PROFILE = "01_profile/business.json"
 DOCUMENTS = "00_admin/documents.json"
 EVENTS = "09_audit/events.json"
 MARKER = "00_admin/workspace.json"
+RUNTIME = "00_admin/runtime.json"
 LOCK = ".workspace.lock"
 FIELDS = (
     "legal_form", "activity_classification", "activities", "existing_activities",
@@ -263,6 +264,314 @@ def _blank_fact() -> Dict[str, Any]:
             "recorded_at": None, "effective_from": None, "note": None}
 
 
+def _text(value: Any) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
+def _evidence_path(root: Path, value: str) -> Path:
+    if not _text(value) or Path(value).is_absolute():
+        raise WorkspaceError("Evidence must be a relative private-workspace file.")
+    path = _inside(root, value)
+    mutable = {PROFILE, DOCUMENTS, EVENTS, MARKER, RUNTIME, LOCK,
+               "00_admin/tasks.json", "00_admin/questions.json", "00_admin/decisions.json"}
+    if (path.relative_to(root).as_posix() in mutable
+            or path.exists() and any((root / item).exists() and path.samefile(root / item) for item in mutable)):
+        raise WorkspaceError("Use a preserved evidence document or history snapshot, not a mutable administrative file.")
+    return path
+
+
+def _fact_value(field: str, value: Any) -> None:
+    """Validate storage types, not the truth or tax treatment of the fact."""
+    if field == "vat_current_regime":
+        valid = isinstance(value, str) and value in {"Kleinunternehmer", "Regelbesteuerung", "unresolved"}
+    elif field == "accounting_method":
+        valid = isinstance(value, str) and value in {"EÜR", "Bilanzierung", "unresolved"}
+    elif field in {"employees", "cash_transactions", "cross_border_activity", "vat_existing_registration"}:
+        valid = isinstance(value, bool)
+    elif field == "vat_prior_year":
+        valid = type(value) is int and 1900 <= value <= 9999
+    elif field.endswith("_date") or field == "vat_binding_until":
+        _day(value)
+        return
+    elif "turnover_all_activities" in field or field == "vat_current_year_forecast_all_activities":
+        valid = isinstance(value, dict) and set(value) == {"amount", "currency", "period"}
+        if valid:
+            valid = (isinstance(value["amount"], str) and _amount(value["amount"]) >= 0
+                     and isinstance(value["currency"], str)
+                     and _currency(value["currency"]) == "EUR"
+                     and isinstance(value["period"], str)
+                     and re.fullmatch(r"[1-9]\d{3}", value["period"]) is not None)
+    elif field in {"client_types", "client_countries", "supplier_countries"}:
+        valid = isinstance(value, list) and all(_text(item) for item in value)
+    elif field in {"activities", "existing_activities"}:
+        valid = isinstance(value, list)
+        ids = set()
+        if valid:
+            for item in value:
+                if not isinstance(item, dict) or not _text(item.get("activity_id")) or item["activity_id"] in ids:
+                    valid = False
+                    break
+                ids.add(item["activity_id"])
+                if item.get("description") is not None and not _text(item["description"]):
+                    valid = False
+                if item.get("classification") is not None and item["classification"] not in {"freiberuflich", "gewerblich", "mixed", "unresolved"}:
+                    valid = False
+                if item.get("commenced_at") is not None:
+                    _day(item["commenced_at"])
+    elif field == "vat_history":
+        valid = isinstance(value, list) and all(isinstance(item, dict) for item in value)
+        if valid:
+            for item in value:
+                _fact_value("vat_current_regime", item.get("regime"))
+                _day(item.get("effective_from"))
+                if not _text(item.get("source_ref")):
+                    valid = False
+    elif field in {"provider_needs", "bank_needs"}:
+        valid = isinstance(value, dict) and all(_text(key) for key in value)
+    else:
+        valid = _text(value)
+    if not valid:
+        raise WorkspaceError("Invalid value type or allowed value for profile field: " + field)
+
+
+def _runtime_review(root: Path, record: Any, *, preparing: bool = False) -> List[str]:
+    """Check recorded assessment evidence; never certify a processing setup."""
+    required = {"assistant_product", "app_version", "session_execution", "model_provider",
+                "authentication_type", "contract_plan", "training_policy_checked_at",
+                "dpa_status", "retention_policy_reference", "residency_scope"}
+    allowed = required | {"schema_version", "third_party_connectors", "client_data_mode", "review"}
+    if (not isinstance(record, dict) or record.get("schema_version") != VERSION
+            or set(record) - allowed or not required.issubset(record)):
+        raise WorkspaceError("Runtime record is invalid; use the documented runtime format.")
+    for field in required:
+        if record[field] is not None and not _text(record[field]):
+            raise WorkspaceError("Runtime settings must be text or null.")
+    if record["session_execution"] not in {"unknown", "local", "cloud", "hybrid"}:
+        raise WorkspaceError("Session execution must be unknown, local, cloud, or hybrid.")
+    connectors = record.get("third_party_connectors")
+    if not isinstance(connectors, list) or not all(_text(item) for item in connectors):
+        raise WorkspaceError("Connectors must be a list of names/references, not credentials.")
+    mode = record.get("client_data_mode")
+    if mode not in {"synthetic_or_redacted_until_reviewed", "review_recorded"}:
+        raise WorkspaceError("Unknown client data mode.")
+    missing = sorted(field for field in required if record[field] is None or record[field].strip().lower() == "unknown")
+    if record["training_policy_checked_at"] is not None:
+        _day(record["training_policy_checked_at"])
+    review = record.get("review")
+    if mode != "review_recorded":
+        return missing + ["data_processing_review"]
+    if missing or not isinstance(review, dict):
+        raise WorkspaceError("A recorded review requires complete settings and assessment evidence.")
+    if set(review) - {"reviewed_by", "reviewed_at", "scope", "evidence_file", "evidence_sha256", "configuration_sha256"}:
+        raise WorkspaceError("Unexpected review field.")
+    if not all(_text(review.get(field)) for field in ("reviewed_by", "reviewed_at", "scope", "evidence_file")):
+        raise WorkspaceError("Review requires reviewer, date, scope and a local evidence file.")
+    _day(review["reviewed_at"])
+    evidence = review["evidence_file"]
+    if Path(evidence).is_absolute():
+        raise WorkspaceError("Review evidence must be a relative private-workspace path.")
+    try:
+        payload = _read_regular(_evidence_path(root, evidence))
+    except OSError as exc:
+        raise WorkspaceError("Review evidence is missing or unreadable.") from exc
+    if not payload.strip():
+        raise WorkspaceError("Review evidence must not be empty.")
+    digest = hashlib.sha256(payload).hexdigest()
+    configuration = {key: value for key, value in record.items() if key != "review"}
+    configuration_digest = hashlib.sha256(json.dumps(configuration, sort_keys=True).encode("utf-8")).hexdigest()
+    if preparing:
+        review["evidence_sha256"] = digest
+        review["configuration_sha256"] = configuration_digest
+    elif review.get("evidence_sha256") != digest or review.get("configuration_sha256") != configuration_digest:
+        raise WorkspaceError("Review evidence or configuration changed; reassess before recording a new review.")
+    return []
+
+
+def configure_runtime(root: PathInput, record: Dict[str, Any]) -> Dict[str, Any]:
+    location = _workspace(root)
+    # Copy before adding a derived hash; callers retain ownership of inputs.
+    after = json.loads(json.dumps(record, allow_nan=False))
+    with _locked(location):
+        _check_audit(location)
+        _runtime_review(location, after, preparing=True)
+        path = _inside(location, RUNTIME)
+        before = _load(path)
+        if before == after:
+            return {"status": "unchanged"}
+        history_id = uuid.uuid4().hex
+        _atomic_json(_inside(location, f"09_audit/history/{history_id}.json"),
+                     {"schema_version": VERSION, "action": "configure_runtime", "recorded_at": _now(),
+                      "before": before, "after": after})
+        _atomic_json(path, after, replace=True)
+        _audit(location, "runtime_configured", {"history_id": history_id})
+    return {"status": "recorded", "history_id": history_id,
+            "note": "A recorded assessment is not legal certification or authorization for an external action."}
+
+
+ENTRY_STATES = {
+    "tasks": {"pending", "in_progress", "blocked", "completed", "cancelled"},
+    "questions": {"open", "deferred", "resolved"},
+    "decisions": {"proposed", "approved", "rejected", "superseded"},
+}
+ENTRY_INITIAL = {"tasks": "pending", "questions": "open", "decisions": "proposed"}
+ENTRY_TERMINAL = {"completed", "cancelled", "resolved", "rejected", "superseded"}
+
+
+def _entry_hash(record: Dict[str, Any]) -> str:
+    return hashlib.sha256(json.dumps(record, sort_keys=True, ensure_ascii=False, allow_nan=False).encode("utf-8")).hexdigest()
+
+
+def _entry_valid(root: Path, collection: str, record: Any, *, preparing: bool = False,
+                 check_evidence: bool = True) -> None:
+    required = {"schema_version", "id", "title", "owner", "status"}
+    allowed = required | {"depends_on", "due_date", "deadline_source", "evidence_file", "evidence_sha256",
+                          "reviewer", "supersedes", "superseded_by", "note"}
+    if collection not in ENTRY_STATES or not isinstance(record, dict) or not required.issubset(record) or set(record) - allowed:
+        raise WorkspaceError("Unknown register or entry fields; review the register contract.")
+    if (record["schema_version"] != 1 or not isinstance(record["id"], str)
+            or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,63}", record["id"])
+            or not _text(record["title"]) or not _text(record["owner"])
+            or not isinstance(record["status"], str) or record["status"] not in ENTRY_STATES[collection]):
+        raise WorkspaceError("Invalid register entry identity, owner, title or state.")
+    dependencies = record.get("depends_on", [])
+    if (not isinstance(dependencies, list) or not all(_text(item) for item in dependencies)
+            or len(dependencies) != len(set(dependencies)) or record["id"] in dependencies):
+        raise WorkspaceError("Dependencies must be distinct IDs other than this entry.")
+    for field in ("deadline_source", "reviewer", "supersedes", "superseded_by", "note"):
+        if record.get(field) is not None and not _text(record[field]):
+            raise WorkspaceError("Entry metadata must be text or null.")
+    if record.get("due_date") is not None:
+        _day(record["due_date"])
+        if not _text(record.get("deadline_source")):
+            raise WorkspaceError("A deadline requires a source or a reference to an explicit user target.")
+    if record["status"] in {"approved", "superseded"} and not _text(record.get("reviewer")):
+        raise WorkspaceError("An approved decision requires an identified reviewer.")
+    if record["status"] == "superseded" and not _text(record.get("superseded_by")):
+        raise WorkspaceError("A superseded decision requires a linked record reference.")
+    evidence = record.get("evidence_file")
+    if evidence is None:
+        if record["status"] in {"completed", "resolved", "approved", "superseded"}:
+            raise WorkspaceError("This state requires an evidence file.")
+        if record.get("evidence_sha256") is not None:
+            raise WorkspaceError("An evidence hash requires its file.")
+        return
+    evidence_path = _evidence_path(root, evidence)
+    if not check_evidence:
+        if not isinstance(record.get("evidence_sha256"), str) or not re.fullmatch(r"[0-9a-f]{64}", record["evidence_sha256"]):
+            raise WorkspaceError("Evidence requires its saved hash.")
+        return
+    try:
+        payload = _read_regular(evidence_path)
+    except OSError as exc:
+        raise WorkspaceError("Entry evidence is missing or unreadable.") from exc
+    if not payload.strip():
+        raise WorkspaceError("Entry evidence must not be empty.")
+    digest = hashlib.sha256(payload).hexdigest()
+    if preparing:
+        record["evidence_sha256"] = digest
+    elif record.get("evidence_sha256") != digest:
+        raise WorkspaceError("Entry evidence changed; preserve history and review the correction.")
+
+
+def _entry_links(entries: List[Dict[str, Any]]) -> None:
+    by_id = {item["id"]: item for item in entries}
+    # Iterative topological check avoids recursion limits on a long task chain.
+    for identifier, record in by_id.items():
+        for link in (*record.get("depends_on", []), record.get("supersedes"), record.get("superseded_by")):
+            if link is not None and (link not in by_id or link == identifier):
+                raise WorkspaceError("Register link must refer to a distinct existing entry.")
+        if record["status"] == "superseded":
+            replacement = by_id[record["superseded_by"]]
+            if replacement["status"] not in {"approved", "superseded"} or replacement.get("supersedes") != identifier:
+                raise WorkspaceError("A superseded decision requires an approved, linked replacement.")
+    for relationship in ("depends_on", "supersedes"):
+        remaining = {identifier: set(record.get("depends_on", [])) if relationship == "depends_on" else
+                     {record["supersedes"]} if record.get("supersedes") else set()
+                     for identifier, record in by_id.items()}
+        while remaining:
+            ready = {identifier for identifier, dependencies in remaining.items() if not dependencies}
+            if not ready:
+                raise WorkspaceError("Register dependencies and supersession links cannot form cycles.")
+            remaining = {identifier: dependencies - ready for identifier, dependencies in remaining.items() if identifier not in ready}
+
+
+def _entries(root: Path, collection: str, *, check_evidence: bool = True) -> List[Dict[str, Any]]:
+    if collection not in ENTRY_STATES:
+        raise WorkspaceError("Unknown register.")
+    entries = _load(_inside(root, f"00_admin/{collection}.json"))
+    if not isinstance(entries, list):
+        raise WorkspaceError("Register must be an array.")
+    ids = set()
+    for record in entries:
+        _entry_valid(root, collection, record, check_evidence=check_evidence)
+        if record["id"] in ids:
+            raise WorkspaceError("Duplicate register ID.")
+        ids.add(record["id"])
+    _entry_links(entries)
+    return entries
+
+
+def entry_status(root: PathInput, collection: str, identifier: str) -> Dict[str, Any]:
+    location = _workspace(root)
+    for record in _entries(location, collection, check_evidence=False):
+        if record["id"] == identifier:
+            try:
+                _entry_valid(location, collection, record)
+                evidence_status = "checked" if record.get("evidence_file") else "not_recorded"
+            except (WorkspaceError, OSError):
+                evidence_status = "needs_review"
+            return {"id": identifier, "status": record["status"], "sha256": _entry_hash(record),
+                    "evidence_status": evidence_status}
+    raise WorkspaceError("Entry not found.")
+
+
+def save_entry(root: PathInput, collection: str, record: Dict[str, Any],
+               expected_sha256: Optional[str] = None) -> Dict[str, Any]:
+    location = _workspace(root)
+    after = json.loads(json.dumps(record, allow_nan=False))
+    with _locked(location):
+        _check_audit(location)
+        _entry_valid(location, collection, after, preparing=True)
+        entries = _entries(location, collection, check_evidence=False)
+        before = next((item for item in entries if item["id"] == after["id"]), None)
+        if before is None:
+            if expected_sha256 is not None or after["status"] != ENTRY_INITIAL[collection]:
+                raise WorkspaceError("New entries must start in their initial state with no previous hash.")
+        else:
+            if expected_sha256 != _entry_hash(before):
+                raise WorkspaceError("Entry changed or previous hash missing; inspect entry status before retrying.")
+            if before["status"] in ENTRY_TERMINAL or before["status"] == "approved" and after["status"] != "superseded":
+                raise WorkspaceError("Preserve terminal/reviewed entries; create a linked correction instead.")
+            if before["status"] == "approved":
+                stable = lambda item: {key: value for key, value in item.items() if key not in {"status", "superseded_by"}}
+                if stable(before) != stable(after):
+                    raise WorkspaceError("Superseding must preserve the old decision and reviewer evidence.")
+        dependencies = after.get("depends_on", [])
+        by_id = {item["id"]: item for item in entries}
+        if any(identifier not in by_id for identifier in dependencies):
+            raise WorkspaceError("Create referenced dependency entries first.")
+        if collection == "tasks" and after["status"] == "completed" and any(by_id[identifier]["status"] != "completed" for identifier in dependencies):
+            raise WorkspaceError("Complete task dependencies before marking this task completed.")
+        if collection == "tasks" and after["status"] == "completed":
+            for identifier in dependencies:
+                _entry_valid(location, collection, by_id[identifier])
+        by_id[after["id"]] = after
+        _entry_links(list(by_id.values()))
+        if after["status"] == "superseded":
+            replacement = by_id[after["superseded_by"]]
+            if replacement["status"] != "approved":
+                raise WorkspaceError("Choose the current approved replacement decision.")
+            _entry_valid(location, collection, replacement)
+        history_id = uuid.uuid4().hex
+        _atomic_json(_inside(location, f"09_audit/history/{history_id}.json"),
+                     {"schema_version": VERSION, "action": "register_entry", "collection": collection,
+                      "recorded_at": _now(), "before": before, "after": after})
+        _atomic_json(_inside(location, f"00_admin/{collection}.json"), list(by_id.values()), replace=True)
+        _audit(location, "register_entry_saved", {"collection": collection, "id": after["id"],
+                                                  "status": after["status"], "history_id": history_id})
+    return {"status": "recorded", "id": after["id"], "sha256": _entry_hash(after), "history_id": history_id}
+
+
 def _audit(root: Path, action: str, details: Dict[str, Any]) -> None:
     path = _inside(root, EVENTS)
     events = _load(path)
@@ -391,6 +700,8 @@ def record_fact(root: PathInput, record: Dict[str, Any]) -> Dict[str, Any]:
         raise WorkspaceError("Unknown facts must use null value and null source kind/ref.")
     if status == "verified" and source["kind"].lower() in {"llm", "model", "inference", "confidence", "ai"}:
         raise WorkspaceError("Verified requires checked evidence; model confidence is not evidence.")
+    if status != "unknown":
+        _fact_value(field, record["value"])
     effective = record.get("effective_from")
     if effective is not None:
         _day(effective)
@@ -698,24 +1009,143 @@ def workspace_status(root: PathInput) -> Dict[str, Any]:
     if not isinstance(profile, dict) or not isinstance(profile.get("facts"), dict):
         raise WorkspaceError("Business profile is invalid.")
     counts = {status: 0 for status in sorted(STATUSES)}
-    for fact in profile["facts"].values():
+    invalid_fields = []
+    for field, fact in profile["facts"].items():
         if not isinstance(fact, dict) or fact.get("status") not in STATUSES:
             raise WorkspaceError("Fact status is invalid.")
         counts[fact["status"]] += 1
+        try:
+            if field not in FIELDS:
+                raise WorkspaceError("Unknown field")
+            if fact["status"] != "unknown":
+                _fact_value(field, fact.get("value"))
+            elif fact.get("value") is not None:
+                raise WorkspaceError("Unknown facts must be null")
+        except (WorkspaceError, TypeError, ValueError):
+            invalid_fields.append(field)
+    invalid_fields.extend(sorted(set(FIELDS) - set(profile["facts"])))
     lists = {}
+    issues = ["invalid_profile_values"] if invalid_fields else []
+    if profile.get("schema_version") != VERSION:
+        issues.append("profile_schema_invalid")
+    try:
+        _check_audit(location)
+    except (WorkspaceError, OSError):
+        issues.append("audit_invalid")
     for name in ("tasks", "questions", "decisions"):
-        data = _load(_inside(location, f"00_admin/{name}.json"))
-        if not isinstance(data, list):
-            raise WorkspaceError("Workspace task/question/decision file must be a list.")
-        lists[name] = len(data)
-    return {"status": "ready", "language": preferences["language"], "mode": preferences["mode"],
+        try:
+            lists[name] = len(_entries(location, name))
+        except (WorkspaceError, OSError, TypeError, ValueError):
+            lists[name] = None
+            issues.append(name + "_invalid")
+    missing = []
+    try:
+        missing = _runtime_review(location, _load(_inside(location, RUNTIME)))
+        review_status = "not_recorded" if missing else "recorded"
+    except (WorkspaceError, OSError, TypeError, ValueError):
+        issues.append("runtime_invalid")
+        review_status = "invalid"
+    locked = (location / LOCK).exists()
+    if locked:
+        issues.append("workspace_locked")
+    result_status = "needs_attention" if issues else "setup_incomplete" if missing else "configured"
+    return {"status": result_status, "workspace_health": "needs_attention" if issues else "ok",
+            "data_processing_review": review_status, "setup_missing": missing, "issues": issues,
+            "invalid_profile_fields": sorted(invalid_fields), "synthetic_work_available": not issues,
+            "next_action": "Review the listed issues without reinitializing." if issues else
+                           "Review the actual data-processing route; use synthetic data meanwhile." if missing else
+                           "Check the recorded assessment scope and current capabilities for this task.",
+            "language": preferences["language"], "mode": preferences["mode"],
             "fact_status_counts": counts, "documents": len(_documents(location)["documents"]),
-            "list_item_counts": lists, "locked": (location / LOCK).exists()}
+            "list_item_counts": lists, "locked": locked}
+
+
+def start_workspace(root: PathInput, year: Optional[int] = None, language: str = "en",
+                    mode: str = "general") -> Dict[str, Any]:
+    location = _absolute(root)
+    _check_chain(location)
+    _private_boundary(location)
+    exists = (location / MARKER).exists()
+    if not exists:
+        init_workspace(location, date.today().year if year is None else year, language, mode)
+    return {"action": "resumed" if exists else "created", **workspace_status(location)}
+
+
+def diagnose_workspace(root: PathInput) -> Dict[str, Any]:
+    result = workspace_status(root)
+    verification = verify_workspace(root)
+    if verification["status"] != "ok":
+        result["status"] = result["workspace_health"] = "needs_attention"
+        result["issues"].append("original_integrity")
+        result["next_action"] = "Run verify and inspect the original-integrity issues; preserve all files."
+    result.update(python_version=sys.version.split()[0], platform=sys.platform,
+                  host_capabilities="not_probed", original_integrity=verification["status"],
+                  note="Local diagnostics do not verify desktop discovery, cloud processing, permissions or legal compliance.")
+    return result
+
+
+def create_demo(root: PathInput, year: int = 2026, language: str = "en") -> Dict[str, Any]:
+    if language not in {"en", "ru"}:
+        raise WorkspaceError("The demo supports en and ru.")
+    init_workspace(root, year, language, "bookkeeping")
+    location = _workspace(root)
+    period = f"{year}-01"
+    bank = ("transaction_id,booking_date,amount,currency\n"
+            f"DEMO-1,{period}-05,-105.00,EUR\nDEMO-2,{period}-06,500.00,EUR\n"
+            f"DEMO-3,{period}-07,-100.00,USD\nDEMO-4,{period}-08,-12.00,EUR\n")
+    ledger = ("entry_id,transaction_id,amount,currency\n"
+              "DEMO-E1,DEMO-1,-100.00,EUR\nDEMO-E2,DEMO-1,-5.00,EUR\n"
+              "DEMO-E3,DEMO-2,500.00,EUR\nDEMO-E4,DEMO-3,-100.00,USD\n")
+    with _locked(location):
+        _check_audit(location)
+        marker = _load(location / MARKER)
+        marker["purpose"] = "synthetic_demo"
+        _atomic_json(location / MARKER, marker, replace=True)
+        _write_exclusive(location / "03_banking/demo-bank.csv", bank.encode("utf-8"))
+        _write_exclusive(location / "04_accounting/demo-ledger.csv", ledger.encode("utf-8"))
+    for source in ("03_banking/demo-bank.csv", "04_accounting/demo-ledger.csv"):
+        ingest_document(location, source, period)
+    reconciliation = reconcile(location, "03_banking/demo-bank.csv", "04_accounting/demo-ledger.csv", period)
+    text = ("# Демонстрация на вымышленных данных\n\n"
+            "Это учебная папка. Храните реальные документы отдельно.\n\n"
+            "Сверены 3 группы: EUR 105 с комиссией EUR 5, поступление EUR 500 и расход USD 100. "
+            "Расход EUR 12 не связан с записью: требуется проверка. Валюты не суммируются.\n\n"
+            "Далее: откройте отчёт, найдите несвязанный расход, затем попросите продолжить эту демонстрацию. "
+            "Совпадение сумм не подтверждает налоговую правильность. Ничего не отправлено и не проведено.\n"
+            if language == "ru" else
+            "# Synthetic demonstration\n\nThis is a practice folder. Keep real documents elsewhere.\n\n"
+            "Three groups match: EUR 105 split into expense and EUR 5 fee, EUR 500 income, and USD 100 expense. "
+            "The EUR 12 outflow is unlinked and needs review. Currencies remain separate.\n\n"
+            "Next: open the report, inspect the unmatched outflow, then ask to continue this demonstration. "
+            "Matching amounts do not establish tax correctness. Nothing was posted or submitted.\n")
+    with _locked(location):
+        _check_audit(location)
+        _write_exclusive(location / "START-HERE.md", (text + "\n" + reconciliation["report"] + "\n").encode("utf-8"))
+        _audit(location, "synthetic_demo_created", {"period": period})
+    return {"status": "demo_created", "guide": "START-HERE.md", "reconciliation": reconciliation,
+            "next_action": "Open START-HERE.md; use start to resume without reinitializing."}
 
 
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
+    for name in ("start", "demo"):
+        command = commands.add_parser(name, help="Create/resume private work" if name == "start" else "Create a NEW synthetic practice workspace")
+        command.add_argument("--root", required=True)
+        command.add_argument("--year", type=int, default=date.today().year)
+        command.add_argument("--language", choices=("en", "ru"), default="en")
+        if name == "start":
+            command.add_argument("--mode", choices=sorted(MODES), default="general")
+    runtime = commands.add_parser("runtime", help="Record assessed processing configuration with local evidence")
+    runtime.add_argument("--root", required=True)
+    runtime.add_argument("--input", required=True, help="JSON inside workspace; never credentials")
+    entry = commands.add_parser("entry", help="Inspect or save a validated task/question/decision with history")
+    entry.add_argument("--root", required=True)
+    entry.add_argument("--collection", required=True, choices=sorted(ENTRY_STATES))
+    entry_input = entry.add_mutually_exclusive_group(required=True)
+    entry_input.add_argument("--input", help="Entry JSON inside workspace")
+    entry_input.add_argument("--id", help="Read only this entry's state and version hash")
+    entry.add_argument("--expected-sha256", help="Required current entry hash for an update")
     init = commands.add_parser("init", help="Create an empty private workspace outside Git and skill folders")
     init.add_argument("--root", required=True)
     init.add_argument("--year", required=True, type=int)
@@ -735,7 +1165,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ingest.add_argument("--root", required=True)
     ingest.add_argument("--source", required=True, help="Local regular file; absolute path may be outside workspace")
     ingest.add_argument("--period", required=True)
-    for name in ("verify", "status"):
+    for name in ("verify", "status", "doctor"):
         command = commands.add_parser(name)
         command.add_argument("--root", required=True)
     reconcile_parser = commands.add_parser("reconcile", help="Compare explicit IDs and Decimal amounts from two workspace CSVs")
@@ -745,7 +1175,23 @@ def main(argv: Optional[List[str]] = None) -> int:
     reconcile_parser.add_argument("--period", required=True)
     args = parser.parse_args(argv)
     try:
-        if args.command == "init":
+        if args.command == "start":
+            result = start_workspace(args.root, args.year, args.language, args.mode)
+        elif args.command == "demo":
+            result = create_demo(args.root, args.year, args.language)
+        elif args.command == "runtime":
+            result = configure_runtime(args.root, _load(_inside(_workspace(args.root), args.input)))
+        elif args.command == "entry":
+            if args.id is not None:
+                if args.expected_sha256 is not None:
+                    raise WorkspaceError("A previous hash is only used with an update input.")
+                result = entry_status(args.root, args.collection, args.id)
+            else:
+                result = save_entry(args.root, args.collection,
+                                    _load(_inside(_workspace(args.root), args.input)), args.expected_sha256)
+        elif args.command == "doctor":
+            result = diagnose_workspace(args.root)
+        elif args.command == "init":
             result = init_workspace(args.root, args.year, args.language, args.mode)
         elif args.command == "configure":
             result = configure_workspace(args.root, args.language, args.mode)

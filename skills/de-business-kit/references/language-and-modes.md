@@ -9,7 +9,7 @@ Use a single skill, profile and evidence history for both supported languages. A
 3. If no saved preference exists, use the dominant language of the user's task: Russian or English. Use English for an unclear/mixed request unless the session already establishes the preference.
 4. Persist a preference when the user asks to change the default, or when initializing with the language they chose. A request such as “write this report in English” changes that report only.
 
-The CLI accepts legacy `de` workspaces for compatibility. German has no complete localized template set in v0.2; do not silently claim that it does or migrate its saved setting. If the user needs German output, adapt the English template while retaining its evidence fields and state the supported document languages when relevant.
+The CLI accepts legacy `de` workspaces for compatibility. German has no complete localized template set in v0.3; do not silently claim that it does or migrate its saved setting. If the user needs German output, adapt the English template while retaining its evidence fields and state the supported document languages when relevant.
 
 Keep official German labels such as **Kleinunternehmerregelung**, **Regelbesteuerung**, **Einnahmenüberschussrechnung (EÜR)** and **Fragebogen zur steuerlichen Erfassung**. Explain them in the user's language on first use. Quote actual form field labels exactly. Translate explanatory text, not legal quotations, authority names, document numbers or evidence.
 
@@ -21,7 +21,7 @@ Keep JSON keys, enum values, directory names, document IDs and ISO dates stable.
 |---|---|---|---|
 | `general` | Startup and organization | Открытие и организация бизнеса | The relevant intake/formation/provider module |
 | `bookkeeping` | Bookkeeping | Ведение бухгалтерии | [Bookkeeping](bookkeeping.md) |
-| `tax-consultant` | Tax consultant | Налоговый консультант | [Tax consultation](tax-consultant.md) and relevant [German rules](german-rules.md) |
+| `tax-consultant` | Tax questions and preparation | Налоговые вопросы и подготовка | [Tax preparation](tax-consultant.md) and relevant [German rules](german-rules.md) |
 
 Treat the user's current task as the priority. Reuse the saved mode for an open-ended request such as “continue.” If a bookkeeping task raises a tax issue, use the tax module for that issue and continue evidence work; do not abandon the whole month or rewrite the default. If the user explicitly says “switch to tax-consultant mode,” save that choice for an existing private workspace. If they only request a single tax explanation, answer it without changing the default.
 

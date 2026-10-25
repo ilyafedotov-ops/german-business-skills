@@ -14,7 +14,7 @@ Prepare a field worksheet first. Use the live official form, year/version and au
 8. Submit only through a supported, permitted route. On timeout or unclear response, inspect the official status before any retry; never send a duplicate blindly.
 9. Save receipt/transmission ID and date in the private workspace. Distinguish `draft`, `ready_for_review`, `authorized`, `submitted` and `authority_response_received`. Submission receipt is not substantive acceptance by the authority. If no receipt or status evidence exists, keep `submission_unconfirmed` and explain what to check.
 
-## Scope of v0.2
+## Scope of v0.3
 
 These are agent instructions, not an implemented ELSTER connector. Do not claim unattended filing, complete UI coverage or a tested ELSTER integration. Native browser availability and file uploads differ by host; consult `platforms.md` and current host documentation. Manual guidance is a complete fallback for preparation, not evidence of a submitted form.
 
