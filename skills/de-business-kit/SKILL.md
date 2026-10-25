@@ -56,6 +56,7 @@ For first use, setup confusion, a demonstration or “continue,” follow [guide
 | Receipts, invoices and monthly close preparation | [bookkeeping](references/bookkeeping.md) | Evidence index, proposals, reconciliation and exception list |
 | Lexware Office and optional exports | [Lexware](references/lexware.md) | Actual accounting-state checks; export only when useful/requested |
 | Mixed documents, review, bank mapping, monthly overview or resume | [document workflow](references/document-workflow.md), [task recipes](references/task-recipes.md) | Preserved catalog, proposals, reconciliation and next self-accounting action |
+| Choose local/existing-software accounting during welcome; record cash movements, period summaries or filing/Finanzamt evidence | [accounting workflow](references/accounting-workflow.md) | Saved authoritative-system choice, reviewed cash journal or external-system route, frozen filing versions and observed outcomes |
 | Choose banking, insurance, software or other business services | [providers](references/providers.md); [insurance](references/insurance.md) when relevant | Needs, current-source comparison, full costs/coverage and reasoned recommendation |
 | Browser-assisted ELSTER or other forms | [forms](references/forms.md) | Field worksheet, verified draft and submission evidence if authorized |
 | Data handling and credentials | [privacy](references/privacy.md) | Minimal approved data scope and configuration evidence |
@@ -89,5 +90,7 @@ On Windows, use [native Windows](references/native-windows.md) first: `scripts/w
 v0.5 contains no complete accounting ledger and no production banking, ELSTER, Lexware or tax-filing connector and no complete personal-tax calculation engine. Consultations use current sources and explicit, reproducible calculations where the facts support them. Browser work uses only tools actually provided by the host and permitted for this task; the skill does not grant capabilities. Do not claim a connection, scheduled reminder, external update, or end-to-end desktop test happened without evidence.
 
 ## Finish and resume
+
+`desk.py` also exposes accounting configuration, reviewed local cash entries/reversals, period summaries and filing evidence transitions. Choose local versus existing software in the welcome dialog, never by default. External books remain authoritative. The local cash journal is limited to an explicitly chosen EÜR workflow; its arithmetic is not complete statutory EÜR or VAT calculation. Filing commands preserve review/authorization/observations and do not transmit. Read [accounting workflow](references/accounting-workflow.md) before use; actual ERiC/provider adapters remain unavailable.
 
 Report the result, files changed, sources and dates, unresolved items, and the next concrete action. Save concise user-facing decisions and evidence references, not hidden reasoning or full chats. Update tasks only to states supported by evidence. Do not say “bookkeeping is correct” because amounts match. Keep reminders as dated tasks unless an actual scheduler was configured and returned success.

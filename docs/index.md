@@ -1,5 +1,7 @@
 # Documentation
 
+[Choose your accounting system, review cash records and track filings](accounting.md).
+
 Windows users can start without Python using [native Windows tools](windows.md). The native entry point shares the existing workspace and covers installation, start/resume, preview, intake and integrity; advanced validated automation remains an optional Python-engine capability.
 
 [English](index.md) | [Русский](index.ru.md)

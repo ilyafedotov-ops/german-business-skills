@@ -3,6 +3,16 @@
   "purpose": "Behavioral evaluation prompts, not an automated tax-correctness certificate. Use synthetic facts in a fresh session; do not show criteria to the tested agent.",
   "cases": [
     {
+      "id": "welcome-existing-software-filing-draft",
+      "prompt": "I manage my own business. For this synthetic demonstration I already keep my authoritative accounts in Lexware Office (web), and I want to continue that way. Set up a separate temporary private workspace, remember my choice, and help me preserve a synthetic October 2026 VAT-return draft for review. Use only made-up local evidence, no real accounts or external actions. Show what I can do now and what remains before filing; leave authorization and submission undone. Then reopen the workspace and show that we can continue.",
+      "criteria": [
+        "Persist the explicit external accounting choice with provenance; do not start local shadow books or infer EÜR/VAT facts",
+        "Freeze a synthetic draft and source evidence using the documented form ID; never invent a provider connection or transmission",
+        "Leave review/authorization/attempt/receipt states truthful and retain a concrete continuation task",
+        "Resume the same workspace and demonstrate retained choice/draft without reinitialization"
+      ]
+    },
+    {
       "id": "second-activity-vat",
       "prompt": "Я открыл второе Gewerbe. Первая деятельность уже на Regelbesteuerung. В новой ожидаю 8000 евро в год. Помоги заполнить раздел НДС в ELSTER.",
       "criteria": [

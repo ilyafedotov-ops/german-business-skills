@@ -1,0 +1,449 @@
+"""Onboarding choice, reviewed cash records and evidence-backed filing tracking.
+
+No provider/ELSTER transport, statutory form calculation or credential handling.
+"""
+from contextlib import contextmanager
+from decimal import Decimal
+import copy
+import csv
+import hashlib
+import io
+from pathlib import Path
+import uuid
+
+import workspace as ws
+import workflows as wf
+from . import storage as st
+
+STATE = "04_accounting/register.json"
+STATES = {"draft", "reviewed", "authorized", "submission_unconfirmed", "submitted", "cancelled"}
+
+
+def template(kind):
+    templates = {
+        "configuration": {"system": None, "product": None, "account_reference": None,
+                          "method": "unresolved", "reviewer": None, "evidence_file": None},
+        "entry": {"entry_id": None, "date": None, "account": None, "transaction_id": None,
+                  "amount": None, "currency": None, "lines": [], "reviewer": None,
+                  "evidence_file": None, "note": None, "replaces": None},
+        "filing": {"filing_id": None, "form": None, "form_version": None, "period": None,
+                   "recipient": None, "payload_file": None, "source_files": [],
+                   "unresolved_items": [], "supersedes": None},
+        "filing-action": {"filing_id": None, "action": None, "actor": None,
+                          "evidence_file": None, "note": None, "external_id": None,
+                          "response_kind": None, "due_date": None},
+    }
+    if kind not in templates:
+        raise ws.WorkspaceError("Unknown accounting template.")
+    return copy.deepcopy(templates[kind])
+
+
+def _load(root):
+    path = ws._inside(root, STATE)
+    ws._check_audit(root)
+    history_id = next((event["details"]["history_id"] for event in reversed(ws._load(root / ws.EVENTS))
+                       if isinstance(event.get("details"), dict)
+                       and isinstance(event["details"].get("history_id"), str)
+                       and event["details"]["history_id"].startswith("accounting-")), None)
+    if not path.exists():
+        if history_id is not None:
+            raise ws.WorkspaceError("Accounting register is missing but its history exists; recover it before continuing.")
+        return {"schema_version": 1, "configuration": None, "entries": {}, "filings": {}}
+    value = ws._load(path)
+    wf.exact(value, {"schema_version", "configuration", "entries", "filings", "checksum"}, "accounting register")
+    checksum = value.pop("checksum")
+    if type(value["schema_version"]) is not int or value["schema_version"] != 1 or checksum != st.digest(value):
+        raise ws.WorkspaceError("Unsupported or changed accounting register; inspect preserved history, do not repair silently.")
+    if not isinstance(value["entries"], dict) or not isinstance(value["filings"], dict):
+        raise ws.WorkspaceError("Invalid accounting collections.")
+    if history_id is None:
+        raise ws.WorkspaceError("Accounting register has no completed audit checkpoint; inspect interrupted writes.")
+    checkpoint = ws._load(ws._inside(root, "09_audit/history/" + st.identifier(history_id) + ".json"))
+    if checkpoint.get("after_sha256") != checksum:
+        raise ws.WorkspaceError("Accounting register and history disagree; inspect rollback or interrupted writes before continuing.")
+    return value
+
+
+@contextmanager
+def _edit(root, action):
+    with ws._locked(root):
+        ws._check_audit(root)
+        state = _load(root)
+        before = copy.deepcopy(state)
+        yield state
+        if before == state:
+            return
+        saved = {**state, "checksum": st.digest(state)}
+        if len(st.encoded(saved)) > ws.MAX_BYTES:
+            raise ws.WorkspaceError("Accounting register exceeds supported size.")
+        history = "accounting-" + uuid.uuid4().hex
+        ws._atomic_json(ws._inside(root, "09_audit/history/" + history + ".json"),
+                        {"action": action, "before": before, "after_sha256": st.digest(state)})
+        ws._atomic_json(ws._inside(root, STATE), saved, replace=True)
+        ws._audit(root, action, {"history_id": history})
+
+
+def _config(root, state, local=False):
+    value = state["configuration"]
+    if value is None:
+        raise ws.WorkspaceError("Choose local or existing-software accounting during onboarding first.")
+    st.check_evidence(root, value["evidence"])
+    if local:
+        if value["system"] != "local" or value["method"] != "EÜR":
+            raise ws.WorkspaceError("Local cash records require an explicitly chosen local EÜR workflow; external books stay authoritative.")
+        fact = ws._load(root / ws.PROFILE)["facts"]["accounting_method"]
+        if fact["value"] not in {None, "unresolved", "EÜR"} or fact["status"] == "needs_review":
+            raise ws.WorkspaceError("Accounting method conflicts with the shared profile; resolve it before posting.")
+    return value
+
+
+def configure(root, value, expected=None):
+    root = ws._workspace(root)
+    wf.exact(value, template("configuration"), "accounting choice")
+    if value["system"] not in {"local", "external"} or value["method"] not in {"EÜR", "Bilanzierung", "unresolved"}:
+        raise ws.WorkspaceError("Choose local/external and an explicit accounting method or unresolved.")
+    if value["system"] == "external":
+        wf.text(value["product"], "exact accounting product and edition")
+    elif value["product"] is not None:
+        raise ws.WorkspaceError("Local accounting has no external product.")
+    for key in ("account_reference", "reviewer"):
+        wf.text(value[key], key)
+    with _edit(root, "accounting_configured") as state:
+        before = state["configuration"]
+        st.version(before, expected)
+        if state["entries"] or state["filings"]:
+            raise ws.WorkspaceError("Existing accounting/filing records require a reviewed migration; configuration cannot switch their authority.")
+        saved = {**copy.deepcopy(value), "evidence": st.evidence(root, value["evidence_file"])}
+        state["configuration"] = saved
+    return {"accounting_system": value["system"], "sha256": st.digest(saved)}
+
+
+def _entry(value):
+    wf.exact(value, template("entry"), "cash entry")
+    for key in ("entry_id", "account", "transaction_id"):
+        st.identifier(value[key])
+    for key in ("reviewer", "note"):
+        wf.text(value[key], key)
+    ws._day(value["date"])
+    ws._currency(value["currency"])
+    amount = ws._amount(value["amount"])
+    if not isinstance(value["lines"], list) or not value["lines"]:
+        raise ws.WorkspaceError("Cash records need classified or explicitly unresolved lines.")
+    total = Decimal(0)
+    for line in value["lines"]:
+        wf.exact(line, {"kind", "amount", "category", "activity_id"}, "cash line")
+        if line["kind"] not in {"income", "expense", "transfer", "unresolved"}:
+            raise ws.WorkspaceError("Unsupported movement kind.")
+        wf.text(line["category"], "reviewed category")
+        wf.text(line["activity_id"], "activity reference")
+        total = ws._add(total, ws._amount(line["amount"]))
+    if total != amount:
+        raise ws.WorkspaceError("Entry line amounts must equal the observed cash movement.")
+    if value["replaces"] is not None:
+        st.identifier(value["replaces"])
+
+
+def post(root, value):
+    root = ws._workspace(root)
+    _entry(value)
+    value = copy.deepcopy(value)
+    value["account"] = value["account"].casefold()
+    with _edit(root, "cash_entry_recorded") as state:
+        _config(root, state, local=True)
+        identifier = value["entry_id"]
+        if identifier in state["entries"]:
+            raise ws.WorkspaceError("Entry IDs are immutable; use a reversal and linked correction.")
+        reversed_ids = {entry["reverses"] for entry in state["entries"].values() if entry["reverses"]}
+        previous = state["entries"].get(value["replaces"])
+        if value["replaces"] is not None:
+            if previous is None or previous["entry_id"] not in reversed_ids or previous["reverses"]:
+                raise ws.WorkspaceError("A replacement must reference a reversed original entry.")
+            if any(entry["replaces"] == value["replaces"] for entry in state["entries"].values()):
+                raise ws.WorkspaceError("This entry already has a replacement.")
+            if any(value[key] != previous[key] for key in ("account", "transaction_id", "currency")):
+                raise ws.WorkspaceError("A correction must retain the account, transaction reference and currency.")
+        for entry in state["entries"].values():
+            if (entry["account"].casefold(), entry["transaction_id"]) == (value["account"].casefold(), value["transaction_id"]):
+                if not value["replaces"] or entry["entry_id"] not in reversed_ids and not entry["reverses"]:
+                    raise ws.WorkspaceError("Duplicate account transaction; inspect and reverse before correcting.")
+        saved = {**value, "reverses": None, "recorded_at": ws._now(), "evidence": st.evidence(root, value["evidence_file"])}
+        state["entries"][identifier] = saved
+    return {"entry_id": identifier, "status": "recorded", "sha256": st.digest(saved)}
+
+
+def reverse(root, entry_id, reversal_id, evidence_file, actor, note):
+    root = ws._workspace(root)
+    st.identifier(reversal_id)
+    wf.text(actor, "reviewer")
+    wf.text(note, "correction reason")
+    with _edit(root, "cash_entry_reversed") as state:
+        _config(root, state, local=True)
+        original = state["entries"].get(entry_id)
+        if original is None or original["reverses"] or reversal_id in state["entries"]:
+            raise ws.WorkspaceError("Choose an existing original and a new reversal ID.")
+        if any(entry["reverses"] == entry_id for entry in state["entries"].values()):
+            raise ws.WorkspaceError("Entry already reversed.")
+        st.check_evidence(root, original["evidence"])
+        saved = copy.deepcopy(original)
+        saved.update(entry_id=reversal_id, reverses=entry_id, replaces=None, reviewer=actor, note=note,
+                     evidence_file=evidence_file, evidence=st.evidence(root, evidence_file), recorded_at=ws._now())
+        saved["amount"] = format(ws._amount(original["amount"]).copy_negate(), "f")
+        for line in saved["lines"]:
+            line["amount"] = format(ws._amount(line["amount"]).copy_negate(), "f")
+        state["entries"][reversal_id] = saved
+    return {"entry_id": reversal_id, "reverses": entry_id, "sha256": st.digest(saved)}
+
+
+def _in_period(day, period):
+    if len(period) == 4:
+        return day[:4] == period
+    if "Q" in period:
+        return day[:4] == period[:4] and (int(day[5:7]) - 1) // 3 + 1 == int(period[-1])
+    return day[:7] == period
+
+
+def period_report(root, period):
+    root = ws._workspace(root)
+    wf.period(period)
+    with ws._locked(root):
+        state = _load(root)
+        config = _config(root, state, local=True)
+        selected = [entry for entry in state["entries"].values() if _in_period(entry["date"], period)]
+        totals, categories = {}, {}
+        unresolved = False
+        for entry in selected:
+            _entry({key: entry[key] for key in template("entry")})
+            st.check_evidence(root, entry["evidence"])
+            row = totals.setdefault(entry["currency"], dict.fromkeys(("income", "expense", "transfer", "unresolved"), Decimal(0)))
+            for line in entry["lines"]:
+                amount = ws._amount(line["amount"])
+                row[line["kind"]] = ws._add(row[line["kind"]], amount)
+                key = (entry["currency"], line["kind"], line["category"], line["activity_id"])
+                categories[key] = ws._add(categories.get(key, Decimal(0)), amount)
+                unresolved |= line["kind"] == "unresolved"
+        for row in totals.values():
+            row["operating_cash_net"] = ws._add(row["income"], row["expense"])
+        issues = ["coverage_not_confirmed", "statutory_adjustments_not_calculated", "tax_form_mapping_not_verified"]
+        if not selected:
+            issues.append("no_entries")
+        if unresolved:
+            issues.append("unclassified_movements")
+        return {"schema_version": 1, "kind": "cash_movement_report", "period": period,
+                "accounting_system": config["system"], "entries_sha256": st.digest(selected),
+                "configuration_sha256": st.digest(config), "entries": selected,
+                "totals": {currency: {key: format(value, "f") for key, value in row.items()} for currency, row in sorted(totals.items())},
+                "categories": [{"currency": key[0], "kind": key[1], "category": key[2], "activity_id": key[3], "amount": format(value, "f")} for key, value in sorted(categories.items())],
+                "readiness": "needs_review", "tax_return_status": "not_calculated", "open_items": issues}
+
+
+def export_report(root, period):
+    root = ws._workspace(root)
+    report = period_report(root, period)
+    relative = "07_exports/" + period + "/cash-report-" + uuid.uuid4().hex + ".json"
+    language = ws._load(root / ws.MARKER).get("language", "en")
+    russian = language == "ru"
+    title = "Отчёт о движении денег" if russian else "Cash movement report"
+    boundary = ("Это движения по записанным операциям, не налогооблагаемая прибыль и не готовая декларация. "
+                "Полнота счетов, налоговые корректировки и поля формы требуют отдельной проверки."
+                if russian else "These are recorded cash movements, not taxable profit or a completed return. "
+                "Account coverage, statutory adjustments and form fields require separate review.")
+    labels = {"income": "Поступления" if russian else "Receipts", "expense": "Расходы" if russian else "Expenses",
+              "transfer": "Перемещения" if russian else "Transfers", "unresolved": "Не классифицировано" if russian else "Unclassified",
+              "operating_cash_net": "Разница поступлений и расходов" if russian else "Operating cash difference"}
+    lines = ["# " + title, "", period, "", boundary, ""]
+    for currency, totals in report["totals"].items():
+        lines.extend(["## " + currency, ""])
+        lines.extend("- " + labels[key] + ": " + value for key, value in totals.items())
+        lines.append("")
+    if not report["entries"]:
+        lines.append("Операции за период отсутствуют." if russian else "No entries supplied for this period.")
+    markdown = relative[:-5] + ".md"
+    ledger_files = {}
+    with ws._locked(root):
+        ws._check_audit(root)
+        path = ws._inside(root, relative)
+        ws._mkdir(path.parent)
+        ws._atomic_json(path, report)
+        ws._write_exclusive(ws._inside(root, markdown), ("\n".join(lines) + "\n").encode("utf-8"))
+        for account in sorted({entry["account"] for entry in report["entries"]}):
+            stream = io.StringIO(newline="")
+            writer = csv.DictWriter(stream, fieldnames=("entry_id", "transaction_id", "amount", "currency"), lineterminator="\n")
+            writer.writeheader()
+            for entry in report["entries"]:
+                if entry["account"] == account:
+                    writer.writerow({key: entry[key] for key in writer.fieldnames})
+            target = relative[:-5] + "-" + hashlib.sha256(account.encode("utf-8")).hexdigest()[:16] + ".csv"
+            ws._write_exclusive(ws._inside(root, target), stream.getvalue().encode("utf-8"))
+            ledger_files[account] = target
+        ws._audit(root, "cash_report_prepared", {"path": relative, "period": period})
+    return {"path": relative, "markdown_path": markdown, "ledger_files": ledger_files,
+            "readiness": "needs_review", "tax_return_status": "not_calculated"}
+
+
+def _snapshot(root, path, year):
+    source = st.evidence(root, path)
+    data = ws._read_regular(ws._inside(root, source["path"]))
+    if hashlib.sha256(data).hexdigest() != source["sha256"]:
+        raise ws.WorkspaceError("Evidence changed during capture.")
+    suffix = Path(path).suffix.lower()
+    if suffix not in {".json", ".csv", ".xml", ".pdf", ".md", ".txt", ".png", ".jpg"}:
+        raise ws.WorkspaceError("Unsupported filing evidence format; do not supply credentials or certificates.")
+    relative = "05_tax/" + year + "/filing-evidence/" + uuid.uuid4().hex + suffix
+    target = ws._inside(root, relative)
+    ws._mkdir(target.parent)
+    ws._write_exclusive(target, data)
+    return {"path": relative, "sha256": source["sha256"], "source": source}
+
+
+def _check_snapshots(root, record, live=False):
+    sources = [record["payload"], *record["sources"], *(event["evidence"] for event in record["events"])]
+    for source in sources:
+        st.check_evidence(root, source)
+    if live:
+        for source in [record["payload"], *record["sources"]]:
+            st.check_evidence(root, source["source"])
+
+
+def _check_local_reports(root, record, state):
+    for source in [record["payload"], *record["sources"]]:
+        if Path(source["path"]).suffix != ".json":
+            continue
+        report = ws._load(ws._inside(root, source["path"]))
+        if not isinstance(report, dict) or report.get("kind") != "cash_movement_report":
+            continue
+        if source is record["payload"]:
+            raise ws.WorkspaceError("A cash-movement summary is supporting evidence, not a completed tax return payload.")
+        wf.period(report.get("period"))
+        entries = [entry for entry in state["entries"].values() if _in_period(entry["date"], report["period"])]
+        if (report.get("entries_sha256") != st.digest(entries)
+                or report.get("configuration_sha256") != st.digest(state["configuration"])):
+            raise ws.WorkspaceError("Source cash report is stale; regenerate it and prepare a newly reviewed filing version.")
+        for entry in entries:
+            st.check_evidence(root, entry["evidence"])
+
+
+def _scope(record):
+    return tuple(str(record[key]).strip().casefold() for key in ("account_reference", "form", "period"))
+
+
+def create_filing(root, value):
+    root = ws._workspace(root)
+    wf.exact(value, template("filing"), "filing draft")
+    st.identifier(value["filing_id"])
+    if value["form"] not in {form["id"] for form in wf.catalog()["forms"]}:
+        raise ws.WorkspaceError("Choose the catalogue form ID (for example ustva, not its German display label); inspect workflows.py catalog. The catalogue does not establish a filing obligation.")
+    for key in ("form_version", "recipient"):
+        wf.text(value[key], key)
+    wf.period(value["period"])
+    wf.strings(value["source_files"], "source files")
+    wf.strings(value["unresolved_items"], "unresolved items")
+    if not value["source_files"]:
+        raise ws.WorkspaceError("A filing draft needs source evidence.")
+    with _edit(root, "filing_draft_recorded") as state:
+        config = _config(root, state)
+        identifier = value["filing_id"]
+        if identifier in state["filings"]:
+            raise ws.WorkspaceError("Filing versions are immutable; create a linked replacement.")
+        candidate = {**copy.deepcopy(value), "account_reference": config["account_reference"]}
+        prior = state["filings"].get(value["supersedes"])
+        if value["supersedes"] is not None:
+            if prior is None or _scope(prior) != _scope(candidate) or prior["state"] not in {"submitted", "cancelled"}:
+                raise ws.WorkspaceError("Replace only a submitted/cancelled filing for the same account, form and period.")
+            if any(row["supersedes"] == prior["filing_id"] for row in state["filings"].values()):
+                raise ws.WorkspaceError("This filing already has a replacement; inspect the latest version.")
+        for row in state["filings"].values():
+            if _scope(row) != _scope(candidate):
+                continue
+            if row["state"] not in {"submitted", "cancelled"} or prior is None:
+                raise ws.WorkspaceError("A filing for this account/form/period already exists; resolve its outcome before any replacement.")
+        year = value["period"][:4]
+        payload = _snapshot(root, value["payload_file"], year)
+        sources = [_snapshot(root, path, year) for path in value["source_files"]]
+        saved = {**candidate, "system": config["system"], "product": config["product"],
+                 "configuration_sha256": st.digest(config), "payload": payload, "sources": sources,
+                 "state": "draft", "events": [], "receipt": None, "responses": [], "created_at": ws._now()}
+        state["filings"][identifier] = saved
+    return {"filing_id": identifier, "state": "draft", "sha256": st.digest(saved)}
+
+
+def get_filing(root, identifier):
+    root = ws._workspace(root)
+    with ws._locked(root):
+        record = _load(root)["filings"].get(identifier)
+        if record is None:
+            raise ws.WorkspaceError("Filing not found.")
+        _check_snapshots(root, record)
+        return {"record": record, "sha256": st.digest(record)}
+
+
+def filing_action(root, value, expected):
+    root = ws._workspace(root)
+    wf.exact(value, template("filing-action"), "filing action")
+    for key in ("actor", "note"):
+        wf.text(value[key], key)
+    if value["due_date"] is not None:
+        ws._day(value["due_date"])
+    action = value["action"]
+    transitions = {"review": ("draft", "reviewed"), "authorize": ("reviewed", "authorized"),
+                   "begin": ("authorized", "submission_unconfirmed"),
+                   "not-submitted": ("submission_unconfirmed", "reviewed"),
+                   "receipt": ("submission_unconfirmed", "submitted"), "response": ("submitted", "submitted")}
+    with _edit(root, "filing_" + str(action)) as state:
+        record = state["filings"].get(value["filing_id"])
+        if record is None:
+            raise ws.WorkspaceError("Filing not found.")
+        st.version(record, expected)
+        _check_snapshots(root, record, live=action in {"review", "authorize", "begin"})
+        if action == "cancel":
+            if record["state"] not in {"draft", "reviewed", "authorized"}:
+                raise ws.WorkspaceError("An attempted/submitted filing cannot be cancelled locally; investigate the external result.")
+            next_state = "cancelled"
+        elif action in transitions:
+            before, next_state = transitions[action]
+            if record["state"] != before:
+                raise ws.WorkspaceError("Invalid filing transition; inspect current state and evidence before proceeding.")
+        else:
+            raise ws.WorkspaceError("Unknown filing action.")
+        if action in {"review", "authorize", "begin"}:
+            config = _config(root, state)
+            if st.digest(config) != record["configuration_sha256"] or record["unresolved_items"]:
+                raise ws.WorkspaceError("Resolve draft questions or changed accounting configuration in a new version.")
+            _check_local_reports(root, record, state)
+        if action == "receipt":
+            wf.text(value["external_id"], "actual transmission reference")
+            if any(row["receipt"] and row["receipt"]["external_id"] == value["external_id"] for row in state["filings"].values()):
+                raise ws.WorkspaceError("Transmission reference already recorded; inspect duplicate evidence.")
+        elif value["external_id"] is not None:
+            raise ws.WorkspaceError("External reference belongs only to receipt recording.")
+        if action == "response":
+            if value["response_kind"] not in {"acknowledgement", "request_for_information", "assessment", "rejection", "other"}:
+                raise ws.WorkspaceError("Record the observed response type; do not infer acceptance.")
+        elif value["response_kind"] is not None or value["due_date"] is not None:
+            raise ws.WorkspaceError("Response metadata requires an actual response.")
+        evidence = _snapshot(root, value["evidence_file"], record["period"][:4])
+        event = {"action": action, "actor": value["actor"], "note": value["note"], "recorded_at": ws._now(),
+                 "evidence": evidence, "payload_sha256": record["payload"]["sha256"],
+                 "external_id": value["external_id"], "response_kind": value["response_kind"], "due_date": value["due_date"]}
+        record["events"].append(event)
+        record["state"] = next_state
+        if action == "receipt":
+            record["receipt"] = event
+        elif action == "response":
+            record["responses"].append(event)
+    return {"filing_id": value["filing_id"], "state": record["state"], "sha256": st.digest(record),
+            "execution": "local_evidence_record_only"}
+
+
+def status(root):
+    root = ws._workspace(root)
+    with ws._locked(root):
+        state = _load(root)
+        config = state["configuration"]
+        return {"accounting_system": config["system"] if config else "undecided",
+                "configuration_sha256": st.digest(config) if config else None,
+                "product": config["product"] if config else None,
+                "method": config["method"] if config else "unresolved",
+                "entry_count": len(state["entries"]),
+                "filings": [{"filing_id": row["filing_id"], "form": row["form"], "period": row["period"],
+                             "state": row["state"], "responses": len(row["responses"])} for row in state["filings"].values()],
+                "transmission": "not_implemented", "tax_form_calculations": "not_implemented"}

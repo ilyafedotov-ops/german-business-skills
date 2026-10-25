@@ -89,6 +89,11 @@ class PackagingTests(unittest.TestCase):
                         capture_output=True, text=True, encoding="utf-8")
                     self.assertEqual(status.returncode, 0, status.stderr)
                     self.assertEqual(json.loads(status.stdout)["language"], language)
+                    choice = subprocess.run(
+                        [sys.executable, "-B", str(skill / "scripts/desk.py"), "accounting-status", "--root", str(private)],
+                        cwd=self.base, capture_output=True, text=True, encoding="utf-8")
+                    self.assertEqual(choice.returncode, 0, choice.stderr)
+                    self.assertEqual(json.loads(choice.stdout)["accounting_system"], "undecided")
                     overview = subprocess.run(
                         [sys.executable, "-B", str(skill / "scripts/desk.py"), "overview", "--root", str(private), "--period", "2026-10"],
                         cwd=self.base, capture_output=True, text=True, encoding="utf-8")

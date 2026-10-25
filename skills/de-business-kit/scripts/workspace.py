@@ -273,7 +273,8 @@ def _evidence_path(root: Path, value: str) -> Path:
         raise WorkspaceError("Evidence must be a relative private-workspace file.")
     path = _inside(root, value)
     mutable = {PROFILE, DOCUMENTS, EVENTS, MARKER, RUNTIME, LOCK,
-               "00_admin/tasks.json", "00_admin/questions.json", "00_admin/decisions.json", "00_admin/casework.json"}
+               "00_admin/tasks.json", "00_admin/questions.json", "00_admin/decisions.json", "00_admin/casework.json",
+               "04_accounting/register.json"}
     if (path.relative_to(root).as_posix() in mutable
             or path.exists() and any((root / item).exists() and path.samefile(root / item) for item in mutable)):
         raise WorkspaceError("Use a preserved evidence document or history snapshot, not a mutable administrative file.")

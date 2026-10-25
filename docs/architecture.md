@@ -6,7 +6,9 @@ Windows users can start without Python using [native Windows tools](windows.md).
 
 Project version: **0.5.0 preview**. Source review: **2026-10-25**.
 
-Read the [domain ontology](ontology.md) for entities, relationships and state meanings. The baseline description below is supplemented by the **local casework extension** section: `desk.py` and `casefiles/` currently exist as working-tree additions. They are not evidence of a published release or completed desktop integration.
+Read the [domain ontology](ontology.md) for entities, relationships and state meanings. The **local casework extension** is part of the source implementation; it is not evidence of a published release or completed desktop integration.
+
+The [accounting workflow](accounting.md) adds an onboarding-selected authoritative system, limited local cash journal and filing evidence lifecycle through the existing `desk.py` entry point. `casefiles/accounting.py` stores additive state in `04_accounting/register.json`; it reuses workspace locks, evidence fingerprints and history, and checks register state against its latest audit checkpoint. Local cash reports include source-entry/configuration fingerprints and per-account reconciliation CSVs. Filing versions freeze payload/source files, separate review/authorization from uncertain attempts and manually observed receipts/responses, and block stale local-report preflight. No provider/ERiC transport or complete statutory tax calculator is added.
 
 ## Intended result
 

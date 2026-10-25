@@ -6,12 +6,29 @@ import json
 import sys
 
 import workspace as ws
+from casefiles import accounting
 from casefiles import bank, documents, archive, folders, invoice_xml, overview, reviews, storage
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
+    accounting_template = sub.add_parser("accounting-template")
+    accounting_template.add_argument("--kind", choices=["configuration", "entry", "filing", "filing-action"], required=True)
+    for name in ("accounting-status", "accounting-configure", "entry-post", "entry-reverse", "period-report", "filing-create", "filing-show", "filing-action"):
+        part = sub.add_parser(name)
+        part.add_argument("--root", required=True)
+        if name in {"accounting-configure", "entry-post", "filing-create", "filing-action"}:
+            part.add_argument("--input", required=True)
+        if name in {"accounting-configure", "filing-action"}:
+            part.add_argument("--expected-sha256", required=name == "filing-action")
+        if name == "filing-show":
+            part.add_argument("--id", required=True)
+        if name == "period-report":
+            part.add_argument("--period", required=True)
+        if name == "entry-reverse":
+            for flag in ("entry-id", "reversal-id", "evidence", "actor", "note"):
+                part.add_argument("--" + flag, required=True)
     template = sub.add_parser("template")
     template.add_argument("--kind", choices=["proposal", "bank-mapping", "source-check", "extracted-field"], required=True)
     verify = sub.add_parser("verify-archive")
@@ -52,7 +69,28 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         command = args.command
-        if command == "template":
+        if command == "accounting-template":
+            result = accounting.template(args.kind)
+        elif command in {"accounting-status", "accounting-configure", "entry-post", "entry-reverse", "period-report", "filing-create", "filing-show", "filing-action"}:
+            root = ws._workspace(args.root)
+            value = ws._load(ws._inside(root, args.input)) if hasattr(args, "input") else None
+            if command == "accounting-status":
+                result = accounting.status(root)
+            elif command == "accounting-configure":
+                result = accounting.configure(root, value, args.expected_sha256)
+            elif command == "entry-post":
+                result = accounting.post(root, value)
+            elif command == "entry-reverse":
+                result = accounting.reverse(root, args.entry_id, args.reversal_id, args.evidence, args.actor, args.note)
+            elif command == "period-report":
+                result = accounting.export_report(root, args.period)
+            elif command == "filing-create":
+                result = accounting.create_filing(root, value)
+            elif command == "filing-show":
+                result = accounting.get_filing(root, args.id)
+            else:
+                result = accounting.filing_action(root, value, args.expected_sha256)
+        elif command == "template":
             result = {"proposal": reviews.proposal_template, "bank-mapping": bank.mapping_template,
                       "source-check": lambda: storage.template("source-check.json"),
                       "extracted-field": lambda: storage.template("extracted-field.json")}[args.kind]()

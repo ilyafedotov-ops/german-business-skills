@@ -10,6 +10,8 @@ Initialize using `workspace.py init --root <private-path> --year <year> --langua
 
 ## Stage 1 — minimum business context
 
+During welcome, ask/reuse whether the user already maintains accounts in a particular software product or wants local records. Save that explicit choice through the [accounting workflow](accounting-workflow.md); no route or vendor is preselected. Keep the choice separate from EÜR/Bilanzierung and VAT facts. An undecided user can continue collecting documents.
+
 Gather these in small batches:
 
 | Group | Facts | Why |
