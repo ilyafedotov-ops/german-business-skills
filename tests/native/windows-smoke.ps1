@@ -23,6 +23,7 @@ try {
     $original = (Get-FileHash -LiteralPath $invoice -Algorithm SHA256).Hash
     $start = & $kit -Action start -Root $root -Year 2026 -Language ru | ConvertFrom-Json
     Assert ($start.status -eq 'initialized') 'Start failed'
+    Assert (@(Get-ChildItem -LiteralPath (Join-Path $root '06_bookkeeping')).Count -eq 0) 'Empty months should not be created before intake'
     $profile = Join-Path $root '01_profile/business.json'
     $before = (Get-FileHash -LiteralPath $profile).Hash
     $resume = & $kit -Action start -Root $root -Language en | ConvertFrom-Json

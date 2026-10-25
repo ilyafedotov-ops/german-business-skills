@@ -63,9 +63,7 @@ class WorkspaceTests(unittest.TestCase):
             self.assertIsNone(fact["value"])
             self.assertEqual(fact["status"], "unknown")
             self.assertEqual(fact["source"], {"kind": None, "ref": None})
-        for month in range(1, 13):
-            for part in ("originals", "derived", "proposals"):
-                self.assertTrue((self.root / f"06_bookkeeping/2026/{month:02d}/{part}").is_dir())
+        self.assertEqual(list((self.root / "06_bookkeeping").iterdir()), [])
         for name in ("tasks", "questions", "decisions"):
             self.assertEqual(self.load(f"00_admin/{name}.json"), [])
         self.assertEqual(self.load(workspace.DOCUMENTS)["documents"], [])
@@ -74,6 +72,19 @@ class WorkspaceTests(unittest.TestCase):
         if os.name == "posix":
             self.assertEqual(stat.S_IMODE(self.root.stat().st_mode), 0o700)
             self.assertEqual(stat.S_IMODE((self.root / workspace.PROFILE).stat().st_mode), 0o600)
+
+    def test_intake_creates_only_the_required_month_and_preserves_legacy_empty_folders(self):
+        archive = self.root / '06_bookkeeping'
+        workspace.ingest_document(self.root, self.source(), '2026-10')
+        self.assertEqual([p.name for p in archive.iterdir()], ['2026'])
+        self.assertEqual([p.name for p in (archive / '2026').iterdir()], ['10'])
+        self.assertEqual([p.name for p in (archive / '2026/10').iterdir()], ['originals'])
+        old_empty = archive / '2026/01/proposals'
+        old_empty.mkdir(parents=True)
+        workspace.start_workspace(self.root, 2027, 'de')
+        self.assertTrue(old_empty.is_dir())
+        self.assertFalse((archive / '2027').exists())
+        self.assertEqual(workspace.verify_workspace(self.root)['status'], 'ok')
 
     def test_init_persists_explicit_language_and_workflow_mode(self):
         target = self.base / "english-workspace"
@@ -241,7 +252,7 @@ class WorkspaceTests(unittest.TestCase):
             workspace.ingest_document(self.root, self.source(), "2026-10")
         self.assertEqual((self.root / workspace.PROFILE).read_bytes(), before)
         self.assertEqual((self.root / workspace.DOCUMENTS).read_bytes(), registry_before)
-        self.assertEqual(list((self.root / "06_bookkeeping/2026/10/originals").iterdir()), [])
+        self.assertFalse((self.root / "06_bookkeeping/2026/10").exists())
 
     def test_record_keeps_before_after_history_and_evidence(self):
         first = workspace.record_fact(self.root, self.record())
@@ -383,6 +394,7 @@ class WorkspaceTests(unittest.TestCase):
 
     def test_verify_flags_crash_orphan_without_following_originals_symlinks(self):
         original = self.root / "06_bookkeeping/2026/10/originals/orphan.pdf"
+        original.parent.mkdir(parents=True)
         original.write_bytes(b"Unindexed crash orphan")
         external = self.base / "outside-originals"
         external.mkdir()
@@ -405,7 +417,7 @@ class WorkspaceTests(unittest.TestCase):
         with self.assertRaises(workspace.WorkspaceError):
             workspace.ingest_document(self.root, self.source("key.pfx"), "2026-10")
         originals = self.root / "06_bookkeeping/2026/10/originals"
-        originals.rmdir()
+        originals.parent.mkdir(parents=True)
         outside = self.base / "outside"
         outside.mkdir()
         self._symlink(originals, outside, True)
@@ -418,6 +430,7 @@ class WorkspaceTests(unittest.TestCase):
         source = self.source()
         digest = hashlib.sha256(source.read_bytes()).hexdigest()
         target = self.root / f"06_bookkeeping/2026/10/originals/{digest}.pdf"
+        target.parent.mkdir(parents=True)
         target.write_bytes(b"preexisting-do-not-overwrite")
         with self.assertRaises(FileExistsError):
             workspace.ingest_document(self.root, source, "2026-10")

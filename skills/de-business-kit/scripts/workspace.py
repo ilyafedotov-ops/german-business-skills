@@ -622,10 +622,8 @@ def init_workspace(root: PathInput, year: int, language: str = "ru", mode: str =
         if any(child.name != LOCK for child in location.iterdir()):
             raise WorkspaceError("Initialization requires an empty directory.")
         directories = ["00_admin", "00_admin/inbox", "01_profile", "02_registration",
-                       "03_banking", "04_accounting", f"05_tax/{year}", "07_exports",
+                       "03_banking", "04_accounting", f"05_tax/{year}", "06_bookkeeping", "07_exports",
                        "08_correspondence", "09_audit/history"]
-        directories.extend(f"06_bookkeeping/{year}/{month:02d}/{part}"
-                           for month in range(1, 13) for part in ("originals", "derived", "proposals"))
         for relative in directories:
             _mkdir(location / relative)
         marker = {"schema": SCHEMA, "schema_version": VERSION, "workspace_id": str(uuid.uuid4()),

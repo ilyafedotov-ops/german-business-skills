@@ -72,6 +72,7 @@ class NativeInteropTests(unittest.TestCase):
         self.assertEqual((result['language'], result['mode']), ('en', 'bookkeeping'))
         self.assertEqual((self.root / ws.PROFILE).read_bytes(), before)
         original = self.root / '06_bookkeeping/2026/10/originals/orphan.csv'
+        original.parent.mkdir(parents=True)
         original.write_bytes(b'unindexed')
         result = self.run_native('verify')
         self.assertEqual(result['status'], 'needs_review')

@@ -43,7 +43,7 @@ All relative input paths below are relative to `--root`, not the current shell d
 | `08_correspondence/` | Relevant correspondence |
 | `09_audit/events.json`, `09_audit/history/` | Local events and before/after profile snapshots |
 
-The initializer creates all twelve months for the chosen year. Later intake may create a further period. A folder period is not a tax-period determination. Keep invoice, service, receipt and payment dates in extracted records. Missing values stay unknown.
+The initializer leaves the document archive empty. Intake creates only the selected storage month; derived files and proposals get directories when an operation needs them. Existing empty month folders are preserved. A folder period is not a tax-period determination. Keep invoice, service, receipt and payment dates in extracted records. Missing values stay unknown.
 
 The task/question/decision files start as empty arrays. Use the validated `entry` command below to preserve IDs, transitions, locks and history. Legacy untyped records are flagged for reviewed conversion; never silently clear or migrate them. A due date in a file does not create an actual reminder.
 

@@ -103,7 +103,7 @@ The original v0.1 synthetic end-to-end local run initialized the workspace, reco
 | Area | Verified behavior |
 |---|---|
 | Installation | Correct local Codex/Claude directories; both-target preflight; dry run; preserve existing skills/configuration; reject symlink/traversal inputs |
-| Workspace | Blank profile; all twelve months; no overwrite; actual Git/worktree/bare-repo and skill boundaries, including a later Git initialization |
+| Workspace | Blank profile; months created on intake; no overwrite; actual Git/worktree/bare-repo and skill boundaries, including a later Git initialization |
 | Updates | Provenance requirements; before/after profile history; active lock protection; corrupt audit preflight |
 | Preferences | Persisted language/mode; independent changes; no-op idempotence; history/audit; legacy missing-mode default; existing profile and VAT facts preserved |
 | Original documents | Byte preservation; content deduplication; tamper detection; private paths; extension/size limits |

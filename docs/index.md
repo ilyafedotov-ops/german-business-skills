@@ -1,5 +1,7 @@
 # Documentation
 
+[Workspace folders and language](folder-structure.md) — current behavior and proposed English/Russian/German structure.
+
 [Try the guided workspace prototype](prototype.md) — fictional records, no installation needed.
 
 [Choose your accounting system, review cash records and track filings](accounting.md).
