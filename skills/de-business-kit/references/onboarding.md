@@ -2,6 +2,8 @@
 
 Use for first use, “help me set this up,” “continue,” or a confused user. Offer outcomes in the active language: **Set up my business**, **Organize this month**, **Tax questions and preparation**, **Continue my work**. Infer a clear choice from the request; do not force a mode menu. Keep the `tax-consultant` machine ID for existing workspaces; show the preparation-focused label.
 
+If the user already has email, cloud/accounting records or a nonempty folder, follow [existing-data onboarding](existing-data.md) before proposing fresh setup. Inspect source access and existing workspace markers; do not initialize over the source or reset accounting/VAT history.
+
 ## First useful task
 
 1. Identify whether the user means their own business or a service for others. For the latter, apply [legal boundaries](legal-boundaries.md). Ask/reuse the language, actual host and Windows/macOS environment. Inspect available tools; do not assume Python, web research or browser control from plugin installation.

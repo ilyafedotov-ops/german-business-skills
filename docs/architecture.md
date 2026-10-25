@@ -173,3 +173,7 @@ One portable skill and one shared profile avoid divergent state across modes and
 Automated checks are `python3 -B -m unittest discover -s tests -v` and `python3 tools/check_package.py`. Tests cover local contracts; package checks cover structure, translations, JSON and local links. The [validation record](validation.md) separates historical runs, behavioral trials and integration gaps. A passing test run does not establish tax correctness, production connector support or desktop usability. This architecture describes the current source, not a certification or a release declaration.
 
 The [core capability plan](core-capabilities.md) defines the unfinished ledger and ELSTER work and its acceptance evidence.
+
+## Existing sources and folder inventory
+
+[Existing-data onboarding](../skills/de-business-kit/references/existing-data.md) discovers actual host plugins/API/browser/computer tools and records bounded access observations in a localized, human-maintained source map. It introduces no network adapter or automatic connection registry. `casefiles/folders.py`, exposed by `desk.py scan-folder`, writes a bounded metadata-only preview before selected intake. It leaves source contents unchanged, excludes detected links/reparse points, hidden entries, key files and nested workspaces, and reports omissions and traversal limits. Cloud residency is not independently verified. A source map or inventory is not import completeness or permission to write to a service.

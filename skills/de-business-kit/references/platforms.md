@@ -37,6 +37,8 @@ Sources:
 
 ## Browser and computer capabilities
 
+For connecting existing email/accounting services and importing their records, use [existing-data onboarding](existing-data.md). Verify the actual operation and account; tool discovery is not connection proof.
+
 Prefer a supported connector or documented API for suitable operations, then
 dedicated Browser/Chrome tools. Use native screen control only when the actual
 host supports it. Otherwise produce a field worksheet for manual entry.

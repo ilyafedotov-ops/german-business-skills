@@ -3,7 +3,7 @@ name: de-business-kit
 description: >-
   Organize a user's own German Freiberufler or Einzelunternehmen/Gewerbe business:
   English/Russian intake, private files, registration and ELSTER worksheets,
-  guided setup, international payments, reverse charge, Gewerbe/Freiberufler clarification,
+  guided setup from existing email, accounting services or mixed folders, international payments, reverse charge, Gewerbe/Freiberufler clarification,
   self-managed bookkeeping, document review, tax reporting preparation, Lexware Office, and bank/software
   comparisons. Use for German sole-trader tax questions, receipts, reconciliation,
   starting or running a business; русский: бухгалтерия, налоговые вопросы,
@@ -44,6 +44,7 @@ For first use, setup confusion, a demonstration or “continue,” follow [guide
 | Task | Read | Produce |
 |---|---|---|
 | First use, collect facts, establish work split | [intake](references/intake.md) | Provenanced profile; prioritized missing facts |
+| Existing Gmail/email, Lexware, sevdesk, WISO or mixed folders | [existing data](references/existing-data.md) | Verified access route, private source map, bounded folder preview and scoped intake |
 | Setup, demonstration, resume or recovery | [onboarding](references/onboarding.md) | Guided first task, truthful setup status and next action |
 | Open, extend or change an activity | [formation](references/formation.md) | Registration plan; form worksheet; unresolved choices |
 | Clarify Gewerbe/Freiberufler or mixed activities | [classification](references/classification.md) | Evidence-linked activity worksheet and focused review questions |

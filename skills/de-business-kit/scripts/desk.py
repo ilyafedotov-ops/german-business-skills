@@ -6,7 +6,7 @@ import json
 import sys
 
 import workspace as ws
-from casefiles import bank, documents, archive, invoice_xml, overview, reviews, storage
+from casefiles import bank, documents, archive, folders, invoice_xml, overview, reviews, storage
 
 
 def main(argv=None):
@@ -17,9 +17,12 @@ def main(argv=None):
     verify = sub.add_parser("verify-archive")
     verify.add_argument("--bundle", required=True)
     commands = {}
-    for name in ("receive", "catalog", "catalog-save", "record", "proposal-save", "source-check", "observe", "bank-preview", "bank-approve", "inspect-xml", "overview", "archive"):
+    for name in ("scan-folder", "receive", "catalog", "catalog-save", "record", "proposal-save", "source-check", "observe", "bank-preview", "bank-approve", "inspect-xml", "overview", "archive"):
         commands[name] = sub.add_parser(name)
         commands[name].add_argument("--root", required=True)
+    commands["scan-folder"].add_argument("--source", required=True)
+    commands["scan-folder"].add_argument("--max-entries", type=int, default=1000)
+    commands["scan-folder"].add_argument("--max-depth", type=int, default=10)
     receive = commands["receive"]
     receive.add_argument("--source", required=True, nargs="+")
     receive.add_argument("--period", required=True)
@@ -59,7 +62,9 @@ def main(argv=None):
             root = ws._workspace(args.root)
             def input_file(relative):
                 return ws._load(ws._inside(root, relative))
-            if command == "receive":
+            if command == "scan-folder":
+                result = folders.scan(root, args.source, args.max_entries, args.max_depth)
+            elif command == "receive":
                 if args.title is not None and len(args.source) != 1:
                     raise ws.WorkspaceError("A custom title can describe only one source at a time.")
                 results, errors = [], []

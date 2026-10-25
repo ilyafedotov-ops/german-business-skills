@@ -97,6 +97,14 @@ class PackagingTests(unittest.TestCase):
                     self.assertTrue((private / view["html_path"]).is_file())
                     snapshot = json.loads((private / "00_admin/overview.json").read_text(encoding="utf-8"))
                     self.assertEqual(snapshot["capabilities"]["elster_submission"], "not_implemented")
+                    source_folder = self.base / (host + "-" + language + "-existing")
+                    source_folder.mkdir()
+                    (source_folder / "invoice.pdf").write_bytes(b"Synthetic preserved file")
+                    scanned = subprocess.run(
+                        [sys.executable, "-B", str(skill / "scripts/desk.py"), "scan-folder", "--root", str(private), "--source", str(source_folder)],
+                        cwd=self.base, capture_output=True, text=True, encoding="utf-8")
+                    self.assertEqual(scanned.returncode, 0, scanned.stderr)
+                    self.assertEqual(json.loads(scanned.stdout)["counts"]["candidate"], 1)
                     seed = subprocess.run(
                         [sys.executable, "-B", str(skill / "scripts/workflows.py"), "template", "--kind", "classification"],
                         cwd=self.base, capture_output=True, text=True, encoding="utf-8")

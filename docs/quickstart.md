@@ -2,6 +2,8 @@
 
 [English](quickstart.md) | [Русский](quickstart.ru.md)
 
+Already have records in Gmail, Lexware, sevdesk, WISO or a folder? [Start with those records](existing-data.md).
+
 Version 0.5.0 preview supports managing your own German sole-trader bookkeeping/accounting and tax reporting. You can prepare registration documents, organize your records, reconcile payments and research tax questions. Complete ledger functionality and ELSTER submission integration are core capabilities still to be completed: the current utilities prepare evidence, proposals and form worksheets. Optional accountant consultation or export addresses a specific need; it is not a required stage.
 
 ## Choose the app you already use

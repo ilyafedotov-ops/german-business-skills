@@ -2,6 +2,8 @@
 
 **English** · [Русский](README.ru.md)
 
+You can also start from existing email, accounting services or a mixed folder. [Bring existing data](docs/existing-data.md).
+
 Open-source assistance for starting and running a sole-trader business in Germany, including **Freiberufler** and **Einzelunternehmen/Gewerbe**. The primary workflow is managing your own bookkeeping/accounting and tax reporting. One portable skill for Codex and Claude Code provides a shared business profile, organized private files and three explicit working modes. Accountant consultation and exports are optional branches for a specific need.
 
 **Version 0.5.0 — preview.** User documentation, conversations and generated documents are supported in **English and Russian**. Official German form labels remain in German so users can find the corresponding fields. Internal agent references and machine-readable JSON keys remain in English; human-readable content follows the chosen language.

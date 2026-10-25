@@ -10,3 +10,5 @@
 | Evidence | [Actual validation and limits](validation.md), [synthetic scenarios](../evals/scenarios.json), [document source checks](../skills/de-business-kit/references/document-sources.md) |
 
 The skill routes one task at a time through focused references. User files belong in a separate private workspace; public fixtures contain synthetic data only.
+
+[Existing email, accounting services and folders](existing-data.md).

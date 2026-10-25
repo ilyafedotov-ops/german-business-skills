@@ -4,7 +4,17 @@
 
 Checked **2026-10-25**. Tests use synthetic temporary data, never live business records or accounts.
 
-## Current local validation (v0.5, 2026-10-25)
+## Existing-data onboarding extension (2026-10-25)
+
+`python3 -B -m unittest discover -s tests -v` — **146 passed** on local macOS / Python **3.14.6**. Six new folder-preview tests cover mixed supported/unsupported formats, source preservation, no implicit import, symlinks, nested workspaces, source/destination overlap, bounded traversal, large-file exclusions, native hidden flags and the CLI. Windows/macOS hidden attributes are simulated at the filesystem metadata boundary; this is not a native Windows run. Detached Codex/Claude package tests now run `scan-folder` in both language workspaces.
+
+Independent read-only review found hidden attributes were not excluded when names lacked a dot prefix. The regression failed before the fix and passed afterward; the reviewer rechecked all six tests. Review also narrowed the documentation: the scanner skips detected links/reparse points and never opens file contents, but does not independently establish cloud residency. No live provider access was tested. Package/link/locale checks, skill frontmatter validation and `git diff --check` passed.
+
+The new source map is a human-maintained bilingual template, not an implemented connection registry. The provider access reference links dated official Gmail, Lexware, sevdesk and Buhl documentation; availability/permissions must still be verified for the real account and operation. The scenario catalog now contains **34 cases**, including Gmail import scope, WISO ambiguity, mixed-folder onboarding and export/download side effects. Not all cases have been executed.
+
+Fresh Codex subagent trial (macOS / Python 3.14.6; exact desktop/model build not exposed): supplied only the skill location, a synthetic existing-business request, the three mixed fixture paths/folder and an isolated destination, with no evaluation criteria or expected answer. The prompt mentioned Gmail and unidentified WISO but authorized supplied-file work only. The agent previewed 3 candidates and 1 unsupported README, imported 3/3 originals without errors, saved a source map, bank mapping preview, one question and two pending tasks, and left all three documents needing review. Parent checked the saved verification/provenance evidence and independently compared all four source hashes/modification times and three copied originals. Gmail tool metadata was inspected, but no real service/account calls occurred; WISO remained unidentified. No connector success, independent-ledger reconciliation, approval, migration, archive, posting or filing was fabricated. Real-data processing remained `setup_incomplete`; synthetic work continued. This is a bounded offline workflow trial, not live connector/native-desktop acceptance or an automatic activation/baseline comparison.
+
+## Document desk validation (v0.5, 2026-10-25)
 
 `python3 -B -m unittest discover -s tests -v` — **140 passed**, macOS / Python **3.14.6**. This includes 33 new document/review/bank/archive/XML/evidence/journey tests and the 107-test baseline. Extracted Codex/Claude packages run the desk overview in both languages after the source copy is removed. No new production dependencies were added.
 
@@ -21,7 +31,7 @@ Checked **2026-10-25**. Tests use synthetic temporary data, never live business 
 
 Browser rendering used a temporary loopback static server serving only synthetic fixtures because the automation tool blocks `file://`. The product itself remains a generated local page with no application server or write actions. This does not prove direct-file behavior in every browser, desktop plugin discovery, native Windows operation, or usability with nontechnical participants. Hosted Windows/macOS CI has **not** run for these local v0.5 changes. Earlier CI evidence below belongs to v0.3.
 
-The current evaluation catalog contains **30 scenarios**. They are not all executed or an automated tax-correctness certificate. Fresh-session trial evidence is recorded separately below; no without-skill baseline comparison or automatic activation acceptance is claimed.
+At that document-desk checkpoint, the evaluation catalog contained **30 scenarios**. They are not all executed or an automated tax-correctness certificate. Fresh-session trial evidence is recorded separately below; no without-skill baseline comparison or automatic activation acceptance is claimed.
 
 Self-managed accounting/reporting is the primary scope. The document desk is implemented; the complete accounting ledger, reporting calculation engine and ELSTER transmission remain core work in [the capability plan](core-capabilities.md). Optional archive verification proves packaged bytes, not complete accounts, filing or Finanzamt acceptance. Updater/restore/migration automation, integrated e-invoice validation, release publication and native desktop acceptance also remain incomplete.
 

@@ -122,7 +122,7 @@ def snapshot(source: Path) -> Dict[str, bytes]:
         "assets/casework-messages.json", "assets/proposal.json", "assets/source-check.json",
         "assets/extracted-field.json",
         *("scripts/casefiles/" + name + ".py" for name in (
-            "__init__", "storage", "documents", "reviews", "bank", "summary", "overview", "archive", "invoice_xml")),
+            "__init__", "storage", "documents", "folders", "reviews", "bank", "summary", "overview", "archive", "invoice_xml")),
     }
     if not all(prefix + name in files for name in required):
         raise BuildError("The canonical skill is missing a required runtime resource.")
