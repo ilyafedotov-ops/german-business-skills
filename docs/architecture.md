@@ -1,63 +1,73 @@
-# Архитектура German Business Kit
+# German Business Kit architecture
 
-Версия проекта: 0.1.0. Источники проверены 25.10.2026.
+[English](architecture.md) · [Русский](architecture.ru.md)
 
-## Пользовательский результат
+Project version: **0.2.0 preview**. Source review: **2026-10-25**.
 
-Предприниматель приходит с задачей — открыть деятельность, разобрать документы, подготовить месяц для Steuerberater или заполнить форму. Skill восстанавливает состояние из личных файлов, выясняет несколько недостающих фактов и производит проверяемый результат. Документы и принятые решения не теряются с окончанием чата.
+## Intended result
 
-Первый выпуск предназначен для физического лица, ведущего деятельность в Германии: Freiberufler, Einzelunternehmen/Gewerbe и несколько видов деятельности одного человека. Корпорации, партнёрства, payroll, сложные международные структуры и кассовые системы не включены в обещанную область автоматизации. По таким случаям можно собрать факты и подготовить предметный запрос специалисту.
+An entrepreneur brings a task: open an activity, organize receipts, prepare a month for a Steuerberater, understand a tax question or draft an official form. The skill resumes from private files, collects the few missing facts that affect the result and produces work the user can inspect. Evidence and recorded decisions remain available after the conversation ends.
 
-## Почему один входной skill
+The supported scope is a natural person operating in Germany: Freiberufler, Einzelunternehmen/Gewerbe and multiple activities of the same person. Corporations, partnerships, payroll, complex international structures and cash-register systems are outside the promised automation scope. The skill can collect facts and prepare a specific specialist handoff for those cases.
 
-Пользователю достаточно одного имени. Внутри — десять подключаемых по задаче модулей. Это уменьшает риск противоречий: профиль предпринимателя, история НДС, правила хранения и задачи используются совместно. Полный справочник загружается только при необходимости. При дальнейшем росте самостоятельные навыки можно выделить из модулей, сохранив формат данных и единые правила внешних действий.
+## One entry point, shared state
 
-| Уровень | Ответственность |
+The portable entry point is `de-business-kit`. Its `SKILL.md` routes to **12 reference modules**, loaded as the task requires. The business profile, VAT history, evidence, questions and decisions are shared, which avoids creating conflicting records for separate modes or languages. Independent skills could be extracted later while preserving the common data contract.
+
+| Layer | Responsibility |
 |---|---|
-| Входной SKILL.md | Понимание задачи, выбор модуля, общие ограничения, результат |
-| Модули references | Пошаговые сценарии и первичные источники |
-| Локальные утилиты | Повторяемые файловые операции и арифметика |
-| Личный workspace | Факты, оригиналы, предложения, решения, состояния |
-| Возможности хоста | Модель, чтение файлов, web search, браузер и разрешения |
-| Бухгалтерская система/ведомство | Реальные проводки, отправки и официальные подтверждения |
+| `SKILL.md` | Task routing, language/mode selection, common invariants and result reporting |
+| `references/` | Workflows, source maps and rules for the current task |
+| `assets/en/`, `assets/ru/` | Equivalent user-facing report templates, indexed by `assets/locales.json` |
+| Local Python utilities | Repeatable filesystem operations, preference persistence and deterministic reconciliation |
+| Private workspace | Facts, originals, proposals, decisions, source checks and operation evidence |
+| Host capabilities | Model, file access, web research, browser tools and task permissions |
+| Accounting product / authority | Actual postings, transmissions, receipts and official responses |
 
-Инструкция skill не создаёт браузер, API и права доступа. Поддержка определяется доступными инструментами конкретного сеанса. Скрипты v0.1 работают без сети; модель самого хоста может обрабатывать данные удалённо.
+The skill cannot create browser tools, API access or permissions. Availability depends on the host and current session. Bundled scripts operate offline; the host's model can still process selected data remotely.
 
-## Состояние и доказательства
+## Languages and modes
 
-Канонический профиль — `01_profile/business.json`. Каждое поле хранит значение, статус, источник, дату фиксации и дату начала действия. `unknown`, `declared`, `proposed`, `verified` и `needs_review` имеют разные значения. Подтверждённость опирается на факты/документы, а не уверенность LLM. Предыдущие значения остаются в истории.
+The two named working modes are `bookkeeping` and `tax-consultant`; `general` covers startup, organization and routing. Bookkeeping prepares evidence, records, reconciliation and monthly handoff. Tax-consultant mode produces sourced explanations, comparisons, estimates and proposed decisions. A tax issue encountered during bookkeeping can use the consultation module without abandoning the other work or changing the saved default. See the [mode guide](modes.md) for usage rather than a second implementation of those workflows here.
 
-Индекс `00_admin/documents.json` связывает оригинал и его хеш с производными данными. Месяц папки служит организации; он не заменяет дату счёта, услуги, оплаты или налоговый период. Виды деятельности имеют отдельные ID, но оценка НДС учитывает предпринимателя целиком. Основание: [§2 UStG](https://www.gesetze-im-internet.de/ustg_1980/__2.html).
+`00_admin/workspace.json` stores the default `language` and `mode`. The `configure` command persists an explicit preference change with history and an audit event; `status` exposes the current values. An explicit one-task request takes priority in the conversation. A request to translate one report does not replace the saved language or rewrite historical records.
 
-Для документов процесс выглядит так: сохранение оригинала → извлечение фактов → предложение → проверка → реальное действие в нужной системе → проверка полученного состояния. При этом v0.1 реализует локальную подготовку и сверку, а внешние действия остаются отдельной возможностью хоста или ручной работой пользователя.
+User-facing conversations and Markdown reports support **English and Russian**. Agent instructions, JSON keys, enum values, paths and IDs remain shared in English. Exact German terms and form labels are preserved and explained in the chosen language. A translation is a linked rendering of the same evidence and decision, not new verification. Legacy `de` preferences remain accepted by the CLI, but this release has no complete German template set.
 
-## Работа с данными
+The workspace format remains **schema version 1**. A v0.1 workspace without `mode` is read as `general`; it does not need to be recreated. Changing a language or mode never changes profile facts, `vat_current_regime`, bookkeeping method or authority filings. The same profile and evidence history serve both languages and all modes.
 
-Код, шаблоны и синтетические тесты публичны. Файлы предпринимателя находятся отдельно. `.gitignore` — дополнительная защита от ошибки; она не заменяет отдельный каталог, шифрование и ограничения доступа. Исходные документы не меняются. OCR, извлечённый JSON и человекочитаемые версии хранятся отдельно.
+## Evidence and state
 
-Перед использованием реальных данных проверяется конкретный продукт AI, план, договорная модель, DPA при применимости, обучение, журналы, сроки хранения, трансграничная передача и сторонние коннекторы. Результат проверки не называется сертификатом GDPR. См. [privacy](../skills/de-business-kit/references/privacy.md).
+`01_profile/business.json` is the canonical profile. Each fact records a value, status, source, recording date and effective date. `unknown`, `declared`, `proposed`, `verified` and `needs_review` have distinct meanings. Verification depends on inspected evidence, not model confidence. Prior values remain in history.
 
-## Консультации и правовой контур
+`00_admin/documents.json` links originals, hashes and storage periods to subsequent work. Folder periods organize documents; they do not determine invoice, service, payment or tax dates. Activities have separate IDs, while VAT assessment considers the entrepreneur's whole enterprise. See [§2 UStG](https://www.gesetze-im-internet.de/ustg_1980/__2.html).
 
-Встроенные сценарии объясняют опубликованные правила, сопоставляют их с явно указанными фактами, показывают неопределённость и подготавливают решения для проверки. Обещание автором индивидуального налогового обслуживания — отдельный вопрос от публикации инструмента для собственных дел пользователя. Бесплатность и disclaimer сами по себе его не разрешают. В текущем StBerG важны [§2](https://www.gesetze-im-internet.de/stberg/__2.html) и [§6](https://www.gesetze-im-internet.de/stberg/__6.html); в 2026 году текст изменился. Подробности и границы — в [справке](../skills/de-business-kit/references/german-rules.md).
+Document handling preserves the original, extracts facts, prepares a proposal and records review before any authorized external action. Actual external states must be read back and evidenced. A local file is not a posted entry; a transmission receipt is not substantive acceptance. Consultation reports live in `05_tax/YYYY/consultations/` and link relevant questions, proposals or decisions.
 
-Для GoBD проект предоставляет организационную основу, хеши, историю и рабочие инструкции. Соответствие полного процесса хранения, исправлений, доступа и резервирования оценивается отдельно. Папка не объявляется ни автоматически соответствующей требованиям, ни автоматически незаконной. См. [BMF E-Rechnung FAQ](https://www.bundesfinanzministerium.de/Content/DE/FAQ/e-rechnung.html) и официальные GoBD, приведённые в справке.
+The scripts supply initialization, preference changes, evidenced profile updates, byte-preserving import, original integrity checks and explicit-reference CSV reconciliation. Locks coordinate script writers and individual JSON replacements are atomic. Copies, indexes, snapshots and audit events are separate writes, so the package does not promise a transaction across all files or a tamper-proof archive.
 
-## Развитие после первой версии
+## Data and professional boundaries
 
-| Этап | Результат | Условие готовности |
-|---|---|---|
-| 0.1 | Переносимый skill, справка, структура данных, импорт, сверка, установка | Локальные тесты; честно обозначенные границы |
-| 0.2 | Проверка на чистых Codex/Claude Desktop для macOS и Windows | Зафиксированные версии, тестовая анкета, установка, повторный запуск, синтетические документы |
-| 0.3 | Lexware Office read-only adapter | Проверенная версия API, минимальные права, тестовая среда, сверка полученных объектов |
-| 0.4 | Черновики через API и управляемая помощь с формами | Точный preview, нужная авторизация, повторное чтение, обработка таймаутов и предотвращение дублей |
-| 0.5 | Дополнительные программы, структурированные e-invoice validators, пакет для Steuerberater | Проверка реальных поддерживаемых форматов и единых тестовых сценариев |
-| Дальше | Плагины для распространения, дополнительные юрисдикции, многопользовательская работа | Отдельные требования, процессы поддержки и оценка модели услуг |
+Source code, templates and synthetic fixtures are public. Entrepreneur files belong in a separate private directory outside Git repositories. `.gitignore` is only an additional safeguard. Originals remain unchanged; OCR, extracted JSON and translations are derivatives. Review the actual AI product, plan, processing route and necessary terms before using real third-party personal data. Local storage alone does not establish local model processing or GDPR compliance; see [privacy](../skills/de-business-kit/references/privacy.md).
 
-Нет обещания автоматической интеграции со всеми банками или полностью автономной подачи ELSTER. Такие функции следует выпускать после проверки конкретных интерфейсов и процессов, а не добавлять одним предложением в prompt.
+Tax mode explains applicable rules, applies them to stated facts and prepares reviewable conclusions. It does not establish licensed Steuerberater status or professional representation. Publishing self-help software and offering individual services to others are different operating models; a free price or disclaimer does not resolve the latter. See current [StBerG §2](https://www.gesetze-im-internet.de/stberg/__2.html), [§6](https://www.gesetze-im-internet.de/stberg/__6.html) and the [German rules reference](../skills/de-business-kit/references/german-rules.md).
 
-## Поддержка актуальности
+Hashes, history and procedures support record organization; compliance of the complete retention and correction process requires separate assessment. The project does not declare an ordinary folder automatically compliant or automatically unlawful. See the [BMF E-Rechnung FAQ](https://www.bundesfinanzministerium.de/Content/DE/FAQ/e-rechnung.html) and the official GoBD sources in the rules reference.
 
-Для существенных решений хранить URL, дату проверки, относящийся период, краткий вывод и связанные задачи. Проверять законы перед применением к новому периоду, формы перед заполнением, условия банка/ПО перед рекомендацией или договором. Источники в релизе служат отправной точкой, а не постоянным разрешением использовать старое правило.
+## Current limits and future work
 
-Разделять тесты кода, проверки поведения skill и реальные интеграционные проверки. При найденной ошибке воспроизводить её синтетическим примером и добавлять проверку, которая действительно ловит эту ошибку.
+Version 0.2 adds language and mode support. It contains no production bank, Lexware or ELSTER connector, automatic filings, complete personal-tax engine, integrated OCR/XML validator or scheduler. Browser instructions use only capabilities actually available in the host. No end-to-end desktop integration test is implied by local tests.
+
+| Future work | Evidence needed before claiming support |
+|---|---|
+| Clean Codex / Claude Desktop checks on macOS and Windows | Recorded versions; installation, discovery, resumption and synthetic-document runs |
+| Lexware Office read-only adapter | Verified API version, minimum permissions, test environment and reconciled objects |
+| Draft writes and assisted forms | Concrete preview, scoped authorization, readback, timeout handling and duplicate prevention |
+| Additional accounting products and e-invoice validation | Verified supported formats, actual validators and shared behavioral cases |
+| Distribution plugins or additional jurisdictions | Separate requirements, maintenance process and service-model review |
+
+## Maintenance and validation
+
+Record URLs, check dates, applicable periods and supported conclusions for material decisions. Recheck laws for the relevant period, forms before filling them and provider terms before a recommendation or contract. Release sources are starting points rather than permanent authority to apply old rules.
+
+Keep English/Russian template roles and user guides aligned while leaving machine identifiers stable. Distinguish code tests, behavioral skill trials and live integration tests. Reproduce defects with synthetic data and add a check that catches the actual failure. See [validation](validation.md) for the work actually performed.

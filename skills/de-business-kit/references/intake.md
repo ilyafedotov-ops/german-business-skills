@@ -4,9 +4,9 @@ Collect what the current workflow needs. Do not demand a passport, every tax ide
 
 ## Stage 0 — establish the workspace and data boundary
 
-Ask/reuse: starting or existing business; country of residence and establishment; natural person or another legal form; chosen private local folder; desired language; assistant product and account/plan. Record model/provider and local/cloud execution separately in `00_admin/runtime.json`. Apply `privacy.md` before bringing real third-party data into context. No account credentials are required for intake.
+Ask/reuse: starting or existing business; country of residence and establishment; natural person or another legal form; chosen private local folder; desired language (English or Russian) and working mode; assistant product and account/plan. Infer the requested mode from a clear task rather than forcing a menu. Record model/provider and local/cloud execution separately in `00_admin/runtime.json`. Apply `privacy.md` before bringing real third-party data into context. No account credentials are required for intake.
 
-Initialize using `workspace.py init --root <private-path> --year <year> --language ru|de|en`. Unknown facts stay null. Do not populate a demo with the author's or user's remembered personal data.
+Initialize using `workspace.py init --root <private-path> --year <year> --language ru|en --mode general|bookkeeping|tax-consultant`, selecting one value for each option. The CLI retains legacy `de` compatibility; complete user templates are supplied for English and Russian. Unknown facts stay null. Do not populate a demo with the author's or user's remembered personal data. A tax question can be answered before creating a workspace; persistent settings and records become available after initialization.
 
 ## Stage 1 — minimum business context
 

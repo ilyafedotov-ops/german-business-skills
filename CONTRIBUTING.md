@@ -1,6 +1,10 @@
 # Contributing
 
+[English](CONTRIBUTING.md) | [Русский](CONTRIBUTING.ru.md)
+
 Keep the portable skill self-contained under `skills/de-business-kit`. Host-specific metadata must not change the meaning of shared workflows. Use concise modules; do not load every reference for every task. No credentials, customer records, user memories, telemetry or automatic external services belong in the package.
+
+Maintain English/Russian parity in README, user mode guides, architecture, validation notes and user-facing Markdown templates. Register every template role for both languages in `assets/locales.json`. Translate user-visible explanations without translating machine keys, IDs, enum values or German official form labels. Agent reference instructions stay shared in English to avoid divergent tax workflows. A change to either mode must preserve the shared profile and evidence; switching mode is never a change of tax regime.
 
 For a legal or product change, include the primary source URL, the date checked, effective period, affected workflow and an example showing the practical consequence. Search the current source instead of copying model memory. Do not silently overwrite a historical assumption with a new rule for a different year. A provider recommendation must show eligibility and costs for the stated scenario, not an affiliate ranking.
 
@@ -8,6 +12,6 @@ For code, use Python standard library where sufficient, preserve originals, vali
 
 Run `python3 -B -m unittest discover -s tests -v` and `python3 tools/check_package.py`. For workflow changes, run relevant cases in `evals/scenarios.json` in a fresh session and save an anonymized result with host/version/date. Record manual tests honestly; a scripted unit test does not prove live desktop compatibility.
 
-Use only synthetic examples in public issues and pull requests. Do not paste invoices, statements, tax IDs, IBANs, local transcripts, credentials or screenshots containing real personal data. Discuss security reports using the procedure in SECURITY.md.
+Use only synthetic examples in public issues and pull requests. Do not paste invoices, statements, tax IDs, IBANs, local transcripts, credentials or screenshots containing real personal data. Discuss security reports using the procedure in [SECURITY.md](SECURITY.md).
 
 Contributions are licensed under this repository's MIT licence. Linked external laws and provider documents retain their own status and rights; link and summarize them instead of copying entire manuals.

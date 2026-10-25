@@ -2,12 +2,14 @@
 
 Use Python 3.9+ and the bundled `scripts/workspace.py`. It makes no network calls. The assistant's own file-reading tools and remote model are separate data flows; apply `privacy.md` before reading real third-party records into context.
 
+Contents: [Create](#create-then-install-project-scoped-skills) · [State](#files-and-state) · [Language/mode](#language-and-working-mode) · [Facts](#profile-facts) · [Originals](#import-and-verify-documents) · [Reconcile](#reconcile-normalized-csvs) · [Templates](#templates-and-external-operations) · [Recovery](#exit-codes-and-recovery).
+
 ## Create, then install project-scoped skills
 
 Initialize a **new or empty private directory outside Git repositories and skill directories**. Do not initialize inside the public source checkout. Example from the source repository:
 
 ```bash
-python3 skills/de-business-kit/scripts/workspace.py init --root /absolute/path/to/private-workspace --year 2026 --language ru
+python3 skills/de-business-kit/scripts/workspace.py init --root /absolute/path/to/private-workspace --year 2026 --language ru --mode bookkeeping
 ```
 
 Replace the path and year; do not use the example literally. On Windows, use the installed Python 3 launcher and an absolute path such as `C:/Users/NAME/Documents/Business-private`. Symlinked paths are rejected; select the actual physical directory. The script does not configure ACLs or encryption. Protect the private folder and backups using the user's normal OS controls.
@@ -20,7 +22,7 @@ All relative input paths below are relative to `--root`, not the current shell d
 
 | File / directory | Meaning |
 |---|---|
-| `00_admin/workspace.json` | Workspace UUID, schema version, initial year and language |
+| `00_admin/workspace.json` | Workspace UUID, schema version, initial year, language and working mode |
 | `00_admin/runtime.json` | Actual host/provider/plan/data-processing configuration |
 | `00_admin/documents.json` | Index of original bytes and storage periods |
 | `00_admin/tasks.json` | Task array, with dependencies and completion evidence |
@@ -28,7 +30,7 @@ All relative input paths below are relative to `--root`, not the current shell d
 | `00_admin/decisions.json` | Decision array, with effective date, reviewer and evidence |
 | `00_admin/inbox/` | Private intake/answer files |
 | `01_profile/business.json` | Canonical profile; flat `facts` mapping |
-| `02_registration/`, `05_tax/YYYY/` | Draft worksheets, official receipts and responses |
+| `02_registration/`, `05_tax/YYYY/` | Draft worksheets, official receipts and responses; tax consultations in `05_tax/YYYY/consultations/` |
 | `03_banking/`, `04_accounting/` | Provider requirements, statements/normalized files, workflow agreements |
 | `06_bookkeeping/YYYY/MM/originals/` | Immutable-by-workflow original copies; no legal immutability guarantee |
 | `06_bookkeeping/YYYY/MM/derived/` | OCR, extracted facts and normalized data |
@@ -39,7 +41,19 @@ All relative input paths below are relative to `--root`, not the current shell d
 
 The initializer creates all twelve months for the chosen year. Later intake may create a further period. A folder period is not a tax-period determination. Keep invoice, service, receipt and payment dates in extracted records. Missing values stay unknown.
 
-The task/question/decision files start as empty arrays. Maintain them with a narrow, reviewed local edit, preserving existing IDs and records. There is no general-purpose task API in v0.1. Stop if a script writer is active. Do not call a task “completed” without its completion evidence. A due date in a file does not create an actual reminder.
+The task/question/decision files start as empty arrays. Maintain them with a narrow, reviewed local edit, preserving existing IDs and records. There is no general-purpose task API in v0.2. Stop if a script writer is active. Do not call a task “completed” without its completion evidence. A due date in a file does not create an actual reminder.
+
+## Language and working mode
+
+`workspace.json` stores `language` (`en` or `ru`; legacy `de` accepted) and `mode` (`general`, `bookkeeping` or `tax-consultant`). A v0.1 workspace without `mode` is read as `general`; its files are not rewritten during status checks and schema version stays 1. Both languages and modes share the existing profile and evidence.
+
+```bash
+python3 <skill-directory>/scripts/workspace.py configure --root /absolute/private-workspace --language en --mode tax-consultant
+python3 <skill-directory>/scripts/workspace.py configure --root /absolute/private-workspace --mode bookkeeping
+python3 <skill-directory>/scripts/workspace.py status --root /absolute/private-workspace
+```
+
+Supply at least one setting. An actual change records before/after marker history and a `workspace_configured` event under the workspace lock; setting the same values again returns `unchanged`. The command changes no business fact, VAT regime, original document, year or workspace identity. Status reports language and mode without printing personal profile values. Apply temporary chat overrides without changing defaults; see [language and modes](language-and-modes.md).
 
 ## Profile facts
 
@@ -130,15 +144,14 @@ Reports receive unique names under `07_exports/YYYY-MM/`. The CLI prints summary
 
 Copy only needed templates into the private workspace:
 
-- [form worksheet](../assets/form-worksheet.md): registration or tax forms.
-- [monthly report](../assets/month-close.md): coverage, exceptions and handoff.
+- [localized templates](language-and-modes.md): English/Russian form worksheets, bookkeeping agreements, monthly reports and tax consultations; choose using [locales.json](../assets/locales.json).
 - [proposal](../assets/proposal.json): extracted facts and unposted treatment.
 - [operation](../assets/operation.json): exact payload, authorization and outcome.
 - [source check](../assets/source-check.json): source, effective dates and applicability.
 
 Create unique IDs. Do not reuse null IDs as real identifiers. Monetary fields in proposals are decimal strings; null means unknown. The templates are workflow schemas, not a provider's API request body.
 
-External operation states may be `draft`, `ready_for_review`, `authorized`, `submitted`, `submission_unconfirmed`, `authority_response_received` or `cancelled`. Use only the state the evidence supports. Bind authorization to the exact recipient, period and payload; a significant payload change invalidates the old scope. Maintain prior linked operations when correcting. No external execution engine is shipped in v0.1.
+External operation states may be `draft`, `ready_for_review`, `authorized`, `submitted`, `submission_unconfirmed`, `authority_response_received` or `cancelled`. Use only the state the evidence supports. Bind authorization to the exact recipient, period and payload; a significant payload change invalidates the old scope. Maintain prior linked operations when correcting. No external execution engine is shipped in v0.2.
 
 ## Exit codes and recovery
 

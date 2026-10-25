@@ -1,6 +1,6 @@
 """Behavioral tests of private storage, evidence and explicit-ID reconciliation."""
 
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 from decimal import Decimal
 import hashlib
 import importlib.util
@@ -69,10 +69,122 @@ class WorkspaceTests(unittest.TestCase):
         for name in ("tasks", "questions", "decisions"):
             self.assertEqual(self.load(f"00_admin/{name}.json"), [])
         self.assertEqual(self.load(workspace.DOCUMENTS)["documents"], [])
+        self.assertEqual(self.load(workspace.MARKER)["mode"], "general")
         self.assertFalse((self.root / ".git").exists())
         if os.name == "posix":
             self.assertEqual(stat.S_IMODE(self.root.stat().st_mode), 0o700)
             self.assertEqual(stat.S_IMODE((self.root / workspace.PROFILE).stat().st_mode), 0o600)
+
+    def test_init_persists_explicit_language_and_workflow_mode(self):
+        target = self.base / "english-workspace"
+        with redirect_stdout(io.StringIO()) as output:
+            code = workspace.main(["init", "--root", str(target), "--year", "2026",
+                                   "--language", "en", "--mode", "tax-consultant"])
+        self.assertEqual(code, 0)
+        self.assertEqual(json.loads(output.getvalue())["mode"], "tax-consultant")
+        status = workspace.workspace_status(target)
+        self.assertEqual((status["language"], status["mode"]), ("en", "tax-consultant"))
+        marker = json.loads((target / workspace.MARKER).read_text(encoding="utf-8"))
+        self.assertEqual(marker["schema_version"], 1)
+        self.assertEqual(marker["mode"], "tax-consultant")
+
+    def test_configure_persists_preferences_and_history_without_changing_tax_facts(self):
+        workspace.record_fact(self.root, self.record(field="vat_current_regime", value="Regelbesteuerung"))
+        profile_before = (self.root / workspace.PROFILE).read_bytes()
+        marker_before = self.load(workspace.MARKER)
+        result = workspace.configure_workspace(self.root, language="en", mode="bookkeeping")
+        marker_after = self.load(workspace.MARKER)
+        self.assertEqual((marker_after["language"], marker_after["mode"]), ("en", "bookkeeping"))
+        self.assertEqual(marker_after["workspace_id"], marker_before["workspace_id"])
+        self.assertEqual(marker_after["created_at"], marker_before["created_at"])
+        self.assertEqual(marker_after["initial_year"], marker_before["initial_year"])
+        self.assertEqual((self.root / workspace.PROFILE).read_bytes(), profile_before)
+        snapshot = self.load(f"09_audit/history/{result['history_id']}.json")
+        self.assertEqual(snapshot["action"], "configure_workspace")
+        self.assertEqual(snapshot["before"], marker_before)
+        self.assertEqual(snapshot["after"], marker_after)
+        event = self.load(workspace.EVENTS)[-1]
+        self.assertEqual(event["action"], "workspace_configured")
+        self.assertEqual(event["details"]["history_id"], result["history_id"])
+        self.assertEqual(set(event["details"]["changed_fields"]), {"language", "mode"})
+        status = workspace.workspace_status(self.root)
+        self.assertEqual((status["language"], status["mode"]), ("en", "bookkeeping"))
+
+    def test_configure_single_option_preserves_other_preference(self):
+        workspace.configure_workspace(self.root, language="en", mode="bookkeeping")
+        workspace.configure_workspace(self.root, mode="tax-consultant")
+        status = workspace.workspace_status(self.root)
+        self.assertEqual((status["language"], status["mode"]), ("en", "tax-consultant"))
+        workspace.configure_workspace(self.root, language="ru")
+        status = workspace.workspace_status(self.root)
+        self.assertEqual((status["language"], status["mode"]), ("ru", "tax-consultant"))
+
+    def test_legacy_marker_missing_mode_defaults_without_read_time_mutation(self):
+        marker = self.load(workspace.MARKER)
+        marker.pop("mode")
+        marker["language"] = "de"
+        path = self.root / workspace.MARKER
+        path.write_text(json.dumps(marker), encoding="utf-8")
+        marker_bytes = path.read_bytes()
+        status = workspace.workspace_status(self.root)
+        self.assertEqual((status["language"], status["mode"]), ("de", "general"))
+        self.assertEqual(path.read_bytes(), marker_bytes)
+        result = workspace.configure_workspace(self.root, mode="bookkeeping")
+        self.assertEqual((result["language"], result["mode"]), ("de", "bookkeeping"))
+        self.assertEqual(self.load(workspace.MARKER)["schema_version"], 1)
+        history = self.load(f"09_audit/history/{result['history_id']}.json")
+        self.assertNotIn("mode", history["before"])
+        self.assertEqual(history["after"]["mode"], "bookkeeping")
+
+    def test_configure_rejects_missing_or_invalid_options_without_changes(self):
+        marker_before = (self.root / workspace.MARKER).read_bytes()
+        profile_before = (self.root / workspace.PROFILE).read_bytes()
+        events_before = (self.root / workspace.EVENTS).read_bytes()
+        for kwargs in ({}, {"language": "fr"}, {"mode": "automatic-tax-filing"},
+                       {"language": "en", "mode": "invalid"}):
+            with self.subTest(options=kwargs):
+                with self.assertRaises(workspace.WorkspaceError):
+                    workspace.configure_workspace(self.root, **kwargs)
+        self.assertEqual((self.root / workspace.MARKER).read_bytes(), marker_before)
+        self.assertEqual((self.root / workspace.PROFILE).read_bytes(), profile_before)
+        self.assertEqual((self.root / workspace.EVENTS).read_bytes(), events_before)
+        self.assertEqual(list((self.root / "09_audit/history").iterdir()), [])
+        target = self.base / "invalid-mode-workspace"
+        with self.assertRaises(workspace.WorkspaceError):
+            workspace.init_workspace(target, 2026, mode="invalid")
+        self.assertFalse(target.exists())
+
+    def test_configure_respects_lock_without_history_or_state_changes(self):
+        marker_before = (self.root / workspace.MARKER).read_bytes()
+        events_before = (self.root / workspace.EVENTS).read_bytes()
+        lock = self.root / workspace.LOCK
+        lock.write_text("another operation", encoding="utf-8")
+        with self.assertRaises(workspace.WorkspaceError):
+            workspace.configure_workspace(self.root, language="en", mode="bookkeeping")
+        self.assertEqual(lock.read_text(), "another operation")
+        self.assertEqual((self.root / workspace.MARKER).read_bytes(), marker_before)
+        self.assertEqual((self.root / workspace.EVENTS).read_bytes(), events_before)
+        self.assertEqual(list((self.root / "09_audit/history").iterdir()), [])
+
+    def test_configure_unchanged_preferences_create_no_redundant_history(self):
+        marker_before = (self.root / workspace.MARKER).read_bytes()
+        events_before = (self.root / workspace.EVENTS).read_bytes()
+        result = workspace.configure_workspace(self.root, language="ru", mode="general")
+        self.assertEqual(result["status"], "unchanged")
+        self.assertEqual((self.root / workspace.MARKER).read_bytes(), marker_before)
+        self.assertEqual((self.root / workspace.EVENTS).read_bytes(), events_before)
+        self.assertEqual(list((self.root / "09_audit/history").iterdir()), [])
+
+    def test_configure_cli_requires_option_and_persists_selected_mode(self):
+        with redirect_stderr(io.StringIO()):
+            code = workspace.main(["configure", "--root", str(self.root)])
+        self.assertEqual(code, 2)
+        self.assertEqual(workspace.workspace_status(self.root)["mode"], "general")
+        with redirect_stdout(io.StringIO()) as output:
+            code = workspace.main(["configure", "--root", str(self.root), "--mode", "tax-consultant"])
+        self.assertEqual(code, 0)
+        self.assertEqual(json.loads(output.getvalue())["mode"], "tax-consultant")
+        self.assertEqual(workspace.workspace_status(self.root)["mode"], "tax-consultant")
 
     def test_init_never_overwrites_nonempty_directory(self):
         before = (self.root / workspace.PROFILE).read_bytes()

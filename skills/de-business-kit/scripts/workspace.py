@@ -30,6 +30,8 @@ VERSION = 1
 MAX_BYTES = 50 * 1024 * 1024
 EXTENSIONS = {".pdf", ".xml", ".png", ".jpg", ".jpeg", ".tif", ".tiff", ".csv"}
 STATUSES = {"unknown", "declared", "proposed", "verified", "needs_review"}
+LANGUAGES = {"ru", "en", "de"}  # de remains accepted for existing workspaces.
+MODES = {"general", "bookkeeping", "tax-consultant"}
 PROFILE = "01_profile/business.json"
 DOCUMENTS = "00_admin/documents.json"
 EVENTS = "09_audit/events.json"
@@ -285,11 +287,21 @@ def _documents(root: Path) -> Dict[str, Any]:
     return registry
 
 
-def init_workspace(root: PathInput, year: int, language: str = "ru") -> Dict[str, Any]:
+def _preferences(marker: Dict[str, Any]) -> Dict[str, str]:
+    """Read UI/workflow preferences without migrating or changing tax facts."""
+    language = marker.get("language", "ru")
+    mode = marker.get("mode", "general")
+    if not isinstance(language, str) or language not in LANGUAGES:
+        raise WorkspaceError("Language must be ru, en, or legacy de.")
+    if not isinstance(mode, str) or mode not in MODES:
+        raise WorkspaceError("Mode must be general, bookkeeping, or tax-consultant.")
+    return {"language": language, "mode": mode}
+
+
+def init_workspace(root: PathInput, year: int, language: str = "ru", mode: str = "general") -> Dict[str, Any]:
     if isinstance(year, bool) or not isinstance(year, int) or not 1900 <= year <= 9999:
         raise WorkspaceError("Year must be an integer between 1900 and 9999.")
-    if language not in {"ru", "de", "en"}:
-        raise WorkspaceError("Language must be ru, de, or en.")
+    _preferences({"language": language, "mode": mode})
     location = _absolute(root)
     _check_chain(location)
     _private_boundary(location)
@@ -307,7 +319,7 @@ def init_workspace(root: PathInput, year: int, language: str = "ru") -> Dict[str
         for relative in directories:
             _mkdir(location / relative)
         marker = {"schema": SCHEMA, "schema_version": VERSION, "workspace_id": str(uuid.uuid4()),
-                  "created_at": _now(), "initial_year": year, "language": language}
+                  "created_at": _now(), "initial_year": year, "language": language, "mode": mode}
         _atomic_json(location / MARKER, marker)
         _atomic_json(location / PROFILE, {"schema_version": VERSION, "facts": {field: _blank_fact() for field in FIELDS}})
         runtime = {"schema_version": VERSION, "assistant_product": None, "app_version": None,
@@ -321,9 +333,44 @@ def init_workspace(root: PathInput, year: int, language: str = "ru") -> Dict[str
             _atomic_json(location / f"00_admin/{name}.json", [])
         _atomic_json(location / DOCUMENTS, {"schema_version": VERSION, "documents": []})
         _atomic_json(location / EVENTS, [])
-        _audit(location, "workspace_initialized", {"year": year, "language": language})
-    return {"status": "initialized", "year": year, "language": language,
+        _audit(location, "workspace_initialized", {"year": year, "language": language, "mode": mode})
+    return {"status": "initialized", "year": year, "language": language, "mode": mode,
             "facts": len(FIELDS), "permissions": "owner POSIX modes best effort; no ACL or encryption guarantee"}
+
+
+def configure_workspace(root: PathInput, language: Optional[str] = None,
+                        mode: Optional[str] = None) -> Dict[str, Any]:
+    """Persist presentation/workflow preferences, never business or tax facts."""
+    if language is None and mode is None:
+        raise WorkspaceError("Configure requires at least one of --language or --mode.")
+    # Validate requested values before opening or changing the workspace.
+    _preferences({"language": "ru" if language is None else language,
+                  "mode": "general" if mode is None else mode})
+    location = _workspace(root)
+    with _locked(location):
+        _check_audit(location)
+        path = _inside(location, MARKER)
+        before = _load(path)
+        preferences = _preferences(before)
+        after = dict(before)
+        after["language"] = preferences["language"] if language is None else language
+        after["mode"] = preferences["mode"] if mode is None else mode
+        changed = [key for key in ("language", "mode") if before.get(key) != after[key]]
+        if not changed:
+            return {"status": "unchanged", "language": after["language"],
+                    "mode": after["mode"], "changed_fields": []}
+        history_id = uuid.uuid4().hex
+        snapshot = {"schema_version": VERSION, "action": "configure_workspace",
+                    "recorded_at": _now(), "changed_fields": changed,
+                    "before": before, "after": after}
+        _atomic_json(_inside(location, f"09_audit/history/{history_id}.json"), snapshot)
+        _atomic_json(path, after, replace=True)
+        _audit(location, "workspace_configured", {"language": after["language"],
+                                                   "mode": after["mode"],
+                                                   "changed_fields": changed,
+                                                   "history_id": history_id})
+    return {"status": "configured", "language": after["language"], "mode": after["mode"],
+            "changed_fields": changed, "history_id": history_id}
 
 
 def record_fact(root: PathInput, record: Dict[str, Any]) -> Dict[str, Any]:
@@ -646,6 +693,7 @@ def reconcile(root: PathInput, bank: PathInput, ledger: PathInput, period: str) 
 
 def workspace_status(root: PathInput) -> Dict[str, Any]:
     location = _workspace(root)
+    preferences = _preferences(_load(_inside(location, MARKER)))
     profile = _load(_inside(location, PROFILE))
     if not isinstance(profile, dict) or not isinstance(profile.get("facts"), dict):
         raise WorkspaceError("Business profile is invalid.")
@@ -660,7 +708,8 @@ def workspace_status(root: PathInput) -> Dict[str, Any]:
         if not isinstance(data, list):
             raise WorkspaceError("Workspace task/question/decision file must be a list.")
         lists[name] = len(data)
-    return {"status": "ready", "fact_status_counts": counts, "documents": len(_documents(location)["documents"]),
+    return {"status": "ready", "language": preferences["language"], "mode": preferences["mode"],
+            "fact_status_counts": counts, "documents": len(_documents(location)["documents"]),
             "list_item_counts": lists, "locked": (location / LOCK).exists()}
 
 
@@ -670,7 +719,15 @@ def main(argv: Optional[List[str]] = None) -> int:
     init = commands.add_parser("init", help="Create an empty private workspace outside Git and skill folders")
     init.add_argument("--root", required=True)
     init.add_argument("--year", required=True, type=int)
-    init.add_argument("--language", choices=("ru", "de", "en"), default="ru")
+    init.add_argument("--language", choices=("ru", "en", "de"), default="ru",
+                      help="Assistant language preference; de retained for legacy compatibility")
+    init.add_argument("--mode", choices=("general", "bookkeeping", "tax-consultant"), default="general",
+                      help="Workflow preference only; does not change business facts or tax regime")
+    configure = commands.add_parser("configure", help="Persist assistant language/workflow mode without changing business or tax facts")
+    configure.add_argument("--root", required=True)
+    configure.add_argument("--language", choices=("ru", "en", "de"),
+                           help="Assistant language preference; de retained for legacy compatibility")
+    configure.add_argument("--mode", choices=("general", "bookkeeping", "tax-consultant"))
     record = commands.add_parser("record", help="Record one evidence-backed fact; verified means checked evidence, not model confidence")
     record.add_argument("--root", required=True)
     record.add_argument("--input", required=True, help="JSON file inside workspace, or - for stdin")
@@ -689,7 +746,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     args = parser.parse_args(argv)
     try:
         if args.command == "init":
-            result = init_workspace(args.root, args.year, args.language)
+            result = init_workspace(args.root, args.year, args.language, args.mode)
+        elif args.command == "configure":
+            result = configure_workspace(args.root, args.language, args.mode)
         elif args.command == "record":
             if args.input == "-":
                 payload = sys.stdin.buffer.read(MAX_BYTES + 1)

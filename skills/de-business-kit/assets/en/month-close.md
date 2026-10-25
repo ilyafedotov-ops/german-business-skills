@@ -1,9 +1,12 @@
 # Monthly preparation report
 
+Output language: en
+Mode: bookkeeping
 Period:
 Status: preparation in progress
 Accounting system:
 Prepared by / checked at:
+Previous report / revision reason:
 
 ## Coverage
 

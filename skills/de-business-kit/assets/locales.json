@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "default_language": "en",
+  "machine_identifiers_language": "en",
+  "languages": {
+    "en": {
+      "label": "English",
+      "templates": {
+        "bookkeeping_workflow": "en/bookkeeping-workflow.md",
+        "month_close": "en/month-close.md",
+        "form_worksheet": "en/form-worksheet.md",
+        "tax_consultation": "en/tax-consultation.md"
+      }
+    },
+    "ru": {
+      "label": "Русский",
+      "templates": {
+        "bookkeeping_workflow": "ru/bookkeeping-workflow.md",
+        "month_close": "ru/month-close.md",
+        "form_worksheet": "ru/form-worksheet.md",
+        "tax_consultation": "ru/tax-consultation.md"
+      }
+    }
+  }
+}

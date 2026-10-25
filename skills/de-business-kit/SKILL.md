@@ -2,21 +2,34 @@
 name: de-business-kit
 description: >-
   Organize a user's own German Freiberufler or Einzelunternehmen/Gewerbe business:
-  staged intake, private files, registration and ELSTER worksheets, preliminary
-  bookkeeping, Lexware Office handoff, and bank/software comparisons. Use for
-  starting or running a German sole-trader business. Provide sourced explanations
-  and reviewable drafts; do not present the tool as a licensed tax adviser or use
-  it for corporate accounts, payroll, or automatic filings.
+  English/Russian intake, private files, registration and ELSTER worksheets,
+  bookkeeping mode, tax-consultant mode, Lexware Office handoff, and bank/software
+  comparisons. Use for German sole-trader tax questions, receipts, reconciliation,
+  starting or running a business; русский: бухгалтерия, налоговый консультант,
+  налоги, открытие и ведение Gewerbe/Freiberufler. Provide sourced analysis and
+  reviewable work; do not claim licensed Steuerberater status or automatic filings.
 ---
 
 # German Business Kit
 
-Use one private workspace per natural-person entrepreneur. Keep multiple activities in that profile, with activity IDs. Answer in the user's language; retain official German form labels. Version: **0.1.0**, source review **2026-10-25**.
+Use one private workspace per natural-person entrepreneur. Keep multiple activities in that profile, with activity IDs. Support **English (`en`) and Russian (`ru`)** throughout conversation and user-facing reports; retain official German form labels. Version: **0.2.0 preview**, source review **2026-10-25**.
+
+## Language and working mode
+
+Apply [language and mode rules](references/language-and-modes.md). Read `00_admin/workspace.json` before choosing saved defaults. An explicit language instruction for the current task takes precedence over the saved language. Otherwise use the saved preference, then the user's task language, with English as the fallback. Use the matching template from `assets/en/` or `assets/ru/`; do not translate machine keys or create separate business profiles for each language.
+
+| Mode | Purpose | Main workflow |
+|---|---|---|
+| `general` | Startup, intake, registration, providers and routing | Select the relevant module below |
+| `bookkeeping` / «Ведение бухгалтерии» | Ongoing receipts, income/expense records, proposals, reconciliation and month preparation | [bookkeeping](references/bookkeeping.md) |
+| `tax-consultant` / «Налоговый консультант» | Explain tax consequences, compare options, estimate supported scenarios and prepare decisions | [tax consultant](references/tax-consultant.md) |
+
+Follow the user's concrete task without forcing a mode menu. An explicit mode switch or durable language preference may be saved with `workspace.py configure`; reuse the existing authorization to make that requested local change. A one-task language override or a related subtask does not rewrite defaults. Without a workspace, apply the choice in the session and continue useful work. Switching modes never changes `vat_current_regime`, bookkeeping method, prior decisions, authority filings or professional status.
 
 ## Start each task
 
 1. Identify the requested result, entrepreneur, year/period, workspace and actual runtime capabilities. Reuse confirmed session context. Do useful preparation before asking questions; ask at most 3 related questions at a time.
-2. Read `00_admin/runtime.json`, `01_profile/business.json`, and the relevant open questions/tasks if the workspace exists. Load only relevant records, never the entire client archive. Do not borrow personal facts from other clients or unrelated memory.
+2. Read `00_admin/workspace.json`, `00_admin/runtime.json`, `01_profile/business.json`, and the relevant open questions/tasks if the workspace exists. Load only relevant records, never the entire client archive. Do not borrow personal facts from other clients or unrelated memory.
 3. Before reading real third-party personal data into model context, apply [privacy](references/privacy.md). Local file execution is separate from model processing. When suitability is unresolved, continue with schemas, public rules and synthetic/redacted examples.
 4. For a new workspace, apply [intake](references/intake.md) and run the initializer only at a chosen private location outside the public source checkout and every Git repository. If the user already chose a suitable path, do not ask again.
 5. Select only the needed module below. Read [German rules](references/german-rules.md) when classification, tax treatment, retention or official deadlines are involved. Check current official sources before consequential advice or action; do not assume the release snapshot is current.
@@ -28,6 +41,7 @@ Use one private workspace per natural-person entrepreneur. Keep multiple activit
 | First use, collect facts, establish work split | [intake](references/intake.md) | Provenanced profile; prioritized missing facts |
 | Open, extend or change an activity | [formation](references/formation.md) | Registration plan; form worksheet; unresolved choices |
 | Explain German rules and identify exceptions | [German rules](references/german-rules.md) | Sources, applicability, explicit assumptions and review questions |
+| Tax-consultant mode; tax questions, choices and estimates | [tax consultant](references/tax-consultant.md) | Direct answer; applicable sources; calculations/assumptions; consultation record |
 | Receipts, invoices and monthly close preparation | [bookkeeping](references/bookkeeping.md) | Evidence index, proposals, reconciliation and exception list |
 | Lexware Office and Steuerberater export | [Lexware](references/lexware.md) | Status checks and reconciled handoff |
 | Choose banking or bookkeeping software | [providers](references/providers.md) | Requirements and current sourced shortlist |
@@ -35,6 +49,7 @@ Use one private workspace per natural-person entrepreneur. Keep multiple activit
 | Data handling and credentials | [privacy](references/privacy.md) | Minimal approved data scope and configuration evidence |
 | Install, missing tools or host differences | [platforms](references/platforms.md) | Actual capability inventory and manual fallback |
 | Record state, use scripts or resume work | [workspace](references/workspace.md) | Consistent files and traceable state transitions |
+| Choose language, switch mode or select a localized template | [language and modes](references/language-and-modes.md) | English/Russian output with stable shared state |
 
 ## Invariants
 
@@ -50,9 +65,9 @@ Use one private workspace per natural-person entrepreneur. Keep multiple activit
 
 ## Available implementation
 
-`scripts/workspace.py` supplies **offline** initialization, provenanced profile updates, byte-preserving intake, original integrity checks and explicit-reference CSV reconciliation. Run `python3 <skill-directory>/scripts/workspace.py --help` and read [workspace](references/workspace.md) before use. Use `python` on Windows when that is the installed Python 3 command.
+`scripts/workspace.py` supplies **offline** initialization, persisted language/mode configuration, provenanced profile updates, byte-preserving intake, original integrity checks and explicit-reference CSV reconciliation. Run `python3 <skill-directory>/scripts/workspace.py --help` and read [workspace](references/workspace.md) before use. Use `python` on Windows when that is the installed Python 3 command.
 
-v0.1 contains no production banking, ELSTER, Lexware or tax-filing connector. Browser work uses only tools actually provided by the host and permitted for this task; the skill does not grant capabilities. Do not claim a connection, scheduled reminder, external update, or end-to-end desktop test happened without evidence.
+v0.2 contains no production banking, ELSTER, Lexware or tax-filing connector and no complete personal-tax calculation engine. Consultations use current sources and explicit, reproducible calculations where the facts support them. Browser work uses only tools actually provided by the host and permitted for this task; the skill does not grant capabilities. Do not claim a connection, scheduled reminder, external update, or end-to-end desktop test happened without evidence.
 
 ## Finish and resume
 

@@ -12,11 +12,16 @@ SKILL = ROOT / "skills" / "de-business-kit"
 def main():
     errors = []
     required = [
-        "README.md", "LICENSE", "SECURITY.md", "CONTRIBUTING.md",
-        "tools/install.py", "docs/architecture.md", "docs/validation.md",
+        "README.md", "README.ru.md", "LICENSE", "SECURITY.md", "SECURITY.ru.md",
+        "CONTRIBUTING.md", "CONTRIBUTING.ru.md",
+        "tools/install.py", "docs/architecture.md", "docs/architecture.ru.md",
+        "docs/validation.md", "docs/validation.ru.md", "docs/modes.md", "docs/modes.ru.md",
         "evals/scenarios.json", "skills/de-business-kit/SKILL.md",
         "skills/de-business-kit/agents/openai.yaml",
         "skills/de-business-kit/scripts/workspace.py",
+        "skills/de-business-kit/references/tax-consultant.md",
+        "skills/de-business-kit/references/language-and-modes.md",
+        "skills/de-business-kit/assets/locales.json",
     ]
     for name in required:
         if not (ROOT / name).is_file():
@@ -26,6 +31,22 @@ def main():
         errors.append("Missing skill name/description frontmatter")
     if len(skill_text.splitlines()) >= 500:
         errors.append("SKILL.md must stay under 500 lines")
+    try:
+        manifest = json.loads((SKILL / "assets/locales.json").read_text(encoding="utf-8"))
+        locales = manifest["languages"]
+        if set(locales) != {"en", "ru"}:
+            errors.append("Complete English and Russian locale definitions are required")
+        roles = {"bookkeeping_workflow", "month_close", "form_worksheet", "tax_consultation"}
+        for language, locale in locales.items():
+            templates = locale["templates"]
+            if set(templates) != roles:
+                errors.append("Missing or unexpected localized template roles: " + language)
+            for name in templates.values():
+                target = (SKILL / "assets" / name).resolve()
+                if not target.is_relative_to(SKILL / "assets" / language) or not target.is_file():
+                    errors.append("Invalid localized template: " + str(name))
+    except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
+        errors.append("Invalid locale manifest: " + str(exc))
     for file in ROOT.rglob("*"):
         if any(part in {".git", "__pycache__"} for part in file.relative_to(ROOT).parts):
             continue
@@ -52,7 +73,7 @@ def main():
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 1
-    print("Package structure, local links and JSON: OK (no network/legal/integration validation)")
+    print("Package structure, EN/RU template coverage, local links and JSON: OK (no network/legal/integration validation)")
     return 0
 
 
