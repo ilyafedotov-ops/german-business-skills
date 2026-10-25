@@ -4,6 +4,21 @@
 
 Checked **2026-10-25**. Tests use synthetic temporary data, never live business records or accounts.
 
+## Native Windows path without Python (2026-10-25)
+
+Windows onboarding now prefers existing host tools and `scripts/windows.ps1`, targeting Windows PowerShell 5.1. Native operations cover standalone installation, canonical workspace start/resume, bounded source preview, original-file intake, exact-byte duplicates and integrity checking. The profile, document index and lock are shared with the optional Python engine; no parallel business registry or migration is introduced. Advanced validated record/proposal/reconciliation/XML/dashboard/archive operations still require that engine. The guides state this boundary and prohibit pretending manual JSON edits are validated operations.
+
+`GBK_TEST_DOCKER_IMAGE=mcr.microsoft.com/dotnet/sdk:9.0 python3 -B -m unittest discover -s tests -v` — **149 passed** on macOS/Python **3.14.6**, including the container-backed interoperability checks. Package/link/locale checks, skill format validation and `git diff --check` passed. The full suite initially caught the missing PowerShell packaging allowance; the builder now allows exactly the reviewed entry point and requires its seed/reference resources. No end-user Python dependency was added.
+
+Execution evidence: PowerShell **7.5.12** in an isolated, network-disabled **Debian 12** container using Microsoft's `mcr.microsoft.com/dotnet/sdk:9.0` image (digest `sha256:d7cfd59385751fc87897a138ba173fb1bbc2bf946ea78aecc91a119993676997`). This container is a developer test environment, not an end-user requirement. The existing macOS PowerShell executable hung before entering the script; those test processes were stopped, and no macOS-native execution success is claimed.
+
+- `tests/native/windows-smoke.ps1` passed in that container without Python or third-party PowerShell modules in the test commands: installation/dry-run/conflict preservation, detached skill resources, start/resume/preferences, brackets/non-ASCII filenames, bounded preview, source hashes, duplicates, flat audit history, malformed audit preservation, lock refusal and tamper detection. Windows-only junction/hidden-attribute branches remain unexecuted locally.
+- Python/PowerShell interoperability tests passed: native-created files were consumed by the existing Python status/intake/verification APIs; native resume preserved a Python-created workspace and detected an unindexed original. The bundled seed is compared with canonical initialization.
+- Independent read-only review found PowerShell 5.1 array-enumeration and malformed-JSON preservation risks. Parsing now uses the native version's array-preserving route, with regression checks for flat history and rejected malformed arrays. Installation publishes a complete staged directory without overwriting a raced destination. Review is not a Windows runtime certificate.
+- A Windows CI job now runs the standalone smoke using `shell: powershell`, asserts major version 5, and does not set up Python. It has **not run for these local changes**. Existing CI evidence elsewhere in this document does not validate this native entry point.
+
+The scenario catalog contains **39 cases**. A fresh Codex agent received only the skill path and the synthetic `windows-without-python` request, without tests, criteria, diff or validation notes. It explained native 5.1 setup/intake, separate source/destination, preservation/resumption and useful preparation; did not require Python/Git/WSL/PowerShell 7 or suggest weakening security policy; disclosed advanced-engine and ledger/filing gaps. No files, invoices, accounts or settings were changed. Host: Codex session on macOS, exact app/model build not exposed. This was an explanation trial, not actual Windows discovery or a nontechnical-user usability study.
+
 ## Needs-led service research extension (2026-10-25)
 
 The skill now routes banking, insurance and other business-service selection to a shared needs/evidence/cost/recommendation workflow, focused insurance guidance and English/Russian comparison templates. These are agent instructions and readable reports, not new production connectors, procurement automation or an insurance intermediary service. Self-managed accounting/reporting remains primary.

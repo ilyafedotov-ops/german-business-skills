@@ -78,7 +78,9 @@ For first use, setup confusion, a demonstration or “continue,” follow [guide
 
 ## Available implementation
 
-`scripts/workspace.py` supplies **offline** start/resume, synthetic demo, diagnosis, recorded runtime assessment, validated profile/register updates, byte-preserving intake, integrity checks and explicit-reference CSV reconciliation. Use `entry` for task/question/decision updates; preserve unresolved legacy records rather than silently converting them. Run `python3 <skill-directory>/scripts/workspace.py --help` and read [workspace](references/workspace.md) before use. Use the actual Python 3 launcher on Windows.
+On Windows, use [native Windows](references/native-windows.md) first: `scripts/windows.ps1` handles installation, start/resume, folder previews, original intake and integrity checks using Windows PowerShell 5.1, without Python. Research and worksheets use host tools. Do not install dependencies by default or manually bypass validated record writers; the reference lists advanced operations still requiring an existing optional runtime.
+
+`scripts/workspace.py` supplies **offline** start/resume, synthetic demo, diagnosis, recorded runtime assessment, validated profile/register updates, byte-preserving intake, integrity checks and explicit-reference CSV reconciliation. Use `entry` for task/question/decision updates; preserve unresolved legacy records rather than silently converting them. Run `python3 <skill-directory>/scripts/workspace.py --help` and read [workspace](references/workspace.md) before use. Use this optional engine only when a suitable Python runtime is already available or separately authorized.
 
 `scripts/workflows.py` prepares international, activity-classification and ELSTER worksheets with validated evidence links, source-period checks and localized reports. `scripts/payments.py` reconciles normalized payment events and a strict subset of Stripe activity exports by currency and explicit payout IDs. Keep raw exports and mapping evidence. Payment matches do not approve tax treatment; all form preparations remain unsubmitted. See [preparation](references/preparation.md) and [payments](references/payments.md).
 

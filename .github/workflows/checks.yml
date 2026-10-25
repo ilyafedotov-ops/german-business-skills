@@ -36,3 +36,15 @@ jobs:
         run: python -B -m unittest discover -s tests -v
       - name: Validate package structure and local references
         run: python -B tools/check_package.py
+
+  windows-without-python:
+    name: Windows PowerShell 5.1 / no Python setup
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Native install, start, preview, intake, resume and integrity
+        shell: powershell
+        run: |
+          $PSVersionTable.PSVersion.ToString()
+          if ($PSVersionTable.PSVersion.Major -ne 5) { throw 'Expected Windows PowerShell 5.1' }
+          & .\tests\native\windows-smoke.ps1

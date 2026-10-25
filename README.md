@@ -51,7 +51,9 @@ The modes share one workspace and evidence history. Switching mode does not crea
 
 ## Install
 
-Local utilities require **Python 3.9+**, with no additional Python packages. Clone the public source repository outside your private business workspace:
+**Windows without Python:** use the [native Windows guide](docs/windows.md). Codex/Claude Code can use Windows PowerShell 5.1 for installation, start/resume and document intake. Git, WSL and PowerShell 7 are not prerequisites. The commands below are the optional Python-engine route, also used by developers; they are not required Windows onboarding steps.
+
+The optional Python utilities require **Python 3.9+**, with no additional Python packages. Clone the public source repository outside your private business workspace:
 
 ```bash
 git clone https://github.com/ilyafedotov-ops/german-business-skills.git

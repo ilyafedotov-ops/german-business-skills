@@ -18,6 +18,8 @@ Version **0.5.0 preview** provides one portable skill with an explicit focus for
 
 Choose the initial defaults when creating a new private workspace:
 
+These are optional Python-engine examples. On Windows, use the [native path](windows.md) for setup/intake without Python. Native resume preserves saved preferences; a task-specific language/mode request can be followed in chat without editing canonical records.
+
 ```bash
 python3 skills/de-business-kit/scripts/workspace.py init --root /absolute/private-workspace --year 2026 --language en --mode bookkeeping
 ```

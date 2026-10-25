@@ -1,5 +1,7 @@
 # Local plugin distribution — v0.3.0 preview
 
+Windows users can start without Python using [native Windows tools](windows.md). The native entry point shares the existing workspace and covers installation, start/resume, preview, intake and integrity; advanced validated automation remains an optional Python-engine capability.
+
 [English](distribution.md) | [Русский](distribution.ru.md)
 
 The maintained workflow lives only in `skills/de-business-kit`. Root `plugin.json` declares the portable Agent Plugins identity; `.claude-plugin/plugin.json` is its thin Claude adapter. The offline builder copies that same skill into two independent local marketplace bundles. It includes the license, manifests, authored EN/RU readmes from `packaging/` and complete skill resources; repository tests, Git history, root-level private files and machine settings are excluded. Review the canonical skill before packaging: the builder is not a secret scanner.
@@ -8,7 +10,7 @@ This preview supplies no MCP server, lifecycle hook, credential, automatic insta
 
 ## Build and review without installing
 
-From a reviewed source checkout, with Python 3.9+ and no extra packages:
+Maintainers build packages from a reviewed source checkout, with Python 3.9+ and no extra packages:
 
 ```bash
 python3 -B -m unittest discover -s tests -v

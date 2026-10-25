@@ -111,7 +111,8 @@ def snapshot(source: Path) -> Dict[str, bytes]:
                 continue
             if not stat.S_ISREG(info.st_mode):
                 raise BuildError(f"Symlink or special resource rejected: {entry}")
-            if name.startswith(".") or entry.suffix not in {".md", ".json", ".yaml", ".py"}:
+            if name.startswith(".") or (entry.suffix not in {".md", ".json", ".yaml", ".py"}
+                    and entry.relative_to(skill).as_posix() != "scripts/windows.ps1"):
                 raise BuildError(f"Unreviewed skill resource type: {entry}")
             files[entry.relative_to(source).as_posix()] = read_file(entry)
 
@@ -119,6 +120,7 @@ def snapshot(source: Path) -> Dict[str, bytes]:
     required = {
         "SKILL.md", "agents/openai.yaml", "scripts/workspace.py", "scripts/desk.py",
         "scripts/workflows.py", "scripts/payments.py", "assets/locales.json",
+        "scripts/windows.ps1", "assets/workspace-seed.json", "references/native-windows.md",
         "assets/casework-messages.json", "assets/proposal.json", "assets/source-check.json",
         "assets/extracted-field.json",
         *("scripts/casefiles/" + name + ".py" for name in (

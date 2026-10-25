@@ -1,5 +1,7 @@
 # German Business Kit architecture
 
+Windows users can start without Python using [native Windows tools](windows.md). The native entry point shares the existing workspace and covers installation, start/resume, preview, intake and integrity; advanced validated automation remains an optional Python-engine capability.
+
 [English](architecture.md) · [Русский](architecture.ru.md)
 
 Project version: **0.5.0 preview**. Source review: **2026-10-25**.

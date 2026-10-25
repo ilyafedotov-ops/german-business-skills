@@ -18,6 +18,8 @@
 
 Выберите начальные настройки при создании новой личной рабочей папки:
 
+Ниже — примеры необязательного Python-движка. На Windows используйте [нативный путь](windows.ru.md) для настройки/приёма без Python. Продолжение сохраняет настройки; язык/режим конкретной задачи можно выбрать в чате без ручного изменения канонических записей.
+
 ```bash
 python3 skills/de-business-kit/scripts/workspace.py init --root /absolute/private-workspace --year 2026 --language ru --mode bookkeeping
 ```

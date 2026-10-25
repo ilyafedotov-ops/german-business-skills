@@ -1,5 +1,7 @@
 # Common tasks / Частые задачи
 
+On Windows without Python, use [native Windows](native-windows.md) for supported setup/intake and host tools for readable preparation. Python commands below apply only when that optional runtime is available. Do not install it by default or claim native parity for unported validated operations.
+
 Use the requested language and existing private workspace. Ask only for missing facts that affect the next step. Do not make setup, an accountant or an export a prerequisite for useful answers. See [document workflow](document-workflow.md) for commands and [onboarding](onboarding.md) for missing runtime/tools.
 
 | User request / Запрос | Minimum input | Tools and saved result | Completion evidence / fallback |

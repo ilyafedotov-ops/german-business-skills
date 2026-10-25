@@ -1,5 +1,7 @@
 # Private workspace and offline utilities
 
+On Windows without Python, use [native Windows](native-windows.md) for supported setup/intake and host tools for readable preparation. Python commands below apply only when that optional runtime is available. Do not install it by default or claim native parity for unported validated operations.
+
 Additional offline tools and record contracts are described in [preparation](preparation.md) and [payments](payments.md). They write versioned reports without changing the workspace schema or canonical profile.
 
 Use Python 3.9+ and the bundled `scripts/workspace.py`. It makes no network calls. The assistant's own file-reading tools and remote model are separate data flows; apply `privacy.md` before reading real third-party records into context.

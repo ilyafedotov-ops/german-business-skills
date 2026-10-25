@@ -8,7 +8,7 @@ Version 0.5.0 preview supports managing your own German sole-trader bookkeeping/
 
 ## Choose the app you already use
 
-Use a local Codex or Claude Code session on Windows or macOS. The app must be able to access your selected folder and run Python 3.9 or newer for the local utilities. A plugin does not provide those capabilities itself. Claude Cowork and cloud sessions need separate testing; this preview does not promise the same local-file workflow there.
+Use a local Codex or Claude Code session on Windows or macOS. The app must be able to access your selected folder. On Windows, use the [native path](windows.md): Windows PowerShell 5.1 handles setup and document intake without Python. Advanced Python utilities are optional and have a separate capability boundary. A plugin does not provide those capabilities itself. Claude Cowork and cloud sessions need separate testing; this preview does not promise the same local-file workflow there.
 
 Install the reviewed skill using the [installation guide](../README.md#install), or have a technical helper prepare the [local plugin package](distribution.md). Plugin bundles are available as locally built preview artifacts, not an already-published one-click marketplace listing. A ZIP must be extracted before its marketplace folder is registered. Installing the open-source kit does not include an AI subscription.
 
@@ -22,7 +22,7 @@ You do not need to edit JSON or choose accounting categories to begin. The assis
 
 Choose a private folder outside the downloaded source code and outside Git repositories. If the app offers to create a Git repository for that folder, use a local folder session instead. The assistant must explain where selected document contents may be sent: a local folder does not mean the AI model runs locally.
 
-The demonstration uses invented data. It finds three matching payment groups and one unmatched EUR 12 outflow. You can inspect this result before choosing to use real records. Keep the demo folder separate from your business folder.
+The demonstration uses invented data. The native Windows example shows folder preview, preserved originals, integrity checks and resumption. With the optional Python engine, the reconciliation example finds three matching payment groups and one unmatched EUR 12 outflow. You can inspect this result before choosing to use real records. Keep the demo folder separate from your business folder.
 
 ## Everyday requests
 
@@ -46,7 +46,7 @@ Preparation, your approval, evidence of actual posting/submission and the Finanz
 
 ## When something goes wrong
 
-Ask: “Run the local diagnosis for this workspace and explain the next safe step.” The assistant can use `doctor` and `verify`; neither establishes desktop or legal compliance. Keep error details private and use synthetic/redacted examples for support.
+Ask: “Run the local diagnosis for this workspace and explain the next safe step.” The assistant uses native `verify`, or `doctor` and `verify` with the optional Python engine; neither establishes desktop or legal compliance. Keep error details private and use synthetic/redacted examples for support.
 
 Do not delete an existing folder, originals or a lock just because setup stopped. Keep protected backups, and verify a restoration into a separate folder. Skill updates should preserve the business workspace. See [workspace recovery](../skills/de-business-kit/references/onboarding.md#recovery).
 

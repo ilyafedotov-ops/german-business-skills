@@ -1,5 +1,7 @@
 # Onboard existing data and services
 
+On Windows without Python, use [native Windows](native-windows.md) for supported setup/intake and host tools for readable preparation. Python commands below apply only when that optional runtime is available. Do not install it by default or claim native parity for unported validated operations.
+
 Use when the user mentions Gmail/email, a cloud drive, Lexware, sevdesk, WISO/Buhl or another service, an old accounting system, a folder of mixed files, or “my records already exist.” Start with their existing records and self-managed workflow. Do not force a new-business interview, new software purchase, accountant handoff or full migration.
 
 ## Discover the source, then the available route
