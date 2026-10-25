@@ -4,6 +4,23 @@
 
 Checked **2026-10-25**. Tests use synthetic temporary data, never live business records or accounts.
 
+## Needs-led service research extension (2026-10-25)
+
+The skill now routes banking, insurance and other business-service selection to a shared needs/evidence/cost/recommendation workflow, focused insurance guidance and English/Russian comparison templates. These are agent instructions and readable reports, not new production connectors, procurement automation or an insurance intermediary service. Self-managed accounting/reporting remains primary.
+
+`python3 -B -m unittest discover -s tests -v` — **146 passed** on local macOS / Python **3.14.6**. `python3 tools/check_package.py`, skill-creator `quick_validate.py` with isolated PyYAML, and `git diff --check` passed. No new runtime dependencies or accounting operations were introduced. Independent read-only review of the references, source notes, templates and user guides found no actionable issues; it did not repeat the source research or certify a deployed commercial service.
+
+Official-source research is recorded in [service research sources](../skills/de-business-kit/references/service-research-sources.md), including the current legal scope and practical consequences. BaFin direct requests returned HTTP 403; its claims were checked against official indexed excerpts. No individual provider/register result, live quote, premium or customer coverage was verified.
+
+The evaluation catalog now has **38 scenarios**. A fresh Codex subagent received only the skill location and the synthetic `needs-led-bank-insurance-comparison` prompt, without criteria, development diff or expected answers. Host: local macOS; exact desktop/model build not exposed or pinned. Its actual response was inspected:
+
+- Insurance A: EUR 480 first year and EUR 540 normal year; rejected because services for US clients were expressly excluded.
+- Insurance B: EUR 600/year, with the EUR 500 deductible correctly separate from premium; conditional on contract jurisdiction, actual wording and insurer acceptance. Worldwide work did not override the US/Canada jurisdiction exclusion.
+- Bank C: EUR 264/year; Bank D: EUR 180/year at 80 domestic transfers/month. D's EUR 84 domestic saving was not presented as an all-in saving because USD fees remained unknown.
+- Existing policy and continuity checks remained prerequisites to switching. The response gave useful recommendations without a workspace or compulsory accountant involvement. No provider contact, application, purchase, cancellation or claimed coverage occurred.
+
+This is one bounded response trial, not execution of all 38 prompts, automatic activation/baseline testing, live provider integration or native desktop acceptance. The comparison template remains human-reviewed; research does not implement account opening or policy binding.
+
 ## Existing-data onboarding extension (2026-10-25)
 
 `python3 -B -m unittest discover -s tests -v` — **146 passed** on local macOS / Python **3.14.6**. Six new folder-preview tests cover mixed supported/unsupported formats, source preservation, no implicit import, symlinks, nested workspaces, source/destination overlap, bounded traversal, large-file exclusions, native hidden flags and the CLI. Windows/macOS hidden attributes are simulated at the filesystem metadata boundary; this is not a native Windows run. Detached Codex/Claude package tests now run `scan-folder` in both language workspaces.

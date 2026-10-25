@@ -95,3 +95,5 @@ A bookkeeping question may reveal a tax issue. Create a linked consultation for 
 Mode and language settings do not grant tools, change permissions, establish consent to publish private data or authorize filings, contracts or payments. There are no production provider connectors in this preview. Complete ledger functionality and ELSTER submission are core capabilities still to be completed. Local preparation and analysis remain useful without those connectors; externally observed actions must be recorded only when they actually occur. See the [document workflow](document-workflow.md) for these evidence boundaries.
 
 Use the shared [workspace](../skills/de-business-kit/references/workspace.md), [privacy](../skills/de-business-kit/references/privacy.md), [German rules](../skills/de-business-kit/references/german-rules.md) and [form workflow](../skills/de-business-kit/references/forms.md) for the relevant task.
+
+In `general`, use [service selection](service-selection.md) for needs-led banking, insurance and other business services. Preserve the same profile, existing contracts and user decisions; a recommendation is not a purchase.

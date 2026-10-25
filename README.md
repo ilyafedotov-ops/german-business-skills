@@ -162,3 +162,5 @@ python3 tools/check_package.py
 See [validation status](docs/validation.md), [architecture](docs/architecture.md), [behavioral scenarios](evals/scenarios.json), [contributing](CONTRIBUTING.md) and [security reporting](SECURITY.md). Utility tests validate local behavior; they do not establish the correctness of tax conclusions or replace integration checks in desktop apps.
 
 Use synthetic or reliably anonymized data in public issues, pull requests and examples. Repository: [ilyafedotov-ops/german-business-skills](https://github.com/ilyafedotov-ops/german-business-skills).
+
+Banking, insurance and other services are researched against your needs, current costs and terms. See [service selection](docs/service-selection.md).

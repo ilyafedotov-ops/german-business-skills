@@ -160,3 +160,5 @@ python3 tools/check_package.py
 См. [статус проверки](docs/validation.ru.md), [архитектуру](docs/architecture.ru.md), [сценарии проверки поведения](evals/scenarios.json), [правила вклада](CONTRIBUTING.ru.md) и [сообщения о проблемах](SECURITY.ru.md). Тесты утилит проверяют локальное поведение; они не доказывают правильность налоговых выводов и не заменяют интеграционные проверки в desktop-приложениях.
 
 Используйте синтетические или надёжно обезличенные данные в публичных issues, PR и примерах. Репозиторий: [ilyafedotov-ops/german-business-skills](https://github.com/ilyafedotov-ops/german-business-skills).
+
+Банковские, страховые и другие услуги сравниваются по вашим потребностям, актуальным ценам и условиям. См. [выбор услуг](docs/service-selection.ru.md).

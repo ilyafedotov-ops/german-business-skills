@@ -4,8 +4,8 @@ description: >-
   Organize a user's own German Freiberufler or Einzelunternehmen/Gewerbe business:
   English/Russian intake, private files, registration and ELSTER worksheets,
   guided setup from existing email, accounting services or mixed folders, international payments, reverse charge, Gewerbe/Freiberufler clarification,
-  self-managed bookkeeping, document review, tax reporting preparation, Lexware Office, and bank/software
-  comparisons. Use for German sole-trader tax questions, receipts, reconciliation,
+  self-managed bookkeeping, document review, tax reporting preparation, Lexware Office, and needs-led banking, insurance and business-service
+  research and recommendations. Use for German sole-trader tax questions, receipts, reconciliation,
   starting or running a business; русский: бухгалтерия, налоговые вопросы,
   налоги, открытие и ведение Gewerbe/Freiberufler. Provide sourced analysis and
   reviewable work; do not claim licensed Steuerberater status or automatic filings.
@@ -56,7 +56,7 @@ For first use, setup confusion, a demonstration or “continue,” follow [guide
 | Receipts, invoices and monthly close preparation | [bookkeeping](references/bookkeeping.md) | Evidence index, proposals, reconciliation and exception list |
 | Lexware Office and optional exports | [Lexware](references/lexware.md) | Actual accounting-state checks; export only when useful/requested |
 | Mixed documents, review, bank mapping, monthly overview or resume | [document workflow](references/document-workflow.md), [task recipes](references/task-recipes.md) | Preserved catalog, proposals, reconciliation and next self-accounting action |
-| Choose banking or bookkeeping software | [providers](references/providers.md) | Requirements and current sourced shortlist |
+| Choose banking, insurance, software or other business services | [providers](references/providers.md); [insurance](references/insurance.md) when relevant | Needs, current-source comparison, full costs/coverage and reasoned recommendation |
 | Browser-assisted ELSTER or other forms | [forms](references/forms.md) | Field worksheet, verified draft and submission evidence if authorized |
 | Data handling and credentials | [privacy](references/privacy.md) | Minimal approved data scope and configuration evidence |
 | Install, missing tools or host differences | [platforms](references/platforms.md) | Actual capability inventory and manual fallback |

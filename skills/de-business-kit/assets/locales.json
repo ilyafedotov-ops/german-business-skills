@@ -11,7 +11,8 @@
         "form_worksheet": "en/form-worksheet.md",
         "tax_consultation": "en/tax-consultation.md",
         "overview": "en/overview.md",
-        "source_map": "en/source-map.md"
+        "source_map": "en/source-map.md",
+        "service_comparison": "en/service-comparison.md"
       }
     },
     "ru": {
@@ -22,7 +23,8 @@
         "form_worksheet": "ru/form-worksheet.md",
         "tax_consultation": "ru/tax-consultation.md",
         "overview": "ru/overview.md",
-        "source_map": "ru/source-map.md"
+        "source_map": "ru/source-map.md",
+        "service_comparison": "ru/service-comparison.md"
       }
     }
   }
