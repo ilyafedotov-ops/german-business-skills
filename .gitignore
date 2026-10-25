@@ -26,3 +26,26 @@ dist/
 08_correspondence/
 09_audit/
 .playwright-mcp/
+
+# Local runtimes, dependencies and generated validation artifacts.
+.venv/
+venv/
+node_modules/
+*.egg-info/
+.coverage
+.coverage.*
+htmlcov/
+coverage/
+/output/
+/test-results/
+/playwright-report/
+/.de-business-kit-stage-*/
+/runtime-artifacts/
+/vendor/eric/
+
+# OS/editor leftovers; keep source, research and synthetic fixtures visible.
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~

@@ -8,6 +8,33 @@ permissions:
   contents: read
 
 jobs:
+  prototype:
+    name: Prototype / ${{ matrix.os }} / ${{ matrix.browser }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            browser: chromium
+          - os: macos-latest
+            browser: webkit
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install ${{ matrix.browser }}
+      - run: npm test
+      - run: npm run test:browser -- --browser=${{ matrix.browser }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: prototype-${{ matrix.os }}-${{ matrix.browser }}
+          path: output/prototype/
+
   native-utilities:
     name: ${{ matrix.os }} / Python ${{ matrix.python }}
     runs-on: ${{ matrix.os }}

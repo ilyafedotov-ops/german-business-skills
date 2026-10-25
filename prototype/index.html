@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Business workspace · Interactive demo</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="state.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="demo-strip"><strong>Interactive demo</strong><span>Fictional data · No accounts connected · Nothing is submitted</span></div>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true">b.</span><span>Business workspace</span></a>
+      <div class="workspace-label"><span class="avatar" aria-hidden="true">S</span><span>Studio Beispiel<small>Example business · October 2026</small></span></div>
+      <nav aria-label="Workspace">
+        <a href="#home" data-nav="home"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9"/></svg> Home</a>
+        <a href="#documents" data-nav="documents"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h7"/></svg> Documents</a>
+        <a href="#month" data-nav="month"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 5h16v16H4zM8 3v4M16 3v4M4 10h16M8 14h3M14 14h2"/></svg> This month</a>
+        <a href="#taxes" data-nav="taxes"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 6l8 6 8-6"/></svg> Taxes and letters</a>
+        <a href="#accounts" data-nav="accounts"><svg class="nav-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 7h17l-4-4M21 17H4l4 4"/></svg> Accounts and services</a>
+      </nav>
+      <div class="sidebar-bottom"><p>A little progress,<br>one clear step at a time.</p><a href="#settings" data-nav="settings">Settings and demo information</a><button class="text-button" data-action="help">Help me with this</button></div>
+    </aside>
+    <div class="body">
+      <header class="topbar"><span class="workspace-period">October 2026 · Example workspace</span><span id="save-status" role="status">Demo changes stay in this browser</span></header>
+      <div id="storage-warning" role="alert" hidden></div>
+      <main id="main" tabindex="-1"></main>
+      <footer>Fictional walkthrough. Reviewing a document does not record an accounting entry.</footer>
+    </div>
+  </div>
+  <dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-heading"><span>Help for the task you are doing</span><button data-action="close-help" aria-label="Close help">Close</button></div><h2 id="help-title">A useful place to start</h2><p id="help-explanation"></p><label for="help-prompt">Ready-to-use assistant request</label><textarea id="help-prompt" rows="6" readonly></textarea><p class="hint">Copy this fictional context into Codex or Claude. This demo cannot send messages or open a connected assistant.</p><button class="primary" data-action="copy-help">Copy request</button><p id="copy-status" role="status"></p></dialog>
+  <dialog id="reset-dialog" aria-labelledby="reset-title"><h2 id="reset-title">Reset this demo?</h2><p>This removes the fictional imports, corrections and notes saved by this prototype in this browser. It does not touch real files or business records.</p><div class="actions"><button data-action="cancel-reset">Keep my demo work</button><button class="danger" data-action="confirm-reset">Reset demo</button></div></dialog>
+</body>
+</html>

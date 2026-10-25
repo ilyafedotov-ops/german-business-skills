@@ -1,0 +1,11 @@
+{
+  "name": "de-business-kit-prototype-checks",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/prototype-state.test.cjs",
+    "test:browser": "node tests/prototype-browser.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}

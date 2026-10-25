@@ -9,6 +9,17 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills" / "de-business-kit"
 
 
+def checked_files(root):
+    """Check authored source; development dependencies and reports are not shipped."""
+    local_only = {"node_modules", ".venv", "venv", "output", "dist", "test-results",
+                  "playwright-report", ".playwright-mcp"}
+    for file in root.rglob("*"):
+        parts = file.relative_to(root).parts
+        if parts[0] in local_only or any(part in {".git", "__pycache__"} for part in parts):
+            continue
+        yield file
+
+
 def main():
     errors = []
     required = [
@@ -73,9 +84,7 @@ def main():
                     errors.append("Invalid localized template: " + str(name))
     except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
         errors.append("Invalid locale manifest: " + str(exc))
-    for file in ROOT.rglob("*"):
-        if any(part in {".git", "__pycache__"} for part in file.relative_to(ROOT).parts):
-            continue
+    for file in checked_files(ROOT):
         if file.is_symlink():
             errors.append("Symlink in distributable: " + str(file.relative_to(ROOT)))
             continue
