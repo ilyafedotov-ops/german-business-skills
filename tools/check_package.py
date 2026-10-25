@@ -27,6 +27,11 @@ def main():
         "docs/quickstart.md", "docs/quickstart.ru.md", "docs/distribution.md", "docs/distribution.ru.md",
         "skills/de-business-kit/references/onboarding.md",
         "skills/de-business-kit/references/legal-boundaries.md",
+        "skills/de-business-kit/scripts/workflows.py", "skills/de-business-kit/scripts/payments.py",
+        "skills/de-business-kit/assets/form-catalog.json", "skills/de-business-kit/assets/preparation-messages.json",
+        "skills/de-business-kit/references/preparation.md", "skills/de-business-kit/references/international.md",
+        "skills/de-business-kit/references/payments.md", "skills/de-business-kit/references/classification.md",
+        "docs/workflows.md", "docs/workflows.ru.md",
     ]
     for name in required:
         if not (ROOT / name).is_file():

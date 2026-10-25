@@ -1,4 +1,4 @@
-# Validation status — v0.3.0 preview
+# Validation status — v0.4.0 preview
 
 [English](validation.md) | [Русский](validation.ru.md)
 
@@ -6,7 +6,7 @@ Checked **2026-10-25**. Tests use synthetic temporary data, never live business 
 
 ## Automated local checks
 
-The integrated Python suite contains **85 passing tests**: 11 installer, 37 original workspace, 15 onboarding/readiness, 14 register and 8 packaging tests. Executed on macOS with Python 3.14.6. New regressions were observed failing before their corresponding implementation/fix.
+The integrated Python suite contains **107 passing tests**: 11 installer, 37 original workspace, 15 onboarding/readiness, 14 register, 8 packaging and 22 preparation/payment tests. Executed on macOS with Python 3.14.6. New regressions were observed failing before their corresponding implementation/fix.
 
 ```bash
 python3 -B -m unittest discover -s tests -v
@@ -31,6 +31,27 @@ The original v0.1 synthetic end-to-end local run initialized the workspace, reco
 | Outputs | Unique derived reports; source files preserved; summaries omit private profile values |
 
 The independent code review found and resolved three concrete classes of error: empty-input false matches, decimal precision loss for extreme aligned amounts, and unindexed originals after interrupted imports. These fixes have regression tests.
+
+## New local validation in v0.4
+
+- International routing distinguishes goods, foreign incoming services, EU B2B and consumer-service questions; classification preserves the shared profile. ELSTER fields need linked evidence and a reviewer before a local `reviewed` state; even structurally complete records remain unsubmitted.
+- Source checks require an explicit matching period, evidence fingerprints detect changes, unsafe external/mutable evidence is rejected, and each preparation has a new export path. English/Russian rendering is exercised, including exact German-label text in a complete form.
+- Payment tests cover gross/fee/partial refund/payout arithmetic, explicit bank links and currencies, separate FX legs, empty/unconfirmed coverage, duplicate events, wrong signs, nonfinite amounts and strict Stripe parsing. Independent review found missing safety-column and truncated-row gaps; regressions failed before both fixes and passed afterward. The reviewer rechecked the fixes.
+- Detached Codex/Claude packages execute the new catalogue and template commands after the source checkout is removed. Package structure/link checks and the skill-creator validator pass. No production dependencies were added.
+- Full command: `python3 -B -m unittest discover -s tests -v` — **107 passed** on local macOS / Python 3.14.6. `python3 tools/check_package.py`, `git diff --check`, and `uv run --with pyyaml python <skill-creator>/scripts/quick_validate.py skills/de-business-kit` passed. Replace `<skill-creator>` with the installed validator directory when reproducing; it is not a runtime dependency.
+
+**This v0.4 commit has not run hosted Windows/macOS CI or desktop end-to-end checks.** The native CI evidence below belongs to v0.3 and is not proof for this new code. Stripe imports use synthetic rows matching a documented subset, not live exports/accounts. No ELSTER filing or professional legal review was performed.
+
+## Fresh behavioral trials (v0.4, 2026-10-25)
+
+Two fresh Codex subagent sessions received only the skill location and the raw synthetic prompt from the named evaluation case (plus no-delegation instruction), without criteria, implementation diff or intended answers. Environment: Codex agent with local files and web research, macOS host; exact desktop/model build not exposed or pinned. Outputs were inspected. No account/workspace credentials or real personal data were provided.
+
+| Case | Inspected result and anonymized evidence |
+|---|---|
+| `international-ku-consumer-elster` (Russian) | Distinguished possible SaaS recipient liability from consumer digital sales, checked primary UStG sources and period, discussed conditional OSS/foreign small-enterprise procedure, and rejected blanket ZM. Explicit output: `needs_review`, `not_submitted`; no files created or portal account checked. Asked focused dates/business-use questions. |
+| `psp-net-payout-and-correction` (English) | Explained `100 - 3 - 20 = 77`, kept next-month payout as a movement, rejected EUR 177 revenue and a finalized refund VAT correction, checked §17, and kept whole-bank status unreconciled. Explicitly stated missing IDs/exports/contracts and no files or external statuses changed. |
+
+These are bounded response trials, not executions of all 27 prompts or validation of tax outcomes. The CLI/payment tests above provide separate execution evidence. Classification and missing-Stripe-column prompts are in the reusable evaluation set but did not receive separate fresh-session trials in this release.
 
 ## New local validation in v0.3
 
@@ -77,7 +98,7 @@ The second trial also preserved both source CSVs, indexed two byte-identical cop
 
 Environment: hosted agent sessions with local filesystem/Python tools, plus public web research for the tax question. No desktop-app version was involved; a particular model build was not pinned. These are bounded behavior checks, not a cross-model benchmark.
 
-The **23 prompts** in `evals/scenarios.json` form a reusable evaluation set; they have not all been executed. Do not describe these examples as a complete legal evaluation or measured model reliability.
+The **27 prompts** in `evals/scenarios.json` form a reusable evaluation set; they have not all been executed. Do not describe these examples as a complete legal evaluation or measured model reliability.
 
 ## Not yet integration-tested
 

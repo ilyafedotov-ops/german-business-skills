@@ -1,4 +1,4 @@
-# German Business Kit — локальная предварительная версия 0.3.0
+# German Business Kit — локальная предварительная версия 0.4.0
 
 [English](README.md) | [Русский](README.ru.md)
 

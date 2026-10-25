@@ -3,7 +3,8 @@ name: de-business-kit
 description: >-
   Organize a user's own German Freiberufler or Einzelunternehmen/Gewerbe business:
   English/Russian intake, private files, registration and ELSTER worksheets,
-  guided setup, bookkeeping preparation, tax questions, Lexware Office handoff, and bank/software
+  guided setup, international payments, reverse charge, Gewerbe/Freiberufler clarification,
+  bookkeeping preparation, tax questions, Lexware Office handoff, and bank/software
   comparisons. Use for German sole-trader tax questions, receipts, reconciliation,
   starting or running a business; русский: бухгалтерия, налоговые вопросы,
   налоги, открытие и ведение Gewerbe/Freiberufler. Provide sourced analysis and
@@ -12,7 +13,7 @@ description: >-
 
 # German Business Kit
 
-Use one private workspace per natural-person entrepreneur. Keep multiple activities in that profile, with activity IDs. Support **English (`en`) and Russian (`ru`)** throughout conversation and user-facing reports; retain official German form labels. Version: **0.3.0 preview**, source review **2026-10-25**.
+Use one private workspace per natural-person entrepreneur. Keep multiple activities in that profile, with activity IDs. Support **English (`en`) and Russian (`ru`)** throughout conversation and user-facing reports; retain official German form labels. Version: **0.4.0 preview**, source review **2026-10-25**.
 
 ## Language and working mode
 
@@ -43,6 +44,9 @@ For first use, setup confusion, a demonstration or “continue,” follow [guide
 | First use, collect facts, establish work split | [intake](references/intake.md) | Provenanced profile; prioritized missing facts |
 | Setup, demonstration, resume or recovery | [onboarding](references/onboarding.md) | Guided first task, truthful setup status and next action |
 | Open, extend or change an activity | [formation](references/formation.md) | Registration plan; form worksheet; unresolved choices |
+| Clarify Gewerbe/Freiberufler or mixed activities | [classification](references/classification.md) | Evidence-linked activity worksheet and focused review questions |
+| Cross-border sales/purchases, reverse charge, OSS or ZM | [international](references/international.md) | Transaction facts, conditional routes and period-specific source checks |
+| Payment providers, payouts, refunds, disputes or FX | [payments](references/payments.md) | Normalized events, statement arithmetic, bank payout links and exceptions |
 | Explain German rules and identify exceptions | [German rules](references/german-rules.md) | Sources, applicability, explicit assumptions and review questions |
 | Tax questions, choices and estimates (`tax-consultant`) | [tax preparation](references/tax-consultant.md) | Direct answer; applicable sources; calculations/assumptions; consultation record |
 | Non-tax legal questions, disputes or services for other people | [legal boundaries](references/legal-boundaries.md) | Factual preparation, precise review issue and qualified handoff when needed |
@@ -53,6 +57,7 @@ For first use, setup confusion, a demonstration or “continue,” follow [guide
 | Data handling and credentials | [privacy](references/privacy.md) | Minimal approved data scope and configuration evidence |
 | Install, missing tools or host differences | [platforms](references/platforms.md) | Actual capability inventory and manual fallback |
 | Record state, use scripts or resume work | [workspace](references/workspace.md) | Consistent files and traceable state transitions |
+| Save international/classification/ELSTER preparation | [preparation](references/preparation.md) | Validated draft record, source fingerprints and English/Russian report |
 | Choose language, switch mode or select a localized template | [language and modes](references/language-and-modes.md) | English/Russian output with stable shared state |
 
 ## Invariants
@@ -71,7 +76,9 @@ For first use, setup confusion, a demonstration or “continue,” follow [guide
 
 `scripts/workspace.py` supplies **offline** start/resume, synthetic demo, diagnosis, recorded runtime assessment, validated profile/register updates, byte-preserving intake, integrity checks and explicit-reference CSV reconciliation. Use `entry` for task/question/decision updates; preserve unresolved legacy records rather than silently converting them. Run `python3 <skill-directory>/scripts/workspace.py --help` and read [workspace](references/workspace.md) before use. Use the actual Python 3 launcher on Windows.
 
-v0.3 contains no production banking, ELSTER, Lexware or tax-filing connector and no complete personal-tax calculation engine. Consultations use current sources and explicit, reproducible calculations where the facts support them. Browser work uses only tools actually provided by the host and permitted for this task; the skill does not grant capabilities. Do not claim a connection, scheduled reminder, external update, or end-to-end desktop test happened without evidence.
+`scripts/workflows.py` prepares international, activity-classification and ELSTER worksheets with validated evidence links, source-period checks and localized reports. `scripts/payments.py` reconciles normalized payment events and a strict subset of Stripe activity exports by currency and explicit payout IDs. Keep raw exports and mapping evidence. Payment matches do not approve tax treatment; all form preparations remain unsubmitted. See [preparation](references/preparation.md) and [payments](references/payments.md).
+
+v0.4 contains no production banking, ELSTER, Lexware or tax-filing connector and no complete personal-tax calculation engine. Consultations use current sources and explicit, reproducible calculations where the facts support them. Browser work uses only tools actually provided by the host and permitted for this task; the skill does not grant capabilities. Do not claim a connection, scheduled reminder, external update, or end-to-end desktop test happened without evidence.
 
 ## Finish and resume
 

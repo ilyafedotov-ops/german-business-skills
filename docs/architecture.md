@@ -2,7 +2,7 @@
 
 [English](architecture.md) · [Русский](architecture.ru.md)
 
-Project version: **0.3.0 preview**. Source review: **2026-10-25**.
+Project version: **0.4.0 preview**. Source review: **2026-10-25**.
 
 ## Intended result
 
@@ -56,7 +56,7 @@ Hashes, history and procedures support record organization; compliance of the co
 
 ## Current limits and future work
 
-Version 0.3 adds guided setup, synthetic demo, runtime assessment records, typed profile values and validated register writes while preserving language/mode support. It contains no production bank, Lexware or ELSTER connector, automatic filings, complete personal-tax engine, integrated OCR/XML validator or scheduler. Browser instructions use only capabilities actually available in the host. No end-to-end desktop integration test is implied by local tests.
+Version 0.4 adds guided setup, synthetic demo, runtime assessment records, typed profile values and validated register writes while preserving language/mode support. It contains no production bank, Lexware or ELSTER connector, automatic filings, complete personal-tax engine, integrated OCR/XML validator or scheduler. Browser instructions use only capabilities actually available in the host. No end-to-end desktop integration test is implied by local tests.
 
 | Future work | Evidence needed before claiming support |
 |---|---|
@@ -76,3 +76,7 @@ Keep English/Russian template roles and user guides aligned while leaving machin
 ## Guided setup and validated records
 
 Use the [beginner guide](quickstart.md) and [distribution guide](distribution.md). `start` resumes without changing preferences; `demo` uses a separate synthetic workspace; `doctor` checks local health. Processing assessment is a recorded, scoped review with configuration/evidence hashes, not legal certification. Profile values have field-specific validation. `entry` updates tasks/questions/decisions under the same lock with history, explicit transitions, evidence and an expected prior hash. Legacy malformed records are reported without silent migration. Proposal/operation JSON files remain instruction templates; no external execution engine or provider-state validator is implied.
+
+## International preparation records
+
+Version 0.4 adds `workflows.py` for international transactions, activity classification and ELSTER worksheets, and `payments.py` for normalized payment events and strict Stripe activity CSVs. Both reuse private-workspace storage protections and write new JSON/Markdown reports with source fingerprints. Runtime dependencies remain Python standard library. Source checks record the exact applicable period; their content still requires human/agent review. Workspace schema stays version 1; no migration or separate entrepreneur profile is needed. See [workflow guide](workflows.md).

@@ -59,7 +59,7 @@ class PackagingTests(unittest.TestCase):
                 manifest_path = "plugin.json" if host == "codex" else ".claude-plugin/plugin.json"
                 manifest = json.loads((plugin / manifest_path).read_text(encoding="utf-8"))
                 self.assertEqual(manifest["name"], entry["name"])
-                self.assertEqual(manifest["version"], "0.3.0-preview")
+                self.assertEqual(manifest["version"], "0.4.0-preview")
                 for readme in ("README.md", "README.ru.md"):
                     content = (plugin / readme).read_bytes()
                     self.assertEqual(content, (ROOT / "packaging" / readme).read_bytes())
@@ -67,6 +67,13 @@ class PackagingTests(unittest.TestCase):
                     self.assertIn(("(" + other + ")").encode(), content)
                 skill = plugin / "skills/de-business-kit"
                 locales = json.loads((skill / "assets/locales.json").read_text(encoding="utf-8"))
+                for script, arguments in (("workflows.py", ["catalog"]),
+                                          ("workflows.py", ["template", "--kind", "international"]),
+                                          ("payments.py", ["template"])):
+                    result = subprocess.run([sys.executable, "-B", str(skill / "scripts" / script), *arguments],
+                                            cwd=self.base, capture_output=True, text=True, encoding="utf-8")
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertEqual(json.loads(result.stdout)["schema_version"], 1)
                 for language in ("en", "ru"):
                     for template in locales["languages"][language]["templates"].values():
                         self.assertTrue((skill / "assets" / template).is_file())
@@ -82,6 +89,22 @@ class PackagingTests(unittest.TestCase):
                         capture_output=True, text=True, encoding="utf-8")
                     self.assertEqual(status.returncode, 0, status.stderr)
                     self.assertEqual(json.loads(status.stdout)["language"], language)
+                    seed = subprocess.run(
+                        [sys.executable, "-B", str(skill / "scripts/workflows.py"), "template", "--kind", "classification"],
+                        cwd=self.base, capture_output=True, text=True, encoding="utf-8")
+                    self.assertEqual(seed.returncode, 0, seed.stderr)
+                    request = json.loads(seed.stdout)
+                    request.update(record_id="packaged-synthetic", period="2026-10")
+                    (private / "00_admin/inbox/request.json").write_text(json.dumps(request), encoding="utf-8")
+                    prepared = subprocess.run(
+                        [sys.executable, "-B", str(skill / "scripts/workflows.py"), "prepare", "--root", str(private),
+                         "--kind", "classification", "--input", "00_admin/inbox/request.json"],
+                        cwd=self.base, capture_output=True, text=True, encoding="utf-8")
+                    self.assertEqual(prepared.returncode, 0, prepared.stderr)
+                    result = json.loads(prepared.stdout)
+                    self.assertEqual(result["status"], "needs_review")
+                    report = (private / result["markdown_path"]).read_text(encoding="utf-8")
+                    self.assertIn("Подготовка" if language == "ru" else "Preparation", report)
 
     def test_archives_are_byte_deterministic_and_include_only_reviewed_resources(self):
         (self.source / ".env").write_text("DO_NOT_SHIP=synthetic\n", encoding="utf-8")

@@ -4,15 +4,17 @@
 
 Open-source assistance for starting and running a sole-trader business in Germany, including **Freiberufler** and **Einzelunternehmen/Gewerbe**. One portable skill for Codex and Claude Code provides a shared business profile, organized private files and three explicit working modes.
 
-**Version 0.3.0 — preview.** User documentation, conversations and generated documents are supported in **English and Russian**. Official German form labels remain in German so users can find the corresponding fields. Internal agent references and machine-readable JSON keys remain in English; human-readable content follows the chosen language.
+**Version 0.4.0 — preview.** User documentation, conversations and generated documents are supported in **English and Russian**. Official German form labels remain in German so users can find the corresponding fields. Internal agent references and machine-readable JSON keys remain in English; human-readable content follows the chosen language.
 
 The source and documentation are MIT-licensed. AI services, bank accounts and accounting products follow their own subscription terms.
+
+See [international transactions, payments, classification and ELSTER workflows](docs/workflows.md) for plain-language prompts and the new evidence-linked preparation reports.
 
 ## Start here
 
 New to skills or terminal tools? Read the [beginner guide](docs/quickstart.md), select the installed **German Business Kit** in your app, and say: “Guide me through setup in English and show the synthetic demo before using real documents.” The assistant checks the actual tools and helps you choose a private folder. You do not need to edit JSON.
 
-Version 0.3 adds safe start/resume, a synthetic demonstration, local diagnostics, recorded processing assessments and validated profile/register updates. [Local plugin bundles](docs/distribution.md) package the same skill for Codex and Claude. They are preview distribution artifacts, not a published one-click listing or a bundled Python runtime. Native Windows/macOS utility CI passes; desktop-app acceptance remains pending. See [validation](docs/validation.md).
+Guided setup includes safe start/resume, a synthetic demonstration, local diagnostics, recorded processing assessments and validated profile/register updates. [Local plugin bundles](docs/distribution.md) package the same skill for Codex and Claude. They are preview distribution artifacts, not a published one-click listing or a bundled Python runtime. The v0.3 baseline passed native Windows/macOS CI; this v0.4 change has local validation only and desktop-app acceptance remains pending. See [validation](docs/validation.md).
 
 ## Choose a working mode
 

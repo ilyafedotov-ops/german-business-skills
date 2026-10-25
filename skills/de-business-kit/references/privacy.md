@@ -30,7 +30,7 @@ Record only the necessary processing purpose, scope, basis/condition evidence an
 
 ## Scope of the free project
 
-Distributing static skills does not automatically give the author access to user documents. v0.3 scripts make no network calls and include no telemetry. Any later hosted service, support upload, analytics or error collector changes the data flow and must be assessed separately. Model providers, bookkeeping software and account providers still have their own terms and fees.
+Distributing static skills does not automatically give the author access to user documents. v0.4 scripts make no network calls and include no telemetry. Any later hosted service, support upload, analytics or error collector changes the data flow and must be assessed separately. Model providers, bookkeeping software and account providers still have their own terms and fees.
 
 ## Official starting sources
 

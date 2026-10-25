@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "checked_on": "2026-10-25",
+  "applicability": "Navigation snapshot only; confirm live form/version and legal obligation for the requested period.",
+  "forms": [
+    {
+      "id": "fseeun",
+      "label": "Fragebogen zur steuerlichen Erfassung für Einzelunternehmen",
+      "url": "https://www.elster.de/eportal/formulare-leistungen/alleformulare/fseeun",
+      "guidance": {
+        "en": "Starting commercial or freelance activity; check existing enterprise context.",
+        "ru": "Начало коммерческой или свободной профессиональной деятельности; учтите существующий бизнес."
+      }
+    },
+    {
+      "id": "ustva",
+      "label": "Umsatzsteuer-Voranmeldung",
+      "url": "https://www.elster.de/eportal/formulare-leistungen/alleformulare/ustvaeru",
+      "guidance": {
+        "en": "Review filing period and liability, including qualifying recipient-tax cases.",
+        "ru": "Проверьте период и обязанность, включая применимые случаи налога получателя."
+      }
+    },
+    {
+      "id": "ust",
+      "label": "Umsatzsteuererklärung",
+      "url": "https://www.elster.de/eportal/formulare-leistungen/alleformulare/ust",
+      "guidance": {
+        "en": "Annual VAT return only where required; check applicable exemptions and requests.",
+        "ru": "Годовая декларация НДС при наличии обязанности; проверьте исключения и требования органа."
+      }
+    },
+    {
+      "id": "euer",
+      "label": "Anlage EÜR",
+      "url": "https://www.elster.de/eportal/formulare-leistungen/alleformulare/euer",
+      "guidance": {
+        "en": "Business profit calculation where EÜR applies; not complete personal taxation.",
+        "ru": "Расчёт прибыли при применении EÜR; не полный расчёт личных налогов."
+      }
+    },
+    {
+      "id": "est_s_g",
+      "label": "Einkommensteuererklärung / Anlage S / Anlage G",
+      "url": "https://www.elster.de/eportal/formulare-leistungen/alleformulare/est",
+      "guidance": {
+        "en": "Prepare business inputs for S or G after activity classification; personal return needs other facts.",
+        "ru": "Подготовьте бизнес-данные для S или G после классификации; личная декларация требует других сведений."
+      }
+    },
+    {
+      "id": "gewst",
+      "label": "Gewerbesteuererklärung",
+      "url": "https://www.elster.de/eportal/formulare-leistungen/alleformulare/gewst",
+      "guidance": {
+        "en": "Conditional commercial-activity filing, not automatic for every Einzelunternehmen.",
+        "ru": "При обязанности по коммерческой деятельности; не автоматически для каждого Einzelunternehmen."
+      }
+    },
+    {
+      "id": "zm",
+      "label": "Zusammenfassende Meldung",
+      "url": "https://www.elster.de/eportal/formulare-leistungen/alleformulare/zmdo",
+      "guidance": {
+        "en": "Assess qualifying EU supplies and §18a(4), not every foreign payment.",
+        "ru": "Проверьте подходящие операции ЕС и §18a(4), а не каждый иностранный платёж."
+      }
+    },
+    {
+      "id": "dauerfrist",
+      "label": "Dauerfristverlängerung / Sondervorauszahlung",
+      "url": "https://www.elster.de/eportal/formulare-leistungen/alleformulare",
+      "guidance": {
+        "en": "Check monthly/quarterly procedure and special-advance-payment applicability.",
+        "ru": "Проверьте месячную/квартальную процедуру и применимость специального авансового платежа."
+      }
+    },
+    {
+      "id": "vorauszahlungen",
+      "label": "Antrag auf Anpassung von Vorauszahlungen",
+      "url": "https://www.elster.de/eportal/formulare-leistungen/alleformulare",
+      "guidance": {
+        "en": "Support requested changes with current forecasts and evidence.",
+        "ru": "Подтвердите изменения актуальными прогнозами и документами."
+      }
+    },
+    {
+      "id": "belege",
+      "label": "Belegnachreichung",
+      "url": "https://www.elster.de/eportal/formulare-leistungen/alleformulare/belegnachreichung",
+      "guidance": {
+        "en": "Attach only requested/relevant evidence to the correct filing reference.",
+        "ru": "Приложите только необходимые подтверждения с правильной ссылкой на декларацию."
+      }
+    },
+    {
+      "id": "nachricht",
+      "label": "Sonstige Nachricht an das Finanzamt",
+      "url": "https://www.elster.de/eportal/formulare-leistungen/alleformulare",
+      "guidance": {
+        "en": "Identify purpose; a general message does not replace a prescribed return or remedy.",
+        "ru": "Установите цель; обычное сообщение не заменяет обязательную форму или средство обжалования."
+      }
+    }
+  ]
+}

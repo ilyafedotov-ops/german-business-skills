@@ -2,7 +2,7 @@
 
 [English](quickstart.md) | [Русский](quickstart.ru.md)
 
-Version 0.3.0 preview helps you organize your own German sole-trader business. You can prepare registration documents, organize a month for your accountant, and research tax questions. It does not replace the accounting system, a licensed adviser, or official submission receipts.
+Version 0.4.0 preview helps you organize your own German sole-trader business. You can prepare registration documents, organize a month for your accountant, and research tax questions. It does not replace the accounting system, a licensed adviser, or official submission receipts.
 
 ## Choose the app you already use
 
@@ -49,3 +49,5 @@ Ask: “Run the local diagnosis for this workspace and explain the next safe ste
 Do not delete an existing folder, originals or a lock just because setup stopped. Keep protected backups, and verify a restoration into a separate folder. Skill updates should preserve the business workspace. See [workspace recovery](../skills/de-business-kit/references/onboarding.md#recovery).
 
 Native Windows/macOS utility CI has passed; desktop-app acceptance remains pending in [validation](validation.md). This guide describes the intended supported workflow, not evidence that every app version has passed it.
+
+Next: [international transactions, payment systems and ELSTER preparation](workflows.md).

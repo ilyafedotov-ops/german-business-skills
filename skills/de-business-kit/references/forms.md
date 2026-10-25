@@ -2,6 +2,10 @@
 
 Prepare a field worksheet first. Use the live official form, year/version and authority; labels and routes can change. Never invent field numbers or submit an old template as current.
 
+Use the [form catalogue](../assets/form-catalog.json) for candidate routing and `workflows.py catalog`. It covers Einzelunternehmen registration (commercial or freelance), UStVA, annual Umsatzsteuer, Anlage EÜR, business inputs for Anlage S/G, conditional Gewerbesteuer/ZM, Dauerfristverlängerung/Sondervorauszahlung, advance-payment adjustment, supplementary evidence and messages. A catalogue entry is not a filing obligation. Confirm actual ELSTER account capability: a startup email-registration account may initially support only the registration questionnaire. Gewerbeanmeldung remains a separate municipal procedure.
+
+For a saved, validated preparation use [the preparation commands](preparation.md), kind `elster`. Keep exact observed German labels, evidence IDs, reviewer, period and calculation notes. Form inputs and source checks can be incomplete; the resulting report states what remains unresolved. Local `reviewed` fields never imply submission. For commercial/freelance ambiguity read [classification](classification.md); for international VAT/ZM read [international](international.md).
+
 ## Workflow
 
 1. Identify the form purpose, legal entity/natural person, tax year, authority and official portal. For registration, read `formation.md`; for tax choices, check current `german-rules.md` sources.
@@ -14,7 +18,7 @@ Prepare a field worksheet first. Use the live official form, year/version and au
 8. Submit only through a supported, permitted route. On timeout or unclear response, inspect the official status before any retry; never send a duplicate blindly.
 9. Save receipt/transmission ID and date in the private workspace. Distinguish `draft`, `ready_for_review`, `authorized`, `submitted` and `authority_response_received`. Submission receipt is not substantive acceptance by the authority. If no receipt or status evidence exists, keep `submission_unconfirmed` and explain what to check.
 
-## Scope of v0.3
+## Scope of v0.4
 
 These are agent instructions, not an implemented ELSTER connector. Do not claim unattended filing, complete UI coverage or a tested ELSTER integration. Native browser availability and file uploads differ by host; consult `platforms.md` and current host documentation. Manual guidance is a complete fallback for preparation, not evidence of a submitted form.
 

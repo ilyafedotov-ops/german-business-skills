@@ -1,10 +1,12 @@
 # Bookkeeping mode: capture, review and reconcile
 
+For PSP exports, fees, refunds, chargebacks, payouts, FX and owned-account movements use [payments](payments.md). For foreign supply VAT questions use [international](international.md).
+
 ## Scope and capability
 
 Use `bookkeeping` mode to carry a German sole proprietor's available records through capture, proposal, review, reconciliation, monthly reporting and adviser handoff. Establish the actual bookkeeping method and division of work with the tax adviser from `01_profile/business.json`. Continue work on clear transactions while isolating unresolved obligations, payroll, cash-register requirements or complex foreign transactions for the relevant review workflow.
 
-Version 0.3 provides local tools and an operational workflow. It has **no production accounting API connector and performs no automated postings**. Keep proposed treatment, reviewed decisions and observed provider state distinct. A receipt upload, local file or successful calculation does not establish a posting, payment, export or tax submission.
+Version 0.4 provides local tools and an operational workflow. It has **no production accounting API connector and performs no automated postings**. Keep proposed treatment, reviewed decisions and observed provider state distinct. A receipt upload, local file or successful calculation does not establish a posting, payment, export or tax submission.
 
 ## Activate and localize
 
@@ -62,7 +64,7 @@ For a tax question that can be analysed on the available facts, use `tax-consult
 
 Prepare a table of proposed changes and unresolved items before entry into the accounting product. Reuse authorization already given for the concrete operation; seek additional authorization only when the proposed action exceeds it. Do not infer authority to submit tax returns or transfer money from permission to organize receipts.
 
-In v0.3, provide a reviewed handoff file or guided user steps. Do not claim that a connector exists, simulate API responses or mark records as posted. If a separate authorized tool is available, verify its operation and current provider documentation independently. Read back external IDs and states after a real write. After a timeout, inspect the provider before retrying a creation.
+In v0.4, provide a reviewed handoff file or guided user steps. Do not claim that a connector exists, simulate API responses or mark records as posted. If a separate authorized tool is available, verify its operation and current provider documentation independently. Read back external IDs and states after a real write. After a timeout, inspect the provider before retrying a creation.
 
 ## Reconcile and close a month
 
