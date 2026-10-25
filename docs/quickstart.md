@@ -48,4 +48,4 @@ Ask: “Run the local diagnosis for this workspace and explain the next safe ste
 
 Do not delete an existing folder, originals or a lock just because setup stopped. Keep protected backups, and verify a restoration into a separate folder. Skill updates should preserve the business workspace. See [workspace recovery](../skills/de-business-kit/references/onboarding.md#recovery).
 
-Actual native Windows and desktop acceptance results remain listed as pending in [validation](validation.md). This guide describes the intended supported workflow, not evidence that every app version has passed it.
+Native Windows/macOS utility CI has passed; desktop-app acceptance remains pending in [validation](validation.md). This guide describes the intended supported workflow, not evidence that every app version has passed it.

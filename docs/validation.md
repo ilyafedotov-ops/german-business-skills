@@ -6,7 +6,7 @@ Checked **2026-10-25**. Tests use synthetic temporary data, never live business 
 
 ## Automated local checks
 
-The integrated Python suite contains **84 passing tests**: 10 installer, 37 original workspace, 15 onboarding/readiness, 14 register and 8 packaging tests. Executed on macOS with Python 3.14.6. New regressions were observed failing before their corresponding implementation/fix.
+The integrated Python suite contains **85 passing tests**: 11 installer, 37 original workspace, 15 onboarding/readiness, 14 register and 8 packaging tests. Executed on macOS with Python 3.14.6. New regressions were observed failing before their corresponding implementation/fix.
 
 ```bash
 python3 -B -m unittest discover -s tests -v
@@ -41,7 +41,11 @@ The independent code review found and resolved three concrete classes of error: 
 - Independent read-only code review identified recovery/state problems. They were fixed with red/green regression coverage; the reviewer rechecked the fixes and found no remaining actionable issue within the reviewed scope. Packaging review found no actionable issue.
 - The skill-creator format validator passed using isolated PyYAML. No production dependency was added.
 
-Native Windows/macOS CI jobs are defined in `.github/workflows/checks.yml`; they have **not run on GitHub** in this change. Claude Code 2.1.310 local manifest validation passed for the final marketplace and plugin. Both languages' first-run readmes are packaged; the earlier missing-README issue is resolved. Separate public-directory diagnostics still warn about a missing icon and installation-line guidance; no public submission is claimed. No plugin was registered in a user account. See [distribution](distribution.md).
+Native Windows/macOS CI in `.github/workflows/checks.yml` [passed all four jobs on commit `ae25b0b`](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40229530057), checked 2026-10-25. Each macOS job (Python 3.10/3.14) passed all 85 tests. Each Windows job (Python 3.9/3.14) passed 84 with one expected skip: Windows cannot create the unsafe filename fixture. All four package checks passed. These results establish offline utility behavior on the runners, not desktop discovery or end-user installation usability.
+
+The first native run exposed an existing installer bug: attempting `mkdir` on an existing Windows drive root raised `PermissionError`. The installer now validates existing ancestors without creating them, retaining symlink checks, exclusive creation and rollback. A local regression reproduced the failure before the fix; independent review and the native rerun verified it.
+
+Claude Code 2.1.310 local manifest validation passed for the final marketplace and plugin. Both languages' first-run readmes are packaged; the earlier missing-README issue is resolved. Separate public-directory diagnostics still warn about a missing icon and installation-line guidance; no public submission is claimed. No plugin was registered in a user account. See [distribution](distribution.md).
 
 ## Fresh behavioral trials (v0.3, 2026-10-25)
 

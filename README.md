@@ -12,7 +12,7 @@ The source and documentation are MIT-licensed. AI services, bank accounts and ac
 
 New to skills or terminal tools? Read the [beginner guide](docs/quickstart.md), select the installed **German Business Kit** in your app, and say: “Guide me through setup in English and show the synthetic demo before using real documents.” The assistant checks the actual tools and helps you choose a private folder. You do not need to edit JSON.
 
-Version 0.3 adds safe start/resume, a synthetic demonstration, local diagnostics, recorded processing assessments and validated profile/register updates. [Local plugin bundles](docs/distribution.md) package the same skill for Codex and Claude. They are preview distribution artifacts, not a published one-click listing or a bundled Python runtime. Native Windows/desktop acceptance remains pending; see [validation](docs/validation.md).
+Version 0.3 adds safe start/resume, a synthetic demonstration, local diagnostics, recorded processing assessments and validated profile/register updates. [Local plugin bundles](docs/distribution.md) package the same skill for Codex and Claude. They are preview distribution artifacts, not a published one-click listing or a bundled Python runtime. Native Windows/macOS utility CI passes; desktop-app acceptance remains pending. See [validation](docs/validation.md).
 
 ## Choose a working mode
 
