@@ -1,0 +1,5 @@
+entry_id,transaction_id,amount,currency
+synthetic-sale,synthetic-tx-001,100.00,EUR
+synthetic-fee,synthetic-tx-001,-3.00,EUR
+synthetic-receipt,synthetic-tx-002,-119.00,EUR
+synthetic-us-payment,synthetic-tx-003,50.00,USD

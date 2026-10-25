@@ -1,0 +1,4 @@
+interface:
+  display_name: "German Business Kit"
+  short_description: "Start and organize a small business in Germany"
+  default_prompt: "Use $de-business-kit to organize my German business workspace and identify the next practical steps."

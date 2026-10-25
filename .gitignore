@@ -1,0 +1,27 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.key
+*.pem
+private/
+client-data/
+workspaces/
+dist/
+.pytest_cache/
+
+# Defence in depth; private workspaces belong outside repositories.
+00_admin/
+01_profile/
+02_registration/
+03_banking/
+04_accounting/
+05_tax/
+06_bookkeeping/
+07_exports/
+08_correspondence/
+09_audit/

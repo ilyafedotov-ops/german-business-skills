@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "operation_id": null,
+  "kind": null,
+  "target_service": null,
+  "target_account_reference": null,
+  "recipient_or_authority": null,
+  "period": null,
+  "payload_file": null,
+  "payload_sha256": null,
+  "state": "draft",
+  "review": {"reviewed_by": null, "reviewed_at": null, "unresolved_questions": []},
+  "authorization": {"scope": null, "reference": null, "authorized_at": null},
+  "execution": {"attempted_at": null, "external_id": null, "receipt_file": null, "result_verified_at": null},
+  "authority_response": {"received_at": null, "evidence_file": null, "meaning": null},
+  "supersedes": null
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "proposal_id": null,
+  "document_id": null,
+  "activity_id": null,
+  "evidence": {"original_sha256": null, "field_locations": []},
+  "extracted": {
+    "invoice_number": null,
+    "supplier_reference": null,
+    "customer_reference": null,
+    "supplier_country": null,
+    "customer_country": null,
+    "invoice_date": null,
+    "service_period": null,
+    "receipt_date": null,
+    "payment_date": null,
+    "currency": null,
+    "net": null,
+    "tax": null,
+    "gross": null
+  },
+  "proposed_treatment": {"category": null, "tax_rule": null, "reason": null, "source_checks": []},
+  "review": {"status": "unreviewed", "questions": [], "reviewer": null, "decision_ref": null},
+  "provider": {"name": null, "record_id": null, "observed_status": "unknown", "observed_at": null},
+  "retention": {"class": "unresolved", "hold_status": "unknown", "review_after": null},
+  "supersedes": null
+}
