@@ -1,0 +1,2 @@
+transaction_id,booking_date,amount,currency,reference
+SYN-PAY-1,2026-10-10,50.00,EUR,INV-SYN-001

@@ -2,15 +2,15 @@
 
 Collect what the current workflow needs. Do not demand a passport, every tax identifier or all customer invoices at first use. Distinguish a user's own administration from operating an accounting service for other people.
 
-## Stage 0 — establish the workspace and data boundary
+## Stage 0 — establish the task and relevant data boundary
 
-Ask/reuse: starting or existing business; country of residence and establishment; natural person or another legal form; chosen private local folder; desired language (English or Russian) and working mode; assistant product and account/plan. Infer the requested mode from a clear task rather than forcing a menu. Record model/provider and local/cloud execution separately in `00_admin/runtime.json`. Apply `privacy.md` before bringing real third-party data into context. No account credentials are required for intake.
+First identify the requested outcome and use the relevant direct skill. For an ordinary question or form explanation, ask only facts affecting that answer; defer workspace/runtime setup until persistent records or real data require it. For that setup, ask/reuse: starting or existing business; country of residence and establishment; natural person or another legal form; chosen private local folder; desired language (English or Russian) and working mode; assistant product and account/plan. Infer the requested mode from a clear task rather than forcing a menu. Record model/provider and local/cloud execution separately in `00_admin/runtime.json`. Apply `privacy.md` before bringing real third-party data into context. No account credentials are required for intake.
 
 Initialize using `workspace.py init --root <private-path> --year <year> --language ru|en --mode general|bookkeeping|tax-consultant`, selecting one value for each option. The CLI retains legacy `de` compatibility; complete user templates are supplied for English and Russian. Unknown facts stay null. Do not populate a demo with the author's or user's remembered personal data. A tax question can be answered before creating a workspace; persistent settings and records become available after initialization.
 
 ## Stage 1 — minimum business context
 
-During welcome, ask/reuse whether the user already maintains accounts in a particular software product or wants local records. Save that explicit choice through the [accounting workflow](accounting-workflow.md); no route or vendor is preselected. Keep the choice separate from EÜR/Bilanzierung and VAT facts. An undecided user can continue collecting documents.
+When accounting work requires the choice, ask/reuse whether the user already maintains accounts in a particular software product or wants local records. Save that explicit choice through the [accounting workflow](accounting-workflow.md); no route or vendor is preselected. Keep the choice separate from EÜR/Bilanzierung and VAT facts. An undecided user can continue collecting documents.
 
 Gather these in small batches:
 

@@ -1,10 +1,10 @@
 # Dot-sourced only by windows.ps1 while its workspace lock is held.
 # Saved states and local hashes are inspected; native full filing preflight is unavailable.
 function ViewProperty($value,[string]$name,$default=$null) {
-    if ($null -eq $value) { return $default }
-    if ($value -is [Collections.IDictionary]) { if ($value.Contains($name)) { return ,$value[$name] }; return $default }
+    if ($null -eq $value) { return ,$default }
+    if ($value -is [Collections.IDictionary]) { if ($value.Contains($name)) { return ,$value[$name] }; return ,$default }
     $property=$value.PSObject.Properties[$name]
-    if ($null -eq $property) { return $default }
+    if ($null -eq $property) { return ,$default }
     return ,$property.Value
 }
 function ViewObjects($value) {
@@ -80,6 +80,111 @@ function ViewInPeriod([string]$recordPeriod,[string]$month) {
     if ($recordPeriod.Length -eq 4) { return $month.StartsWith($recordPeriod+'-') }
     if ($recordPeriod.Contains('-Q')) { return ($recordPeriod.Substring(0,4) -ceq $month.Substring(0,4) -and [int]$recordPeriod.Substring(6,1) -eq [int][Math]::Ceiling([int]$month.Substring(5,2)/3.0)) }
     return $recordPeriod -ceq $month
+}
+function ViewTaskEvidencePath($record) {
+    $relative=ViewProperty $record 'evidence_file'
+    $digest=ViewProperty $record 'evidence_sha256'
+    if ($null -eq $relative) {
+        if ($null -ne $digest -or $record.status -ceq 'completed') { throw 'Task state requires a preserved evidence file and hash.' }
+        return $null
+    }
+    if ($relative -isnot [string] -or [string]::IsNullOrWhiteSpace($relative) -or $relative -match '(^|/)[.]{1,2}(/|$)|[\\:]|^/' -or $digest -isnot [string] -or $digest -cnotmatch '^[0-9a-f]{64}$') { throw 'Invalid task evidence path or hash.' }
+    $path=Absolute (WorkspacePath $relative)
+    Chain $path $true
+    if (Test-Path -LiteralPath $path) {
+        $item=Get-Item -LiteralPath $path -Force
+        $link=$item.PSObject.Properties['LinkType']
+        if ($null -eq $link -or -not [string]::IsNullOrEmpty([string]$link.Value)) { throw 'Use an independent preserved evidence file, not a linked file.' }
+    }
+    # Mutable registers cannot establish that a task's result was preserved.
+    foreach ($mutable in @('01_profile/business.json','00_admin/documents.json','09_audit/events.json','00_admin/workspace.json','00_admin/runtime.json','.workspace.lock','.workspace-layout.json','00_admin/tasks.json','00_admin/questions.json','00_admin/decisions.json','00_admin/casework.json','04_accounting/register.json')) {
+        if ($path.Equals((WorkspacePath $mutable),[StringComparison]::OrdinalIgnoreCase)) { throw 'Use preserved task evidence, not a mutable register.' }
+    }
+    return $path
+}
+function ViewActiveTasks {
+    $records=ReadJson (WorkspacePath '00_admin/tasks.json')
+    if ($records -isnot [Array]) { throw 'Invalid tasks register.' }
+    $byId=New-Object 'Collections.Generic.Dictionary[string,object]' ([StringComparer]::Ordinal)
+    $evidence=New-Object 'Collections.Generic.Dictionary[string,string]' ([StringComparer]::Ordinal)
+    $allowed=@('schema_version','id','title','owner','status','depends_on','due_date','deadline_source','evidence_file','evidence_sha256','reviewer','supersedes','superseded_by','note')
+    foreach ($record in $records) {
+        $id=ViewProperty $record 'id'; $status=ViewProperty $record 'status'
+        $schema=ViewProperty $record 'schema_version'
+        if ($record -isnot [pscustomobject] -or @($record.PSObject.Properties.Name | Where-Object { $_ -cnotin $allowed }).Count -or ($schema -isnot [int] -and $schema -isnot [long]) -or $schema -ne 1 -or $id -isnot [string] -or $id -cnotmatch '^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$' -or $byId.ContainsKey($id) -or $status -isnot [string] -or $status -cnotin @('pending','in_progress','blocked','completed','cancelled')) { throw 'Invalid task entry.' }
+        foreach ($name in @('title','owner')) { $value=ViewProperty $record $name; if ($value -isnot [string] -or [string]::IsNullOrWhiteSpace($value)) { throw 'Task title and owner must be text.' } }
+        foreach ($name in @('deadline_source','reviewer','supersedes','superseded_by','note')) { $value=ViewProperty $record $name; if ($null -ne $value -and ($value -isnot [string] -or [string]::IsNullOrWhiteSpace($value))) { throw 'Invalid task metadata.' } }
+        $due=ViewProperty $record 'due_date'
+        if ($null -ne $due) {
+            $parsed=[DateTime]::MinValue
+            if ($due -isnot [string] -or -not [DateTime]::TryParseExact($due,'yyyy-MM-dd',[Globalization.CultureInfo]::InvariantCulture,[Globalization.DateTimeStyles]::None,[ref]$parsed) -or [string]::IsNullOrWhiteSpace((ViewProperty $record 'deadline_source'))) { throw 'Recorded dates require a valid date and source.' }
+        }
+        $dependencies=ViewProperty $record 'depends_on' @()
+        if ($dependencies -isnot [Array]) { throw 'Task dependencies must be an array.' }
+        $seen=New-Object 'Collections.Generic.HashSet[string]' ([StringComparer]::Ordinal)
+        foreach ($dependency in $dependencies) { if ($dependency -isnot [string] -or [string]::IsNullOrWhiteSpace($dependency) -or $dependency -ceq $id -or -not $seen.Add($dependency)) { throw 'Invalid task dependency.' } }
+        $path=ViewTaskEvidencePath $record
+        $evidence[$id]='not_recorded'
+        if ($null -ne $path) {
+            try {
+                $bytes=ReadBytes $path
+                # Canonical evidence is arbitrary bytes, including PDF and images.
+                $hasContent=$false
+                foreach ($byte in $bytes) { if ($byte -notin @(9,10,11,12,13,32)) { $hasContent=$true; break } }
+                if (-not $hasContent -or (Hash $bytes) -cne $record.evidence_sha256) { throw 'Task evidence needs review.' }
+                $evidence[$id]='checked'
+            } catch { $evidence[$id]='needs_review' }
+        }
+        $byId.Add($id,$record)
+    }
+    foreach ($record in $records) {
+        $links=ViewProperty $record 'depends_on' @()
+        $links=$links+@((ViewProperty $record 'supersedes'),(ViewProperty $record 'superseded_by'))
+        foreach ($link in $links) { if ($null -ne $link -and (-not $byId.ContainsKey($link) -or $link -ceq $record.id)) { throw 'Task link must refer to a distinct existing entry.' } }
+    }
+    # Topological checks cover even hidden terminal tasks and avoid recursive stack limits.
+    foreach ($relationship in @('depends_on','supersedes')) {
+        $remaining=New-Object 'Collections.Generic.HashSet[string]' ([StringComparer]::Ordinal)
+        foreach ($id in $byId.Keys) { [void]$remaining.Add($id) }
+        while ($remaining.Count) {
+            $ready=@(foreach ($id in $remaining) { $links=ViewProperty $byId[$id] $relationship @(); if (@($links | Where-Object { $null -ne $_ -and $remaining.Contains($_) }).Count -eq 0) { $id } })
+            if (-not $ready.Count) { throw 'Task dependencies and supersession links cannot form cycles.' }
+            foreach ($id in $ready) { [void]$remaining.Remove($id) }
+        }
+    }
+    $active=@(foreach ($record in $records) {
+        if ($record.status -cin @('completed','cancelled')) { continue }
+        $pending=New-Object 'Collections.Generic.HashSet[string]' ([StringComparer]::Ordinal)
+        $visited=New-Object 'Collections.Generic.HashSet[string]' ([StringComparer]::Ordinal)
+        $queue=New-Object 'Collections.Generic.Queue[string]'
+        $dependencies=ViewProperty $record 'depends_on' @()
+        foreach ($id in $dependencies) { $queue.Enqueue($id) }
+        $needsReview=$evidence[$record.id] -ceq 'needs_review'
+        while ($queue.Count) {
+            $id=$queue.Dequeue(); if (-not $visited.Add($id)) { continue }
+            if ($byId[$id].status -cne 'completed' -or $evidence[$id] -cne 'checked') { [void]$pending.Add($id) }
+            if ($evidence[$id] -ceq 'needs_review') { $needsReview=$true }
+            $ancestors=ViewProperty $byId[$id] 'depends_on' @()
+            foreach ($ancestor in $ancestors) { $queue.Enqueue($ancestor) }
+        }
+        $readiness='ready'
+        if ($needsReview) { $readiness='needs_review' } elseif ($record.status -cnotin @('pending','in_progress') -or $pending.Count) { $readiness='blocked' }
+        $pendingIds=[string[]]@($pending); [Array]::Sort($pendingIds,[StringComparer]::Ordinal)
+        @{id=$record.id;title=$record.title;owner=$record.owner;status=$record.status;due_date=(ViewProperty $record 'due_date');deadline_source=(ViewProperty $record 'deadline_source');note=(ViewProperty $record 'note');evidence_status=$evidence[$record.id];pending_dependencies=$pendingIds;readiness=$readiness}
+    })
+    $compare=[Collections.Generic.Comparer[object]]::Create([Comparison[object]]{
+        param($left,$right)
+        $leftDate=$left.due_date; if ($null -eq $leftDate) { $leftDate='9999-12-31' }
+        $rightDate=$right.due_date; if ($null -eq $rightDate) { $rightDate='9999-12-31' }
+        $order=[StringComparer]::Ordinal.Compare($leftDate,$rightDate)
+        if ($order) { return $order }
+        $leftState=1; if ($left.status -ceq 'in_progress') { $leftState=0 }
+        $rightState=1; if ($right.status -ceq 'in_progress') { $rightState=0 }
+        if ($leftState -ne $rightState) { return $leftState-$rightState }
+        return [StringComparer]::Ordinal.Compare($left.id,$right.id)
+    })
+    [Array]::Sort($active,$compare)
+    return ,$active
 }
 function ViewAccounting($events) {
     $path=WorkspacePath '04_accounting/register.json'
@@ -167,18 +272,26 @@ function NativeOverview {
     $words.urgent=$messages.PSObject.Properties[$language].Value.urgent
     $words.authority_response=$messages.PSObject.Properties[$language].Value.authority_response
     $words.response_kinds=$messages.PSObject.Properties[$language].Value.response_kinds
+    foreach ($key in @('choose_task','continue_task','review_tasks','active_tasks','tasks_scope','no_active_tasks','task_no_date','task_ready','task_blocked','task_needs_review','task_owner','task_dependencies','task_states')) {
+        $words[$key]=$messages.PSObject.Properties[$language].Value.PSObject.Properties[$key].Value
+    }
     $errors=New-Object 'Collections.Generic.List[string]'
-    $docs=@(); $questions=@(); $tasks=@(); $accounting=$null
+    $docs=@(); $allDocumentCount=0; $questions=@(); $tasks=@(); $activeTasks=@(); $accounting=$null; $nextTaskId=$null
     try {
         $integrity=Verify
         if ($integrity.status -ne 'ok') { throw 'Original integrity needs review; inspect verify output.' }
         $events=ReadJson (WorkspacePath '09_audit/events.json')
         if ($events -isnot [Array] -or @($events | Where-Object { $_ -isnot [pscustomobject] }).Count) { throw 'Invalid audit log.' }
-        $docs=@((Index).documents | Where-Object { $_.period -ceq $Period })
+        $allDocuments=(Index).documents
+        $allDocumentCount=$allDocuments.Count
+        $docs=@($allDocuments | Where-Object { $_.period -ceq $Period })
         $questions=@((ViewRegister 'questions' @('open','deferred','resolved')) | Where-Object { $_.status -cin @('open','deferred') })
-        $tasks=@((ViewRegister 'tasks' @('pending','in_progress','blocked','completed','cancelled')) | Where-Object { $_.status -cnotin @('completed','cancelled') -and $null -ne (ViewProperty $_ 'due_date') } | Sort-Object due_date,id)
+        $activeTasks=ViewActiveTasks
+        $taskRecords=ReadJson (WorkspacePath '00_admin/tasks.json')
+        $tasks=@($taskRecords | Where-Object { $_.status -cnotin @('completed','cancelled') -and $null -ne (ViewProperty $_ 'due_date') } | Sort-Object due_date,id)
         $accounting=ViewAccounting $events
-    } catch { $errors.Add($_.Exception.Message) }
+    } catch { $errors.Add($_.Exception.Message); $activeTasks=@(); $tasks=@() }
+    if (-not $errors.Count) { $readyTasks=@($activeTasks | Where-Object { $_.readiness -ceq 'ready' }); if ($readyTasks.Count) { $nextTaskId=$readyTasks[0].id } }
     $soon=(Get-Date).Date.AddDays(7).ToString('yyyy-MM-dd')
     $urgentTasks=@($tasks | Where-Object { $_.due_date -cle $soon })
     $urgentResponses=@()
@@ -189,18 +302,29 @@ function NativeOverview {
     elseif ($urgentTasks.Count -gt 0 -or $urgentResponses.Count -gt 0) { $next='urgent' }
     elseif (@($accounting.filings | Where-Object { $_.issues.Count -gt 0 -or $_.state -cin @('draft','reviewed','authorized') }).Count) { $next='review_filings' }
     elseif ($questions.Count) { $next='review_questions' }
+    elseif ($activeTasks.Count) { if ($null -ne $nextTaskId) { $next='continue_task' } else { $next='review_tasks' } }
+    elseif ($accounting.accounting_system -ceq 'undecided' -and $allDocumentCount -eq 0 -and $accounting.entry_count -eq 0 -and $accounting.filings.Count -eq 0) { $next='choose_task' }
     elseif ($accounting.accounting_system -ceq 'undecided') { $next='choose_accounting' }
     $health='ok'; $docCount=$docs.Count; $entryCount=$null
     if ($null -ne $accounting) { $entryCount=$accounting.entry_count }
     if ($errors.Count) { $health='needs_review';$docCount=$null;$entryCount=$null }
-    $result=@{schema_version=1;generated_by='de-business-kit-native-overview-v1';health=$health;errors=@($errors.ToArray());language=$language;period=$Period;as_of=(Get-Date).ToString('yyyy-MM-dd');questions=$questions;tasks=$tasks;documents=$docs;accounting=$accounting;counts=@{documents=$docCount;entries=$entryCount};next_action=$next;scope='Saved state and local hashes only; full filing preflight, tax correctness and period completeness are not assessed.'}
+    $result=@{schema_version=1;generated_by='de-business-kit-native-overview-v1';health=$health;errors=@($errors.ToArray());language=$language;period=$Period;as_of=(Get-Date).ToString('yyyy-MM-dd');questions=$questions;tasks=$tasks;active_tasks=$activeTasks;next_task_id=$nextTaskId;documents=$docs;accounting=$accounting;counts=@{documents=$docCount;entries=$entryCount};next_action=$next;scope='Saved state and local hashes only; full filing preflight, tax correctness and period completeness are not assessed.'}
     $e={param($value) [Net.WebUtility]::HtmlEncode([string]$value)}
     $section={param($title,$items) '<section><h2>'+(& $e $title)+'</h2>'+$(if (@($items).Count) { '<ul>'+(@($items | ForEach-Object { '<li>'+(& $e $_)+'</li>' }) -join '')+'</ul>' } else { '<p>'+(& $e $words.empty)+'</p>' })+'</section>'}
     $body='<section><h2>'+(& $e $words.next)+'</h2><p>'+(& $e $words[$next])+'</p></section>'
     if ($errors.Count) { $body+=& $section $words.errors @($errors.ToArray()) }
+    $taskRows=@(foreach ($task in $activeTasks) {
+        $state=$words.task_states.PSObject.Properties[$task.status].Value
+        $date=$words.task_no_date; if ($null -ne $task.due_date) { $date=$task.due_date+' / '+$task.deadline_source }
+        $row=$task.title+' / '+$words.task_owner+': '+$task.owner+' / '+$state+' / '+$words[('task_'+$task.readiness)]+' / '+$date
+        if ($null -ne $task.note) { $row+=' / '+$task.note }
+        if ($task.pending_dependencies.Count) { $row+=' / '+$words.task_dependencies+': '+($task.pending_dependencies -join ', ') }
+        $row
+    })
+    $noTasks=$words.no_active_tasks; if ($errors.Count) { $noTasks=$words.repair }
+    $body+=& $section $words.active_tasks (@($words.tasks_scope)+$(if ($taskRows.Count) { $taskRows } else { @($noTasks) }))
     $body+=& $section ($words.documents+' ('+$(if ($null -eq $docCount) { $words.unknown } else { $docCount })+')') @($docs | ForEach-Object { $_.original_name })
     $body+=& $section $words.questions @($questions | ForEach-Object { $_.title })
-    $body+=& $section $words.tasks @($tasks | ForEach-Object { $_.title+' '+$_.due_date+' / '+$_.deadline_source })
     $accountRows=@($words.readiness+': '+$words.not_assessed)
     if ($null -ne $accounting) {
         $accountRows+=@(($words.system+': '+$words[$accounting.accounting_system]),($words.method+': '+$(if ($accounting.method -ceq 'unresolved') { $words.not_assessed } else { $accounting.method })),($words.entries+': '+$(if ($null -eq $entryCount) { $words.unknown } else { $entryCount })),($words.evidence+': '+$words[$accounting.evidence_status]))
@@ -223,12 +347,12 @@ function NativeOverview {
             elseif (-not $utf8.GetString((ReadBytes $target)).StartsWith($mark,[StringComparison]::Ordinal)) { throw 'Existing native view is not tool-generated; preserve it.' }
         }
     }
-    $markdownRows=@($errors.ToArray())+@($docs | ForEach-Object { $_.original_name })+@($questions | ForEach-Object { $_.title })+@($tasks | ForEach-Object { $_.title+' / '+$_.due_date+' / '+$_.deadline_source })+$accountRows
+    $markdownRows=@($errors.ToArray())+@($words.active_tasks,$words.tasks_scope)+$(if ($taskRows.Count) { $taskRows } else { @($noTasks) })+@($docs | ForEach-Object { $_.original_name })+@($questions | ForEach-Object { $_.title })+$accountRows
     $markdownRows=@($markdownRows | ForEach-Object { ([Net.WebUtility]::HtmlEncode([string]$_)) -replace '([\\`*_{}\[\]()#+.!|>~-])','\$1' })
     $markdown=$mark+'# '+$words.title+"`n`n"+$Period+' / '+$result.as_of+"`n`n"+$words.boundary+"`n`n"+$words.next+': '+$words[$next]+"`n`n"+($markdownRows -join "`n`n")+"`n"
     ViewSave '00_admin/native-overview.html' ($utf8.GetBytes($html))
     ViewSave '00_admin/native-overview.md' ($utf8.GetBytes($markdown))
     ViewSave '00_admin/native-overview.json' (BytesJson $result)
     $prefix=(WorkspacePath '00_admin').Substring($rootPath.TrimEnd([char[]]'\/').Length+1).Replace('\','/')
-    return @{health=$health;errors=@($errors.ToArray());html_path=$prefix+'/native-overview.html';markdown_path=$prefix+'/native-overview.md';json_path=$prefix+'/native-overview.json';next_action=$next;scope=$result.scope}
+    return @{health=$health;errors=@($errors.ToArray());html_path=$prefix+'/native-overview.html';markdown_path=$prefix+'/native-overview.md';json_path=$prefix+'/native-overview.json';next_action=$next;next_task_id=$nextTaskId;scope=$result.scope}
 }

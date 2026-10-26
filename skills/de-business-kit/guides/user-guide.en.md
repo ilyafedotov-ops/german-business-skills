@@ -2,15 +2,20 @@
 
 **English** · [Русский](user-guide.ru.md)
 
+Choose a concrete outcome in the [task guide](tasks.en.md).
+
 New here? Follow the [short start guide](start.en.md). Read this manual by task; you do not need to learn technical commands.
 
-[Documents](#documents) · [Accounts and payments](#accounts-and-payments) · [Taxes and letters](#taxes-and-letters) · [Reports](#reports) · [Continue](#continue) · [States](#states) · [Help](#help) · [Backups](#backups)
+[Lifecycle tasks](#launch-annual-preparation-and-business-changes) · [Service exports](#inspect-a-service-export) · [Invoice corrections](#invoice-corrections-and-partial-payments) · [Documents](#documents) · [Accounts and payments](#accounts-and-payments) · [Taxes and letters](#taxes-and-letters) · [Reports](#reports) · [Continue](#continue) · [States](#states) · [Help](#help) · [Backups](#backups)
+
+
+You can directly select `de-business-start`, `de-business-operations`, `de-business-accounting`, `de-business-tax`, `de-business-services` or `de-business-changes`. The general `de-business-kit` helps select the next action. See the [map and shared resources](../references/lifecycle.md). Install the complete bundle; keep one profile.
 
 ## What this assistant is
 
-German Business Kit is a set of instructions and tools for Codex and Claude Code. It helps you work independently with your own German business records. The app, file access, AI subscription and service connections are provided separately. The skill alone does not grant access to email or banking.
+German Business Kit is a set of instructions and tools for Codex and Claude Code. It helps you handle business tasks and records independently throughout your activity in Germany. The app, file access, AI subscription and service connections are provided separately. The skill alone does not grant access to email or banking.
 
-The main work is to retrieve and preserve selected documents, review suggested facts, investigate payments, and prepare readable reports and form materials. A complete accounting/tax engine and ELSTER transmission integration are not implemented. If you use existing accounting software, it remains authoritative. Professional consultation is an optional route for a specific issue, not a required handoff of all your work.
+This manual describes existing document, payment, reporting and recovery tasks within the wider entrepreneur skill system. Formation, questions and service selection also have dedicated modules; change and closure guidance is available. See the [portable lifecycle map](../references/lifecycle.md). A complete accounting/tax engine and ELSTER transmission integration are not implemented. Existing accounting software remains authoritative. Professional consultation is optional for a specific issue.
 
 ## Ask for a result
 
@@ -19,6 +24,12 @@ Specify the result, period and source where relevant. For example:
 > Organize October 2026 documents from this folder. Show the list first. I want to see which invoices need review and which evidence is missing. Do not send anything.
 
 The assistant should reuse known facts, ask only what matters and retain uncertainty. Say “I don't know” when a fact is unresolved. A simple explanation does not require a workspace, full questionnaire or mode selection.
+
+## Launch, annual preparation and business changes
+
+Start with the outcome in the [task guide](tasks.en.md). For example: “Prepare a launch plan for this activity,” “Show what is missing before annual reporting,” or “Plan closing one activity while keeping my other work running.”
+
+The relevant skill reuses your profile and prepares a readable plan or worksheet with known facts, dependencies, sources and open decisions. Formation, customer work, annual readiness, service access and changes have dedicated worksheets. First-hire preparation covers the required questions and next steps; payroll calculations and registrations need their actual tools and evidence. A saved plan does not establish a completed registration, hire or closure.
 
 ## Find your files
 
@@ -54,9 +65,17 @@ Before importing a bank export, review column mapping, signs, dates, currencies 
 
 **Result:** a readable report of the actual evidence checked. Matching amounts does not prove a complete month or correct tax treatment.
 
+## Inspect a service export
+
+> Check this supplied export for the requested period. Explain how its date selection works, which originals are present and what evidence is still missing. Keep my existing accounting system authoritative.
+
+The assistant records the export route, date basis, supplied files, inspected pages and gaps. A CSV row or matching count does not prove that every original or an entire month is present. Lexware Office guidance distinguishes document/PDF selection from DATEV posting exports; current project trials use local examples. A live connection or import is confirmed only by an actual service result. See [services and access](../references/connections.md).
+
 ## Taxes and letters
 
 > Explain this letter, what it asks and the next action. Distinguish its stated date from a verified deadline. Prepare a German draft response and a separate English explanation. Do not send yet.
+
+For a conceptual tax question, ask for the rule and its source first. For example: “Does buying a phone in installments change its depreciation period?” Before concrete entries or amounts, the assistant needs the relevant date, accounting method and other decisive facts. It checks applicable primary sources and uses a suitable official or selected accounting tool for calculations; the skill does not supply its own tax formula engine.
 
 For a form identify the purpose and year/period. Form applicability, deadlines and elections depend on your circumstances and current official sources. Exact German field names remain visible so you can find them in the interface.
 
@@ -83,6 +102,8 @@ The result includes sources and check dates, reasons for the comparison and deci
 At the end ask to save the result, open questions and next step. Return to the same folder:
 
 > Continue here. Show the latest saved state, changes in the sources and what needs to happen next.
+
+The overview also shows active business tasks without dates and tasks from other months. It shows unresolved dependencies and changed or missing evidence; an independent task can still continue. Completed and cancelled tasks stay in history. Ask the assistant to inspect the saved task before continuing. In the GUI, the continuation button prepares a request to copy to your assistant; it does not start an AI session or complete work automatically.
 
 Change language naturally: “Respond in German from now on; do not rename my folders.” New folder names support EN/RU/DE; complete report templates currently cover English and Russian. Switching tasks does not change your tax regime. A dated task is not an automatic notification.
 
@@ -132,3 +153,14 @@ The real workspace overview now shows your accounting choice, period entries, op
 Ask: “Create and verify a complete backup at this protected location”, or “Restore this backup into a new folder and check it.” [Full backup and restore](../references/recovery.md) includes originals, records, evidence and history, and is available through native Windows tools without installing Python. An existing folder is never overwritten. Keep both the backup and original until you have checked the restored workspace.
 
 The native Windows overview reads saved records and checks local evidence hashes; it does not run the full filing preflight. Advanced protected accounting/filing writes still need a supported existing execution environment. It does not silently install Python. [Monthly workflow and exact limits](../references/monthly-workflow.md).
+
+## Invoice corrections and partial payments
+
+You can supply an original invoice, a later CreditNote and relevant payment
+records. The assistant can preserve and inspect supported standalone XML, explain
+its reference to the earlier invoice, and save a reviewed document link. The
+issued originals and earlier drafts remain available. Missing or ambiguous links
+stay open. A partial payment or CreditNote does not automatically mean the invoice
+is settled, money was refunded or accounting was corrected. Existing software
+remains authoritative; ask to continue the saved case when new evidence arrives.
+This is bounded evidence preparation, not technical e-invoice validation or sending.

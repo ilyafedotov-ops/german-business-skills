@@ -5,7 +5,7 @@
 
 The user-facing tax mode is **Tax questions and preparation**. Its existing machine ID `tax-consultant` is retained for compatibility; it does not describe licensed professional status.
 
-Version **0.6.0-preview.4** provides one portable skill with an explicit focus for each task. Self-managed bookkeeping/accounting and tax reporting are the primary workflow. Bookkeeping and tax analysis use the same private profile, evidence index and decision history; they do not create separate versions of the business. Accountant consultation and exports are optional branches for a specific need.
+The current source contains seven skills covering the entrepreneur lifecycle. The saved modes below remain compatible preferences for focus and language; they are not the skill catalog or a required setup step. Select a domain skill directly or use the router; see the [task guide](../skills/de-business-kit/guides/tasks.en.md). Accounting and tax analysis use the same private profile, evidence index and decision history as other tasks. Self-managed accounting and reporting remain supported journeys; professional consultation and exports are optional branches.
 
 ## Select a mode and language
 
@@ -19,6 +19,8 @@ Version **0.6.0-preview.4** provides one portable skill with an explicit focus f
 Choose the initial defaults when creating a new private workspace:
 
 These are optional Python-engine examples. On Windows, use the [native path](windows.md) for setup/intake without Python. Native resume preserves saved preferences; a task-specific language/mode request can be followed in chat without editing canonical records.
+
+Paths such as `00_admin` below are logical identifiers, not fixed folder names. Resolve physical paths through `workspace.py folders` or the native folders action; preserve existing layouts. See [folder mapping](folder-structure.md).
 
 ```bash
 python3 skills/de-business-kit/scripts/workspace.py init --root /absolute/private-workspace --year 2026 --language en --mode bookkeeping
@@ -41,7 +43,7 @@ Preserve official German labels in both languages. Translate their explanations,
 
 ### Purpose
 
-Help the entrepreneur manage their own books and tax reporting, starting with an organized, reviewable record of receipts, invoices and payments. Continue useful processing while isolating transactions that need clarification. Current utilities provide preparation, proposals, reconciliation and form worksheets. A complete accounting ledger and ELSTER submission integration remain core implementation gaps; a monthly package does not fill those gaps.
+Help the entrepreneur manage their own books and tax reporting, starting with an organized, reviewable record of receipts, invoices and payments. Continue useful processing while isolating transactions that need clarification. Current utilities provide preparation, proposals, reconciliation and form worksheets. Complete statutory accounting and direct ELSTER transmission are not implemented in this package; use the selected accounting/form tools for their supported operations. A monthly archive does not fill those gaps.
 
 ### Workflow
 
@@ -94,7 +96,7 @@ A bookkeeping question may reveal a tax issue. Create a linked consultation for 
 
 ## What modes do not change
 
-Mode and language settings do not grant tools, change permissions, establish consent to publish private data or authorize filings, contracts or payments. There are no production provider connectors in this preview. Complete ledger functionality and ELSTER submission are core capabilities still to be completed. Local preparation and analysis remain useful without those connectors; externally observed actions must be recorded only when they actually occur. See the [document workflow](document-workflow.md) for these evidence boundaries.
+Mode and language settings do not grant tools, change permissions, establish consent to publish private data or authorize filings, contracts or payments. There are no production provider connectors in this preview. A complete proprietary ledger and direct ELSTER transport are not implemented; further development follows a concrete journey and does not require replacing the selected software. Local preparation and analysis remain useful without those connectors; externally observed actions must be recorded only when they actually occur. See the [document workflow](document-workflow.md) for these evidence boundaries.
 
 Use the shared [workspace](../skills/de-business-kit/references/workspace.md), [privacy](../skills/de-business-kit/references/privacy.md), [German rules](../skills/de-business-kit/references/german-rules.md) and [form workflow](../skills/de-business-kit/references/forms.md) for the relevant task.
 

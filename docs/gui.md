@@ -1,10 +1,10 @@
-# Real workspace interface — 0.7.0-preview.1
+# Real workspace interface — 0.8.0-preview.1
 
 [English](gui.md) | [Русский](gui.ru.md) | [User instructions](../gui/README.md)
 
 The `gui/` application connects a browser interface to the real workspace writers.
 The separate `prototype/` remains a fictional demonstration. Version
-[0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1)
+[0.8.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1)
 adds standalone Windows x64, macOS Apple Silicon and macOS Intel packages. Use a
 matching archive only after publication and verification; a local build or
 passing test is not a published platform release. [Download verification](releases.md)
@@ -13,6 +13,7 @@ installing Python.
 
 ## Supported work
 
+- See active business tasks across months, including tasks without dates, dependencies and evidence status. Continue through the existing assistant-request dialog; this does not call an AI service or update tasks. Empty workspaces start with the intended business task.
 - Open/create a private workspace and use English, Russian or German navigation.
 - Import selected PDFs, XML, images and CSVs; see per-file results and review
   catalog details alongside a safe text/image preview or original download.

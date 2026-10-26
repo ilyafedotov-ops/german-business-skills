@@ -6,6 +6,399 @@ Current capabilities are summarized in [project status](project-status.md). Date
 
 Checked **2026-10-26**. Tests use synthetic temporary data, never live business records or accounts.
 
+## 0.8.0-preview.1 release preparation (2026-10-26)
+
+The user authorized commit, push, PR, release and production delivery. This repository's delivery target is the verified GitHub release with two skill bundles and three native GUI archives; no hosted application deployment is configured. Version metadata/current instructions were advanced without changing workspace schemas or historical release entries.
+
+Independent integration review found a legacy installer regression: an explicit catalog-less source with a noncanonical directory name could be ignored in favor of a sibling `de-business-kit`. Both regressions failed before the fix; `68c7a94` preserves the explicitly selected source while retaining catalog-based complete-bundle checks. Independent follow-up found no remaining blocker. Installer tests: **18 passed**; complete-bundle tests: **4 passed**.
+
+The first fresh local full run failed two PowerShell overview subprocess timeouts at the unchanged 40-second limit: **273 tests, 2 errors, 5 skips**, 223.868 s. Sampling showed filesystem directory enumeration but did not establish a root cause. An unchanged focused repeat passed **9 tests** in 64.379 s. The final integrated run, including the installer regressions, passed **275 tests: 270 passed, 5 skipped**, 130.952 s, macOS arm64/Python 3.14.6. No timeouts, assertions or native protection rules were relaxed. The intermittent local PowerShell limitation remains unresolved. Logs: `/private/tmp/gbk-080-full-tests.log`, `/private/tmp/gbk-080-native-overview-repeat.log`, `/private/tmp/gbk-080-final-full-tests.log`.
+
+`npm test`: **8 passed**; `npm audit --audit-level=high`: **0 vulnerabilities**. Package/version, Markdown link/anchor and diff checks passed. PR [#10](https://github.com/ilyafedotov-ops/german-business-skills/pull/10) runs exact-head platform/security checks; the release tag reruns those gates before publication. This preparation entry is not evidence that the final PR/tag has passed or that publication has completed. Ordinary-user first launch and real service operations remain open; Lexware remains on local examples.
+
+## Documentation consolidation (2026-10-26)
+
+Documentation-only refresh on top of `223194b`: README and package introductions, start/user guides, documentation navigation, current status, modes/accounting/preparation, architecture and ontology now describe the seven-skill lifecycle and optional GUI consistently. The new Unreleased changelog section records accumulated source changes without changing version `0.7.0-preview.1` or rewriting historical release entries. The user guides expose annual/change preparation, supplied exports, correction evidence and cross-period continuation; no runtime, schema, tax rule or execution workflow was added.
+
+`python3 -B tools/check_package.py`, `python3 -B tools/release.py check`, local Markdown file/anchor checks and `git diff --check` passed. Independent read-only documentation review found no blocker; EN/RU coverage and the German start-guide correction were inspected. Runtime/browser tests and host/service trials were not rerun for this text-only change. Earlier evidence retains its original source scope and dates; new source/package acceptance is not inferred from it. No package was published or host installation changed.
+
+## Claude discovery and consultation follow-up (2026-10-26)
+
+This checkpoint changes portable guidance, evaluation scenarios and documentation on top of `a257ef2`; production runtime code is unchanged.
+
+- **Claude Code 2.1.310, macOS 27.0.1 arm64:** installed the seven canonical skills into a new isolated project with `python3 -B tools/install.py --target claude --scope project --project <temporary-project>`. Two fresh processes returned all seven project skills through a stream-JSON `control_request` / `initialize`. The successful route explicitly used `--bare --add-dir <project> --setting-sources project`, disabled hooks/plugins/MCP tools and session persistence, and sent no user/model turn. A bare-only diagnostic returned no bundle skills; it is not an automatic-discovery pass. The documented [CLI behavior](https://code.claude.com/docs/en/cli-reference) and [SDK skill loading](https://code.claude.com/docs/en/agent-sdk/skills) were checked on this date.
+- A process sandbox denied networking and writes outside the temporary evidence directory; selected Claude credential/configuration and Keychain paths were denied. This is not a claim that every sensitive host path was unreadable. No host-wide installation, provider choice or account setting was changed. Only bundle-filtered discovery responses were retained. Both processes exited 0; **128 installed files** matched the captured/current source, and **361 relative links, including 48 sibling-skill links**, resolved. An initial capture changed during the test and was superseded by a separate stable installation. Evidence: `/private/tmp/gbk-claude-discovery-aj56hplz/current/summary.json`, `add-dir-method.json`, `installed-manifest.json` and the two `add-dir-run-*.json` receipts. Independent review checked the receipts, probe/sandbox and all file hashes. This proves the explicit added-directory discovery route, not ordinary automatic discovery, conversational routing, marketplace installation or Windows support.
+- A fresh Russian phone-on-installments question was tried in the Codex subagent runtime (GPT-6.1-sol, high), without evaluation criteria or the previous answer supplied. The answer checked primary German tax sources, separated acquisition/useful life from repayment, distinguished financing costs and mixed use, and asked three grouped follow-ups including delivery month/year and EÜR versus balance-sheet accounting. It made no accounting entry, calculation or submission. The earlier trial's core distinction was already correct; the portable guidance now explicitly asks for date/method before precise treatment and keeps the initial conceptual answer focused. The trial remains qualitative evidence, not a general tax-correctness or response-length guarantee. `asset-installments-conceptual-answer` preserves the scenario for future trials.
+- The EN/RU packaged GUI instructions now start with the user's task; document intake, accounting choice and filing are conditional branches. These are instruction changes, not new GUI behavior.
+- `python3 -B -m unittest discover -s tests -p test_install.py -v`: **16 passed**. Package/version checks passed (`0.7.0-preview.1`). The current macOS arm64 application was built with the existing Python 3.12.11/PyInstaller 6.22.3 environment. `python3 -B tests/gui-packaged-smoke.py --executable <new-build>/GermanBusinessKit` passed UI serving, localized workspace, import, posting, drafts and backup/restore with an empty `PATH`. Logs: `/private/tmp/gbk-host-acceptance-install.log`, `/private/tmp/gbk-host-acceptance-build.log`, `/private/tmp/gbk-host-acceptance-packaged.log`. A second build included the final conditional README wording and passed the same empty-PATH smoke (logs `/private/tmp/gbk-host-acceptance-build-final.log` and `/private/tmp/gbk-host-acceptance-packaged-final.log`). Package/version, 116 local Markdown links/anchors and `git diff --check` passed. Independent read-only review of the final guidance and EN/RU evidence found no remaining blocker.
+- A normal executable launch reached Chrome's profile/guest first-run search-engine setup; the application journey did **not** complete. No default/search-engine preference was selected. A window-close action was interrupted before dispatch and was not retried; the owned application server was stopped. This is incomplete interactive desktop acceptance, separately from the successful package smoke.
+
+The preceding **273-test** suite and Chromium/WebKit results are reused only for unchanged runtime behavior; they were not rerun at this guidance checkpoint. Windows PowerShell 5.1 CI already exists, but its older successful run does not validate these local changes. Current-ref hosted checks, Windows/Intel Mac acceptance, ordinary-user trials and real service operations remain open. Lexware continues to use local examples by user choice. No release, external business operation or tax submission was performed.
+
+## Lifecycle tasks in overview and GUI (2026-10-26)
+
+Runtime changes: `e444e73` and `332eaca`. Implemented P1/P7 task-first continuation from the existing task register, including undated/cross-month tasks, transitive dependencies and evidence health. No task state machine, accounting formula, connector or automatic action was added.
+
+- TDD: the prior Python implementation failed the new continuation cases; the native implementation failed empty/undated/graph cases. Independent review reproduced binary evidence incorrectly rejected, task rows surviving later accounting failure, and a hardlink alias of a mutable profile incorrectly trusted. Each added regression failed before its fix. Populated GUI workspaces without tasks also retain document/accounting continuation, including after a month switch.
+- `python3 -B -m unittest discover -s tests -v`: **273 tests, 268 passed, 5 skipped**, 109.980 s, macOS arm64/Python 3.14.6. Includes 12 overview and 9 native task tests plus GUI adapter coverage. The skips are existing Windows/container intake and recovery interoperability cases. This unmodified full run passed the native installer test; the earlier intermittent timeout remains unexplained, not certified fixed.
+- `npm run test:overview -- --browser=chromium` and `--browser=webkit`: passed Python EN/RU empty, blocked, corrupt and lifecycle views at 390/1280, including long unbroken text, keyboard navigation, escaping and console/network checks. Inspected actual screenshots; existing layout retained. This local run did not generate native browser fixtures.
+- `npm run test:gui -- --browser=chromium` and `--browser=webkit`: passed full existing workflows, 54 localized route/viewport checks and six task-home checks per browser, plus populated/no-task continuation. Fixtures use canonical task writers. Stale snapshots, task dependencies, changed evidence, draft/filing precedence, XSS and cross-month visibility were checked. Inspected EN/RU/DE captures and before/after comparison artifacts. WebKit retained 17 existing screenshot-only CSP diagnostics; no unexpected console/network failures.
+- `TMPDIR=/private/tmp pwsh -NoProfile -NonInteractive -File tests/native/overview-smoke.ps1`: passed EN/RU/DE folder paths, task continuation, corruption, escaping, locks and output protection on **PowerShell 7.5.4/macOS**. Native task evidence conservatively refuses hardlinks; PDF/image bytes need no UTF-8 decoding. This is not Windows PowerShell 5.1 acceptance.
+- `npm test`: 8 passed. `python3 -B tools/check_package.py`, local Markdown links/anchors and `git diff --check`: passed. Independent read-only review found no remaining blocker after the fixes.
+- Built the macOS arm64 GUI with existing isolated Python 3.12.11/PyInstaller 6.22.3 tools matching the pinned build requirements. `python3 -B tests/gui-packaged-smoke.py --executable …/GermanBusinessKit`: passed UI serving, localized workspace, import, posting, drafts and backup/restore with an empty `PATH`. This local package smoke does not prove interactive first launch, notarization, Intel/Windows packaging or publication.
+
+A fresh Russian continuation trial used the Codex subagent runtime (GPT-6.1-sol, high; macOS/Python 3.14.6) with a synthetic existing workspace and no evaluation criteria supplied. It kept an application blocked by changed evidence, prepared independent service questions, saved completion through the canonical writer and left accounting undecided. The initial note incorrectly claimed the former evidence file was preserved. On follow-up, an actual search found only its old hash/history, not old bytes; a corrected v2 retained v1 and the task register unchanged. The portable reference now requires locating and verifying a former file before claiming availability, and `lifecycle-resume-changed-evidence` records this regression scenario. A concurrent read initially met the workspace lock; a sequential retry after generation succeeded. This is a bounded synthetic preparation/correction trial, not proof that unprompted first-pass wording, all conversational routes or external operations are reliable.
+
+The final rebuild first refused 13 generated CPython 3.14 cache files in the skill tree. Only the inventoried ignored bytecode was removed; source files were retained. Rebuild and empty-PATH smoke then passed with the final portable reference included.
+
+Hosted Checks run [40308343747](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40308343747) was inspected only as older evidence at `aaba6378`: its Windows PowerShell 5.1 and package jobs succeeded, while macOS WebKit failed. It does not validate this unpushed change. Live Lexware/ELSTER, ordinary-user acceptance and exact-ref platform CI remain open.
+
+## Native timeout investigation and Codex CLI discovery (2026-10-26)
+
+Source under test: `1a01b57`. No production script, test assertion, timeout or
+host-wide installation/configuration was changed in this investigation.
+
+### Native installer diagnosis
+
+- The preceding 90-second native dry-run timeout remains unresolved. Independent
+  inspection found finite path traversal and no explicit installer thread/lock
+  wait. The earlier process sample showed a worker in filesystem/mount metadata
+  calls (`lstat`/`statfs`); this does not establish a deadlock or its cause.
+- Temporary copies outside the checkout recorded script entry, file reads, link
+  validation and destination checks. The first run finished in **8.535 seconds**;
+  three further traced dry-runs finished in **2.992 / 3.227 / 3.296 seconds**.
+  Small sequential startup, provider and metadata controls also completed.
+  These successful probes do not demonstrate that the intermittent failure is fixed.
+- Unmodified focused command:
+  `python3 -B -m unittest discover -s tests -p test_skill_bundle.py -v`:
+  **4 passed**, 35.376 seconds. This exercised complete installation, detached
+  execution, sibling conflicts and invalid/missing resources.
+- A diagnostic full-suite run added timestamps around `Test-Path`/`Get-Item`
+  **only in temporary native test copies**. Existing assertions remained intact:
+  **258 tests, 253 passed, 5 skipped**, 63.694 seconds. This is an instrumented run,
+  not an unmodified full-suite pass or proof that instrumentation has no timing effect.
+- Local evidence: `/private/tmp/gbk-native-diagnosis-l0sb1xg8`,
+  `/private/tmp/gbk-native-focused-20261026.log`, and
+  `/private/tmp/gbk-native-trace-suite-20261026.log`; the diagnostic harness is
+  `/private/tmp/gbk-native-trace-suite.py`, with per-operation logs in
+  `/private/tmp/gbk-native-trace-full-20261026`. No speculative runtime fix was made.
+- Inspected hosted Checks run **40308343747**, commit `aaba637`: native Windows
+  PowerShell 5.1 and all four Python platform jobs passed, but the overall run
+  failed WebKit. This older ref does not validate the current seven-skill source.
+
+### Actual CLI discovery, separately from conversational execution
+
+Used installed **Codex CLI 0.164.0**, macOS 27.0.1 arm64. The existing installer
+copied all seven skills into a new isolated project at
+`/private/tmp/gbk-host-discovery-y20jrub3/project`, using
+`python3 -B tools/install.py --target codex --scope project --project <project>`.
+No user/global skill location or marketplace registration was changed.
+
+The CLI itself generated its protocol schema. Two fresh local
+`codex app-server --listen stdio://` processes received `initialize`, `initialized`
+and `skills/list` with that project in `cwds` and `forceReload: true`. Both returned
+**7/7 catalog members, enabled, scope `repo`, exact installed SKILL.md paths,
+display names/default prompts and zero project errors**. All 128 installed files
+matched source bytes; local sibling links resolved against the installed inventory.
+
+Evidence: `discovery-first.json`, `discovery.json` and the reproducible `probe.py`
+under `/private/tmp/gbk-host-discovery-y20jrub3`. Only the seven project skill
+records were retained in these JSON artifacts. No model turn, provider change,
+account operation, GUI action or business record was involved. Processes were
+closed after inspection.
+
+This establishes project-scoped CLI discovery and rediscovery after process
+restart. Automatic task routing, conversation/workspace resumption, Claude
+runtime discovery, desktop permission/UI flows, Windows host discovery and
+nontechnical-user acceptance remain unverified. P7 is partially accepted;
+the native timing issue stays open.
+
+## P6 Lexware export routes and supplied evidence (2026-10-26)
+
+Implemented a supplied-export coverage procedure, EN/RU operation-note fields and
+route-specific Lexware guidance. Self-managed external books remain authoritative;
+no runtime adapter, ZIP importer, tax formula or workspace schema changed. The
+chosen first live target is Lexware Office document reading; the user selected
+local examples for this run after the browser reached the official login screen.
+No credentials, account documents, live reads, export generation or external
+mutations were performed. The temporary login tab was closed.
+
+- Baseline fresh RU trial reproduced an error: with the export format unknown,
+  the answer applied the DATEV document-date rule universally. Source investigation
+  found that the separate PDF export supports invoice-date or payment-date filters.
+  The corrected workflow establishes the route before applying date/status rules.
+  Primary findings are in [the source note](../skills/de-business-kit/references/lexware-export-sources.md).
+- Two fresh follow-up trials passed: RU kept the unknown route/year conditional
+  and requested existing selection evidence without forcing an adviser or new
+  folders; EN accepted the stated September-invoice/October-payment PDF selection
+  as consistent with Zahldatum while keeping pages 2–3 and the unsupplied ZIP
+  unverified. Matching counts did not close October. Parent read both actual
+  answers. These were synthetic descriptions, not file-import or live tests.
+- Artifacts: baseline `/private/tmp/gbk-export-baseline-9nabenpu/answer.md`;
+  follow-ups `/private/tmp/lexware-route-acceptance-7fjumxwn/ru-answer.md` and
+  `en-answer.md`. Trials requested gpt-6.1-sol/high; source research medium;
+  independent read-only review gpt-6-astra/high. Actual application runtime/model
+  was not independently exposed. Trials saw no eval criteria or test code.
+- Independent review checked authorization, original preservation, scope/date
+  handling, localized paths, EN/RU parity and the bounded live-read procedure:
+  **no actionable findings**. It separately verified the primary source distinctions.
+- Full required suite: `python3 -B -m unittest discover -s tests -v` ran
+  **258 tests: 252 passed, 1 error, 5 skipped** in 197.091 seconds on macOS,
+  Python 3.14.6 / PowerShell 7.5.4. `test_dry_run_then_detached_complete_install`
+  timed out in its initial native `-DryRun` after 90 seconds. This reproduces the
+  previously recorded native timing limitation; the suite is **not green**.
+  The remaining tests completed; no timeout increase or blind retry was used.
+  Log: `/private/tmp/gbk-p6-tests-20261026.log`. Root cause remains unresolved;
+  no Windows PowerShell 5.1 acceptance is claimed.
+- Both packaged skill trees contain **128 files** with identical paths/bytes to
+  current canonical `skills/`. The package check verifies EN/RU template parity;
+  the final local Markdown check covered **191 links/anchors in 17 changed files**.
+- Package, local Markdown links/anchors, version check and `git diff --check`
+  passed. The final bundle was built with `tools/build_package.py --output` at
+  `/private/tmp/gbk-p6-lexware-package-20261026`. Both Claude Code 2.1.310
+  `plugin validate` calls passed; existing icon/install-line advice remains.
+  Validation is not registration, installation, discovery or desktop acceptance.
+
+Live Lexware account/edition/permissions, original retrieval, full coverage,
+Windows/macOS host discovery and nontechnical-user acceptance remain open.
+
+## CreditNote and correction evidence cycle (2026-10-26)
+
+P3/P6 source implementation extends `inspect-xml` to standalone UBL CreditNote
+and adds grouped `preceding_invoices` candidates for UBL Invoice/CreditNote/CII.
+Amounts retain source signs; CII reference dates use `qdt`, not the current-date
+`udt` namespace. Unexpected CII multiplicity is retained with a subset warning.
+No schema/profile validation, tax calculation, automatic relation matching,
+refund, posting or provider execution is added. Source checks are recorded in
+[correction XML sources](../skills/de-business-kit/references/correction-xml-sources.md).
+
+- Red/green: the first four added regressions failed on unsupported CreditNote or
+  absent reference extraction before implementation. A further CII multiplicity
+  assertion failed before adding the warning. Independent review found that two
+  malformed `InvoiceDocumentReference` children could combine an unrelated ID and
+  date. Its exact regression failed before the fix; both fields now remain
+  unavailable with explicit ambiguity. All **11 XML tests passed** afterward.
+- `python3 -B -m unittest discover -s tests -v`: **258 tests, 253 passed,
+  5 skipped**, 53.370 seconds, macOS/Python 3.14.6. The prior native-install timing
+  instability did not recur in this run; this does not establish its cause/fix
+  or Windows PowerShell 5.1 acceptance. Existing platform skips remain.
+- New CLI customer-cycle regression runs in EN/RU: receives actual synthetic
+  invoice/payment/credit-note files, inspects XML, explicitly saves reviewed
+  catalog links through expected hashes, preserves original bytes and v01,
+  resumes the pending task and retains external authority with zero local entries.
+  Two separate retained runs were executed with `tests/customer_journey.py` under
+  `/private/tmp/gbk-correction-cycle-en-20261026` and the corresponding `-ru-` path.
+- A fresh independent operations-skill trial read only supplied raw fixtures and
+  relevant skill resources, without evaluation criteria/test implementation.
+  It used actual intake/inspection/accounting-configuration/task writers, read
+  the CSV and verified all three originals. It produced a Russian private
+  explanation and German unsent reply, leaving the correction/settlement outcome
+  open. Parent read the actual outputs and re-inspected the pending task with
+  evidence health `checked`. No provider account or live bank data was accessed.
+- Trial artifacts: `/private/tmp/business-correction-trial-v5j1zb79`. One exploratory
+  `desk.py template --kind catalog` failed because that kind is unsupported;
+  no mutation occurred and the agent continued with supported commands. Text was
+  inspected; HTML/PDF/browser/native-desktop acceptance was not performed.
+- `python3 -B tools/check_package.py`, local Markdown file/anchor check,
+  `python3 -B tools/release.py check` and `git diff --check`: **passed**.
+  Independent read-only review rechecked the association fix and found no remaining
+  actionable issues in the parser, fixture and CLI-journey scope.
+
+These header-only XML fixtures are not valid/certified commercial e-invoices.
+The evidence cycle establishes local preparation and preservation, not actual
+issuance, tax correctness, provider correction/settlement or refund execution.
+No GUI, production dependencies, workspace migration or live connector changed.
+
+## Practical lifecycle outcomes P1–P7 (2026-10-26)
+
+Added five EN/RU worksheet roles (launch plan, customer case, annual readiness,
+change plan, operation check), shared correspondence/continuation routes, sourced
+first-hire preparation and task-oriented user guides. These implement skill-led
+preparation and use existing writers; they add no runtime calculator, connector,
+state schema, GUI screen or live submission. Reviewed against `c3f426c` plus the
+working-tree changes; the earlier three grouped commits retain the bundle baseline.
+
+### Local source and package checks
+
+- macOS 27.0.1 arm64, Python 3.14.6, PowerShell 7.5.4. Trial subagents were requested
+  as gpt-6.1-sol/high; independent review as gpt-6-astra/high. Application runtime
+  version/effective model were not independently exposed. Locally installed CLI
+  versions do not establish the host used for the conversational trials.
+- `python3 -B -m unittest discover -s tests -v`: final run **251 tests, 246 passed,
+  5 skipped**, 48.405 seconds. Existing Windows/cross-runtime skips remain.
+- The first full run failed one native install dry-run on a **90-second timeout**
+  (251 tests, one error, five skips; 143.010 seconds). No production runtime source
+  was changed to hide the failure. A private instrumented copy completed preflight
+  in 2.7 seconds; focused `test_skill_bundle.py` passed all **4** tests in 31.362
+  seconds; the subsequent full run passed. Cause remains unestablished and native
+  installation timing remains an acceptance limitation, including the earlier
+  deep-path issue. A successful retry does not prove the instability fixed.
+- `TMPDIR=/private/tmp pwsh -NoProfile -File tests/native/windows-smoke.ps1`:
+  **passed** start/resume, preview, original preservation, duplicates, tamper,
+  locks, install and detached resources. This is macOS PowerShell 7 evidence,
+  **not Windows PowerShell 5.1 acceptance**.
+- `python3 -B tools/check_package.py`, `python3 -B tools/release.py check` and
+  `git diff --check`: **passed**. Seven skill frontmatter validations passed.
+  Local Markdown file/anchor checks found **0 errors**.
+- Local package built at `/private/tmp/gbk-p1-p7-package-20261026` using
+  `tools/build_package.py --output`. Both Claude marketplace/plugin validations
+  passed, with unchanged nonblocking icon/install-line advice. No host install,
+  publication, signature validation or actual automatic skill discovery occurred.
+- Independent read-only review inspected the new bilingual materials, routing,
+  source statements, writer contracts and plan claims: **no actionable findings**.
+  The timeout and external/native/user acceptance remain explicitly open.
+
+### Fresh synthetic preparation trials
+
+Criteria were not shown to the trial agents. Each used only synthetic statements
+and public primary sources; artifacts stayed outside the repository. Parent read
+actual outputs rather than treating a trial's final answer as execution evidence.
+
+- **P1/P3 authority reply, initial run:** created separate German HTML/text and
+  Russian private-review files without a workspace, account access or sending.
+  Chromium checks at 1100/390 px passed; parent inspected the narrow screenshot.
+  It nevertheless added an unsolicited extension request and invented proposed
+  date. This is a behavioral finding, not a pass. The correspondence workflow now
+  keeps new dates/commitments outside the recipient draft unless confirmed.
+- **P2 additional activity:** English launch plan and factual worksheet retained
+  existing translation activity/VAT history, no workspace or accounting selection.
+  Observed official help headings were separated from unobserved portal fields.
+  Berlin PDF retrieval, older help URL identifier and conflicting account-route
+  wording were disclosed; no registration or case-level tax conclusion was claimed.
+- **P5 first employee:** Russian plan and data checklist started with existing BG
+  correspondence, separated identifiers, reporting, calculation and payment, and
+  preserved the self-managed software route. No employee secrets, payroll run,
+  selected software suitability or individual deadline was invented. Parent ran
+  the artifact verifier: four UTF-8 documents across the two cases, six local links,
+  no reported errors or cross-case source-marker contamination.
+- **P4/P6 annual preparation and partial-export continuation:** v1 readiness/access
+  notes retained external sevdesk authority, missing December/assets/reconciliation,
+  stale calculation and the uncertain 2025 annual attempt. A 2026 monthly receipt
+  did not resolve it. The v2 update preserved “page 1 of 3” as incomplete, without
+  assuming its period. Parent read the reports and verified all three original v1
+  file hashes unchanged. No original account/export bytes were supplied; this is
+  a manual-route preparation trial, not a provider integration or tax result.
+
+- **P1/P3 authority reply, fresh corrected trial:** the German draft retained only
+  the user-supplied facts and missing proof. No extension request, invented date,
+  attachment or promise was added. Russian private notes kept receipt facts and
+  the reported deadline distinct. Parent inspected the actual recipient/private
+  files. Markdown text acceptance only; no new PDF/browser claim.
+- **P3 customer sequence:** proposal/private review v01 followed by a separate
+  customer reply/correction plan v02. External EX-1 issuance, EUR 100 receipt and
+  dispute remained user-reported because no originals were attached. No issued
+  correction, refund promise, posting or sending occurred. Parent inspected the
+  documents and verified both original v01 hashes unchanged. This is preparation
+  across the cycle, not execution in invoicing software.
+- **P1/P5 pause and actual local resume:** created an isolated Russian-layout
+  synthetic workspace, saved one pending continuation task with the existing
+  `entry` writer and reopened using `start`. Observed `created` then `resumed`,
+  `workspace_health: ok`, one task, unchanged identity/hash and checked plan evidence.
+  Parent repeated `entry --collection tasks --id task-pause-continue-001` and read
+  the plan: pending task/evidence checked. Other activity and external accounting
+  authority remained; no cancellation, migration or deletion. `setup_incomplete`
+  remains appropriate because no real-data processing assessment was performed.
+
+Additional local artifacts: `/private/tmp/business-reply-trials-tqSTKk` and
+`/private/tmp/gbk-pause-resume-20261026-2BZhWY`. The latter is an actual synthetic
+workspace, not a backup of external accounts. All command writes used existing
+writers; the resume trial did not edit canonical JSON directly.
+
+Local trial artifact directories: `finanzamt-correspondence-trial-s0o0bgta`,
+`de-business-fresh-formation-hiring-20261026.xuzlwR` and
+`annual-access-trial-lhm_n39y`, all under `/private/tmp`. Temporary trial outputs
+are not durable business storage. Registration, actual issued-document cycles,
+calculation/submission, payroll, service migration, authenticated operations,
+scheduler delivery, nontechnical users and published/native desktop acceptance
+remain outside this evidence. The plan's remaining acceptance is not marked done.
+
+## Seven-skill bundle and lifecycle instructions (2026-10-26)
+
+Local implementation of the agreed split: optional router plus start, operations,
+accounting, tax, services and changes skills. Shared contracts/resources remain in
+`de-business-kit`; the explicit catalog drives complete-set installation and
+packaging. No user workspace schema migration or external account action occurred.
+The lifecycle plan records instruction implementation separately from external,
+platform and user acceptance.
+
+- Host observed: macOS **27.0.1 arm64**, Python **3.14.6**, PowerShell **7.5.4**.
+  `python3 -B -m unittest discover -s tests -v`: **251 tests, 246 passed,
+  5 native-runtime checks skipped**, 51.435 seconds in the final run. This includes
+  complete-set installation, detached packages, missing dependencies, identity and
+  metadata, unsafe sibling links, collision preflight and symlink-before-read cases.
+- Red/green evidence: new installer and packaging cases failed with the old
+  single-skill implementation; native smoke failed on a missing sibling; identity
+  and catalog-ancestor regressions failed before their fixes. Independent review
+  found native JSON integer compatibility, a conflicting welcome instruction and
+  Python entry/metadata validation. Fixes were independently rechecked; no remaining
+  actionable findings in that review scope.
+- `python3 -B tools/check_package.py`, `python3 -B tools/release.py check`, local
+  Markdown file/anchor checks and `git diff --check`: passed. Skill Creator's
+  `quick_validate.py` passed for all seven entries using existing `/usr/bin/python3`
+  with PyYAML; no new dependency was installed. UI metadata was generated with the
+  provided generator and explicit names.
+- `TMPDIR=/private/tmp pwsh -NoProfile -File tests/native/windows-smoke.ps1`:
+  passed, including all seven skills in both targets and detached resources.
+  This is macOS PowerShell evidence, **not Windows PowerShell 5.1 acceptance**.
+  Initial deep per-user macOS temporary-root bundle trials hit a 90-second timeout
+  while copying. A short canonical `/private/tmp` diagnostic completed within the
+  15-second observation interval; the test harness now uses that root on macOS
+  with the same production guards. Deep-path performance is not certified.
+- `python3 -B tools/build_package.py --output <new absolute temporary directory>`
+  built both complete marketplace archives. Claude Code **2.1.310** `plugin validate`
+  passed for the marketplace and plugin. The plugin-directory check still warned
+  about the absent public-listing icon and suggested a marketplace install line.
+  These were nonblocking; no public listing, installation or host discovery trial
+  was performed. Existing published assets were not modified.
+
+Fresh behavioral evidence (Codex subagent sessions, configured `gpt-6.1-sol` / high;
+application build not exposed; evaluation criteria withheld):
+
+- `direct-operations-draft`: direct operations entry produced actual English HTML,
+  Markdown and separate private review for a synthetic three-icon EUR 300 quote.
+  Unagreed VAT/payment terms stayed unresolved; no invoice or sending was claimed.
+  Chromium desktop/390px inspection passed without overflow or console warnings;
+  root inspected the written content and narrow screenshot. PDF was not tested.
+- `direct-changes-partial-closure`: direct changes entry produced a Russian action
+  plan outside Git, preserving the continuing activity, shared bank account,
+  unpaid invoice, open tax question and originals. The trial checked public primary
+  sources and marked missing municipality/date/classification facts. Root inspected
+  the saved plan. No registration, cancellation, payment or deletion occurred.
+- One separate fresh routing session covered five isolated synthetic first responses:
+  formation without setup, external sevdesk accounting without access, annual tax
+  inputs without taxable income, read-only service access and mixed-task continuation.
+  It selected the relevant owners, did not borrow facts across cases and did not
+  require GUI/workspace setup. It inspected available tool metadata and retrieved
+  the official BMF calculator input page; no calculation or account access occurred.
+  This verifies instruction selection/first response, not automatic host discovery.
+
+A dated twelve-source lifecycle map was added. It is case-dependent research,
+not legal certification. Live registration/reporting, provider mutations,
+scheduled reminder delivery, complete annual acceptance, native Windows and
+nontechnical-user acceptance remain unperformed. No GUI code was changed or new
+GUI acceptance claimed. No commit, push, host installation or publication occurred.
+
+## Lifecycle correction plan and positioning (2026-10-26)
+
+- Added the EN/RU lifecycle correction plan with P0–P7 changes, dependencies,
+  user outcomes and acceptance criteria; aligned product entry documents and
+  added a self-contained portable module map. This is planning/instruction work,
+  not implementation of the planned journeys or a new legal-source check.
+- `python3 -B tools/check_package.py` passed. A temporary local Markdown checker
+  verified changed documents' file targets and heading anchors; no errors.
+  `git diff --check` passed. EN/RU plan sections and acceptance meanings were inspected.
+- Fresh read-only Codex subagent trial, configured `gpt-6.1-sol` / high,
+  used the `elster-no-browser` scenario prompt without evaluation criteria.
+  It read the installed-source skill and relevant references, proposed a worksheet
+  and manual ELSTER entry, asked only initial facts, and required neither a GUI
+  nor a workspace to begin. It explicitly stated that sources had not yet been
+  checked and no portal filling/submission occurred. Outcome: routing criteria
+  passed for this Russian response. Host application build was not exposed.
+- No live source research, legal/form validation, external access, runtime suite,
+  browser/native acceptance or full EN/RU lifecycle trial was performed in this
+  documentation change. P1–P7 acceptance remains future work; prior evidence
+  retains its original scope. No commit, push or publication was performed here.
+
 ## Real GUI candidate 0.7.0-preview.1 (2026-10-26)
 
 Local candidate only; no tag, push or release publication was performed for this

@@ -1,7 +1,7 @@
 {
   "en": {
     "title": "Business workspace",
-    "subtitle": "Your own bookkeeping and tax reporting",
+    "subtitle": "Your business tasks, records and reporting",
     "overview": "Overview",
     "inbox": "Inbox",
     "needs_review": "Needs review",
@@ -11,7 +11,7 @@
     "as_of": "Snapshot date",
     "snapshot": "Generated from your records. Ask your assistant to refresh this view after changes.",
     "boundary": "This snapshot separates reviewed documents, recorded cash movements, filing preparation and observed external outcomes. It grants no approval and does not submit anything.",
-    "empty": "No documents in this month yet. Ask your assistant to organize your documents and preserve the originals.",
+    "empty": "No documents supplied for this month.",
     "next": "Next useful action",
     "repair": "Ask your assistant to inspect the workspace issue before changing records or exporting.",
     "urgent": "Review the dated task or authority response first. Inspect its source; the overview does not calculate or verify legal deadlines.",
@@ -130,11 +130,30 @@
       "rejection": "Rejection",
       "other": "Other response"
     },
-    "empty_section": "No records supplied in this section."
+    "empty_section": "No records supplied in this section.",
+    "active_tasks": "Active tasks",
+    "choose_task": "Tell your assistant what you want to do next: start or change an activity, prepare a document, answer a question, or work on accounting.",
+    "continue_task": "Continue a ready task with your assistant using its saved evidence. Check the task details before taking any external action.",
+    "review_tasks": "Review the blocked tasks and their evidence or dependencies with your assistant. No task has been completed by this view.",
+    "tasks_scope": "These tasks cover the whole workspace, including tasks without a date; the selected month does not hide them.",
+    "no_active_tasks": "No active tasks recorded. Describe your next task to the assistant.",
+    "task_no_date": "No date recorded",
+    "task_ready": "Ready to continue",
+    "task_blocked": "Waiting for a dependency or an explicit unblock",
+    "task_needs_review": "Saved evidence needs review",
+    "task_owner": "Owner",
+    "task_dependencies": "Unresolved dependencies",
+    "task_states": {
+      "pending": "Pending",
+      "in_progress": "In progress",
+      "blocked": "Blocked",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
   },
   "ru": {
     "title": "Рабочая папка бизнеса",
-    "subtitle": "Самостоятельный бухгалтерский учёт и налоговая отчётность",
+    "subtitle": "Задачи бизнеса, документы и отчётность",
     "overview": "Обзор",
     "inbox": "Входящие",
     "needs_review": "Требует проверки",
@@ -144,7 +163,7 @@
     "as_of": "Дата снимка",
     "snapshot": "Создано из ваших записей. После изменений попросите ассистента обновить обзор.",
     "boundary": "Снимок разделяет проверку документов, денежные записи, подготовку отчётности и подтверждённые внешние результаты. Он не даёт разрешений и ничего не отправляет.",
-    "empty": "В этом месяце пока нет документов. Попросите ассистента организовать документы и сохранить оригиналы.",
+    "empty": "За этот месяц документы не предоставлены.",
     "next": "Следующее полезное действие",
     "repair": "Попросите ассистента проверить проблему папки до изменений или создания архива.",
     "urgent": "Сначала проверьте задачу с датой или ответ ведомства и его источник. Обзор не рассчитывает и не подтверждает юридические сроки.",
@@ -263,6 +282,25 @@
       "rejection": "Отклонение",
       "other": "Другой ответ"
     },
-    "empty_section": "В этом разделе пока нет записей."
+    "empty_section": "В этом разделе пока нет записей.",
+    "active_tasks": "Активные задачи",
+    "choose_task": "Опишите ассистенту следующую задачу: открыть или изменить деятельность, подготовить документ, ответить на вопрос или заняться учётом.",
+    "continue_task": "Продолжите доступную задачу с ассистентом по сохранённым подтверждениям. Перед внешним действием проверьте детали задачи.",
+    "review_tasks": "Разберите с ассистентом заблокированные задачи, подтверждения и зависимости. Обзор не отмечает задачи выполненными.",
+    "tasks_scope": "Здесь задачи всего рабочего пространства, включая задачи без даты; выбранный месяц их не скрывает.",
+    "no_active_tasks": "Активных задач не записано. Опишите ассистенту следующую задачу.",
+    "task_no_date": "Дата не задана",
+    "task_ready": "Можно продолжить",
+    "task_blocked": "Ожидает зависимости или снятия блокировки",
+    "task_needs_review": "Нужно проверить сохранённое подтверждение",
+    "task_owner": "Ответственный",
+    "task_dependencies": "Незавершённые зависимости",
+    "task_states": {
+      "pending": "Ожидает выполнения",
+      "in_progress": "В работе",
+      "blocked": "Заблокирована",
+      "completed": "Выполнена",
+      "cancelled": "Отменена"
+    }
   }
 }

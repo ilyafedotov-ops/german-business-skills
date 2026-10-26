@@ -80,8 +80,129 @@ function start(root) {
     await page.goto(`${url}#token=${token}`);
     await page.getByRole('heading', { name: 'Your business, one clear next step.' }).waitFor();
     await page.getByLabel('Working month').fill('2026-10');
+    await page.getByLabel('Working month').press('Tab');
     await page.waitForFunction(()=>document.querySelector('main').getAttribute('aria-busy')==='false');
     assert.ok(!page.url().includes(token), 'Bootstrap token must leave URL');
+    await page.getByRole('heading',{name:'What would you like to work on?'}).waitFor({timeout:3000});
+    assert.equal(await page.locator('.next-step').getByRole('button',{name:'Add documents',exact:true}).count(),0,'Empty workspace must ask the desired task before importing');
+    await page.locator('.next-step').getByRole('button',{name:'Help me with this',exact:true}).click();
+    assert.match(await page.locator('#help-prompt').inputValue(),/What would you like to work on/);
+    await click(page,'Close');
+    for (const width of [1280,390]) {
+      await page.setViewportSize({width,height:1000});
+      await capture(page,{path:path.join(output,`${browserName}-empty-home-actual-${width}.png`),fullPage:true});
+    }
+    // Existing document/accounting work remains useful without active lifecycle tasks.
+    const populatedRoot=path.join(temp,'populated-no-tasks');
+    await fixture(populatedRoot);
+    execFileSync(python,['-B','-c',`
+import sys
+from pathlib import Path
+sys.path.insert(0, 'skills/de-business-kit/scripts')
+import workspace as ws
+root = Path(sys.argv[1])
+source = root.parent / 'no-task-invoice.xml'
+source.write_text('<invoice>Synthetic no-task invoice</invoice>', encoding='utf-8')
+ws.ingest_document(root, source, '2026-10')
+`,populatedRoot],{cwd:process.cwd()});
+    const selectWorkspace=async destination=>{
+      await page.getByRole('link',{name:'Settings and recovery',exact:true}).click();
+      await click(page,'Open another workspace');
+      await page.getByLabel('Workspace folder').fill(destination);
+      await click(page,'Open existing workspace');
+      await page.getByRole('heading',{name:'Your business, one clear next step.'}).waitFor();
+    };
+    await selectWorkspace(populatedRoot);
+    await page.locator('.next-step').getByRole('button',{name:'Review the next document',exact:true}).waitFor({timeout:3000});
+    await page.locator('.next-step').getByRole('button',{name:'Review the next document',exact:true}).click();
+    await page.getByLabel('Review status').selectOption('reviewed');
+    await page.getByLabel('Reviewer').fill('Synthetic owner');
+    await page.getByLabel('Review note').fill('Checked no-task synthetic source.');
+    await click(page,'Save document details');
+    await page.getByText('Saved to your workspace.',{exact:true}).waitFor();
+    await page.getByRole('link',{name:'Home',exact:true}).click();
+    await page.locator('.next-step').getByRole('button',{name:'Choose where your accounts are kept',exact:true}).waitFor();
+    await page.getByLabel('Working month').fill('2026-12');
+    await page.getByLabel('Working month').press('Tab');
+    await page.waitForFunction(()=>document.querySelector('main').getAttribute('aria-busy')==='false');
+    await page.locator('.next-step').getByRole('button',{name:'Choose where your accounts are kept',exact:true}).click();
+    await page.getByLabel('Accounting system').selectOption('local');
+    await page.getByLabel('Accounting method').selectOption('EÜR');
+    await page.getByLabel('Account reference').fill('synthetic-no-task');
+    await page.getByLabel('Reviewer').fill('Synthetic owner');
+    await page.getByLabel('Evidence file').selectOption({index:1});
+    await click(page,'Save accounting choice');
+    await click(page,'Confirm and save');
+    await page.getByText('Saved to your workspace.',{exact:true}).waitFor();
+    await page.getByRole('link',{name:'Home',exact:true}).click();
+    await page.locator('.next-step').getByRole('button',{name:'Continue your work',exact:true}).click();
+    await page.getByRole('heading',{name:'Make the month understandable.'}).waitFor();
+    await selectWorkspace(root);
+    await page.getByLabel('Working month').fill('2026-10');
+    await page.getByLabel('Working month').press('Tab');
+    await page.waitForFunction(()=>document.querySelector('main').getAttribute('aria-busy')==='false');
+    // Canonical task writers preserve the sole register and its evidence history.
+    execFileSync(python,['-B','-c',`
+import sys
+from pathlib import Path
+sys.path.insert(0, 'skills/de-business-kit/scripts')
+import workspace as ws
+root = Path(sys.argv[1])
+ws.save_entry(root, 'tasks', {'schema_version':1, 'id':'formation-undated', 'title':'Prepare my first business activity', 'owner':'Synthetic owner', 'status':'pending', 'note':'Choose the next formation step.'})
+ws.save_entry(root, 'tasks', {'schema_version':1, 'id':'formation-dependent', 'title':'Register <img src=x onerror="window.taskInjected=true"> activity', 'owner':'Synthetic <owner>', 'status':'pending', 'depends_on':['formation-undated'], 'due_date':'2026-11-12', 'deadline_source':'Explicit synthetic target <source>', 'note':'Await the activity choice <note>.'})
+item = {'schema_version':1, 'id':'evidence-review', 'title':'Check changed registration evidence', 'owner':'Synthetic owner', 'status':'pending', 'evidence_file':'task-evidence.txt'}
+(root / 'task-evidence.txt').write_text('Synthetic original evidence', encoding='utf-8')
+ws.save_entry(root, 'tasks', item)
+(root / 'task-evidence.txt').write_text('Synthetic changed evidence', encoding='utf-8')
+(root / 'task-completed.txt').write_text('Synthetic completion evidence', encoding='utf-8')
+completed = {'schema_version':1, 'id':'completed-task', 'title':'Completed synthetic task', 'owner':'Synthetic owner', 'status':'pending'}
+previous = ws.save_entry(root, 'tasks', completed)
+ws.save_entry(root, 'tasks', dict(completed, status='completed', evidence_file='task-completed.txt'), previous['sha256'])
+cancelled = {'schema_version':1, 'id':'cancelled-task', 'title':'Cancelled synthetic task', 'owner':'Synthetic owner', 'status':'pending'}
+previous = ws.save_entry(root, 'tasks', cancelled)
+ws.save_entry(root, 'tasks', dict(cancelled, status='cancelled'), previous['sha256'])
+`,root],{cwd:process.cwd()});
+    await click(page,'Refresh records');
+    await page.getByText('Prepare my first business activity',{exact:true}).first().waitFor({timeout:3000});
+    const taskList=page.getByRole('list',{name:'Active tasks'});
+    await taskList.getByText('Prepare my first business activity',{exact:true}).waitFor();
+    assert.equal(await taskList.getByText('Completed synthetic task',{exact:true}).count(),0);
+    assert.equal(await taskList.getByText('Cancelled synthetic task',{exact:true}).count(),0);
+    await taskList.getByText('No date recorded',{exact:true}).first().waitFor();
+    await taskList.getByText('Evidence not recorded',{exact:true}).first().waitFor();
+    await taskList.getByText('Blocked by unfinished tasks: formation-undated',{exact:true}).waitFor();
+    await taskList.getByText('Evidence needs review',{exact:true}).waitFor();
+    await taskList.getByText('Explicit synthetic target <source>',{exact:true}).waitFor();
+    await taskList.getByText('Register <img src=x onerror="window.taskInjected=true"> activity',{exact:true}).waitFor();
+    assert.equal(await taskList.locator('img').count(),0,'Task titles must remain text');
+    assert.equal(await page.evaluate(()=>window.taskInjected),undefined,'Task evidence must not execute');
+    assert.equal(await page.locator('.next-step').getByRole('button',{name:'Choose where your accounts are kept',exact:true}).count(),0,'Formation tasks must not force an accounting choice');
+    await page.locator('.next-step').getByRole('button',{name:'Continue with your assistant',exact:true}).focus();
+    await page.keyboard.press('Enter');
+    assert.match(await page.locator('#help-prompt').inputValue(),/formation-undated/);
+    assert.match(await page.locator('#help-prompt').inputValue(),/Prepare my first business activity/);
+    await click(page,'Close');
+    await page.getByLabel('Working month').fill('2026-12');
+    await page.getByLabel('Working month').press('Tab');
+    await page.waitForFunction(()=>document.querySelector('main').getAttribute('aria-busy')==='false');
+    assert.equal(await page.getByLabel('Working month').inputValue(),'2026-12');
+    await taskList.getByText('Prepare my first business activity',{exact:true}).waitFor();
+    await taskList.getByText('Blocked by unfinished tasks: formation-undated',{exact:true}).waitFor();
+    for (const lang of ['en','ru','de']) {
+      await page.locator('#language').selectOption(lang);
+      const headings={en:'Active tasks',ru:'Текущие задачи',de:'Aktive Aufgaben'};
+      await page.getByRole('heading',{name:headings[lang],exact:true}).waitFor();
+      for (const width of [1280,390]) {
+        await page.setViewportSize({width,height:1000});
+        assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`${lang}/task home overflow at ${width}`);
+        await capture(page,{path:path.join(output,`${browserName}-${lang}-task-home-${width}.png`),fullPage:true});
+      }
+    }
+    await page.locator('#language').selectOption('en');
+    await page.getByLabel('Working month').fill('2026-10');
+    await page.getByLabel('Working month').press('Tab');
+    await page.waitForFunction(()=>document.querySelector('main').getAttribute('aria-busy')==='false');
+    await page.setViewportSize({width:1440,height:1000});
     await page.getByRole('link', { name: 'Documents', exact: true }).click();
     await page.getByLabel('Choose documents').setInputFiles({ name: 'synthetic-invoice.xml', mimeType: 'application/xml', buffer: Buffer.from('<invoice><total>119.80</total></invoice>') });
     await page.getByLabel('Storage month').fill('2026-10');
@@ -148,6 +269,10 @@ function start(root) {
     await page.getByText('Saved to your workspace.',{exact:true}).waitFor();
     await page.unroute(url+'api',delayDraft);
     await page.reload();
+    await page.getByRole('link',{name:'Home',exact:true}).click();
+    await page.locator('.next-step').getByRole('button',{name:'Continue your work',exact:true}).click();
+    await page.getByRole('heading',{name:'Record a cash movement',exact:true}).waitFor();
+    assert.equal(await page.getByLabel('Total cash movement').inputValue(),'119.80','Saved draft takes precedence over active tasks');
     await page.getByRole('link', { name: 'This month', exact: true }).click();
     await click(page, 'Resume entry draft');
     assert.equal(await page.getByLabel('Total cash movement').inputValue(), '119.80');
@@ -229,7 +354,10 @@ function start(root) {
     await observeFiling('review','Draft','Reviewed');
     await observeFiling('authorize','Reviewed','Authorized');
     await observeFiling('begin','Authorized','Submission outcome unknown');
-    await inspectState('Submission outcome unknown');
+    await page.getByRole('link',{name:'Home',exact:true}).click();
+    await page.locator('.next-step').getByRole('button',{name:'Inspect filing',exact:true}).click();
+    await page.getByRole('heading',{name:'Filing details and next action'}).waitFor();
+    assert.equal(await page.getByText('Submission outcome unknown',{exact:true}).isVisible(),true,'Uncertain filing takes precedence over active tasks');
     assert.equal(await page.getByLabel('Action to record').locator('option[value="cancel"]').count(),0,'Attempted filing cannot be cancelled locally');
     for(const width of [1440,390]) {
       await page.setViewportSize({width,height:1000});
@@ -300,9 +428,18 @@ function start(root) {
     const catalogPath=path.join(root,'.business-kit','admin','casework.json');
     const originalCatalog=await fs.readFile(catalogPath);
     await fs.writeFile(catalogPath,'{broken');
+    await page.getByRole('link',{name:'Home',exact:true}).click();
+    await click(page,'Refresh records');
+    await page.getByRole('heading',{name:'Some records could not be checked. Inspect the problem before continuing.'}).waitFor();
+    await click(page,'Help me with this');
+    assert.match(await page.locator('#help-prompt').inputValue(),/Inspect the record errors/);
+    assert.doesNotMatch(await page.locator('#help-prompt').inputValue(),/formation-undated/,'Failed refresh must not suggest a stale task');
+    await click(page,'Close');
     await page.reload();
     await page.getByRole('heading',{name:'Some records could not be checked. Inspect the problem before continuing.'}).waitFor();
     assert.equal(await page.getByText('Documents received',{exact:true}).count(),0);
+    assert.equal(await page.getByRole('heading',{name:'Active tasks',exact:true}).count(),0,'Unknown snapshot must not present tasks as valid');
+    assert.equal(await page.getByRole('button',{name:'Continue with your assistant',exact:true}).count(),0);
     await page.getByRole('link',{name:'Settings and recovery',exact:true}).click();
     await page.getByRole('heading',{name:'Keep your work recoverable.'}).waitFor();
     await fs.writeFile(catalogPath,originalCatalog);
@@ -353,7 +490,7 @@ function start(root) {
     assert.equal(untouched.drafts.entry,undefined,'Stale tab did not write into the newly selected workspace');
     await otherTab.close();
     assert.deepEqual(issues, []);
-    console.log(`GUI ${browserName}: real import/review/configuration/draft/post/reversal/filing lifecycle/recovery/stale-tab journeys and 54 localized route-width checks passed; ${screenshotDiagnostics} screenshot-only WebKit CSP diagnostics.`);
+    console.log(`GUI ${browserName}: task-first empty/undated/blocked/evidence/XSS/cross-month journeys, real import/review/configuration/draft/post/reversal/filing lifecycle/recovery/stale-tab journeys, and 54 localized route-width checks plus 6 task-home checks passed; ${screenshotDiagnostics} screenshot-only WebKit CSP diagnostics.`);
     await context.close();
   } catch (error) {
     failure = error;

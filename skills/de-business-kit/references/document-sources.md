@@ -1,6 +1,6 @@
 # Document preparation: sources and inspection boundaries
 
-Checked: **2026-10-25**. Shared English reference for the local document catalog, extraction/proposal review, overview and optional personal records archive. The XML subset below supports preparation from standalone UBL Invoice and CII XML. It is not an invoice schema, EN 16931 validator, XRechnung/ZUGFeRD certification, tax determination or proof of a complete archive. Recheck applicable sources and actual format/profile before expanding support.
+Checked: **2026-10-25**. Shared English reference for the local document catalog, extraction/proposal review, overview and optional personal records archive. The original XML subset below supports preparation from standalone UBL Invoice and CII XML. The [CreditNote and preceding-reference extension](correction-xml-sources.md) was checked separately on 2026-10-26. It is not an invoice schema, EN 16931 validator, XRechnung/ZUGFeRD certification, tax determination or proof of a complete archive. Recheck applicable sources and actual format/profile before expanding support.
 
 ## Preserve the received evidence
 

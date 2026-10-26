@@ -41,6 +41,37 @@ class PackagingTests(unittest.TestCase):
             self.assertIn("Package build stopped:", result.stderr)
         return output
 
+    def test_bundle_keeps_sibling_skill_links_after_source_removal(self):
+        import re
+        sibling = self.source / "skills/de-business-tax"
+        sibling.mkdir(exist_ok=True)
+        (sibling / "SKILL.md").write_text(
+            "---\nname: de-business-tax\ndescription: Tax fixture.\n---\n"
+            "[Shared](../de-business-kit/references/intake.md)\n")
+        (sibling / "agents").mkdir(exist_ok=True)
+        (sibling / "agents/openai.yaml").write_text('interface:\n  display_name: "Tax"\n')
+        output = self.build()
+        shutil.rmtree(self.source)
+        for host in ("codex", "claude"):
+            with zipfile.ZipFile(output / (host + ".zip")) as archive:
+                names = set(archive.namelist())
+                prefix = host + "/plugins/de-business-kit/skills/"
+                self.assertIn(prefix + "de-business-tax/SKILL.md", names)
+                self.assertIn(prefix + "de-business-kit/references/intake.md", names)
+
+    def test_bundle_rejects_missing_skill(self):
+        catalog = self.source / "skills/de-business-kit/assets/skill-set.json"
+        catalog.write_text(json.dumps({"schema_version": 1,
+            "skills": ["de-business-kit", "de-business-missing"]}))
+        self.build(success=False)
+        self.assertFalse((self.base / "build").exists())
+
+    def test_sibling_reference_cannot_escape_package(self):
+        sibling = self.source / "skills/de-business-tax/SKILL.md"
+        sibling.write_text(sibling.read_text() + "\n[Private](../../LICENSE)\n")
+        self.build(success=False)
+        self.assertFalse((self.base / "build").exists())
+
     def test_extracted_host_packages_resolve_marketplaces_and_run_without_checkout(self):
         output = self.build()
         shutil.rmtree(self.source)

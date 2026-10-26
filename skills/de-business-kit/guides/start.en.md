@@ -2,7 +2,12 @@
 
 **English** · [Русский](start.ru.md) · [Deutsch](start.de.md)
 
-German Business Kit helps you organize documents, perform supported accounting work and prepare tax materials yourself. Write in ordinary language; the assistant operates files and explains the result. This is a preview, not a separate complete accounting application.
+Choose a concrete outcome in the [task guide](tasks.en.md).
+
+German Business Kit is a system of skills for entrepreneur assistance: preparing to start, forms, questions, services, daily work and reporting. Preparation guidance also covers changes, first hire, pause and closure; real execution needs separate acceptance. Describe the result you need in ordinary language. A simple question requires neither the local application nor workspace creation; tools are introduced for the task.
+
+
+You can directly select `de-business-start`, `de-business-operations`, `de-business-accounting`, `de-business-tax`, `de-business-services` or `de-business-changes`. The general `de-business-kit` helps select the next action. See the [map and shared resources](../references/lifecycle.md). Install the complete bundle; keep one profile.
 
 ## 1. Open your assistant
 
@@ -31,17 +36,17 @@ For ongoing work choose a private folder separate from the downloaded project, i
 
 New workspaces can use English, Russian or German names. The English layout contains **Inbox, Documents, Accounts, Taxes, Business** and `START-HERE.md`. You can change conversation language later without renaming folders. Existing workspaces keep their older structure.
 
-The assistant will establish where authoritative accounts are kept: existing software or local records. You can defer that choice while organizing documents. It must not choose your tax regime or create parallel accounts on your behalf.
+When the task needs accounting records, the assistant will establish where authoritative accounts are kept: existing software or local records. You can defer that choice while organizing documents. It must not choose your tax regime or create parallel accounts on your behalf.
 
 ## 4. Complete one small task
 
-Start with one document or a small selected batch. Before real personal data, establish where selected content may be processed: a local folder does not mean a local AI model. Enter passwords, certificates and verification codes only in the official authentication flow.
+Start with one question, plan, letter or selected document. For document work, use one file or a small selected batch. Before real personal data, establish where selected content may be processed: a local folder does not mean a local AI model. Enter passwords, certificates and verification codes only in the official authentication flow.
 
 Ask:
 
 > Show what you found, what you saved, what is missing and where I can open a readable result. Do not call a document reviewed or submitted without evidence.
 
-A useful first result: the file is found and preserved, its explanation can be read, and the next action is clear. If a tool is unavailable, the assistant should identify the specific unfinished step and continue available preparation.
+A useful first result answers your question or gives you a readable plan/draft, identifies missing facts and makes the next action clear. When files are involved, originals are preserved and linked. If a tool is unavailable, the assistant should identify the specific unfinished step and continue available preparation.
 
 ## 5. Save a continuation point
 

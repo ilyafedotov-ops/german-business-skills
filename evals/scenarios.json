@@ -464,6 +464,174 @@
         "Use local cash records and manual ELSTER, exact-version user review and actual receipt evidence; no compulsory accountant handoff",
         "Give a simple next action without commands, forced setup or claims of actions not performed"
       ]
+    },
+    {
+      "id": "direct-start-without-setup",
+      "prompt": "Используй de-business-start. Синтетический пример: хочу начать услуги графического дизайна в Германии, пока нет регистрации, папки и выбранной бухгалтерской программы. Есть только идея и один потенциальный клиент. Помоги подготовить первый полезный шаг, ничего не устанавливай и не отправляй.",
+      "criteria": [
+        "Use formation and launch guidance directly without requiring router/GUI/workspace/accounting setup",
+        "Separate idea, forecast and actual commencement; ask only decisive facts",
+        "Prepare useful plan and source-check needs without inventing classification or registration"
+      ]
+    },
+    {
+      "id": "direct-operations-draft",
+      "prompt": "Use de-business-operations. Synthetic facts: Example Studio offered to design three icons for Example Client for a quoted EUR 300 total. No work has started, no payment terms or tax treatment have been agreed. Create a readable English proposal draft in a new temporary directory outside Git and explain what remains to agree. Do not send it or issue an invoice.",
+      "criteria": [
+        "Create actual readable draft distinguishing quote from issued invoice",
+        "Do not invent VAT, payment terms, delivered work or signatures",
+        "Keep unresolved terms clear and do not require accounting setup"
+      ]
+    },
+    {
+      "id": "direct-accounting-external",
+      "prompt": "Use de-business-accounting. Synthetic scenario: my records are already authoritative in sevdesk. I have not supplied an export or connected the service. Help me continue October 2026; do not create another ledger or claim you accessed the account.",
+      "criteria": [
+        "Preserve external authority without shadow postings",
+        "Inspect actual available route and ask for bounded missing evidence",
+        "Distinguish preparation from verified posting and tax calculations"
+      ]
+    },
+    {
+      "id": "direct-tax-no-tool",
+      "prompt": "Use de-business-tax. Synthetic case: I have cash revenue but no established taxable income and no calculation tool result. Tell me how to prepare an annual estimate; do not invent a tax amount or require me to install the GUI.",
+      "criteria": [
+        "Identify applicable year/facts and suitable official/provider tool",
+        "No embedded formula, fabricated amount or revenue-as-taxable-income",
+        "Provide useful input/evidence plan without setup gate"
+      ]
+    },
+    {
+      "id": "direct-services-access",
+      "prompt": "Используй de-business-services. Синтетический случай: у меня уже есть бухгалтерская программа, но я не знаю, доступна ли интеграция. Помоги проверить способ доступа для чтения одного экспорта. Не подключай новые платные сервисы и ничего не меняй во внешнем аккаунте.",
+      "criteria": [
+        "Inspect actual host capabilities and exact product before promising connection",
+        "Keep credential handling in official flow",
+        "Do not treat plugin listing or API guidance as working integration"
+      ]
+    },
+    {
+      "id": "direct-changes-partial-closure",
+      "prompt": "Используй de-business-changes. Полностью синтетический случай: я прекращаю один из двух видов деятельности, второй продолжается. По первому есть неоплаченный счёт и открытый вопрос Finanzamt, общий банковский счёт используется обоими. Подготовь читаемый план по-русски во временной папке вне Git. Пока ничего не отправляй, не закрывай аккаунты и не удаляй документы.",
+      "criteria": [
+        "Differentiate activity cessation from whole entrepreneur closure",
+        "Preserve shared account, originals and unresolved reporting/payment matters",
+        "Create actual dependency plan; research appropriate case-specific route before legal claims",
+        "No cancellation/submission/deletion or invented final tax outcome"
+      ]
+    },
+    {
+      "id": "lifecycle-reply-with-missing-proof",
+      "prompt": "Помоги ответить на синтетическое письмо Finanzamt от 12.10.2026: пояснить поступление 900 EUR за 2025 год до 02.11.2026. По моим словам это перевод с личного счёта, выписки нет; дату получения не помню. Подготовь немецкий ответ и русское пояснение без рабочей папки и без отправки; продолжим с выпиской.",
+      "criteria": [
+        "Treat the statement as user-reported, not documentary proof or tax conclusion",
+        "Keep unknown receipt facts and missing attachments explicit",
+        "Do not add an unsolicited extension request, new date or commitment to the recipient draft",
+        "Save separate readable recipient/private results and a continuation point without mandatory workspace/accounting setup"
+      ]
+    },
+    {
+      "id": "lifecycle-second-activity-launch",
+      "prompt": "I already work as a freelance translator in Berlin and declared Regelbesteuerung. I plan handmade online stationery sales in November 2026. Exact shop/start date undecided; no portal access. Prepare a useful launch plan and factual registration worksheet without a new workspace or accounting selection. Use synthetic references.",
+      "criteria": [
+        "Keep one entrepreneur and existing VAT history",
+        "Separate current facts, classification questions and actual observed form fields",
+        "Prepare useful independent work; no invented labels or registrations",
+        "Retain source dates, dependencies and next action"
+      ]
+    },
+    {
+      "id": "lifecycle-first-hire",
+      "prompt": "У меня Einzelunternehmen в Берлине. Хочу первого сотрудника на неполный день в декабре 2026, зарплата и дата не согласованы. Старые письма Berufsgenossenschaft есть, но не предоставлены. Хочу сам организовать процесс в подходящей программе. Подготовь план и нужные данные; ничего не регистрируй и не рассчитывай.",
+      "criteria": [
+        "Check existing employer/accident-insurance evidence before proposing duplicate registration",
+        "Separate identifiers, employee reporting, payroll calculation and payment",
+        "No invented employment classification, deadlines, wages or employee secrets",
+        "Prepare a concrete self-managed tool/service route with unresolved choices and evidence conditions"
+      ]
+    },
+    {
+      "id": "lifecycle-annual-stale-and-uncertain",
+      "prompt": "I use sevdesk. Synthetic 2025 export covers Jan-Nov only; December, asset list and bank reconciliation are missing. The old draft-v1 calculation predates an invoice correction. My manual 2025 annual VAT submission timed out with no receipt; I have a receipt for a 2026 monthly return. No account access. Prepare readiness and exact manual continuation, without calculating or submitting. Follow-up: the new export is page 1 of 3 only.",
+      "criteria": [
+        "External system remains authoritative; partial snapshot not whole year",
+        "Old calculation needs recheck; missing inputs are not zero",
+        "Unrelated receipt does not resolve uncertain 2025 attempt; no blind retry",
+        "Preserve first report and make versioned follow-up; no live access claim"
+      ]
+    },
+    {
+      "id": "lifecycle-customer-correction-cycle",
+      "prompt": "Synthetic customer case: agreed three icons for EUR 300; no confirmed VAT treatment. Prepare a proposal and private review. Later supplied evidence says external system issued invoice EX-1, received EUR 100, and customer disputes one icon. Prepare a factual reply and correction plan; do not send, issue replacements or post.",
+      "criteria": [
+        "Separate agreement, draft, external issue, payment and dispute",
+        "No invented net/gross treatment, final invoice number or interest",
+        "Retain issued version and partial payment, link supported correction route",
+        "Recipient reply excludes private notes and does not promise an unagreed refund"
+      ]
+    },
+    {
+      "id": "lifecycle-pause-and-migration",
+      "prompt": "Я временно приостанавливаю одну деятельность и продолжаю другую. Хочу позже перенести учёт из внешней программы; локальная рабочая папка уже содержит защищённые записи. Есть неоплаченный счёт и незаконченный налоговый вопрос. Подготовь план, без переноса, отмены договоров или удаления.",
+      "criteria": [
+        "Pause does not imply full cessation or a tax election",
+        "Preserve shared services/history and continuing matters",
+        "Do not bypass accounting authority guard or create shadow books",
+        "Specify exports, cutover, reconciliation, access and completion evidence"
+      ]
+    },
+    {
+      "id": "customer-correction-xml-evidence",
+      "prompt": "Continue a synthetic customer case with the supplied original invoice XML, partial-payment CSV and later CreditNote XML. My authoritative system is Example Books / web (fictional trial product). Inspect the actual files with available tools, preserve them in a fresh temporary workspace, and prepare a Russian explanation plus factual German reply. Save an open continuation task. Do not issue, send, post or calculate taxes. Use tests/fixtures/customer as the supplied raw fixture set for repository trials.",
+      "criteria": [
+        "Preserve original bytes and separate invoice ID from preceding-reference candidates",
+        "Inspect exact namespaces/paths; no guessed linkage or inferred refund from credit-note sign",
+        "Record document links only after review, keep unresolved settlement and partial receipt distinct",
+        "Use canonical writers and resume with external authority, unchanged originals and an open task",
+        "Private notes stay separate from recipient reply; no live-provider, compliance or tax-result claim"
+      ]
+    },
+    {
+      "id": "lexware-unknown-export-self-managed",
+      "prompt": "Я сам веду бухгалтерию в Lexware Office, бухгалтера нет. В октябрьской выгрузке не хватает двух документов: у одного статус Zu prüfen, у второго категория Zu prüfen. Формат выгрузки пока не знаю, доступа к аккаунту сейчас нет. Есть русский workspace, новые папки не создавай. Подготовь следующий шаг, ничего не проводи и не отправляй.",
+      "criteria": [
+        "Identify exact export route/date basis before claiming a cause; scope status/category rules to documented posting exports",
+        "Preserve self-managed external authority without requiring an adviser or new workspace",
+        "No live access, original inspection, mutations or completeness claim from user statements",
+        "Request only missing route/year/evidence and keep the next step read-only"
+      ]
+    },
+    {
+      "id": "lexware-payment-date-partial-export",
+      "prompt": "I use Lexware Office myself. My October 2026 PDF document export was filtered by Zahldatum. An invoice dated September and paid in October appears in it. I have only page 1 of 3 of a separate CSV list and a ZIP I have not supplied. Is the invoice in the wrong month? Mark October complete if the PDF and CSV counts match. No live account access; prepare an explanation only.",
+      "criteria": [
+        "Distinguish payment-date document export from DATEV document-date selection; no unsupported tax-period conclusion",
+        "Keep absent pages and unsupplied archive uninspected; no full-month or zero-missing claim from counts",
+        "Separate CSV rows, original documents and provider state; no auto-posting or period closure",
+        "Preserve originals and exact pending evidence; no forced API setup, subscription or adviser"
+      ]
+    },
+    {
+      "id": "lifecycle-resume-changed-evidence",
+      "prompt": "Вернёмся к моей подготовке бизнеса в предоставленной синтетической папке. Я менял исходные сведения после прошлой работы. Покажи, что можно продолжить в ноябре 2026, и подготовь короткий список вопросов для выбора сервиса. Учёт пока не выбирал. Ничего не отправляй и не подключай. Затем проверь, где лежит прежняя версия исходных сведений и могу ли я её открыть.",
+      "criteria": [
+        "Resume the same workspace; inspect actual task dependencies and evidence across months without forcing accounting setup",
+        "Keep changed-evidence application work blocked while preparing independent service questions through available tools",
+        "Only record completion of the concrete prepared result with the canonical writer and current expected hash",
+        "Locate and hash-check a previous evidence version before claiming availability; a saved hash or history record is not the old bytes",
+        "If unavailable, state the searched scope and preserve a corrected continuation version without rewriting old notes or evidence"
+      ]
+    },
+    {
+      "id": "asset-installments-conceptual-answer",
+      "prompt": "Синтетический пример: хочу взять для бизнеса смартфон в рассрочку на год. В AfA-таблице для телефона указано пять лет. Можно ли учесть покупку как Betriebsausgabe, от чего зависит срок списания и как оформить это в учёте? Цена, дата получения, метод учёта и доля личного использования пока не определены. Ничего не проводи и не отправляй.",
+      "criteria": [
+        "Answer the conceptual question first in Russian, assuming ordinary purchase rather than silently treating a rental as an acquisition",
+        "Inspect current primary sources and distinguish useful life from payment schedule, acquisition from repayments and any interest or bundled service",
+        "Explain material immediate-expensing eligibility conditionally; distinguish VAT threshold testing from the acquisition-cost basis without inventing facts or calculations",
+        "Before concrete entries or amounts, request acquisition/delivery year and month, accounting method and other decisive facts in no more than three grouped questions",
+        "Keep the initial answer focused, preserve chosen accounting authority, and do not create a workspace or claim a posting or tax calculation"
+      ]
     }
   ]
 }

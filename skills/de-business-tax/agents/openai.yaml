@@ -1,0 +1,4 @@
+interface:
+  display_name: "Business Tax"
+  short_description: "Research taxes, prepare returns and authority replies"
+  default_prompt: "Use $de-business-tax to help me prepare my tax question or return with current sources."

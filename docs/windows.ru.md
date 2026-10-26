@@ -3,7 +3,7 @@
 [English](windows.md) | [Русский](windows.ru.md) | [Начало работы](quickstart.ru.md)
 
 Для локального приложения скачайте и проверьте Windows x64 GUI-архив версии
-[0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1)
+[0.8.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1)
 после публикации. Распакуйте папку целиком и откройте `GermanBusinessKit.exe`;
 встроенный движок поддерживает проверку документов, защищённые денежные записи,
 доказательства подачи, черновики и восстановление без установки Python пользователем.

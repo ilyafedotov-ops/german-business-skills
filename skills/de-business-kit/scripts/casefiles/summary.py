@@ -42,6 +42,47 @@ def reconciliation_reports(root, period):
     return [item for _, item in sorted(latest.values(), key=lambda pair: pair[1]["path"])]
 
 
+def task_work(root, tasks):
+    """Project existing tasks; completion dependencies require current evidence.
+
+    Input has already passed the canonical register and graph validation. Keep
+    missing/changed evidence scoped to its task so independent work can continue.
+    No state, evidence hash or authorization is changed by this view.
+    """
+    evidence = {}
+    for item in tasks:
+        try:
+            ws._entry_valid(root, "tasks", item)
+            evidence[item["id"]] = "checked" if item.get("evidence_file") else "not_recorded"
+        except (OSError, ws.WorkspaceError):
+            evidence[item["id"]] = "needs_review"
+    by_id = {item["id"]: item for item in tasks}
+    active = []
+    for item in tasks:
+        if item["status"] in {"completed", "cancelled"}:
+            continue
+        # Inspect the entire dependency ancestry without recursion or state writes.
+        ancestors = set()
+        remaining = list(item.get("depends_on", []))
+        while remaining:
+            dependency = remaining.pop()
+            if dependency not in ancestors:
+                ancestors.add(dependency)
+                remaining.extend(by_id[dependency].get("depends_on", []))
+        pending = sorted(dep for dep in ancestors
+                         if by_id[dep]["status"] != "completed" or evidence[dep] != "checked")
+        needs_review = any(evidence[key] == "needs_review" for key in ancestors | {item["id"]})
+        readiness = ("needs_review" if needs_review else
+                     "blocked" if item["status"] == "blocked" or pending else "ready")
+        active.append({**{key: item.get(key) for key in
+                         ("id", "title", "owner", "status", "due_date", "deadline_source", "note")},
+                       "evidence_status": evidence[item["id"]], "pending_dependencies": pending,
+                       "readiness": readiness})
+    active.sort(key=lambda item: (item["due_date"] or "9999-12-31",
+                                 item["status"] != "in_progress", item["id"]))
+    return active, next((item["id"] for item in active if item["readiness"] == "ready"), None)
+
+
 def collect(root, period, as_of=None, selected_ids=None):
     root = ws._workspace(root)
     ws._period(period)
@@ -88,6 +129,7 @@ def collect(root, period, as_of=None, selected_ids=None):
     tasks = ws._entries(root, "tasks", check_evidence=False)
     questions = ws._entries(root, "questions", check_evidence=False)
     decisions = ws._entries(root, "decisions", check_evidence=False)
+    task_rows, next_task_id = task_work(root, tasks)
     active_tasks = [item for item in tasks if item["status"] not in {"completed", "cancelled"}]
     overdue = [item for item in active_tasks if item.get("due_date") and item.get("deadline_source") and item["due_date"] < as_of]
     dated_tasks = sorted((item for item in active_tasks if item.get("due_date") and item.get("deadline_source")), key=lambda item: (item["due_date"], item["id"]))
@@ -101,7 +143,7 @@ def collect(root, period, as_of=None, selected_ids=None):
         omitted_sources.update(docs.original(root, row["document_id"])["sha256"] for row in catalog if row["document_id"] not in identifiers)
         reports = [item for item in reports if not any(source["sha256"] in omitted_sources for source in item["report"]["sources"].values())]
         bank_imports = [item for item in bank_imports if item["document_id"] in identifiers]
-    if not reports:
+    if not reports and (bank_imports or any(item["type"] in {"invoice", "credit_note", "receipt", "bank_statement"} for item in selected)):
         problems.append({"code": "reconciliation_not_supplied", "ref": period})
     unmatched = 0
     for item in reports:
@@ -118,7 +160,8 @@ def collect(root, period, as_of=None, selected_ids=None):
         if item["issues"]:
             problems.append({"code": "bank_import_review_note", "ref": item["import_id"]})
     return {"schema_version": 1, "period": period, "as_of": as_of, "documents": selected, "proposals": proposals,
-            "tasks": tasks, "questions": questions, "decisions": decisions, "overdue_tasks": overdue, "dated_tasks": dated_tasks,
+            "workspace_has_documents": bool(catalog),
+            "tasks": tasks, "active_tasks": task_rows, "next_task_id": next_task_id, "questions": questions, "decisions": decisions, "overdue_tasks": overdue, "dated_tasks": dated_tasks,
             "reports": reports, "bank_imports": bank_imports, "open_items": sorted(problems, key=lambda row: (row["code"], row["ref"])),
             "counts": {"documents": len(selected), "awaiting_review": sum(item["review_status"] in {"new", "needs_review"} for item in selected),
                        "approved_proposals": sum(p["review"]["status"] == "approved" and p["proposal_id"] not in replaced for p in proposals),

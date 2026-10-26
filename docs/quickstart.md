@@ -6,6 +6,8 @@ Open [Start here](../skills/de-business-kit/guides/start.en.md): five steps from
 
 | What you need now | Where to go |
 | --- | --- |
+| Choose among lifecycle tasks | [Launch, annual preparation and changes](../skills/de-business-kit/guides/user-guide.en.md#launch-annual-preparation-and-business-changes), [task menu](../skills/de-business-kit/guides/tasks.en.md) |
+| Work through the optional local application | [GUI launch instructions](../gui/README.md), [implemented operations](gui.md) |
 | Start or try fictional data | [Short start guide](../skills/de-business-kit/guides/start.en.md) |
 | Understand daily work or an error | [User guide](../skills/de-business-kit/guides/user-guide.en.md) |
 | Connect a downloaded project | [Installation options](../README.md#install) and [packages/updates](distribution.md); the assistant can perform technical steps |

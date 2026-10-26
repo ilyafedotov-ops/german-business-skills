@@ -207,29 +207,73 @@ function Verify {
 function Install {
     if (-not [IO.Directory]::Exists($rootPath)) { throw 'Install root must be an existing user home or project directory.' }
     Chain $kitRoot
-    $files = New-Object 'Collections.Generic.List[object]'
-    $pending = New-Object 'Collections.Generic.Stack[string]'
-    $pending.Push($kitRoot)
-    while ($pending.Count) {
-        $directory = $pending.Pop()
-        Chain $directory
-        foreach ($item in Get-ChildItem -LiteralPath $directory -Force) {
-            if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { throw 'Linked package resource rejected.' }
-            if ($item.PSIsContainer) { $pending.Push($item.FullName) } else {
-                $files.Add(@{relative=$item.FullName.Substring($kitRoot.Length).TrimStart([char[]]'\/'); bytes=(ReadBytes $item.FullName)})
+    $catalogPath = Join-Path $kitRoot 'assets/skill-set.json'
+    $catalog = $utf8.GetString((ReadBytes $catalogPath)) | ConvertFrom-Json
+    if (@($catalog.PSObject.Properties.Name).Count -ne 2 -or
+        $null -eq $catalog.PSObject.Properties['schema_version'] -or
+        $null -eq $catalog.PSObject.Properties['skills'] -or
+        -not ($catalog.schema_version -is [int] -or $catalog.schema_version -is [long]) -or $catalog.schema_version -ne 1 -or
+        -not ($catalog.skills -is [array])) { throw 'Unsupported skill catalog.' }
+    $names = @($catalog.skills)
+    if ($names.Count -lt 1 -or $names.Count -gt 32 -or $names[0] -cne 'de-business-kit') { throw 'Missing shared core in skill catalog.' }
+    $seen = @{}; $packages = @{}; $allFiles = @{}
+    $bundleRoot = [IO.Path]::GetDirectoryName($kitRoot)
+    foreach ($name in $names) {
+        if (-not ($name -is [string]) -or $name.Length -gt 64 -or
+            $name -cnotmatch '\Ade-business-[a-z0-9]+(?:-[a-z0-9]+)*\z' -or $seen.ContainsKey($name)) { throw 'Invalid or duplicate skill name.' }
+        $seen[$name] = $true
+        $skillRoot = Join-Path $bundleRoot $name
+        Chain $skillRoot
+        if (-not [IO.Directory]::Exists($skillRoot)) { throw ('Missing skill: ' + $name) }
+        $entryText = $utf8.GetString((ReadBytes (Join-Path $skillRoot 'SKILL.md')))
+        if (-not $entryText.Replace("`r`n", "`n").StartsWith("---`nname: $name`n")) { throw ('Skill identity mismatch: ' + $name) }
+        $files = New-Object 'Collections.Generic.List[object]'
+        $pending = New-Object 'Collections.Generic.Stack[string]'
+        $pending.Push($skillRoot)
+        while ($pending.Count) {
+            $directory = $pending.Pop()
+            Chain $directory
+            foreach ($item in Get-ChildItem -LiteralPath $directory -Force) {
+                if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { throw 'Linked package resource rejected.' }
+                if ($item.PSIsContainer) { $pending.Push($item.FullName) } else {
+                    $relative = $item.FullName.Substring($skillRoot.Length).TrimStart([char[]]'\/')
+                    $file = @{relative=$relative; bytes=(ReadBytes $item.FullName)}
+                    $files.Add($file)
+                    $allFiles[$name + '/' + $relative.Replace('\','/')] = $file.bytes
+                }
             }
+        }
+        if (-not $allFiles.ContainsKey($name + '/agents/openai.yaml')) { throw ('Missing skill metadata: ' + $name) }
+        $packages[$name] = $files
+    }
+    # Resolve every local reference against the captured bundle, never the source
+    # checkout or another installed skill outside this inventory.
+    foreach ($key in @($allFiles.Keys)) {
+        if (-not $key.EndsWith('.md')) { continue }
+        foreach ($match in [regex]::Matches($utf8.GetString($allFiles[$key]), '\]\(([^)]+)\)')) {
+            $link = $match.Groups[1].Value
+            if ($link -match '^[a-zA-Z][a-zA-Z0-9+.-]*:' -or $link.StartsWith('#')) { continue }
+            $parent = [IO.Path]::GetDirectoryName((Join-Path $bundleRoot $key))
+            $resolved = [IO.Path]::GetFullPath((Join-Path $parent ($link.Split('#')[0])))
+            if (-not $resolved.StartsWith($bundleRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw 'Skill reference escapes the bundle.' }
+            $targetKey = $resolved.Substring($bundleRoot.Length).TrimStart([char[]]'\/').Replace('\','/')
+            $found = $allFiles.ContainsKey($targetKey)
+            if (-not $found) { foreach ($candidate in $allFiles.Keys) { if ($candidate.StartsWith($targetKey.TrimEnd('/') + '/', [StringComparison]::Ordinal)) { $found = $true; break } } }
+            if (-not $found) { throw ('Missing skill reference: ' + $key + ' -> ' + $link) }
         }
     }
     $hosts = @($Target); if ($Target -eq 'both') { $hosts = @('codex','claude') }
     $targets = @()
     foreach ($hostName in $hosts) {
         $folder = '.agents'; if ($hostName -eq 'claude') { $folder = '.claude' }
-        $dest = Join-Path $rootPath ($folder + '/skills/de-business-kit')
-        Chain $dest
-        if ((Test-Path -LiteralPath $dest) -or $dest.StartsWith($kitRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw 'Existing installation or destination inside package; preserve it and review update separately.' }
-        $targets += $dest
+        foreach ($name in $names) {
+            $dest = Join-Path $rootPath ($folder + '/skills/' + $name)
+            Chain $dest
+            if ((Test-Path -LiteralPath $dest) -or $dest.StartsWith($bundleRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw 'Existing installation or destination inside package; preserve it and review update separately.' }
+            $targets += $dest
+        }
     }
-    if ($DryRun) { return @{status='preview'; destinations=$targets; files=$files.Count} }
+    if ($DryRun) { return @{status='preview'; destinations=$targets; files=$allFiles.Count} }
     # Publish complete staged directories with a no-overwrite move. A raced
     # destination is preserved; any completed first target stays visible.
     foreach ($dest in $targets) {
@@ -238,7 +282,8 @@ function Install {
         [void][IO.Directory]::CreateDirectory($parent)
         $stage = Join-Path $parent ('.de-business-kit-stage-' + [guid]::NewGuid().ToString('N'))
         [void][IO.Directory]::CreateDirectory($stage)
-        foreach ($file in $files) { WriteNew (Join-Path $stage $file.relative) $file.bytes }
+        $skillName = [IO.Path]::GetFileName($dest)
+        foreach ($file in $packages[$skillName]) { WriteNew (Join-Path $stage $file.relative) $file.bytes }
         Chain $parent
         [IO.Directory]::Move($stage, $dest)
     }

@@ -1,22 +1,25 @@
-# Local plugin distribution — v0.7.0-preview.1
+# Local plugin distribution — v0.8.0-preview.1
 
 The [local GUI application](gui.md) bundles its engine for document review, cash entries, filing evidence and recovery on Windows/macOS; users do not install Python. Download availability requires publication and verification of the matching platform archive. Optional [standalone Windows tools](windows.md) cover installation, start/resume, preview, intake, integrity, real overview and full backup/restore; their advanced protected writers still require an existing supported engine.
 
 [English](distribution.md) | [Русский](distribution.ru.md)
 
-The maintained workflow lives only in `skills/de-business-kit`. Root `plugin.json` declares the portable Agent Plugins identity; `.claude-plugin/plugin.json` is its thin Claude adapter. The offline builder copies that same skill into two independent local marketplace bundles. It includes the license, manifests, authored EN/RU readmes from `packaging/` and complete skill resources; repository tests, Git history, root-level private files and machine settings are excluded. Review the canonical skill before packaging: the builder is not a secret scanner.
+The maintained bundle lives in `skills/` and contains seven skills listed in `skills/de-business-kit/assets/skill-set.json`. Shared instructions, templates and utilities remain in `de-business-kit`; sibling domain skills reference them directly. Python/PowerShell installers preflight the complete set and destination conflicts before writing. The builder creates independent Codex/Claude marketplace bundles with all resources, readmes and manifests. Do not install a dependent skill alone; private business data is not migrated. Installer safety checks do not replace source review for secrets.
 
 This preview supplies no MCP server, lifecycle hook, credential, automatic installer or updater. Installing a plugin does not grant Python execution, filesystem access, browser tools, subscriptions or access to banking, Lexware or ELSTER. Actual host tools, permissions and account policy control those capabilities.
+
+
+Install the complete set together: domain skills use shared resources in `de-business-kit`. Invoke a domain skill directly when appropriate. The shared profile and chosen accounting system persist; changing skills does not restart setup. These changes are in source and local builds; previously published archives remain unchanged.
 
 ## Use a published package
 
 For the standalone application, use [application downloads and instructions](gui.md).
-The rest of this page covers optional AI skill/plugin packages. Users do not need
+The rest of this page covers the primary skill/plugin bundle. Users do not need
 to build the project. Once published, download the named Codex or Claude ZIP from
-[release 0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1),
+[release 0.8.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1),
 follow [download verification](releases.md), and extract it into a new folder using
 Explorer or Finder. Published filenames include the version, for example
-`de-business-kit-0.7.0-preview.1-codex.zip`.
+`de-business-kit-0.8.0-preview.1-codex.zip`.
 
 Inside the extracted folder, `codex` or `claude` is the marketplace root. Skip the
 build section and go to [host installation](#optional-host-installation-after-review).
@@ -45,10 +48,10 @@ The result contains:
 new-review-bundle/
   codex/.agents/plugins/marketplace.json
   codex/plugins/de-business-kit/plugin.json
-  codex/plugins/de-business-kit/skills/de-business-kit/...
+  codex/plugins/de-business-kit/skills/{de-business-kit,de-business-start,de-business-operations,...}/...
   claude/.claude-plugin/marketplace.json
   claude/plugins/de-business-kit/.claude-plugin/plugin.json
-  claude/plugins/de-business-kit/skills/de-business-kit/...
+  claude/plugins/de-business-kit/skills/{de-business-kit,de-business-start,de-business-operations,...}/...
   codex.zip
   claude.zip
   SHA256SUMS
@@ -94,8 +97,12 @@ Package tests extract each archive, resolve its catalog and manifest, compare ev
 
 On 2026-10-25, Claude Code **2.1.310** read-only `plugin validate` passed for a generated local marketplace and its packaged plugin. Both host packages now contain mutually linked EN/RU readmes with a first-run prompt. The separate public-directory check still reports a missing icon; public submission and directory acceptance remain deferred. Codex CLI **0.164.0** exposes marketplace registration, but registration/installation were not run.
 
+On **2026-10-26**, project-scoped standalone installation was checked through actual **Codex CLI 0.164.0** discovery on macOS arm64. Two fresh app-server processes found all seven enabled catalog skills at their installed paths, with no project errors; 128 files and installed sibling links were verified. This covers CLI discovery after process restart, not model invocation, marketplace installation or desktop UI. See the [dated evidence](validation.md).
+
 The CI workflow runs native `windows-latest` (Python 3.9/3.14) and `macos-latest` (Python 3.10/3.14) jobs. [All four jobs passed on 2026-10-25](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40229530057) after fixing an installer drive-root error found by the first Windows run. Python 3.9 is covered on Windows because [GitHub's macOS ARM64 tool builds do not provide it](https://github.com/actions/python-versions/blob/main/versions-manifest.json). These checks execute offline Python utilities, not desktop apps.
 
 No desktop installation, discovery, permission prompt, account synchronization or complete live workflow has been tested by this packaging work. Record host/product version, OS, language, discovery, setup, resumption and synthetic-file results before claiming desktop support. Use the [validation notes](validation.md) and [scenario cases](../evals/scenarios.json).
+
+On **2026-10-26**, Claude Code **2.1.310** also discovered all seven standalone project skills in two fresh control-initialize processes using explicit `--add-dir`. No model turn was sent. This is a separate bounded CLI result, not automatic discovery or desktop acceptance; see the [validation record](validation.md).
 
 [Versions, signatures and release verification](releases.md)

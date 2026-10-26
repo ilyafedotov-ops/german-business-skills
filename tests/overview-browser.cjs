@@ -15,7 +15,7 @@ const playwright = require('playwright');
   const browser = await playwright[browserName].launch();
   try {
     const kinds = process.platform === 'win32' || process.env.GBK_TEST_DOCKER_IMAGE ? ['', '-native'] : [''];
-    for (const kind of kinds) for (const language of ['en','ru']) for (const scenario of ['empty','blocked','corrupt']) {
+    for (const kind of kinds) for (const language of ['en','ru']) for (const scenario of ['empty','blocked','corrupt','lifecycle']) {
       for (const width of [390,1280]) {
         const page = await browser.newPage({viewport:{width,height:900}});
         const issues=[];
@@ -30,6 +30,19 @@ const playwright = require('playwright');
           assert((await page.locator(kind ? 'body' : '#needs-review').innerText()).includes('Clarify invoice country'));
           assert((await page.locator(kind ? 'body' : '#accounting-tax').innerText()).includes('return-1'));
           assert((await page.locator('body').innerText()).includes('<script>alert(1)</script>'));
+        }
+        if (scenario==='lifecycle') {
+          const tasks=page.locator(kind ? 'body' : '#active-tasks');
+          assert((await tasks.innerText()).includes('Prepare registration <script>alert(1)</script>'));
+          assert((await tasks.innerText()).includes('Review authority reply'));
+          assert((await tasks.innerText()).includes(language==='en'?'No date recorded':'Дата не задана'));
+          assert((await tasks.innerText()).includes(language==='en'?'Unresolved dependencies':'Незавершённые зависимости'));
+          if (!kind) {
+            const taskLink=page.locator('nav a[href="#active-tasks"]');
+            await taskLink.focus(); await page.keyboard.press('Enter');
+            assert(page.url().endsWith('#active-tasks'));
+            assert(await tasks.isVisible());
+          }
         }
         if (scenario==='corrupt') {
           if (kind) assert((await page.locator('body').innerText()).includes('Accounting register is missing'));
@@ -50,6 +63,6 @@ const playwright = require('playwright');
         await page.close();
       }
     }
-    console.log(`${browserName}: real overview EN/RU, empty/blocked/corrupt, 390/1280, keyboard, escaping and no network/console errors passed`);
+    console.log(`${browserName}: real overview EN/RU, empty/blocked/corrupt/lifecycle, 390/1280, keyboard, escaping and no network/console errors passed`);
   } finally {await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

@@ -4,21 +4,23 @@ Windows users can start without Python using [native Windows tools](windows.md).
 
 [English](architecture.md) · [Русский](architecture.ru.md)
 
-Project version: **0.6.0-preview.4**. Implementation reviewed **2026-10-26**; external-source checks retain their recorded dates. [Current scope](project-status.md).
+Project version: **0.8.0-preview.1**. Implementation reviewed **2026-10-26**; external-source checks retain their recorded dates. [Current scope](project-status.md).
 
 Read the [domain ontology](ontology.md) for entities, relationships and state meanings. The **local casework extension** is part of the source implementation; it is not evidence of a published release or completed desktop integration.
 
-The [accounting workflow](accounting.md) adds an onboarding-selected authoritative system, limited local cash journal and filing evidence lifecycle through the existing `desk.py` entry point. `casefiles/accounting.py` stores additive state in `04_accounting/register.json`; it reuses workspace locks, evidence fingerprints and history, and checks register state against its latest audit checkpoint. Local cash reports include source-entry/configuration fingerprints and per-account reconciliation CSVs. Filing versions freeze payload/source files, separate review/authorization from uncertain attempts and manually observed receipts/responses, and block stale local-report preflight. No provider/ERiC transport or complete statutory tax calculator is added.
+The [accounting workflow](accounting.md) adds an explicitly selected authoritative system when accounting work needs it, limited local cash journal and filing evidence lifecycle through the existing `desk.py` entry point. `casefiles/accounting.py` stores additive state in `04_accounting/register.json`; it reuses workspace locks, evidence fingerprints and history, and checks register state against its latest audit checkpoint. Local cash reports include source-entry/configuration fingerprints and per-account reconciliation CSVs. Filing versions freeze payload/source files, separate review/authorization from uncertain attempts and manually observed receipts/responses, and block stale local-report preflight. No provider/ERiC transport or complete statutory tax calculator is added.
 
 ## Intended result
 
-An entrepreneur brings a task: open an activity, manage their own accounting and tax reporting, organize receipts, understand a tax question or prepare an official form. The skill resumes from private files, collects the few missing facts that affect the result and produces work the user can inspect. Evidence and recorded decisions remain available after the conversation ends. Self-managed bookkeeping/accounting and tax reporting are the primary workflow; consultation and accountant exports are optional branches for a specific need. Complete ledger functionality and ELSTER submission integration are core capabilities still to be completed, not replaced by an archive or handoff.
+An entrepreneur brings a task at any stage: prepare to start, register an activity, choose a service, fill in a form, answer a question, manage daily work or prepare reporting. Changes and closure have journey instructions; real execution needs separate acceptance. The [lifecycle map](lifecycle.md) defines coverage and priorities. The router or a directly selected domain skill loads relevant modules and available tools; shared facts and decisions support continuation. Local utilities, the GUI and integrations serve these outcomes. Self-managed accounting and filing use the chosen system; a proprietary complete ledger and ELSTER connector are not prerequisites for every route. Consultation and exports remain optional.
 
 The supported scope is a natural person operating in Germany: Freiberufler, Einzelunternehmen/Gewerbe and multiple activities of the same person. Corporations, partnerships, payroll, complex international structures and cash-register systems are outside the promised automation scope. The skill can collect facts and prepare a specific specialist handoff for those cases.
 
-## One entry point, shared state
+Export coverage is a readable projection of supplied evidence: the selected route, date basis, inspected pages/originals and missing scope. It reuses operation notes and source maps; it adds no provider registry or automatic export engine.
 
-The portable entry point is `de-business-kit`. Its `SKILL.md` routes to task-specific reference modules, loaded as the task requires. The business profile, VAT history, evidence, questions and decisions are shared, which avoids creating conflicting records for separate modes or languages. Independent skills could be extracted later while preserving the common data contract.
+## Seven entry points, shared state
+
+The bundle contains seven directly usable skills with one shared profile. `de-business-kit` starts/resumes mixed work; `de-business-start`, `de-business-operations`, `de-business-accounting`, `de-business-tax`, `de-business-services` and `de-business-changes` can be invoked directly. Shared contracts and utilities remain in `skills/de-business-kit`; installers and the builder use `assets/skill-set.json`. Load only relevant modules; a transition passes the task and evidence references without new profiles, shadow registers or automatic subagents. Install the complete set without migrating private data.
 
 | Layer | Responsibility |
 |---|---|
@@ -32,6 +34,10 @@ The portable entry point is `de-business-kit`. Its `SKILL.md` routes to task-spe
 | Accounting product / authority | Actual postings, transmissions, receipts and official responses |
 
 The skill cannot create browser tools, API access or permissions. Availability depends on the host and current session. Bundled scripts operate offline; the host's model can still process selected data remotely.
+
+The lifecycle worksheets and continuation notes reuse existing tasks, decisions and evidence. They add no state schema or autonomous workflow runner; the assistant prepares and verifies each result through available tools.
+
+The overview and GUI home project active lifecycle tasks from the existing `tasks.json` register across months, including undated work. Readiness checks the task evidence and its full dependency ancestry; cancelled dependencies do not satisfy work. Stale evidence blocks the affected chain while unrelated tasks may continue. Invalid records suppress task suggestions. The projection cannot complete a task, grant authorization or create a reminder.
 
 ## Languages and modes
 
@@ -92,7 +98,7 @@ The current preview includes `workflows.py` for international transactions, acti
 
 ## Component and deployment architecture
 
-This is a host-driven skill with an offline filesystem backend. The host runs the conversation and invokes short-lived Python CLI processes. There is no persistent application server, database service, queue worker or built-in model API client. The local extension generates a static overview rather than introducing a web application backend.
+The assistant/CLI route uses the seven-skill bundle and an offline filesystem backend. The host runs the conversation and invokes short-lived Python CLI processes; the utilities can generate a static overview. The optional [real GUI](gui.md) instead runs a session-protected loopback service while its launcher is open, using the same records and protected writers. Neither route adds a database service, queue worker or built-in model API client. The diagram below describes the assistant/CLI route; the GUI adapter is described separately below.
 
 ```mermaid
 flowchart TB
@@ -117,7 +123,7 @@ flowchart TB
     X -. inspected evidence saved through host workflow .-> FS
 ```
 
-The diagram shows execution and dependency boundaries, not network access supplied by the Python utilities. Public source and the installed skill are separate from the private business workspace. `tools/install.py` copies the self-contained skill into host discovery directories; `tools/build_package.py` creates distribution bundles. Python is supplied by the environment. No production Python dependency beyond the standard library is required.
+The diagram shows execution and dependency boundaries, not network access supplied by the Python utilities. Public source and the installed skill are separate from the private business workspace. `tools/install.py` copies the complete self-contained skill bundle into host discovery directories; `tools/build_package.py` creates distribution bundles. Standalone CLI use requires an available Python runtime; the GUI application bundles its engine. No production Python dependency beyond the standard library is required.
 
 The host chooses a task module and supplies reviewed inputs. Python validates structures and performs deterministic operations. The host interprets business meaning and inspects external sources. This division keeps arithmetic and file operations reproducible while making semantic and authorization responsibilities explicit.
 
@@ -132,7 +138,7 @@ These components describe code present in this source snapshot. `SKILL.md` route
 | [documents.py](../skills/de-business-kit/scripts/casefiles/documents.py) | Reuse preserved originals; catalog metadata, typed relations and repeated receipt events | Catalog and receipt collections |
 | [reviews.py](../skills/de-business-kit/scripts/casefiles/reviews.py) | Extracted-field checks, proposal arithmetic and review, source checks, provider observations | Proposals, source checks and observations |
 | [bank.py](../skills/de-business-kit/scripts/casefiles/bank.py) | Explicit CSV mapping, review preview, normalization and overlapping-ID checks | Preview, normalized CSV and bank-import record |
-| [invoice_xml.py](../skills/de-business-kit/scripts/casefiles/invoice_xml.py) | Bounded standalone UBL Invoice / CII field inspection | Derived report and inspection record |
+| [invoice_xml.py](../skills/de-business-kit/scripts/casefiles/invoice_xml.py) | Bounded standalone UBL Invoice / CreditNote / CII header and preceding-reference inspection | Derived report and inspection record |
 | [summary.py](../skills/de-business-kit/scripts/casefiles/summary.py) | Read-only projection of documents, open reviews, deadlines and reconciliation evidence | In-memory snapshot consumed by overview/archive |
 | [overview.py](../skills/de-business-kit/scripts/casefiles/overview.py) | English/Russian static HTML, Markdown and JSON generation | `00_admin/overview.*`, initial `START-HERE.md` |
 | [archive.py](../skills/de-business-kit/scripts/casefiles/archive.py) | Select linked records/evidence, build a manifest, verify directory and ZIP | Unique `07_exports/YYYY-MM/archive-*` artifacts |
@@ -176,7 +182,7 @@ Recovery starts by inspecting failed-command outputs, current register hashes, o
 
 ## Design choices and validation scope
 
-One portable skill and one shared profile avoid divergent state across modes and hosts. Standard-library CLI processes reduce installation dependencies. JSON and ordinary files make evidence inspectable and portable, at the cost of multi-file recovery and coarse write locking. The casework register is rewritten as a whole and has a 50 MiB limit; this is not designed as a concurrent, high-volume accounting platform. Shared helpers reduce duplication, but casework imports internal helpers from `workspace.py` and `workflows.py`, so their contracts are coupled.
+One portable seven-skill bundle and one shared profile avoid divergent state across modes and hosts. Standard-library CLI processes reduce installation dependencies. JSON and ordinary files make evidence inspectable and portable, at the cost of multi-file recovery and coarse write locking. The casework register is rewritten as a whole and has a 50 MiB limit; this is not designed as a concurrent, high-volume accounting platform. Shared helpers reduce duplication, but casework imports internal helpers from `workspace.py` and `workflows.py`, so their contracts are coupled.
 
 Automated checks are `python3 -B -m unittest discover -s tests -v` and `python3 -B tools/check_package.py`. Tests cover local contracts; package checks cover structure, translations, JSON and local links. The [validation record](validation.md) separates historical runs, behavioral trials and integration gaps. A passing test run does not establish tax correctness, production connector support or desktop usability. This architecture describes the current source, not a certification or a release declaration.
 

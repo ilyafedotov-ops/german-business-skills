@@ -73,6 +73,11 @@ try {
     Assert (-not (Test-Path -LiteralPath (Join-Path $homeDir '.agents'))) 'Dry-run wrote files'
     & $kit -Action install -Root $homeDir -Target both | Out-Null
     Assert (Test-Path -LiteralPath (Join-Path $homeDir '.claude/skills/de-business-kit/SKILL.md')) 'Claude install missing'
+    foreach ($name in @('de-business-start','de-business-operations','de-business-accounting','de-business-tax','de-business-services','de-business-changes')) {
+        foreach ($hostFolder in @('.agents','.claude')) {
+            Assert (Test-Path -LiteralPath (Join-Path $homeDir ($hostFolder + '/skills/' + $name + '/SKILL.md'))) ('Sibling skill missing: ' + $name)
+        }
+    }
     Assert (Test-Path -LiteralPath (Join-Path $homeDir '.agents/skills/de-business-kit/scripts/windows.ps1')) 'Detached native utility missing'
     Reject { & $kit -Action install -Root $homeDir -Target both }
     $corruptRoot = Join-Path $base 'Corrupt audit'

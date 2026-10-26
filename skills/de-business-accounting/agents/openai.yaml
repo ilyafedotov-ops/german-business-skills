@@ -1,0 +1,4 @@
+interface:
+  display_name: "Business Accounting"
+  short_description: "Review records, payments and period accounting"
+  default_prompt: "Use $de-business-accounting to continue accounting in my existing system and explain gaps."

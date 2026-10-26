@@ -8,10 +8,13 @@ explicit user instructions and applicable higher-priority instructions. Read
 
 ## Purpose and navigation
 
-Self-managed accounting and tax reporting are the primary workflow for a German
-sole trader. Professional consultation and exports are optional branches. Do not
-replace missing accounting or filing capabilities with a mandatory accountant
-handoff. Check implementation and [capability limits](docs/core-capabilities.md)
+The product is a system of skills supporting the lifecycle of a German sole
+trader: preparation, formation, setup, daily work, reporting, changes and closure.
+Use the [lifecycle coverage and roadmap](docs/lifecycle.md) to choose work by user
+outcome. Self-managed accounting and tax reporting are an important part of that
+lifecycle; professional consultation and exports are optional branches. Preserve
+that outcome without requiring a proprietary ledger, GUI or transport for every
+route. Check implementation and [accounting capability limits](docs/core-capabilities.md)
 before claiming support; a plan, template or passing utility test is not an
 implemented integration.
 
@@ -42,8 +45,10 @@ protected journal/filing writers or full filing preflight.
 
 Read only the modules relevant to the task. Inspect status and the relevant diff
 before editing; preserve unrelated work. Edit canonical sources, not generated
-bundles or installed copies. Keep `skills/de-business-kit` self-contained: its
-local references must resolve after installation without the source checkout.
+bundles or installed copies. Keep the complete `skills/` bundle self-contained. The explicit catalog in
+`skills/de-business-kit/assets/skill-set.json` owns membership; sibling links must
+resolve after installation without the source checkout. Shared resources stay in
+`de-business-kit`; never install a dependent skill alone.
 
 ## Rules that changes must preserve
 

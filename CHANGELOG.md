@@ -6,6 +6,18 @@ Versions follow Semantic Versioning. All releases below are previews, not a
 certification of accounting correctness or desktop compatibility. Historical
 milestones are first published on 2026-10-26; their original commits are retained.
 
+## 0.8.0-preview.1
+
+Lifecycle skill bundle preview. Publication requires the matching tag checks and verified assets; previously published versions remain unchanged.
+
+- Preserve explicitly selected legacy installation sources even when the source folder has a different name or an unrelated sibling exists.
+- Deliver the router and six domain skills as one portable bundle with shared profile/evidence, complete-set installation and detached resource checks.
+- Add EN/RU preparation and continuation across launch, customer work, correspondence, annual readiness, services, first hire, changes and closure.
+- Show active lifecycle tasks, including undated/cross-month tasks, dependencies and evidence health, in the real overview and GUI home. GUI continuation prepares a request for the assistant without executing it.
+- Inspect bounded standalone invoice/CreditNote XML references and retain correction evidence. Inspect supplied service exports with explicit route/date-basis and coverage limits; Lexware remains on local examples.
+- Clarify source-led tax consultations, required date/accounting facts, and task-first user guidance without adding tax formulas.
+- Record fresh synthetic trials, Codex CLI and explicit Claude Code discovery, and local runtime/package checks. Exact-ref Windows 5.1/other platform, ordinary-user and real-service acceptance remain open; see [validation](docs/validation.md).
+
 ## 0.7.0-preview.1
 
 Version [0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1). Download availability requires successful platform gates, publication and verification of the matching assets.
