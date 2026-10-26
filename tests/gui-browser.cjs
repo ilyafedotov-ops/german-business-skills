@@ -6,6 +6,7 @@ const path = require('node:path');
 const { spawn, execFileSync } = require('node:child_process');
 const readline = require('node:readline');
 const playwright = require('playwright');
+const { stopChild } = require('./gui-lifecycle.cjs');
 const browserName = process.argv.find(a => a.startsWith('--browser='))?.split('=')[1] || 'chromium';
 const output = path.resolve('output/gui');
 const python = process.env.GUI_PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
@@ -49,7 +50,7 @@ function start(root) {
   await fixture(root);
   await fs.mkdir(output,{recursive:true});
   const server = start(root);
-  let browser;
+  let browser, failure;
   try {
     const { url, token } = await server.ready;
     browser = await playwright[browserName].launch();
@@ -340,9 +341,19 @@ function start(root) {
     assert.deepEqual(issues, []);
     console.log(`GUI ${browserName}: real import/review/configuration/draft/post/reversal/filing lifecycle/recovery/stale-tab journeys and 54 localized route-width checks passed; ${screenshotDiagnostics} screenshot-only WebKit CSP diagnostics.`);
     await context.close();
+  } catch (error) {
+    failure = error;
+    throw error;
   } finally {
-    if (browser) await browser.close();
-    server.child.kill();
-    await fs.rm(temp, { recursive: true, force: true });
+    const cleanupErrors = [];
+    try { if (browser) await browser.close(); } catch (error) { cleanupErrors.push(error); }
+    try {
+      await stopChild(server.child);
+      await fs.rm(temp, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+    } catch (error) { cleanupErrors.push(error); }
+    if (cleanupErrors.length) {
+      if (failure) console.error('Additional GUI cleanup errors:', ...cleanupErrors);
+      else throw new AggregateError(cleanupErrors, 'GUI cleanup failed');
+    }
   }
 })().catch(error => { console.error(error); process.exitCode = 1; });
