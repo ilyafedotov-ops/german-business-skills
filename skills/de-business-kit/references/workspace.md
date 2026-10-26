@@ -24,6 +24,10 @@ All relative input paths below are relative to `--root`, not the current shell d
 
 ## Files and state
 
+New CLI `init` and `start` use five everyday folders in `en`, `ru` or `de`, plus `.business-kit` for internal records and a localized root start guide. Folder language is pinned separately in `.workspace-layout.json` and the workspace marker. Include both the internal area and descriptor in backups. `--layout legacy` explicitly selects the old layout; existing workspaces resume unchanged. No automatic migration is implemented.
+
+The table below lists **stable logical references**, not necessarily physical paths. Before using ordinary file tools, run `workspace.py folders --root <private-folder>` (or native `-Action folders`) and translate the longest matching prefix. Under the document archive, `originals`, `derived` and `proposals` also have translated names. Prefer the actual paths returned by operations. Never create old English directories alongside a localized workspace. See `assets/folder-layouts.json` for the shared mapping. The low-level Python `init_workspace` API retains its legacy default for existing callers; `start_workspace` defaults to localized folders.
+
 | File / directory | Meaning |
 |---|---|
 | `00_admin/workspace.json` | Workspace UUID, schema version, initial year, language and working mode |

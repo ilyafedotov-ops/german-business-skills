@@ -2,7 +2,20 @@
 
 [English](validation.md) | [Русский](validation.ru.md)
 
-Checked **2026-10-25**. Tests use synthetic temporary data, never live business records or accounts.
+Checked **2026-10-26**. Tests use synthetic temporary data, never live business records or accounts.
+
+## Localized physical workspace folders (2026-10-26)
+
+New CLI workspaces use EN/RU/DE physical folders, a localized start guide and fixed folder-language metadata; existing layouts remain unchanged. Shared resolution now covers native intake/integrity checks, Python casework, accounting, filing evidence, archives and overview links. Source scanners exclude localized and interrupted workspaces. This is not automatic migration or complete German report/prototype translation.
+
+- `GBK_TEST_DOCKER_IMAGE=mcr.microsoft.com/dotnet/sdk:9.0 python3 -B -m unittest discover -s tests -v`: **189 tests passed**, no skips, macOS/Python 3.14.6 with native interoperability executed in Linux PowerShell 7.5.12.
+- `docker run --rm --network none -v "$PWD:/work:ro" -w /work mcr.microsoft.com/dotnet/sdk:9.0 pwsh -NoProfile -NonInteractive -File tests/native/windows-smoke.ps1`: passed, including detached resources and EN/RU/DE intake, resume, physical-folder discovery and orphan detection. Windows PowerShell 5.1 has not been run for this change; the existing Windows CI remains necessary.
+- `python3 -B tools/check_package.py` and `git diff --check`: passed. Detached Codex/Claude package workflows are included in the suite.
+- A fresh skill-only synthetic trial created Russian folders, preserved a CSV for October, changed conversation preference to German and resumed. Workspace identity, Russian paths and original SHA-256 remained unchanged. Accounting system stayed undecided and processing assessment remained incomplete, as expected.
+- Independent read-only review found and then verified fixes for native audit paths, native orphan detection and localized-workspace source exclusions. No further findings on recheck.
+- Browser probes: Chromium rendered EN/RU/DE overviews and downloaded the archive through keyboard activation. WebKit rendered them, focused the link and resolved it to the correct existing archive; its local-file download event timed out, so WebKit archive download is **not accepted**. No appearance changes or visual parity claim.
+
+Earlier validation runs exposed stale legacy paths in test fixtures and generated Python bytecode rejected by packaging; these were corrected/removed. One container run transiently failed to read the marker after a host-side atomic update. Focused and final full reruns passed without an application workaround; this does not establish Docker file-sharing reliability or native Windows acceptance. All inputs were synthetic; no live tax submission or real accounting data was used.
 
 ## Read-only filing readiness checks (2026-10-25)
 

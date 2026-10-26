@@ -11,6 +11,7 @@ The assistant runs commands and explains outcomes; users should not need to edit
 | Research, tax explanation, service comparison, form preparation | Available host search/browser/file tools and localized Markdown templates; no workspace or runtime required for an answer |
 | Install standalone skill | `scripts/windows.ps1 -Action install`; no network, runtime installer or host-setting changes |
 | Create/resume canonical workspace | `-Action start`; same profile, preferences, unknown facts, document index and lock as Python utilities |
+| Resolve actual workspace folders | `-Action folders`; read-only logical-to-physical path map |
 | Preview a mixed folder | `-Action scan`; bounded metadata, exclusions and completeness, no source content reads/import |
 | Preserve selected original files | `-Action ingest`, one selected file at a time; byte copy, SHA-256, exact-content duplicate detection |
 | Check stored originals | `-Action verify`; indexed hashes/sizes, unexpected originals and unsafe paths |
@@ -36,6 +37,8 @@ Run from the reviewed extracted source directory; substitute real paths and year
 ```
 
 `install -Root` is the existing user home or, for project scope, an already initialized private workspace. It copies only the canonical skill, refuses an existing installation and preflights both target locations. Keep updates separate and preserve customized installations. Verify actual skill discovery after installation; copying files is not desktop acceptance.
+
+`start` defaults to localized physical folders selected by `-Language en|ru|de`, with a localized root guide. `-Layout legacy` explicitly selects the older layout for a new workspace. Use `-Action folders` before accessing records through ordinary file tools; keep `.business-kit` and `.workspace-layout.json` in backups. Changing assistant language does not rename folders. Existing layouts remain unchanged; no migration is performed.
 
 `start` refuses a nonempty folder without a valid marker; it resumes an existing workspace without changing language, mode or facts. Initialization preserves unknown facts and an unreviewed processing configuration. Native resume is an integrity summary, not the complete Python `doctor` or processing-assessment validator. Read existing profile/tasks/source map and assess the real host/data flow before real personal data. Do not call the workspace configured merely because native start succeeded.
 

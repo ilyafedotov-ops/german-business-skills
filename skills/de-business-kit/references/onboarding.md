@@ -33,3 +33,7 @@ If web access is unavailable, identify which consequential rule remains unverifi
 - For updates: install/review a fresh skill package separately, close active writers, verify a synthetic example, and reopen the same private workspace. Do not initialize business data again. Avoid duplicate standalone and plugin installations.
 
 Backup verification is a separate operation: preserve a protected copy outside the source checkout, restore into a fresh private location, then run `doctor` and `verify`. Never delete originals or backups based only on folder age. This preview does not encrypt files or configure Windows ACLs.
+
+## Folder language during setup
+
+For a new workspace, use the user's chosen English, Russian or German language for physical folders and the start guide. `start` defaults to the localized layout in both engines. Explain the five everyday areas through that guide; do not ask users to classify mixed invoices before inspection. Existing workspace paths and folder language stay fixed on resume, even if conversation preferences change. Before ordinary file reads/writes, obtain `workspace.py folders --root <private-folder>` or native `-Action folders` and resolve stable logical references into actual paths. Never create a parallel English folder tree. German folder/guide support does not imply full German report/prototype translation.

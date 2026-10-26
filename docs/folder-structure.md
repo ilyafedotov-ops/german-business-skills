@@ -2,49 +2,28 @@
 
 [English](folder-structure.md) | [Русский](folder-structure.ru.md) | [Deutsch](folder-structure.de.md)
 
-Review date: 2026-10-25. This page distinguishes the current implementation from the proposed user-facing structure. The project supports self-managed accounting; an accountant export is optional.
+New workspaces created with `start` or CLI `init` now use real folder names in English, Russian or German. Choose the language once at creation. Existing workspaces keep their paths. Self-managed accounting remains the main workflow; exports are optional.
 
-## What was confusing
-
-The current workspace has ten English-named top-level directories. Russian conversation/report preferences do not translate those names. German is accepted in some saved settings, but several entry points and generated outputs still support only English/Russian or fall back to English. Full German support must not be claimed yet.
-
-`04_accounting` and `06_bookkeeping` represent different technical purposes, but look like competing places to put an invoice. `00_admin/inbox` is difficult to discover; `07_exports` gives an optional output more prominence than everyday work. The profile, indexes and history are implementation records, not filing decisions for users.
-
-Previously, initialization also created a full year and twelve months with `originals`, `derived` and `proposals` below each month. New initialization now creates the archive container only. Intake creates its selected month and originals directory; other operations create their output directories when needed. That avoids 49 empty directories at setup. Existing empty folders and original files are preserved.
-
-## Recommended everyday structure
-
-Use one selected language for a new workspace, not duplicate English/Russian/German copies of the same records.
+## Five everyday areas
 
 | Purpose | English | Русский | Deutsch |
 | --- | --- | --- | --- |
-| Items to bring into the workspace | `01 Inbox` | `01 Входящие` | `01 Eingang` |
-| Preserved source documents and related derivatives | `02 Documents` | `02 Документы` | `02 Dokumente` |
+| Mixed files awaiting intake | `01 Inbox` | `01 Входящие` | `01 Eingang` |
+| Preserved documents and derivatives | `02 Documents` | `02 Документы` | `02 Dokumente` |
 | Statements, accounting records and reports | `03 Accounts` | `03 Учёт` | `03 Buchhaltung` |
-| Returns, tax correspondence and submission evidence | `04 Taxes` | `04 Налоги` | `04 Steuern` |
-| Registration, contracts and general business correspondence | `05 Business` | `05 Бизнес` | `05 Unternehmen` |
+| Tax preparation and submission evidence | `04 Taxes` | `04 Налоги` | `04 Steuern` |
+| Registration and correspondence | `05 Business` | `05 Бизнес` | `05 Unternehmen` |
 
-These are **proposed names**, not paths supported by the current writers. Actual folder renaming needs a versioned path-resolution contract across Python, native Windows, evidence readers, exports and generated links. A localized interface/guide could instead use these labels while keeping existing storage paths. Confirm the intended Explorer/Finder experience before changing that contract.
+The root includes a start guide in the chosen language: `START-HERE.md`, `НАЧНИТЕ-ЗДЕСЬ.md` or `HIER-STARTEN.md`. Put mixed incoming files in the first folder; the assistant can inspect and organize them without requiring a tax category in advance. Dropping a file there does not itself import or review it.
 
-Create subdivisions only when needed. Under documents use `YYYY/MM` for ordering, with translated labels such as `Оригиналы` / `Originale` and `Обработанные` / `Aufbereitet`. Show month names in the interface. A storage month must not determine tax treatment. Keep source filenames and exact bytes; readable titles belong in the catalog. Do not copy a document into multiple categories just because several tasks reference it.
+Months are created only when used. For example, a Russian original is stored under `02 Документы/2026/10/Оригиналы/`. Intake preserves source bytes and records the source filename; archived copies retain the existing hash-based naming convention. A storage month does not determine the tax period. Several tasks can reference one original without making copies in multiple folders.
 
-Keep the business profile, indexes, audit history and technical configuration in a clearly identified internal area. It is not a security boundary and must remain in backups. Avoid asking the user to choose between tax/accounting categories before the document has been inspected: the inbox accepts mixed information, and unresolved classification remains visible.
+Profile, indexes and history live in `.business-kit`. The versioned `.workspace-layout.json` identifies the folder language. Include both in backups; hiding technical files is not access protection. Do not edit these files or rename the folders manually.
 
-Put optional exports beneath reports rather than making “accountant handoff” the main task. An archive, report, reviewed document, accounting entry and submitted return need separate labels and completion evidence.
+## Stable references and compatibility
 
-## Compatibility and language changes
+Folder language is separate from conversation/report preferences. Switching the assistant language does not rename folders or originals. The tools resolve stable internal references such as `06_bookkeeping/...` into the selected physical paths. Assistants using ordinary file tools must first inspect `workspace.py folders --root <private-folder>` or native `windows.ps1 -Action folders -Root <private-folder>`; the technical reference table is not a literal Explorer/Finder path list.
 
-Do not rename existing workspaces in place or silently rewrite evidence references. Existing paths remain supported. A future migration needs a preview, backup verification, collision checks, full reference mapping, original-hash verification and a recoverable completion record before it is offered.
+New CLI workspaces default to this layout. `--layout legacy` / `-Layout legacy` explicitly selects the older layout. The low-level Python `init_workspace` API keeps its legacy default for existing callers; `start_workspace` defaults to localized folders. Existing workspaces resume without migration. Migration would require a preview, verified backup, collision checks, reference mapping and original-hash verification; no migration is supplied now.
 
-Store folder language separately from conversation/report language. Switching the assistant to Russian must not rename an established German archive. German official terms and form identifiers stay exact; explain them in the user's chosen language. Use short portable names, preserve Unicode, avoid Windows reserved names and characters, and check actual Windows/macOS behavior.
-
-## Acceptance for the next layout
-
-- A Russian-speaking user can start, file a mixed document and resume without interpreting English labels.
-- A German-speaking user can do the same without an English fallback.
-- New folders, native Windows intake, optional Python operations and generated links use the same versioned mapping.
-- Language switching leaves original bytes and existing references unchanged.
-- Intake works before every business/tax fact is known; no duplicated archive is created.
-- Legacy workspaces remain readable, and recovery preserves originals and user files.
-
-Only lazy month creation is implemented by this change. Full folder localization, a migration and a translated prototype are not yet implemented.
+Native Windows setup, scan, intake and integrity checks use the same mapping as the optional Python workflows, accounting reports and archives. This does not add native Windows support for Python-only advanced operations. German folder names and the start guide are implemented; the prototype and all generated report templates are not fully translated. Native runtime validation on Linux is not Windows PowerShell 5.1 acceptance; see [validation](validation.md).
