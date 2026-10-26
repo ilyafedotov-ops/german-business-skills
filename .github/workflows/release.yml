@@ -77,8 +77,18 @@ jobs:
         run: |
           set -euo pipefail
           gh --version
+          # GitHub may publish the immutable release before its proof is readable.
+          # Retry verification only; a missing/invalid proof still fails closed.
+          verify_with_retry() {
+            local attempt
+            for attempt in 1 2 3 4 5 6; do
+              if "$@"; then return 0; fi
+              if [[ "$attempt" -lt 6 ]]; then sleep 10; fi
+            done
+            return 1
+          }
           for asset in release-assets/*; do
-            gh attestation verify "$asset" --repo "$GH_REPO" \
+            verify_with_retry gh attestation verify "$asset" --repo "$GH_REPO" \
               --signer-workflow "$GH_REPO/.github/workflows/release.yml" \
               --source-ref "refs/tags/$RELEASE_TAG" --source-digest "$SOURCE_SHA" \
               --deny-self-hosted-runners
@@ -92,4 +102,4 @@ jobs:
           # The settings endpoint requires admin permissions, unavailable to
           # GITHUB_TOKEN. The published release exposes this enforced outcome.
           test "$(gh api "repos/$GH_REPO/releases/tags/$RELEASE_TAG" --jq .immutable)" = true
-          gh release verify "$RELEASE_TAG"
+          verify_with_retry gh release verify "$RELEASE_TAG"

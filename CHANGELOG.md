@@ -6,6 +6,16 @@ Versions follow Semantic Versioning. All releases below are previews, not a
 certification of accounting correctness or desktop compatibility. Historical
 milestones are first published on 2026-10-26; their original commits are retained.
 
+## 0.6.0-preview.4
+
+- Retry cryptographic verification a bounded number of times when GitHub's newly
+  created attestation is not yet readable. Verification never becomes optional;
+  persistent failures still stop the job. Tests cover delayed success and failure.
+- Preview.3 passed all test/security/build gates and published an immutable release,
+  but its immediate final verification raced attestation availability. Subsequent
+  release verification succeeded. No existing files or tags were replaced.
+- Retain the explicit static prototype dispatch and complete CodeQL severity gate.
+
 ## 0.6.0-preview.3
 
 - Use explicit static screen dispatch, removing indirect renderer lookup entirely.

@@ -1,4 +1,4 @@
-# German Business Kit — local preview 0.6.0-preview.3
+# German Business Kit — local preview 0.6.0-preview.4
 
 **Start here:** `skills/de-business-kit/guides/start.en.md` · `skills/de-business-kit/guides/user-guide.en.md`. These files ship inside the extracted package; the source checkout is not needed.
 

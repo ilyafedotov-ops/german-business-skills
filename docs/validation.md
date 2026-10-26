@@ -323,3 +323,16 @@ stylesheet diagnostics remain separately identified, with CSP unchanged. The
 local suite ran 218 tests: 213 passed, five native-runtime checks skipped. Package
 validation, actionlint and independent review passed. Fresh PR/tag checks remain
 required before merging/publishing preview.2.
+
+## Preview.3 acceptance and attestation timing — 2026-10-26
+
+Static dispatch passed both browser suites and fresh hosted CodeQL; the exact PR
+ref returned zero open alerts. All 12 required PR checks passed. The preview.3 tag
+run passed all platform/browser/security/build gates and verified every artifact's
+build provenance before publishing an immutable release. Its immediate final
+release-attestation lookup failed, but subsequent `gh release verify` succeeded.
+This was not a missing asset or invalid signature. Preview.4 adds bounded
+verification retries without bypassing persistent failure; two shell-behavior
+regressions failed before implementation and passed after it.
+
+Preview.4 local validation ran 220 tests: 215 passed and five native-runtime checks skipped on macOS. Package validation, version checks, actionlint and independent review passed.

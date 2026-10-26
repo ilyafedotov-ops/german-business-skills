@@ -38,18 +38,18 @@ minor, совместимые исправления — patch, несовмес
 Codex или Claude и `SHA256SUMS` в новую папку. Windows проверяет хеш без Python:
 
 ```powershell
-Get-FileHash .\de-business-kit-0.6.0-preview.3-codex.zip -Algorithm SHA256
+Get-FileHash .\de-business-kit-0.6.0-preview.4-codex.zip -Algorithm SHA256
 ```
 
-В macOS: `shasum -a 256 de-business-kit-0.6.0-preview.3-codex.zip`. Сравните результат
+В macOS: `shasum -a 256 de-business-kit-0.6.0-preview.4-codex.zip`. Сравните результат
 с нужной строкой `SHA256SUMS`. Хеш из того же недоверенного источника не подтверждает
 автора. При наличии актуального необязательного GitHub CLI проверьте происхождение
 архива (2.103.2 проверил эти выпуски; 2.80 не смог прочитать их аттестации):
 
 ```sh
-gh release verify v0.6.0-preview.3 -R ilyafedotov-ops/german-business-skills
-gh release verify-asset v0.6.0-preview.3 de-business-kit-0.6.0-preview.3-codex.zip -R ilyafedotov-ops/german-business-skills
-gh attestation verify de-business-kit-0.6.0-preview.3-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.6.0-preview.3 --deny-self-hosted-runners
+gh release verify v0.6.0-preview.4 -R ilyafedotov-ops/german-business-skills
+gh release verify-asset v0.6.0-preview.4 de-business-kit-0.6.0-preview.4-codex.zip -R ilyafedotov-ops/german-business-skills
+gh attestation verify de-business-kit-0.6.0-preview.4-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.6.0-preview.4 --deny-self-hosted-runners
 ```
 
 Для строгой фиксации добавьте `--source-digest` с полным ожидаемым коммитом тега.
@@ -80,7 +80,7 @@ gh attestation verify de-business-kit-0.6.0-preview.3-codex.zip --repo ilyafedot
 Локальная репетиция после создания точного тега:
 
 ```sh
-python3 -B tools/release.py prepare --tag v0.6.0-preview.3 --output /absolute/new/release-assets
+python3 -B tools/release.py prepare --tag v0.6.0-preview.4 --output /absolute/new/release-assets
 python3 -B tools/release.py verify --directory /absolute/new/release-assets
 ```
 
