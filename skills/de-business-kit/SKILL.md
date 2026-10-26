@@ -4,7 +4,7 @@ description: >-
   Organize a user's own German Freiberufler or Einzelunternehmen/Gewerbe business:
   English/Russian intake, private files, registration and ELSTER worksheets,
   guided setup from existing email, accounting services or mixed folders, international payments, reverse charge, Gewerbe/Freiberufler clarification,
-  self-managed bookkeeping, document review, tax reporting preparation, Lexware Office, and needs-led banking, insurance and business-service
+  self-managed bookkeeping, document review, readable reports and recipient documents, tax reporting preparation, Lexware Office, and needs-led banking, insurance and business-service
   research and recommendations. Use for German sole-trader tax questions, receipts, reconciliation,
   starting or running a business; русский: бухгалтерия, налоговые вопросы,
   налоги, открытие и ведение Gewerbe/Freiberufler. Provide sourced analysis and
@@ -19,7 +19,7 @@ Self-managed accounting and tax reporting are the primary workflow. Accountant c
 
 ## Language and working mode
 
-Apply [language and mode rules](references/language-and-modes.md). Read `00_admin/workspace.json` before choosing saved defaults. An explicit language instruction for the current task takes precedence over the saved language. Otherwise use the saved preference, then the user's task language, with English as the fallback. Use the matching template from `assets/en/` or `assets/ru/`; do not translate machine keys or create separate business profiles for each language.
+Apply [language and mode rules](references/language-and-modes.md). Resolve logical paths through `workspace.py folders` or native `-Action folders` before ordinary file access; then read `00_admin/workspace.json` before choosing saved defaults. An explicit language instruction for the current task takes precedence over the saved language. Otherwise use the saved preference, then the user's task language, with English as the fallback. Use the matching template from `assets/en/` or `assets/ru/`; do not translate machine keys or create separate business profiles for each language.
 
 | Mode | Purpose | Main workflow |
 |---|---|---|
@@ -59,6 +59,7 @@ For first use, setup confusion, a demonstration or “continue,” follow [guide
 | Mixed documents, review, bank mapping, monthly overview or resume | [document workflow](references/document-workflow.md), [task recipes](references/task-recipes.md) | Preserved catalog, proposals, reconciliation and next self-accounting action |
 | Choose local/existing-software accounting during welcome; record cash movements, period summaries or filing/Finanzamt evidence | [accounting workflow](references/accounting-workflow.md) | Saved authoritative-system choice, reviewed cash journal or external-system route, frozen filing versions and observed outcomes |
 | Choose banking, insurance, software or other business services | [providers](references/providers.md); [insurance](references/insurance.md) when relevant | Needs, current-source comparison, full costs/coverage and reasoned recommendation |
+| Create a readable report, letter, attachment or review copy for submission | [document authoring](references/document-authoring.md), [readable output](references/readable-output.md) | User-language report/review, recipient-language document, verified actual format and explicit sending state |
 | Browser-assisted ELSTER or other forms | [forms](references/forms.md) | Field worksheet, verified draft and submission evidence if authorized |
 | Data handling and credentials | [privacy](references/privacy.md) | Minimal approved data scope and configuration evidence |
 | Install, missing tools or host differences | [platforms](references/platforms.md) | Actual capability inventory and manual fallback |
@@ -94,4 +95,4 @@ v0.5 contains no complete accounting ledger and no production banking, ELSTER, L
 
 `desk.py` also exposes accounting configuration, reviewed local cash entries/reversals, period summaries and filing evidence transitions. Choose local versus existing software in the welcome dialog, never by default. External books remain authoritative. The local cash journal is limited to an explicitly chosen EÜR workflow; its arithmetic is not complete statutory EÜR or VAT calculation. Filing commands preserve review/authorization/observations and do not transmit. Read [accounting workflow](references/accounting-workflow.md) before use; actual ERiC/provider adapters remain unavailable.
 
-Report the result, files changed, sources and dates, unresolved items, and the next concrete action. Save concise user-facing decisions and evidence references, not hidden reasoning or full chats. Update tasks only to states supported by evidence. Do not say “bookkeeping is correct” because amounts match. Keep reminders as dated tasks unless an actual scheduler was configured and returned success.
+Apply [readable output](references/readable-output.md) across every module: substantial work gets a readable result, not just JSON or logs. For recipient documents and print/export use [document authoring](references/document-authoring.md). Report the result, files changed, sources and dates, unresolved items, and the next concrete action. Save concise user-facing decisions and evidence references, not hidden reasoning or full chats. Update tasks only to states supported by evidence. Do not say “bookkeeping is correct” because amounts match. Keep reminders as dated tasks unless an actual scheduler was configured and returned success.

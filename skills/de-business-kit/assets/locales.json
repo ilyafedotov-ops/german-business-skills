@@ -12,7 +12,9 @@
         "tax_consultation": "en/tax-consultation.md",
         "overview": "en/overview.md",
         "source_map": "en/source-map.md",
-        "service_comparison": "en/service-comparison.md"
+        "service_comparison": "en/service-comparison.md",
+        "readable_report": "en/readable-report.md",
+        "submission_review": "en/submission-review.md"
       }
     },
     "ru": {
@@ -24,7 +26,9 @@
         "tax_consultation": "ru/tax-consultation.md",
         "overview": "ru/overview.md",
         "source_map": "ru/source-map.md",
-        "service_comparison": "ru/service-comparison.md"
+        "service_comparison": "ru/service-comparison.md",
+        "readable_report": "ru/readable-report.md",
+        "submission_review": "ru/submission-review.md"
       }
     }
   }

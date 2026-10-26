@@ -1,5 +1,7 @@
 # Payment systems and statement reconciliation
 
+Present payment findings through [readable output](readable-output.md): readable currency-separated results and exceptions accompany technical CSV/JSON outputs.
+
 Use for Stripe, PayPal, Wise, bank/PSP statements, payout batches, refunds, disputes, FX and owned-account movements. The executable tools are offline CSV readers. Naming a provider does not imply a connector, eligibility, fee recommendation or known contractual seller.
 
 ## Preserve and normalize

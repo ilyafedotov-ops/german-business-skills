@@ -1,5 +1,7 @@
 # Guided start, demonstration and recovery
 
+For substantial setup/source-intake work, provide a readable outcome and next step under [readable output](readable-output.md). Do not make the user choose a technical format; use an available readable document by default and explain capability gaps only when relevant.
+
 Use for first use, “help me set this up,” “continue,” or a confused user. Offer outcomes in the active language: **Set up my business**, **Organize this month**, **Tax questions and preparation**, **Continue my work**. Infer a clear choice from the request; do not force a mode menu. Keep the `tax-consultant` machine ID for existing workspaces; show the preparation-focused label.
 
 If the user already has email, cloud/accounting records or a nonempty folder, follow [existing-data onboarding](existing-data.md) before proposing fresh setup. Inspect source access and existing workspace markers; do not initialize over the source or reset accounting/VAT history.

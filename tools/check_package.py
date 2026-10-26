@@ -50,6 +50,9 @@ def main():
         "docs/windows.md", "docs/windows.ru.md",
         "skills/de-business-kit/scripts/windows.ps1", "skills/de-business-kit/assets/workspace-seed.json", "skills/de-business-kit/assets/folder-layouts.json",
         "skills/de-business-kit/references/native-windows.md",
+        "skills/de-business-kit/references/document-authoring.md", "skills/de-business-kit/references/readable-output.md",
+        "skills/de-business-kit/references/document-delivery-sources.md", "skills/de-business-kit/assets/readable-document.html",
+        "skills/de-business-kit/assets/de/recipient-letter.md",
         "skills/de-business-kit/references/insurance.md", "skills/de-business-kit/references/service-research-sources.md",
         "docs/workflows.md", "docs/workflows.ru.md", "docs/existing-data.md", "docs/existing-data.ru.md",
         "skills/de-business-kit/scripts/casefiles/folders.py",
@@ -73,7 +76,7 @@ def main():
         locales = manifest["languages"]
         if set(locales) != {"en", "ru"}:
             errors.append("Complete English and Russian locale definitions are required")
-        roles = {"bookkeeping_workflow", "month_close", "form_worksheet", "tax_consultation", "overview", "source_map", "service_comparison"}
+        roles = {"bookkeeping_workflow", "month_close", "form_worksheet", "tax_consultation", "overview", "source_map", "service_comparison", "readable_report", "submission_review"}
         for language, locale in locales.items():
             templates = locale["templates"]
             if set(templates) != roles:

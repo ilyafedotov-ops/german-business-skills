@@ -1,5 +1,7 @@
 # Research and recommend services from the user's needs
 
+Present substantial comparisons and decisions under [readable output](readable-output.md). For bank/insurance/provider correspondence use [document authoring](document-authoring.md), retaining the actual recipient language and authorization boundary.
+
 Use for banking, insurance, payment systems, accounting/invoicing software and other business services. Produce a useful reasoned recommendation when evidence supports one, or a conditional shortlist with the decisive missing fact. This package supplies a research workflow, not a marketplace, insurer/broker role, production connector or account-opening service. Comparison alone does not authorize an application, quote request containing personal data, purchase, cancellation or migration. For insurance also read [insurance](insurance.md); for access to existing services use [existing data](existing-data.md).
 
 ## Start from the user's actual work

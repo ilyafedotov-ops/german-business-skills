@@ -66,6 +66,7 @@ class PackagingTests(unittest.TestCase):
                     other = "README.ru.md" if readme == "README.md" else "README.md"
                     self.assertIn(("(" + other + ")").encode(), content)
                 skill = plugin / "skills/de-business-kit"
+                self.assertTrue((skill / "assets/readable-document.html").is_file())
                 locales = json.loads((skill / "assets/locales.json").read_text(encoding="utf-8"))
                 for script, arguments in (("workflows.py", ["catalog"]),
                                           ("workflows.py", ["template", "--kind", "international"]),
@@ -155,6 +156,11 @@ class PackagingTests(unittest.TestCase):
                 for host in ("codex", "claude"):
                     self.assertEqual(source.read_bytes(),
                                      (first / host / "plugins/de-business-kit/skills/de-business-kit" / relative).read_bytes())
+
+    def test_unreviewed_html_resource_still_stops_packaging(self):
+        (self.source / "skills/de-business-kit/assets/unreviewed.html").write_text("<script>synthetic</script>")
+        output = self.build(success=False)
+        self.assertFalse(output.exists())
 
     def test_existing_output_is_preserved(self):
         output = self.base / "existing"

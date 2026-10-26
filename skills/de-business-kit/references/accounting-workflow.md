@@ -1,5 +1,7 @@
 # Accounting choice, cash records and filing evidence
 
+For readable period reports and final filing review material, apply [readable output](readable-output.md) and [document authoring](document-authoring.md). Retain machine-readable source fingerprints and freeze the actual reviewed rendering/attachments; a nicely formatted report does not advance a filing state.
+
 During welcome/onboarding, establish the authoritative accounting route from the user's existing setup and intended work. Do not preselect local accounting or a vendor. Reuse an explicit existing choice. Ask one practical question: **Do you already keep your accounts in software, or do you want to maintain local records here?** Identify the exact product/edition if external. Explain the relevant capability limits before the user chooses.
 
 This is independent of conversation mode, language, accounting method and VAT treatment. Do not infer EÜR eligibility from a local choice. A user can defer the choice and continue intake, research and document review. Read `desk.py accounting-status` on resume. It returns `undecided` without creating a record when no choice exists. After a choice, use `accounting-configure` with preserved evidence of the user's instruction; never invent consent. Existing software remains authoritative on the external route and `entry-post` is blocked. A choice cannot be switched after cash/filing records exist: prepare a separately reviewed migration instead of creating parallel books.

@@ -1,5 +1,7 @@
 # Browser-assisted forms and ELSTER
 
+For readable drafts, recipient letters, attachments and a private user-language review sheet, follow [document authoring](document-authoring.md). Keep the official form payload separate from its readable explanation; inspect the exact final attachments and accepted route before sending.
+
 Prepare a field worksheet first. Use the live official form, year/version and authority; labels and routes can change. Never invent field numbers or submit an old template as current.
 
 Use the [form catalogue](../assets/form-catalog.json) for candidate routing and `workflows.py catalog`. It covers Einzelunternehmen registration (commercial or freelance), UStVA, annual Umsatzsteuer, Anlage EÜR, business inputs for Anlage S/G, conditional Gewerbesteuer/ZM, Dauerfristverlängerung/Sondervorauszahlung, advance-payment adjustment, supplementary evidence and messages. A catalogue entry is not a filing obligation. Confirm actual ELSTER account capability: a startup email-registration account may initially support only the registration questionnaire. Gewerbeanmeldung remains a separate municipal procedure.

@@ -1,5 +1,7 @@
 # Windows without a Python installation
 
+Readable reports and recipient documents follow [document authoring](document-authoring.md). The bundled static HTML template opens in an existing browser without Python. Use an available browser/OS PDF export and inspect the actual file; if export is unavailable, deliver HTML and mark PDF preparation incomplete. This does not add native validated filing transitions.
+
 Default to the user's existing Codex/Claude Code tools and **Windows PowerShell 5.1** (`powershell.exe`), not Python installation, WSL, Git or PowerShell 7. Check actual OS, shell, file access and policy first. PowerShell 7 (`pwsh`) is a separately installed alternative, not the Windows baseline. macOS also does not guarantee Python: use available host tools for research/worksheets, and an existing supported runtime only for its implemented operations.
 
 The assistant runs commands and explains outcomes; users should not need to edit JSON, learn terminal syntax or install development tools to start. Opening a downloaded, reviewed source ZIP in Explorer is sufficient to obtain the skill; Git is optional. For source ZIPs use Explorer **Extract All** into a new folder outside private business records. A host-installed plugin already includes the native entry point.

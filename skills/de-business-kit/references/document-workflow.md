@@ -1,5 +1,7 @@
 # Self-managed document and accounting review
 
+Apply [readable output](readable-output.md) to catalog/extraction/proposal/scan results: explain scope and unresolved items without making the user read JSON. For printable reports, letters or attachments use [document authoring](document-authoring.md).
+
 On Windows without Python, use [native Windows](native-windows.md) for supported setup/intake and host tools for readable preparation. Python commands below apply only when that optional runtime is available. Do not install it by default or claim native parity for unported validated operations.
 
 Use this module for mixed document intake, review, bank-export mapping, the monthly overview and resuming work. The user manages their own accounting and tax reporting. Consultation and a records archive are optional. Do not replace the requested accounting work with an adviser referral or export.

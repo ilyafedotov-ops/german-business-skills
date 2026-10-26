@@ -1,5 +1,7 @@
 # English, Russian and working modes
 
+For recipient documents, separate the user explanation language from the accepted recipient language. A Russian user may need a German authority letter plus a private Russian review sheet. Use [document authoring](document-authoring.md); German letter guidance is not a claim of complete German report-template coverage.
+
 Use a single skill, profile and evidence history for both supported languages. Agent instructions and machine identifiers are kept in English; user conversations, explanations, questions, summaries and generated Markdown reports must use the selected language. Do not make the user understand internal English instructions to complete a workflow.
 
 ## Resolve the language
