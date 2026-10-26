@@ -38,8 +38,12 @@ class MonthlyAccountingTests(unittest.TestCase):
             entry = ac.template("entry")
             entry.update(entry_id="sale", date="2026-10-02", account="one-account", transaction_id=row["transaction_id"],
                          amount="119.00", currency="EUR", reviewer="owner", evidence_file=documents.original(root, invoice["document_id"])["path"], note="Reviewed synthetic receipt")
-            entry["lines"] = [{"kind": "income", "amount": "119.00", "category": "sale", "activity_id": "one-activity"}]
+            # The synthetic invoice states net and VAT but no rate element.
+            entry["lines"] = [{"kind": "income", "amount": "119.00", "category": "sale", "activity_id": "one-activity", "proposal_id": None,
+                               "vat": {"status": "stated", "net": "100.00", "tax": "19.00", "rate": None}}]
             ac.post(root, entry)
+            self.assertEqual(ac.period_report(root, "2026-10")["vat"],
+                             [{"currency": "EUR", "kind": "income", "rate": None, "net": "100.00", "tax": "19.00"}])
             report = ac.export_report(root, "2026-10")
             reconciliation = ws.reconciliation_report(root, approved["csv_path"], report["ledger_files"]["one-account"], "2026-10")
             self.assertEqual(len(reconciliation["matches"]), 1)

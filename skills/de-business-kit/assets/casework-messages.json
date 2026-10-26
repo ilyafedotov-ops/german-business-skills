@@ -57,6 +57,8 @@
       "tax_form_mapping_not_verified": "Tax form mapping not verified",
       "no_entries": "No local cash entries supplied",
       "unclassified_movements": "Cash movements need classification",
+      "vat_unresolved": "VAT on some cash lines is not yet determined",
+      "vat_not_recorded": "Some cash entries were recorded before VAT capture",
       "accounting_evidence": "Accounting evidence needs inspection"
     },
     "types": {
@@ -209,6 +211,8 @@
       "tax_form_mapping_not_verified": "Перенос в налоговую форму не проверен",
       "no_entries": "Локальные денежные записи не предоставлены",
       "unclassified_movements": "Денежные операции требуют классификации",
+      "vat_unresolved": "НДС по некоторым денежным строкам ещё не определён",
+      "vat_not_recorded": "Некоторые денежные записи сделаны до учёта НДС",
       "accounting_evidence": "Нужна проверка доказательств учёта"
     },
     "types": {

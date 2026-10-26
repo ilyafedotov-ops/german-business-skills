@@ -6,7 +6,7 @@ Implementation scope and remaining work: [current status](project-status.md).
 
 Read the [domain ontology](ontology.md) for entities, relationships and state meanings.
 
-The [accounting workflow](../skills/de-business-kit/references/accounting-workflow.md) adds an explicitly selected authoritative system when accounting work needs it, limited local cash journal and filing evidence lifecycle through the existing `desk.py` entry point. `casefiles/accounting.py` stores additive state in `04_accounting/register.json`; it reuses workspace locks, evidence fingerprints and history, and checks register state against its latest audit checkpoint. Local cash reports include source-entry/configuration fingerprints and per-account reconciliation CSVs. Filing versions freeze payload/source files, separate review/authorization from uncertain attempts and manually observed receipts/responses, and block stale local-report preflight. No provider/ERiC transport or complete statutory tax calculator is added.
+The [accounting workflow](../skills/de-business-kit/references/accounting-workflow.md) adds an explicitly selected authoritative system when accounting work needs it, limited local cash journal and filing evidence lifecycle through the existing `desk.py` entry point. `casefiles/accounting.py` stores additive state in `04_accounting/register.json`; it reuses workspace locks, evidence fingerprints and history, and checks register state against its latest audit checkpoint. Cash lines record VAT as stated on their evidence and can link the current approved proposal they settle; the writer fingerprints each link, and reports and filing preflight stop when a linked proposal changes. Local cash reports include source-entry/configuration fingerprints, stated-VAT groups and per-account reconciliation CSVs. Filing versions freeze payload/source files, separate review/authorization from uncertain attempts and manually observed receipts/responses, and block stale local-report preflight. No provider/ERiC transport or complete statutory tax calculator is added.
 
 ## Assisted external-service execution
 
@@ -151,11 +151,11 @@ These components describe code present in this source snapshot. `SKILL.md` route
 | [summary.py](../skills/de-business-kit/scripts/casefiles/summary.py) | Read-only projection of documents, open reviews, deadlines and reconciliation evidence | In-memory snapshot consumed by overview/archive |
 | [overview.py](../skills/de-business-kit/scripts/casefiles/overview.py) | English/Russian static HTML, Markdown and JSON generation | `00_admin/overview.*`, initial `START-HERE.md` |
 | [archive.py](../skills/de-business-kit/scripts/casefiles/archive.py) | Select linked records/evidence, build a manifest, verify directory and ZIP | Unique `07_exports/YYYY-MM/archive-*` artifacts |
-| [accounting.py](../skills/de-business-kit/scripts/casefiles/accounting.py) | Accounting choice, reviewed cash movements and filing-evidence lifecycle/preflight | `04_accounting/register.json`, frozen files and history |
+| [accounting.py](../skills/de-business-kit/scripts/casefiles/accounting.py) | Accounting choice, reviewed cash movements with stated line VAT and proposal links, filing-evidence lifecycle/preflight | `04_accounting/register.json`, frozen files and history |
 | [windows-overview.ps1](../skills/de-business-kit/scripts/windows-overview.ps1) | Native saved-state and local-evidence inspection under the workspace lock | Separate `00_admin/native-overview.*` projections |
 | [recovery.py](../skills/de-business-kit/scripts/recovery.py) / [recovery.ps1](../skills/de-business-kit/scripts/recovery.ps1) | Full portable backup/verify/restore, safe paths and coordinated copying | External manifest plus complete workspace tree; fresh restored location |
 
-The casework register has schema version 1 while proposals have schema version 2. These versions are independent of workspace schema version 1. Unsupported casework schemas and old proposal contracts require explicit handling; no silent migration is supplied.
+The casework register has schema version 1 while proposals have schema version 2. The accounting register stays version 1 while new cash entries have version 2; entries recorded before line VAT have no entry version, remain readable and are reported as lacking VAT. These versions are independent of workspace schema version 1. Unsupported casework schemas and old proposal contracts require explicit handling; no silent migration is supplied.
 
 ## Main execution paths
 

@@ -245,7 +245,8 @@ class Application:
             return {'workspace': {'root': str(self.root), 'name': self.root.name, 'id': self.workspace_id}, 'period': period,
                     'documents': records, 'accounting': {'configuration': state['configuration'],
                     'configuration_sha256': storage.digest(state['configuration']) if state['configuration'] else None,
-                    'entries': list(state['entries'].values()), 'filings': filings}, 'overview': view,
+                    'entries': list(state['entries'].values()), 'filings': filings,
+                    'proposals': accounting.linkable(self.root)}, 'overview': view,
                     'files': self.files(), 'drafts': drafts, 'drafts_sha256': checksum,
                     'forms': wf.catalog()['forms'], 'capabilities': {'local_writes': True, 'transmission': False,
                     'tax_calculation': False, 'report_languages': ['en', 'ru']}}

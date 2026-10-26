@@ -253,6 +253,11 @@ ws.save_entry(root, 'tasks', dict(cancelled, status='cancelled'), previous['sha2
     await page.getByLabel('Movement kind').selectOption('income');
     await page.getByLabel('Category').fill('Synthetic service');
     await page.getByLabel('Activity reference').fill('activity-1');
+    assert.equal(await page.getByLabel('Reviewed invoice (optional)').inputValue(),'','A cash line is not linked to an invoice by default');
+    await page.getByLabel('VAT on the document').selectOption('stated');
+    await page.getByLabel('Net amount (document)').fill('100,67');
+    await page.getByLabel('VAT amount (document)').fill('19.13');
+    await page.getByLabel('VAT rate % (document)').fill('19');
     await page.getByLabel('Reviewer').fill('Synthetic owner');
     await page.getByLabel('Evidence file').selectOption({ index: 1 });
     await page.getByLabel('Entry note').fill('Observed synthetic payment.');
@@ -292,8 +297,10 @@ ws.save_entry(root, 'tasks', dict(cancelled, status='cancelled'), previous['sha2
     await page.getByRole('link', { name: 'This month', exact: true }).click();
     await click(page, 'Resume entry draft');
     assert.equal(await page.getByLabel('Total cash movement').inputValue(), '119.80');
+    assert.equal(await page.getByLabel('Net amount (document)').inputValue(), '100,67', 'Saved draft keeps the stated VAT');
     await click(page, 'Record cash entry');
     await page.getByRole('dialog').getByText('119.80 EUR', { exact: false }).waitFor();
+    await page.getByRole('dialog').getByText('Stated: net and VAT shown: 100.67 + 19.13 (19 %)', { exact: true }).waitFor();
     await click(page, 'Confirm and save');
     await page.locator('main').getByText('synthetic-tx', { exact: true }).waitFor();
     await page.getByText('Saved to your workspace.', { exact: true }).waitFor();

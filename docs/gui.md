@@ -11,7 +11,8 @@ The `gui/` application connects a browser interface to the real workspace writer
 - Import selected PDFs, XML, images and CSVs; see per-file results and review
   catalog details alongside a safe text/image preview or original download.
 - Choose local or external authoritative accounting explicitly. Post reviewed
-  cash entries with split lines and evidence; reverse/correct without rewriting history.
+  cash entries with split lines, line VAT as stated, optional links to approved proposals and
+  evidence; reverse/correct without rewriting history.
 - Create frozen filing versions, inspect preflight blockers, review/authorize,
   record a manual attempt, record an observed receipt, and retain authority responses.
   Cancel/replace only when the existing state machine permits it.

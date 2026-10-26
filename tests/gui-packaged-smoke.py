@@ -71,7 +71,7 @@ with tempfile.TemporaryDirectory() as directory:
         state = call('status', period='2026-10')
         evidence = state['documents'][0]['path']
         call('configuration', value=dict(system='local',product=None,account_reference='synthetic',method='EÜR',reviewer='Owner',evidence_file=evidence), expected_sha256=None)
-        call('entry-post', value=dict(entry_id='entry',date='2026-10-20',account='bank',transaction_id='tx',amount='20.00',currency='EUR',lines=[dict(kind='income',amount='20.00',category='Synthetic income',activity_id='one')],reviewer='Owner',evidence_file=evidence,note='Synthetic verified receipt',replaces=None))
+        call('entry-post', value=dict(schema_version=2,entry_id='entry',date='2026-10-20',account='bank',transaction_id='tx',amount='20.00',currency='EUR',lines=[dict(kind='income',amount='20.00',category='Synthetic income',activity_id='one',proposal_id=None,vat=dict(status='none_stated',net=None,tax=None,rate=None))],reviewer='Owner',evidence_file=evidence,note='Synthetic verified receipt',replaces=None))
         call('draft-save', drafts={'filing':{'recipient':'Synthetic office'}}, expected_sha256=None)
         call('backup', destination=str(root/'backup'))
         call('restore', backup=str(root/'backup'), destination=str(root/'restored'))

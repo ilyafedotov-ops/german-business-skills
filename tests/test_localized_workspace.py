@@ -69,7 +69,8 @@ class LocalizedWorkspaceTests(unittest.TestCase):
         ac.configure(self.root, config)
         entry = ac.template('entry')
         entry.update(entry_id='example', date='2026-10-20', account='bank', transaction_id='example', amount='100.00', currency='EUR', reviewer='owner', evidence_file=proof, note='Synthetic')
-        entry['lines'] = [{'kind':'income','amount':'100.00','category':'income','activity_id':'example'}]
+        entry['lines'] = [{'kind':'income','amount':'100.00','category':'income','activity_id':'example','proposal_id':None,
+                           'vat':{'status':'none_stated','net':None,'tax':None,'rate':None}}]
         ac.post(self.root, entry)
         result = ac.export_report(self.root, '2026-10')
         self.assertTrue((self.root / result['path']).is_file())

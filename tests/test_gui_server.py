@@ -49,14 +49,50 @@ class GuiTests(unittest.TestCase):
                   method='EÜR', reviewer='Owner', evidence_file=proof), expected_sha256=None)
         return proof
 
+    def approve_proposal(self, document_id):
+        from casefiles import reviews
+        root = self.app.root
+        reviews.save_source_check(root, {
+            'schema_version': 1, 'source_check_id': 'rule-1', 'url': 'https://www.gesetze-im-internet.de/ustg_1980/__12.html',
+            'title': 'Synthetic rule check', 'checked_on': '2026-10-20', 'applicable_period': '2026-10',
+            'assumptions': ['Synthetic facts only'], 'conclusion': 'Synthetic applicability note',
+            'review_after': '2099-01-01', 'reviewer': 'Owner', 'evidence_file': self.call('status', period='2026-10')['documents'][0]['path']})
+        record = reviews.proposal_template()
+        record.update(proposal_id='proposal-1', document_id=document_id, period='2026-10', activity_id='activity-1')
+        record['fields'] = {key: dict(raw=value, value=value, location='row 1', status='reviewed', reviewer='Owner', note=None)
+                            for key, value in dict(invoice_number='SYN-1', invoice_date='2026-10-01', currency='EUR',
+                                                   net='100.00', tax='19.00', gross='119.00').items()}
+        record['proposed_treatment'] = dict(category='Sales', tax_rule='Synthetic reviewed assumption',
+                                            reason='Training fixture only', source_check_ids=['rule-1'])
+        saved = reviews.save_proposal(root, record)
+        record['review'].update(status='approved', reviewer='Owner', reviewed_on='2026-10-20', note='Synthetic approval')
+        reviews.save_proposal(root, record, saved['sha256'])
+
+    def test_entry_form_lists_approved_proposals_and_posts_a_linked_vat_line(self):
+        self.configure()
+        self.approve_proposal(self.call('status', period='2026-10')['documents'][0]['record']['document_id'])
+        state = self.call('status', period='2026-10')
+        self.assertEqual([(row['proposal_id'], row['invoice_number'], row['gross'], row['currency'], row['activity_id'])
+                          for row in state['accounting']['proposals']],
+                         [('proposal-1', 'SYN-1', '119.00', 'EUR', 'activity-1')])
+        line = dict(kind='income', amount='119.00', category='Sales', activity_id='activity-1', proposal_id='proposal-1',
+                    vat=dict(status='stated', net='100.00', tax='19.00', rate='19'))
+        self.call('entry-post', value=dict(schema_version=2, entry_id='paid', date='2026-10-20', account='bank',
+                                           transaction_id='bank-2', amount='119.00', currency='EUR', lines=[line],
+                                           reviewer='Owner', evidence_file=state['documents'][0]['path'],
+                                           note='Synthetic payment of the reviewed invoice', replaces=None))
+        entry = self.call('status', period='2026-10')['accounting']['entries'][0]
+        self.assertEqual(list(entry['linked_proposals']), ['proposal-1'])
+
     def test_real_import_review_post_and_reversal_preserve_original(self):
         proof = self.configure()
         state = self.call('status', period='2026-10')
         doc = state['documents'][0]
         edited = dict(doc['record'], review_status='reviewed', reviewer='Owner', review_note='Inspected original')
         self.call('document-save', record=edited, expected_sha256=doc['sha256'])
-        entry = dict(entry_id='sale', date='2026-10-20', account='bank', transaction_id='bank-1', amount='100.00',
-                     currency='EUR', lines=[dict(kind='income', amount='100.00', category='Sales', activity_id='activity-1')],
+        entry = dict(schema_version=2, entry_id='sale', date='2026-10-20', account='bank', transaction_id='bank-1', amount='100.00',
+                     currency='EUR', lines=[dict(kind='income', amount='100.00', category='Sales', activity_id='activity-1', proposal_id=None,
+                                                 vat=dict(status='none_stated', net=None, tax=None, rate=None))],
                      reviewer='Owner', evidence_file=proof, note='Actual synthetic cash movement', replaces=None)
         result = self.call('entry-post', value=entry, request_id='post-sale')
         self.assertEqual(result, self.call('entry-post', value=entry, request_id='post-sale'))

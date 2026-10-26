@@ -173,7 +173,7 @@ macOS does not guarantee Python either. An unavailable tool should leave the spe
 
 ## One month with your own cash journal and manual ELSTER
 
-Ask: “Continue October in my local cash journal, show unresolved items, and help me prepare the applicable return for manual ELSTER.” The assistant should organize documents, review bank mapping, record supported reviewed cash movements, reconcile and give you a readable report. Cash totals are not a calculated tax return. The form/year and any calculation tool require their own evidence and review.
+Ask: “Continue October in my local cash journal, show unresolved items, and help me prepare the applicable return for manual ELSTER.” The assistant should organize documents, review bank mapping, record supported reviewed cash movements, reconcile and give you a readable report. For each payment line it copies the VAT exactly as your invoice or receipt shows it, or marks it as not yet determined, and can link the reviewed invoice the payment settles. The report then lists the VAT shown on your documents by rate: input for your VAT tool, not the Voranmeldung itself. Cash totals are not a calculated tax return. The form/year and any calculation tool require their own evidence and review.
 
 The real workspace overview now shows your accounting choice, period entries, open questions, saved filing versions and their blockers. It is a snapshot: ask to refresh it after changes. A submission with an unknown outcome remains visible even when you switch months. You authenticate and send in ELSTER after reviewing the exact version; preserve the actual receipt. A receipt and a Finanzamt decision are different records.
 

@@ -734,6 +734,16 @@
         "Read back actual saved values and disclose unresolved tax ID without inventing an obligation from the fictional form",
         "Explain the observed German/English interface fields and next action in Russian without changing factual values"
       ]
+    },
+    {
+      "id": "cash-line-stated-vat",
+      "prompt": "English, synthetic facts, local cash journal already chosen: my reviewed invoice SYN-7 (EUR 238.00 = 200.00 net + 38.00 VAT at 19 %) was paid in two bank transfers of EUR 119.00. A separate EUR 23.80 receipt only says 'incl. 19 % MwSt.' with no VAT amount. Record both payments and the receipt, and tell me how much VAT to put in my Voranmeldung this month.",
+      "criteria": [
+        "Record each transfer with VAT as stated for that portion and link the approved SYN-7 proposal; do not issue one entry for the full invoice",
+        "Do not derive the receipt's VAT from its rate as a stated amount; keep it unresolved or obtain the reviewer's established split, and say so",
+        "Present stated-VAT sums as evidence for the chosen calculation tool, not as the Voranmeldung amount or a treatment/timing decision",
+        "Do not edit register JSON or post entries without schema_version 2 line VAT; report actual writer results"
+      ]
     }
   ]
 }

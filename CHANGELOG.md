@@ -6,6 +6,13 @@ Versions follow Semantic Versioning. All releases below are previews, not a
 certification of accounting correctness or desktop compatibility. Historical
 milestones are first published on 2026-10-26; their original commits are retained.
 
+## Unreleased
+
+- **Breaking for cash-entry input:** new local cash entries use `schema_version` 2. Every line records VAT as stated on its evidence (`stated`, `none_stated` or `unresolved`) and can link the current approved proposal it settles. The writer checks that net plus VAT equals the line amount, refuses unapproved, replaced or different-activity proposals and fingerprints each link. Entries without line VAT can no longer be posted; start from `accounting-template --kind entry`.
+- Period reports (schema 2) group stated VAT by currency, movement kind and rate, report `vat_unresolved` and `vat_not_recorded`, and add a VAT section to the EN/RU Markdown. Reports and filing preflight stop when a linked proposal changes. The GUI entry form adds VAT fields and an approved-invoice picker in EN/RU/DE.
+
+The accounting register stays schema 1; existing entries remain readable, reportable and reversible without migration. Stated-VAT sums are evidence for a calculation tool, not a VAT return.
+
 ## 0.9.0-preview.1
 
 - Add operation-specific connector/browser/desktop discovery and assisted draft/export workflows, with user-controlled login and final confirmation, EN/RU guides and synthetic browser trials.
