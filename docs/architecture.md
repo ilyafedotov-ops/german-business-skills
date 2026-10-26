@@ -4,7 +4,7 @@ Windows users can start without Python using [native Windows tools](windows.md).
 
 [English](architecture.md) · [Русский](architecture.ru.md)
 
-Project version: **0.6.0-preview.2**. Implementation reviewed **2026-10-26**; external-source checks retain their recorded dates. [Current scope](project-status.md).
+Project version: **0.6.0-preview.3**. Implementation reviewed **2026-10-26**; external-source checks retain their recorded dates. [Current scope](project-status.md).
 
 Read the [domain ontology](ontology.md) for entities, relationships and state meanings. The **local casework extension** is part of the source implementation; it is not evidence of a published release or completed desktop integration.
 

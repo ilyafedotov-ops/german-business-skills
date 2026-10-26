@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "de-business-kit",
-  "version": "0.6.0-preview.2",
+  "version": "0.6.0-preview.3",
   "description": "English and Russian workspaces for German sole traders: evidence-linked cash records, readable reports and tax preparation.",
   "author": {
     "name": "German Business Kit contributors"

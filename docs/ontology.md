@@ -2,7 +2,7 @@
 
 [English](ontology.md) · [Русский](ontology.ru.md) · [Architecture](architecture.md)
 
-Source snapshot: **2026-10-26**, version **0.6.0-preview.2**, including the local casework extension. The extension is present in the working tree; its presence does not establish release, installation or desktop integration. This document describes the implemented domain concepts and their relationships. It is a conceptual ontology mapped to JSON/Python contracts, not an RDF/OWL schema or a new storage format.
+Source snapshot: **2026-10-26**, version **0.6.0-preview.3**, including the local casework extension. The extension is present in the working tree; its presence does not establish release, installation or desktop integration. This document describes the implemented domain concepts and their relationships. It is a conceptual ontology mapped to JSON/Python contracts, not an RDF/OWL schema or a new storage format.
 
 ## Domain and identity
 

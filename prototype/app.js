@@ -87,14 +87,24 @@
   }
   function render() {
     route = location.hash.slice(1) || 'home';
-    const screens = new Map(Object.entries({ home, onboard: onboarding, documents, review: invoice, month, payment, taxes, accounts, settings }));
-    if (!screens.has(route)) route = 'home';
+    let renderScreen = home;
+    switch (route) {
+      case 'onboard': renderScreen = onboarding; break;
+      case 'documents': renderScreen = documents; break;
+      case 'review': renderScreen = invoice; break;
+      case 'month': renderScreen = month; break;
+      case 'payment': renderScreen = payment; break;
+      case 'taxes': renderScreen = taxes; break;
+      case 'accounts': renderScreen = accounts; break;
+      case 'settings': renderScreen = settings; break;
+      default: route = 'home';
+    }
     if (!['home', 'settings'].includes(route)) { state.resume = route; save(); }
     document.querySelectorAll('[data-nav]').forEach(a => {
       const active = a.dataset.nav === ({ review: 'documents', onboard: 'documents', payment: 'month' }[route] || route);
       if (active) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
-    main.innerHTML = screens.get(route)();
+    main.innerHTML = renderScreen();
     main.focus({ preventScroll: true });
     window.scrollTo(0, 0);
     document.title = `${main.querySelector('h1')?.textContent || 'Business workspace'} · Interactive demo`;

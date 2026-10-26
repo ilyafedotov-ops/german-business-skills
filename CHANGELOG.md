@@ -6,6 +6,15 @@ Versions follow Semantic Versioning. All releases below are previews, not a
 certification of accounting correctness or desktop compatibility. Historical
 milestones are first published on 2026-10-26; their original commits are retained.
 
+## 0.6.0-preview.3
+
+- Use explicit static screen dispatch, removing indirect renderer lookup entirely.
+- Retain preview.2's SARIF metadata fix and browser regressions. Its gate correctly
+  blocked the remaining indirect-call alert before publication; preview.2 is an
+  unpublished candidate tag, not a downloadable release. No tags are moved.
+- This is the replacement for preview.1, including the complete verified-release
+  and self-managed accounting workflows described below.
+
 ## 0.6.0-preview.2
 
 - Fix the release security gate to read CodeQL rule severity from SARIF extension
