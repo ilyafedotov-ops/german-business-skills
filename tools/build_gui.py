@@ -51,7 +51,8 @@ def build(output):
         # bundled skill directory; collect their stdlib imports explicitly.
         for name in sorted(local_modules):
             command += ['--exclude-module', name]
-        for name in sorted(imports - local_modules - {'__future__'}):
+        # Source modules still execute their __future__ imports on Python 3.12.
+        for name in sorted(imports - local_modules):
             command += ['--hidden-import', name]
         command += [str(ROOT / 'gui/server.py')]
         subprocess.run(command, check=True)

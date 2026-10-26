@@ -16,12 +16,26 @@ const click = (page, name) => page.getByRole('button', { name, exact: true }).cl
 async function fixture(root) {
   execFileSync(python, ['-B', '-c', `import sys; sys.path.insert(0, 'skills/de-business-kit/scripts'); import workspace as ws; ws.start_workspace(sys.argv[1], year=2026, language='en')`, root], { cwd: process.cwd() });
 }
+// Capture a source-startup stack before the existing deadline. Cancel the timer
+// once binding completes so a long browser journey does not emit false traces.
+const startupProbe = [
+  'import faulthandler, runpy',
+  'faulthandler.dump_traceback_later(10)',
+  "scope = runpy.run_path('gui/server.py')",
+  "original_create = scope['create_server']",
+  'def observed_create(*args, **kwargs):',
+  '    try: return original_create(*args, **kwargs)',
+  '    finally: faulthandler.cancel_dump_traceback_later()',
+  "scope['main'].__globals__['create_server'] = observed_create",
+  "scope['main']()",
+].join('\n');
 function start(root) {
-  const child = spawn(python, ['-B', 'gui/server.py', '--root', root, '--no-browser', '--port', '0'], { cwd: process.cwd(), stdio: ['ignore', 'pipe', 'pipe'] });
+  const child = spawn(python, ['-B', '-X', 'faulthandler', '-c', startupProbe, '--root', root, '--no-browser', '--port', '0'], { cwd: process.cwd(), stdio: ['ignore', 'pipe', 'pipe'] });
   let stderr = '';
   child.stderr.on('data', chunk => { stderr += chunk; });
   const ready = new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error(`GUI startup timed out: ${stderr}`)), 15000);
+    child.once('error', error => { clearTimeout(timer); reject(new Error(`GUI could not start: ${error.message}`)); });
     child.once('exit', code => { clearTimeout(timer); reject(new Error(`GUI exited ${code}: ${stderr}`)); });
     readline.createInterface({ input: child.stdout }).on('line', line => {
       try { const value = JSON.parse(line); if (value.url && value.token) { clearTimeout(timer); resolve(value); } } catch { /* not readiness */ }

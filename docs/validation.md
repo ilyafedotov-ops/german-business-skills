@@ -390,3 +390,7 @@ verification retries without bypassing persistent failure; two shell-behavior
 regressions failed before implementation and passed after it.
 
 Preview.4 local validation ran 220 tests: 215 passed and five native-runtime checks skipped on macOS. Package validation, version checks, actionlint and independent review passed.
+
+## GUI packaging CI repair — 2026-10-26
+
+The first [PR #8 check run](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40297786756) exposed an omitted Windows-only build dependency (`pefile`) and a missing bundled `__future__` module on Python 3.12. The latter was reproduced locally with Python 3.12 before the fix. The corrected executable and the extracted macOS arm64 archive both passed the synthetic import/post/draft/backup/restore smoke with an empty `PATH`. All 13 focused GUI server/packaging tests passed. These results do not replace the hosted Windows and Intel Mac reruns. The separate hosted WebKit startup timeout remains under investigation at this checkpoint; security checks passed and the exact `refs/pull/8/merge` CodeQL ref returned no open alerts. Publication remains gated on the complete rerun.

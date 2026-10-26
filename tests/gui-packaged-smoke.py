@@ -41,7 +41,11 @@ with tempfile.TemporaryDirectory() as directory:
         import threading
         lines = queue.Queue()
         threading.Thread(target=lambda: lines.put(child.stdout.readline()), daemon=True).start()
-        ready = json.loads(lines.get(timeout=30))
+        startup = lines.get(timeout=30)
+        if not startup.strip():
+            diagnostic = child.stderr.read(12000)
+            raise RuntimeError('Packaged application exited before readiness: ' + diagnostic)
+        ready = json.loads(startup)
         sequence, identity = 0, None
         def call(op, **values):
             global sequence, identity
