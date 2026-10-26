@@ -10,6 +10,7 @@ Set-StrictMode -Version 2
 $utf8 = New-Object Text.UTF8Encoding($false, $true)
 [Console]::OutputEncoding = $utf8
 $lockName = '.workspace.lock'
+. (Join-Path $PSScriptRoot 'windows-locks.ps1')
 
 function Chain([string]$path, [bool]$file=$false) {
     $current=$path
@@ -159,8 +160,7 @@ try {
     if ($Action -eq 'verify') { $result=VerifyBackup $Backup }
     elseif ($Action -eq 'backup') {
         $rootPath=Location $Root; Workspace $rootPath; $target=Fresh $Destination $rootPath
-        $lock=Join-Path $rootPath $lockName; $token=$utf8.GetBytes(([guid]::NewGuid().ToString()))
-        WriteNew $lock $token
+        $lock=OpenNativeLock (Join-Path $rootPath $lockName)
         try {
             $inventory=Inventory $rootPath $true
             [void](New-Item -ItemType Directory -Path $target -ErrorAction Stop); $data=Join-Path $target 'files'; [void][IO.Directory]::CreateDirectory($data)
@@ -174,16 +174,12 @@ try {
             WriteNew (Join-Path $target 'manifest.json') ($utf8.GetBytes((ConvertTo-Json -InputObject $value -Depth 20)+"`n"))
             $result=VerifyBackup $target
         } finally {
-            if ([IO.File]::Exists($lock)) {
-                Chain $lock $true
-                if ([Convert]::ToBase64String([IO.File]::ReadAllBytes($lock)) -ceq [Convert]::ToBase64String($token)) { [IO.File]::Delete($lock) }
-            }
+            CloseNativeLock $lock
         }
     } else {
         $backupPath=Location $Backup; $target=Fresh $Root $backupPath; $verified=VerifyBackup $backupPath $true; $result=$verified.result; $value=$verified.manifest
         [void](New-Item -ItemType Directory -Path $target -ErrorAction Stop)
-        $lock=Join-Path $target $lockName; $token=$utf8.GetBytes(([guid]::NewGuid().ToString()))
-        WriteNew $lock $token
+        $lock=OpenNativeLock (Join-Path $target $lockName)
         try {
             foreach ($directory in @($value.directories | Sort-Object { $_.Split('/').Count })) { [void][IO.Directory]::CreateDirectory((Join-Path $target $directory)) }
             foreach ($file in $value.files) {
@@ -192,10 +188,7 @@ try {
             }
             if (-not (SameInventory $value (Inventory $target $true))) { throw 'Restored workspace verification failed; preserve destination.' }
         } finally {
-            if ([IO.File]::Exists($lock)) {
-                Chain $lock $true
-                if ([Convert]::ToBase64String([IO.File]::ReadAllBytes($lock)) -ceq [Convert]::ToBase64String($token)) { [IO.File]::Delete($lock) }
-            }
+            CloseNativeLock $lock
         }
         Workspace $target
         $verification=& (Join-Path $PSScriptRoot 'windows.ps1') -Action verify -Root $target | ConvertFrom-Json

@@ -59,7 +59,17 @@
       "unclassified_movements": "Cash movements need classification",
       "vat_unresolved": "VAT on some cash lines is not yet determined",
       "vat_not_recorded": "Some cash entries were recorded before VAT capture",
-      "accounting_evidence": "Accounting evidence needs inspection"
+      "accounting_evidence": "Accounting evidence needs inspection",
+      "settlement_overpaid": "Recorded payments exceed an invoice amount",
+      "settlement_partial": "Some invoices have partial payment allocations",
+      "settlement_unpaid": "Some invoices have no allocated payments",
+      "settlement_needs_review": "Invoice payment allocation needs review",
+      "settlement_currency_mismatch": "Payment and invoice currencies differ; no conversion evidence is recorded",
+      "settlement_movement_unresolved": "A transfer or unclassified movement cannot establish payment allocation",
+      "settlement_mixed_payment_directions": "Income and expense lines refer to the same invoice; review their direction",
+      "settlement_refund_exceeds_payments": "Recorded refunds exceed allocated payments",
+      "settlement_proposal_superseded": "The reviewed proposal was replaced; allocations have not been transferred",
+      "settlement_invoice_amount_unresolved": "Invoice amount or currency requires review; signed credit notes are not automatically netted"
     },
     "types": {
       "unknown": "Unknown",
@@ -213,7 +223,17 @@
       "unclassified_movements": "Денежные операции требуют классификации",
       "vat_unresolved": "НДС по некоторым денежным строкам ещё не определён",
       "vat_not_recorded": "Некоторые денежные записи сделаны до учёта НДС",
-      "accounting_evidence": "Нужна проверка доказательств учёта"
+      "accounting_evidence": "Нужна проверка доказательств учёта",
+      "settlement_overpaid": "Записанные платежи превышают сумму счёта",
+      "settlement_partial": "По некоторым счетам распределена только часть платежей",
+      "settlement_unpaid": "По некоторым счетам нет распределённых платежей",
+      "settlement_needs_review": "Распределение платежей по счетам требует проверки",
+      "settlement_currency_mismatch": "Валюты платежа и счёта отличаются; доказательства конвертации не записаны",
+      "settlement_movement_unresolved": "Перевод или неклассифицированное движение не подтверждает распределение оплаты",
+      "settlement_mixed_payment_directions": "Строки доходов и расходов ссылаются на один счёт; проверьте направление",
+      "settlement_refund_exceeds_payments": "Записанные возвраты превышают распределённые платежи",
+      "settlement_proposal_superseded": "Проверенное предложение заменено; платежи не перенесены автоматически",
+      "settlement_invoice_amount_unresolved": "Сумма или валюта счёта требует проверки; суммы кредит-нот не засчитываются автоматически"
     },
     "types": {
       "unknown": "Неизвестно",

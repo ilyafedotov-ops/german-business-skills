@@ -782,7 +782,7 @@ def _preferences(marker: Dict[str, Any]) -> Dict[str, str]:
     return {"language": language, "mode": mode}
 
 
-def init_workspace(root: PathInput, year: int, language: str = "ru", mode: str = "general", layout: str = "legacy") -> Dict[str, Any]:
+def init_workspace(root: PathInput, year: int, language: str = "en", mode: str = "general", layout: str = "legacy") -> Dict[str, Any]:
     if isinstance(year, bool) or not isinstance(year, int) or not 1900 <= year <= 9999:
         raise WorkspaceError("Year must be an integer between 1900 and 9999.")
     _preferences({"language": language, "mode": mode})
@@ -1337,10 +1337,10 @@ def unlock_workspace(root: PathInput, expected_sha256: str, confirmed_no_writer:
     if lock["assessment"] == "unverifiable" and not confirmed_no_writer:
         raise WorkspaceError("This lock cannot be checked from this computer; confirm that no other app or computer uses the workspace first.")
     path = location / LOCK
-    data = _read_regular(path, 64 * 1024)
     moved = location / (".stale-lock-" + uuid.uuid4().hex)
     os.rename(str(path), str(moved))
-    if hashlib.sha256(_read_regular(moved, 64 * 1024)).hexdigest() != expected_sha256:
+    data = _read_regular(moved, 64 * 1024)
+    if hashlib.sha256(data).hexdigest() != expected_sha256:
         try:
             os.link(str(moved), str(path))  # Restores only if no new lock took its place.
             moved.unlink()
@@ -1354,10 +1354,12 @@ def unlock_workspace(root: PathInput, expected_sha256: str, confirmed_no_writer:
     history_id = "lock-" + uuid.uuid4().hex
     with _locked(location):
         _check_audit(location)
+        raw_path = f"09_audit/history/{history_id}.lock"
+        _write_exclusive(_inside(location, raw_path), data)
         _atomic_json(_inside(location, f"09_audit/history/{history_id}.json"),
                      {"schema_version": VERSION, "action": "stale_lock_removed", "recorded_at": _now(),
                       "lock_sha256": expected_sha256, "lock": previous, "assessment": lock["assessment"],
-                      "confirmed_no_writer": confirmed_no_writer})
+                      "confirmed_no_writer": confirmed_no_writer, "lock_evidence": raw_path})
         _audit(location, "stale_lock_removed", {"history_id": history_id})
         moved.unlink()
     return {"status": "removed", "history_id": history_id, "assessment": lock["assessment"],
@@ -1431,7 +1433,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     init.add_argument("--root", required=True)
     init.add_argument("--layout", choices=("localized", "legacy"), default="localized")
     init.add_argument("--year", required=True, type=int)
-    init.add_argument("--language", choices=("ru", "en", "de"), default="ru",
+    init.add_argument("--language", choices=("ru", "en", "de"), default="en",
                       help="Assistant language preference; German report templates are not yet complete")
     init.add_argument("--mode", choices=("general", "bookkeeping", "tax-consultant"), default="general",
                       help="Workflow preference only; does not change business facts or tax regime")

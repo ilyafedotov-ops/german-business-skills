@@ -3,6 +3,7 @@
 No provider/ELSTER transport, statutory form calculation or credential handling.
 """
 from contextlib import contextmanager
+import calendar
 from decimal import Decimal
 import copy
 import csv
@@ -300,6 +301,79 @@ def _in_period(day, period):
     return day[:7] == period
 
 
+def _period_end(period):
+    year = int(period[:4])
+    month = 12 if len(period) == 4 else int(period[-1]) * 3 if "Q" in period else int(period[5:7])
+    return f"{year:04d}-{month:02d}-{calendar.monthrange(year, month)[1]:02d}"
+
+
+def _settlement_basis(root, period, state):
+    """Current reviewed evidence, with payments dated through the period end."""
+    cutoff = _period_end(period)
+    entries = [entry for entry in state["entries"].values() if entry["date"] <= cutoff
+               and any(line.get("proposal_id") for line in entry["lines"])]
+    proposals = st.load(root)["proposals"]
+    reversed_ids = {entry["reverses"] for entry in entries if entry["reverses"]}
+    linked = {line["proposal_id"] for entry in entries if not entry["reverses"] and entry["entry_id"] not in reversed_ids
+              for line in entry["lines"] if line.get("proposal_id")}
+    current = _current(proposals)
+    selected = {key: row for key, row in proposals.items()
+                if key in linked or key in current and row["period"] <= cutoff[:7]}
+    _check_links(root, entries)
+    for entry in entries:
+        _entry(_fields(entry), legacy="schema_version" not in entry)
+        st.check_evidence(root, entry["evidence"])
+    for proposal in selected.values():
+        if docs.original(root, proposal["document_id"])["sha256"] != proposal["original_sha256"]:
+            raise ws.WorkspaceError("A settlement proposal original changed; inspect evidence before reporting.")
+    return {"through": cutoff, "entries": entries, "proposals": selected,
+            "current": sorted(set(selected) & set(current))}
+
+
+def _settlements(basis):
+    reversed_ids = {entry["reverses"] for entry in basis["entries"] if entry["reverses"]}
+    active = [entry for entry in basis["entries"] if not entry["reverses"] and entry["entry_id"] not in reversed_ids]
+    rows = []
+    for identifier, proposal in sorted(basis["proposals"].items()):
+        fields = proposal["fields"]
+        value = lambda key: fields.get(key, {}).get("value")
+        gross, currency = value("gross"), value("currency")
+        issues, payments, kinds = [], [], set()
+        allocated = Decimal(0)
+        if identifier not in basis["current"]:
+            issues.append("proposal_superseded")
+        target = ws._amount(gross) if gross is not None else None
+        if target is None or target < 0 or currency is None:
+            issues.append("invoice_amount_unresolved")
+        for entry in active:
+            for index, line in enumerate(entry["lines"]):
+                if line.get("proposal_id") != identifier:
+                    continue
+                payments.append({"entry_id": entry["entry_id"], "line": index + 1, "date": entry["date"],
+                                 "amount": line["amount"], "currency": entry["currency"], "kind": line["kind"]})
+                if entry["currency"] != currency:
+                    issues.append("currency_mismatch")
+                    continue
+                if line["kind"] not in {"income", "expense"}:
+                    issues.append("movement_unresolved")
+                    continue
+                kinds.add(line["kind"])
+                amount = ws._amount(line["amount"])
+                allocated = ws._add(allocated, amount if line["kind"] == "income" else amount.copy_negate())
+        if len(kinds) > 1:
+            issues.append("mixed_payment_directions")
+        if allocated < 0:
+            issues.append("refund_exceeds_payments")
+        remaining = None if issues else ws._add(target, allocated.copy_negate())
+        status = ("needs_review" if issues else "overpaid" if remaining < 0 else "balanced" if remaining == 0
+                  else "unpaid" if allocated == 0 else "partial")
+        rows.append({"proposal_id": identifier, "invoice_number": value("invoice_number"), "currency": currency,
+                     "gross": gross, "allocated": format(allocated, "f"),
+                     "remaining": None if remaining is None else format(remaining, "f"), "status": status,
+                     "issues": sorted(set(issues)), "payments": payments})
+    return rows
+
+
 def period_report(root, period):
     root = ws._workspace(root)
     wf.period(period)
@@ -346,6 +420,11 @@ def _period_report(root, period, state):
         issues.append("vat_unresolved")
     if vat_not_recorded:
         issues.append("vat_not_recorded")
+    basis = _settlement_basis(root, period, state)
+    settlements = _settlements(basis)
+    for status in ("overpaid", "needs_review", "partial", "unpaid"):
+        if any(row["status"] == status for row in settlements):
+            issues.append("settlement_" + status)
     return {"schema_version": 2, "kind": "cash_movement_report", "period": period,
             "accounting_system": config["system"], "entries_sha256": st.digest(selected),
             "configuration_sha256": st.digest(config), "entries": selected,
@@ -353,6 +432,7 @@ def _period_report(root, period, state):
             "categories": [{"currency": key[0], "kind": key[1], "category": key[2], "activity_id": key[3], "amount": format(value, "f")} for key, value in sorted(categories.items())],
             "vat": [{"currency": key[0], "kind": key[1], "rate": key[2], "net": format(value[0], "f"), "tax": format(value[1], "f")}
                     for key, value in sorted(vat.items(), key=lambda item: (item[0][0], item[0][1], item[0][2] or ""))],
+            "settlements": settlements, "settlement_through": basis["through"], "settlement_basis_sha256": st.digest(basis),
             "readiness": "needs_review", "tax_return_status": "not_calculated", "open_items": issues}
 
 
@@ -393,6 +473,25 @@ def export_report(root, period):
                       else "Some entries were recorded before VAT capture; reverse them and post a linked replacement to record VAT.", ""])
     if not report["entries"]:
         lines.append("Операции за период отсутствуют." if russian else "No entries supplied for this period.")
+    if report["settlements"]:
+        lines.extend(["", "## " + ("Распределение платежей по счетам" if russian else "Invoice payment allocation"), "",
+                      ("Платежи по дату " if russian else "Payments through ") + report["settlement_through"],
+                      "Сверка записанных сумм; не подтверждение оплаты во внешней системе. Валюты не конвертируются."
+                      if russian else "Reconciles recorded amounts; does not confirm payment in an external system. No currency conversion.", ""])
+        statuses = {"balanced": "Суммы совпадают", "partial": "Частичная оплата", "unpaid": "Нет распределённых платежей",
+                    "overpaid": "Переплата", "needs_review": "Нужна проверка"} if russian else {
+                        "balanced": "Amounts match", "partial": "Partly allocated", "unpaid": "No payments allocated",
+                        "overpaid": "Overallocated", "needs_review": "Needs review"}
+        for row in report["settlements"]:
+            lines.append("- " + (row["invoice_number"] or row["proposal_id"]) + " (" + (row["currency"] or "—") + "): "
+                         + statuses[row["status"]])
+            lines.extend(["  " + label + ": " + (row[key] or "—") for key, label in (
+                              ("gross", "По счёту" if russian else "Invoice"),
+                              ("allocated", "Распределено в валюте счёта" if russian else "Allocated in invoice currency"),
+                              ("remaining", "Остаток" if russian else "Remaining"))])
+            if row["issues"]:
+                messages = st.template("casework-messages.json")["ru" if russian else "en"]["codes"]
+                lines.extend("  - " + messages.get("settlement_" + issue, issue) for issue in row["issues"])
     markdown = relative[:-5] + ".md"
     ledger_files = {}
     with ws._locked(root):
@@ -451,6 +550,11 @@ def _local_report_evidence(root, source, payload, state):
             or report.get("configuration_sha256") != st.digest(state["configuration"])):
         raise ws.WorkspaceError("Source cash report is stale; regenerate it and prepare a newly reviewed filing version.")
     _check_links(root, entries)
+    if "settlement_basis_sha256" in report:
+        basis = _settlement_basis(root, report["period"], state)
+        if report["settlement_basis_sha256"] != st.digest(basis):
+            raise ws.WorkspaceError("Source settlement report is stale; regenerate it and prepare a newly reviewed filing version.")
+        entries = list({entry["entry_id"]: entry for entry in [*entries, *basis["entries"]]}.values())
     return [entry["evidence"] for entry in entries]
 
 
@@ -654,21 +758,22 @@ def status(root):
                 "transmission": "not_implemented", "tax_form_calculations": "not_implemented"}
 
 
-def overview_state(root, period):
+def overview_state(root, period, state=None, filing_checks=None):
     """Projection for overview; caller holds the workspace lock across all reads."""
-    state = _load(root)
+    state = _load(root) if state is None else state
     config = state["configuration"]
     result = {"accounting_system": config["system"] if config else "undecided",
               "product": config["product"] if config else None,
               "method": config["method"] if config else "unresolved",
-              "period_entry_count": None, "totals": {}, "issues": [],
+              "period_entry_count": None, "totals": {}, "issues": [], "settlements": [],
               "coverage": "not_confirmed", "tax_return_status": "not_calculated"}
     if config:
         try:
             _config(root, state)
             if config["system"] == "local":
                 report = _period_report(root, period, state)
-                result.update(period_entry_count=len(report["entries"]), totals=report["totals"],
+                result.update(period_entry_count=len(report["entries"]), totals=report["totals"], settlements=report["settlements"],
+                              settlement_through=report["settlement_through"],
                               issues=[{"code": code} for code in report["open_items"]])
         except (OSError, ws.WorkspaceError) as exc:
             result["issues"].append({"code": "accounting_evidence", "detail": str(exc)})
@@ -678,7 +783,7 @@ def overview_state(root, period):
         if (_in_period(period + "-01", record["period"])
                 or record["state"] == "submission_unconfirmed"
                 or any(event.get("due_date") for event in record["responses"])):
-            check = _check_filing(root, identifier, state)
+            check = copy.deepcopy(filing_checks[identifier]) if filing_checks is not None else _check_filing(root, identifier, state)
             check["responses"] = [{"kind": event["response_kind"], "due_date": event["due_date"],
                                     "evidence_path": event["evidence"]["path"]}
                                    for event in record["responses"]]

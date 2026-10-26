@@ -143,7 +143,7 @@ class PackagingTests(unittest.TestCase):
                         self.assertEqual(recovery.returncode, 0, recovery.stderr)
                     self.assertEqual((private / Path(view["html_path"]).with_name("workspace.json")).read_bytes(),
                                      (recovered / Path(view["html_path"]).with_name("workspace.json")).read_bytes())
-                    for native in ("windows-overview.ps1", "recovery.ps1"):
+                    for native in ("windows-overview.ps1", "windows-locks.ps1", "recovery.ps1"):
                         self.assertTrue((skill / "scripts" / native).is_file())
                     source_folder = self.base / (host + "-" + language + "-existing")
                     source_folder.mkdir()

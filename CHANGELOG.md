@@ -8,6 +8,11 @@ milestones are first published on 2026-10-26; their original commits are retaine
 
 ## Unreleased
 
+- Add recorded invoice payment allocation across periods, readable EN/RU balances and EN/RU/DE GUI details; preserve partial/overpayments, refunds and corrections, flag unresolved currencies/directions, and invalidate filing source reports when the allocation basis changes.
+- Add native lock diagnosis/recovery and shared writer metadata; preserve exact raw lock bytes in Python and PowerShell audit history. Package the shared native helper explicitly.
+- Reuse filing preflight within each locked GUI snapshot and add a synthetic snapshot profiler. New workspace language defaults to English; explicit and saved preferences remain unchanged.
+- Add an opt-in POSIX Codex evaluation runner for ten synthetic fresh-session cases, independent state/action checks and separate rubric review. This is developer tooling, not an end-user requirement or automatic legal/quality certification.
+
 - **Breaking for cash-entry input:** new local cash entries use `schema_version` 2. Every line records VAT as stated on its evidence (`stated`, `none_stated` or `unresolved`) and can link the current approved proposal it settles. The writer checks that net plus VAT equals the line amount, refuses unapproved, replaced or different-activity proposals and fingerprints each link. Entries without line VAT can no longer be posted; start from `accounting-template --kind entry`.
 - Period reports (schema 2) group stated VAT by currency, movement kind and rate, report `vat_unresolved` and `vat_not_recorded`, and add a VAT section to the EN/RU Markdown. Reports and filing preflight stop when a linked proposal changes. The GUI entry form adds VAT fields and an approved-invoice picker in EN/RU/DE.
 - Writers wait up to five seconds for a cooperating writer instead of failing at once. Locks record process, computer and time; `doctor` classifies a remaining lock as active, stale or unverifiable, and the new `workspace.py unlock` and GUI lock check remove only a lock whose writer has ended (or an unverifiable one after explicit confirmation), preserving it in history and the audit log. Native `windows.ps1` locks also record the computer.

@@ -24,6 +24,8 @@ Reviewed against source on **2026-10-26**. German Business Kit is a seven-skill 
 
 Physical folder names support EN/RU/DE; full user manuals and report templates cover EN/RU. German navigation and the short German guide do not imply complete German reporting. Users need neither JSON editing nor development dependencies. Native applications, assistant tools and standalone scripts have different capability sets; see [architecture](architecture.md) and [GUI](gui.md).
 
+Current local source additionally projects invoice payment allocations across periods, exposes discrepancies in the GUI/report and checks settlement-basis freshness before filing actions. Native PowerShell supports lock diagnosis/recovery, including exact raw evidence. An opt-in [evaluation runner](../evals/README.md) executes ten selected fresh-session cases on supported POSIX developer hosts; it does not certify behavior from a passing utility test. These changes are not in the published preview. Desktop signing and live provider acceptance remain open.
+
 ## Roadmap
 
 P1–P7 are **partially accepted**, not a completed end-to-end lifecycle. The [original correction plan](history/lifecycle-plan-2026-10-26.md) is historical; this table owns the remaining work.

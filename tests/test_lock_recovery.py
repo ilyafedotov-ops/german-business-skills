@@ -83,6 +83,12 @@ class LockDiagnosisTests(LockFixture):
 
 
 class UnlockTests(LockFixture):
+    def test_unverifiable_lock_preserves_exact_opaque_bytes(self):
+        data = b"legacy-token-\xff\x00"
+        self.lock.write_bytes(data)
+        result = ws.unlock_workspace(self.root, hashlib.sha256(data).hexdigest(), confirmed_no_writer=True)
+        self.assertEqual((self.root / "09_audit/history" / (result["history_id"] + ".lock")).read_bytes(), data)
+
     def test_stale_lock_is_removed_with_history_and_writes_resume(self):
         pid = finished_pid()
         digest = self.leave_lock(pid, socket.gethostname())

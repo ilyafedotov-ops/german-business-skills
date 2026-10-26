@@ -245,3 +245,9 @@ The utilities refuse symlink paths, path traversal, existing content during init
 ## Document review desk
 
 Use [document workflow](document-workflow.md) for `desk.py` commands and additive casework schema 1. Proposal template schema 2 and source checks have validated writers; external-operation templates do not execute integrations. The complete accounting ledger and ELSTER submission remain core gaps.
+
+## Creation defaults and lock evidence
+
+New `init` and `start` workspaces default to English unless a language is explicitly selected. `init` retains its legacy layout default for existing automation; `start` retains the localized layout. Resuming a workspace preserves its language and physical folders. Never rename existing folders to align defaults.
+
+Python unlock preserves the exact captured lock bytes as a `.lock` history file as well as readable metadata. Native diagnosis/recovery is described in [native Windows](native-windows.md#diagnose-and-recover-a-remaining-lock).

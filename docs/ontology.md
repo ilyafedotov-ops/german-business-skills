@@ -4,6 +4,9 @@
 
 This conceptual ontology maps implemented domain concepts and relationships to JSON/Python contracts; it is not an RDF/OWL schema or a new storage format. [Current status](project-status.md) owns delivery scope and remaining work.
 
+
+Invoice payment allocation is a derived projection, not a persisted paid flag: approved proposal amounts are compared with linked cash lines through the report end date, across periods. Reversals cancel their originals; corrected allocations retain history. Different currencies and ambiguous directions have no inferred balance. Reports include a settlement-basis fingerprint checked again by filing preflight. The GUI reuses filing checks only within one locked snapshot; mutations still recheck evidence. Native and Python unlock preserve exact lock bytes in audit history.
+
 ## Assisted-service context
 
 An access route (connector, browser, desktop UI or guided manual) is a property

@@ -87,6 +87,12 @@ checked 2026-10-26. [GitHub runner architectures](https://docs.github.com/en/act
 establish the CI labels, not desktop acceptance. Record actual results separately
 in [validation](validation.md).
 
+## Snapshot profiling
+
+Run `python3 -B tools/profile_gui.py --filings 12 --samples 3` for a disposable synthetic snapshot profile. Use `--filings 60` for a larger fixture. It reports timings and evidence-check call counts without loading a real workspace. Snapshot construction now loads accounting state once and reuses filing preflight results within that same workspace lock. No cache survives the snapshot, and writes still run the canonical preflight.
+
+The month page expands each invoice's recorded allocations, outstanding amount and currency/correction warnings. It uses the existing disclosure and summary controls in EN/RU/DE. “Amounts match” is a local arithmetic result, not an external paid status.
+
 ## Fictional prototype
 
 Open [prototype/index.html](../prototype/index.html) in a desktop browser, keeping its sibling CSS/JS files together. This separate English demo uses fictional records only; no installation, login or runtime is needed. Do not enter business data. Its screens are Home, Documents, This month, Taxes and letters, and Accounts and services.

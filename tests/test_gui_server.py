@@ -83,6 +83,8 @@ class GuiTests(unittest.TestCase):
                                            note='Synthetic payment of the reviewed invoice', replaces=None))
         entry = self.call('status', period='2026-10')['accounting']['entries'][0]
         self.assertEqual(list(entry['linked_proposals']), ['proposal-1'])
+        settlement = self.call('status', period='2026-10')['overview']['accounting']['settlements'][0]
+        self.assertEqual((settlement['status'], settlement['remaining']), ('balanced', '0.00'))
 
     @patch.object(gui.ws, 'LOCK_WAIT_SECONDS', 0)
     def test_left_over_lock_can_be_checked_and_removed_without_an_assistant(self):

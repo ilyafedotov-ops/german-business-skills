@@ -495,6 +495,52 @@ ws.save_entry(root, 'tasks', dict(cancelled, status='cancelled'), previous['sha2
     await page.getByRole('heading',{name:'Your business, one clear next step.'}).waitFor();
     await assert.rejects(fs.access(lockFile),'Removed lock must not remain');
 
+    // Settlement projection uses real writers and never claims authoritative payment.
+    const settlementRoot=path.join(temp,'settlements');
+    execFileSync(python,['-B','-c',`
+import sys, shutil
+sys.path.insert(0, 'tests')
+from test_cash_vat import ProposalLinkTests, ac
+f = ProposalLinkTests(); f.setUp()
+try:
+    f.proposal('proposal-1')
+    ac.post(f.root, f.entry('first-payment', '60', f.line('60', status='none_stated', proposal='proposal-1')))
+    shutil.copytree(f.root, sys.argv[1])
+finally:
+    f.doCleanups()
+`,settlementRoot],{cwd:process.cwd()});
+    await selectWorkspace(settlementRoot);
+    await page.getByRole('link',{name:'This month',exact:true}).click();
+    await page.locator('[data-settlements] summary').getByText('SYN-1',{exact:false}).waitFor();
+    assert.match(await page.locator('[data-settlements]').innerText(),/Partly allocated/);
+    await page.locator('[data-settlements] summary').press('Enter');
+    await page.locator('[data-settlements]').getByText('59.00 EUR',{exact:true}).waitFor();
+    const settlementContext=await publicApi('context');
+    const postAllocation=async(id,amount,currency)=>publicApi('entry-post',{
+      workspace_id:settlementContext.workspace.id,request_id:require('node:crypto').randomUUID(),
+      value:{schema_version:2,entry_id:id,date:'2026-10-21',account:'bank',transaction_id:id,amount,currency,
+        reviewer:'Synthetic owner',evidence_file:'08_correspondence/review.md',note:'Synthetic allocation',replaces:null,
+        lines:[{kind:'income',amount,category:'Synthetic income',activity_id:'consulting',proposal_id:'proposal-1',
+          vat:{status:'none_stated',net:null,tax:null,rate:null}}]}});
+    await postAllocation('balance-payment','59','EUR');
+    await page.reload();
+    await page.locator('[data-settlements]').getByText('SYN-1 · Amounts match',{exact:true}).waitFor();
+    await postAllocation('foreign-payment','10','USD');
+    await page.reload();
+    await page.locator('[data-settlements]').getByText('SYN-1 · Needs review',{exact:true}).waitFor();
+    for(const lang of ['en','ru','de']) {
+      await page.locator('#language').selectOption(lang);
+      await page.locator('[data-settlements] summary').click();
+      assert.match(await page.locator('[data-settlements]').innerText(),/10 USD/);
+      for(const width of [1440,390]) {
+        await page.setViewportSize({width,height:1000});
+        assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`${lang}/settlements overflow at ${width}`);
+        await capture(page,{path:path.join(output,`${browserName}-${lang}-settlements-${width}.png`),fullPage:true});
+      }
+    }
+    await page.locator('#language').selectOption('en');
+    await selectWorkspace(root);
+
     for (const lang of ['en','ru','de']) {
       await page.locator('#language').selectOption(lang);
       for (const destination of ['home','documents','month','taxes','accounts','settings']) {

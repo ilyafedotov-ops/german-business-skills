@@ -5,7 +5,7 @@
 #>
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true)][ValidateSet('install','start','scan','ingest','verify','folders','overview')][string]$Action,
+    [Parameter(Mandatory=$true)][ValidateSet('install','start','scan','ingest','verify','folders','overview','lock-status','unlock')][string]$Action,
     [Parameter(Mandatory=$true)][string]$Root,
     [string]$Source,
     [ValidateRange(1900,9999)][int]$Year = (Get-Date).Year,
@@ -16,7 +16,9 @@ param(
     [ValidateSet('codex','claude','both')][string]$Target = 'both',
     [ValidateRange(1,10000)][int]$MaxEntries = 1000,
     [ValidateRange(0,32)][int]$MaxDepth = 10,
-    [switch]$DryRun
+    [switch]$DryRun,
+    [string]$ExpectedSha256,
+    [switch]$ConfirmedNoWriter
 )
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2
@@ -26,6 +28,7 @@ $limit = 50 * 1024 * 1024
 $extensions = @('.pdf','.xml','.png','.jpg','.jpeg','.tif','.tiff','.csv')
 $markerName = '00_admin/workspace.json'
 $kitRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+. (Join-Path $PSScriptRoot 'windows-locks.ps1')
 
 function Absolute([string]$path) {
     if ([string]::IsNullOrWhiteSpace($path) -or -not [IO.Path]::IsPathRooted($path) -or $path -match '(^|[\\/])\.\.([\\/]|$)') {
@@ -290,11 +293,112 @@ function Install {
     return @{status='installed'; destinations=$targets; note='Verify skill discovery in the actual host. No permissions or execution policy changed.'}
 }
 
+function LockBytes([string]$path) {
+    Chain $path $true
+    $stream = [IO.File]::Open($path, [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::Read)
+    try {
+        if ($stream.Length -gt 64 * 1024) { throw 'Lock exceeds 64 KiB; preserve it for inspection.' }
+        $memory = New-Object IO.MemoryStream
+        try { $stream.CopyTo($memory); return ,$memory.ToArray() } finally { $memory.Dispose() }
+    } finally { $stream.Dispose() }
+}
+function LockStatus {
+    $path = Join-Path $rootPath '.workspace.lock'
+    if (-not (Test-Path -LiteralPath $path)) { return $null }
+    $result = @{sha256=$null; pid=$null; created_at=$null; age_seconds=$null; host=$null; owner_running=$null; assessment='unverifiable'}
+    try { $data = LockBytes $path }
+    catch {
+        # Native writers keep an exclusive handle. Other access failures cannot prove liveness.
+        $errorObject = $_.Exception
+        while ($null -ne $errorObject.InnerException) { $errorObject = $errorObject.InnerException }
+        if (($errorObject.HResult -band 0xffff) -in @(32,33)) { $result.owner_running=$true; $result.assessment='active' }
+        return $result
+    }
+    $result.sha256 = Hash $data
+    try {
+        $options = @{InputObject=$utf8.GetString($data)}
+        if ((Get-Command ConvertFrom-Json).Parameters.ContainsKey('DateKind')) { $options.DateKind='String' }
+        $record = ConvertFrom-Json @options
+    } catch { return $result }
+    if ($record -isnot [pscustomobject] -or $null -eq $record.PSObject.Properties['pid'] -or
+        ($record.pid -isnot [int] -and $record.pid -isnot [long]) -or $record.pid -le 0 -or $record.pid -ge 2147483648) { return $result }
+    $result.pid = $record.pid
+    if ($null -ne $record.PSObject.Properties['host'] -and $record.host -is [string] -and $record.host) { $result.host=$record.host }
+    if ($null -ne $record.PSObject.Properties['created_at'] -and $record.created_at -is [string] -and
+        $record.created_at -match '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$') {
+        $started = [DateTimeOffset]::MinValue
+        if ([DateTimeOffset]::TryParse($record.created_at, [Globalization.CultureInfo]::InvariantCulture, [Globalization.DateTimeStyles]::None, [ref]$started)) {
+            $result.created_at=$record.created_at
+            $result.age_seconds=[long][Math]::Truncate(([DateTimeOffset]::UtcNow-$started).TotalSeconds)
+        }
+    }
+    if ($null -ne $result.host -and -not $result.host.Equals([System.Net.Dns]::GetHostName(), [StringComparison]::OrdinalIgnoreCase)) { return $result }
+    $process = $null
+    try {
+        $process = [Diagnostics.Process]::GetProcessById([int]$record.pid)
+        $result.owner_running = -not $process.HasExited
+    } catch [ArgumentException] { $result.owner_running=$false }
+    catch { return $result } # Permission or process-query failure is never evidence of an ended writer.
+    finally { if ($null -ne $process) { $process.Dispose() } }
+    if ($result.owner_running) { $result.assessment='active' }
+    elseif ($null -ne $result.host) { $result.assessment='stale' }
+    return $result
+}
+function UnlockWorkspace {
+    if ($ExpectedSha256 -cnotmatch '^[0-9a-f]{64}$') { throw 'Use the exact lock sha256 from lock-status.' }
+    $events = ReadJson (WorkspacePath '09_audit/events.json')
+    if ($events -isnot [Array] -or @($events | Where-Object { $null -eq $_ -or $_ -isnot [pscustomobject] }).Count) { throw 'Invalid audit log; preserve and inspect it.' }
+    $status = LockStatus
+    if ($null -eq $status) { throw 'The workspace is not locked.' }
+    if ($null -eq $status.sha256 -or $status.sha256 -cne $ExpectedSha256) { throw 'The lock changed or cannot be read; run lock-status again before removal.' }
+    if ($status.assessment -eq 'active') { throw 'The lock owner is still running; let it finish or close it. The lock was kept.' }
+    if ($status.assessment -eq 'unverifiable' -and -not $ConfirmedNoWriter) { throw 'Confirm that no other app, assistant or computer uses the workspace first (-ConfirmedNoWriter).' }
+    $path = Join-Path $rootPath '.workspace.lock'
+    $moved = Join-Path $rootPath ('.stale-lock-' + [guid]::NewGuid().ToString('N'))
+    $historyId = 'lock-' + [guid]::NewGuid().ToString('N')
+    $historyPath = WorkspacePath ('09_audit/history/' + $historyId + '.json')
+    Chain $historyPath $true
+    [IO.File]::Move($path, $moved) # No overwrite; an exclusive native writer cannot be moved on Windows.
+    $owned = $null
+    try {
+        $data = LockBytes $moved
+        if ((Hash $data) -cne $ExpectedSha256) { throw 'The lock changed during removal; inspect the workspace before retrying.' }
+        # A concurrent writer may have acquired the path after the move. Never replace its lock.
+        $owned = OpenNativeLock $path
+        $events = ReadJson (WorkspacePath '09_audit/events.json')
+        if ($events -isnot [Array] -or @($events | Where-Object { $null -eq $_ -or $_ -isnot [pscustomobject] }).Count) { throw 'Invalid audit log; preserve and inspect it.' }
+        try {
+            $options = @{InputObject=$utf8.GetString($data)}
+            if ((Get-Command ConvertFrom-Json).Parameters.ContainsKey('DateKind')) { $options.DateKind='String' }
+            $previous = ConvertFrom-Json @options
+        } catch { $previous = [Text.Encoding]::UTF8.GetString($data) }
+        # Keep original bytes even for invalid UTF-8 or a legacy token-only lock.
+        $evidence = WorkspacePath ('09_audit/history/' + $historyId + '.lock')
+        WriteNew $evidence $data
+        WriteNew $historyPath (BytesJson @{schema_version=1; action='stale_lock_removed'; recorded_at=(Now); lock_sha256=$ExpectedSha256; lock=$previous; assessment=$status.assessment; confirmed_no_writer=[bool]$ConfirmedNoWriter; lock_evidence=('09_audit/history/' + $historyId + '.lock')})
+        Audit 'stale_lock_removed' @{history_id=$historyId}
+        [IO.File]::Delete($moved)
+        return @{status='removed'; history_id=$historyId; assessment=$status.assessment; previous_lock=@{pid=$status.pid; host=$status.host; created_at=$status.created_at}}
+    } catch {
+        # Only restore into an absent path. Otherwise leave the exact moved bytes for diagnosis.
+        if ($null -eq $owned -and [IO.File]::Exists($moved)) {
+            try { [IO.File]::Move($moved, $path) } catch { }
+        }
+        throw
+    } finally { CloseNativeLock $owned }
+}
+
 $rootPath = Absolute $Root
 Chain $rootPath
 if ($DryRun -and $Action -ne 'install') { throw 'DryRun is supported only for install.' }
 if ($Action -eq 'install') { Install | ConvertTo-Json -Depth 40; return }
 Private $rootPath
+if ($Action -in @('lock-status','unlock')) {
+    [void](Workspace)
+    if ($Action -eq 'lock-status') { ConvertTo-Json -InputObject @{lock=(LockStatus)} -Depth 40 }
+    else { UnlockWorkspace | ConvertTo-Json -Depth 40 }
+    return
+}
 if ($Action -eq 'start' -and -not (Test-Path -LiteralPath (WorkspacePath $markerName))) {
     if ((Test-Path -LiteralPath $rootPath) -and @(Get-ChildItem -LiteralPath $rootPath -Force).Count) { throw 'Start requires an empty folder or an existing workspace. Keep source files separate.' }
     [void][IO.Directory]::CreateDirectory($rootPath)
@@ -303,10 +407,7 @@ $lockPath = Join-Path $rootPath '.workspace.lock'
 $lock = $null
 try {
     # Same lock as Python writers. Read-only operations refuse active writes too.
-    $lock = [IO.File]::Open($lockPath, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
-    # The host lets doctor tell an ended local writer from another computer's lock.
-    $lockBytes = BytesJson @{pid=$PID; created_at=(Now); host=[System.Net.Dns]::GetHostName()}
-    $lock.Write($lockBytes,0,$lockBytes.Length); $lock.Flush($true)
+    $lock = OpenNativeLock $lockPath
     $result = $null
     if ($Action -eq 'start' -and -not (Test-Path -LiteralPath (WorkspacePath $markerName))) {
         if (@(Get-ChildItem -LiteralPath $rootPath -Force | Where-Object { $_.Name -ne '.workspace.lock' }).Count) { throw 'Folder changed; preserve it.' }
@@ -416,5 +517,5 @@ try {
     }
     ConvertTo-Json -InputObject $result -Depth 40
 } finally {
-    if ($null -ne $lock) { $lock.Dispose(); [IO.File]::Delete($lockPath) }
+    CloseNativeLock $lock
 }

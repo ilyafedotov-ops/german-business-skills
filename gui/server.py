@@ -243,10 +243,12 @@ class Application:
                         'path': indexed[record['document_id']]['path'],
                         'original_name': indexed[record['document_id']]['original_name']} for record in catalog]
             view = summary.collect(self.root, period, date.today().isoformat())
-            view['accounting'], view['filings'] = accounting.overview_state(self.root, period)
+            filing_checks = {identifier: accounting._check_filing(self.root, identifier, state)
+                             for identifier in state['filings']}
+            view['accounting'], view['filings'] = accounting.overview_state(self.root, period, state, filing_checks)
             view['open_questions'] = [q for q in view['questions'] if q['status'] in {'open', 'deferred'}]
             filings = [{'record': record, 'sha256': storage.digest(record),
-                        'check': accounting._check_filing(self.root, record['filing_id'], state)} for record in state['filings'].values()]
+                        'check': filing_checks[record['filing_id']]} for record in state['filings'].values()]
             drafts, checksum = self._drafts()
             return {'workspace': {'root': str(self.root), 'name': self.root.name, 'id': self.workspace_id}, 'period': period,
                     'documents': records, 'accounting': {'configuration': state['configuration'],

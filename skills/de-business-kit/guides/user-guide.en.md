@@ -81,6 +81,8 @@ Before importing a bank export, review column mapping, signs, dates, currencies 
 
 **Result:** a readable report of the actual evidence checked. Matching amounts does not prove a complete month or correct tax treatment.
 
+For local cash records, ask “Show which reviewed invoices still have a payment difference.” The month view and readable report show recorded payments through the selected month, including earlier months. Expand an invoice to inspect its payments. Partial payments, overpayments, refunds and currency differences stay visible. “Amounts match” does not mark the invoice paid in your accounting software. Corrections preserve the original and require an explicit reviewed allocation.
+
 ## Inspect a service export
 
 > Check this supplied export for the requested period. Explain how its date selection works, which originals are present and what evidence is still missing. Keep my existing accounting system authoritative.
