@@ -16,7 +16,7 @@ For behavior changes, run `python3 -B -m unittest discover -s tests -v`, `python
 
 Use only synthetic examples in public issues and pull requests. Do not paste invoices, statements, tax IDs, IBANs, local transcripts, credentials or screenshots containing real personal data. Discuss security reports using the procedure in [SECURITY.md](SECURITY.md).
 
-When capabilities change, update the affected current-status, architecture/ontology, EN/RU user docs and portable references together. Keep compact domain entry points, an optional router and one shared profile. Native user tools, optional Python automation and development dependencies must remain distinct. Date implementation reviews separately from legal/provider research; preserve historical validation, never relabel it as a new run. Treat plugin descriptions as capability claims and keep Codex/Claude metadata aligned.
+When capabilities change, update the affected current-status, architecture/ontology, EN/RU user docs and portable references together. Keep compact domain entry points, an optional router and one shared profile. Native user tools, optional Python automation and development dependencies must remain distinct. Date implementation reviews separately from legal/provider research; keep relevant validation summaries dated and concise, never relabel old evidence as a new run. Git history holds earlier plans and detailed work logs; do not add separate history documents. Treat plugin descriptions as capability claims and keep Codex/Claude metadata aligned.
 
 Contributions are licensed under this repository's MIT licence. Linked external laws and provider documents retain their own status and rights; link and summarize them instead of copying entire manuals.
 

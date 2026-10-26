@@ -46,7 +46,7 @@ Current local source additionally projects invoice payment allocations across pe
 
 ## Roadmap
 
-P1–P7 are **partially accepted**, not a completed end-to-end lifecycle. The [original correction plan](history/lifecycle-plan-2026-10-26.md) is historical; this table owns the remaining work.
+P1–P7 are **partially accepted**, not a completed end-to-end lifecycle. This table owns the remaining work.
 
 | Package | Delivered foundation | Remaining acceptance or implementation |
 | --- | --- | --- |

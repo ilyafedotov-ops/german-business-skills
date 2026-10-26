@@ -99,7 +99,7 @@ resolve after installation without the source checkout. Shared resources stay in
 
 `AGENTS.md` owns repository maintenance rules; `CLAUDE.md` only points here.
 `SKILL.md` owns portable product routing and must remain usable without root docs.
-User documentation lives in the portable `guides/`; `docs/index.md` is the technical index. `docs/project-status.md` owns current scope and remaining work; `docs/validation.md` summarizes actual checks, with dated chronology under `docs/history/`. Update an existing owner instead of adding duplicate status or topic pages. Code and command schemas establish implemented behavior. Keep current status,
+User documentation lives in the portable `guides/`; `docs/index.md` is the technical index. `docs/project-status.md` owns current scope and remaining work; `docs/validation.md` summarizes relevant checks and their limits. Keep old plans and detailed work logs in Git history; do not create a documentation archive. Update an existing owner instead of adding duplicate status or topic pages. Code and command schemas establish implemented behavior. Keep current status,
 architecture/ontology, affected EN/RU guides and portable references aligned when
 a capability changes. Keep the entry point compact and load detailed references
 only when needed. Do not duplicate complete workflows across rule files.
@@ -109,9 +109,11 @@ request repeated confirmation for already-authorized work. Documentation may
 describe required approval for concrete external submissions without inventing a
 new approval gate for ordinary local preparation.
 
-Preserve historical validation entries and dated research as evidence. Add a
-dated result for new checks; never change an old source-check date merely because
-implementation documentation was edited. Distinguish local source, package build,
+Keep validation summaries concise, with dates, source revisions and unresolved
+limits. Git history preserves earlier results; do not maintain separate history
+documents. Preserve dated research and record new checks without relabelling old
+runs; never change an old source-check date merely because implementation
+documentation was edited. Distinguish local source, package build,
 published release, hosted CI and native desktop acceptance. Do not assert a
 current provider/UI/legal fact solely because it appears in a dated source map.
 
