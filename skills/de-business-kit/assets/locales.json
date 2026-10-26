@@ -14,7 +14,12 @@
         "source_map": "en/source-map.md",
         "service_comparison": "en/service-comparison.md",
         "readable_report": "en/readable-report.md",
-        "submission_review": "en/submission-review.md"
+        "submission_review": "en/submission-review.md",
+        "launch_plan": "en/launch-plan.md",
+        "customer_case": "en/customer-case.md",
+        "annual_readiness": "en/annual-readiness.md",
+        "change_plan": "en/change-plan.md",
+        "connection_check": "en/connection-check.md"
       }
     },
     "ru": {
@@ -28,7 +33,12 @@
         "source_map": "ru/source-map.md",
         "service_comparison": "ru/service-comparison.md",
         "readable_report": "ru/readable-report.md",
-        "submission_review": "ru/submission-review.md"
+        "submission_review": "ru/submission-review.md",
+        "launch_plan": "ru/launch-plan.md",
+        "customer_case": "ru/customer-case.md",
+        "annual_readiness": "ru/annual-readiness.md",
+        "change_plan": "ru/change-plan.md",
+        "connection_check": "ru/connection-check.md"
       }
     }
   }

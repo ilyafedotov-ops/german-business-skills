@@ -2,6 +2,8 @@
 
 **English** · [Русский](user-guide.ru.md)
 
+Choose a concrete outcome in the [task guide](tasks.en.md).
+
 New here? Follow the [short start guide](start.en.md). Read this manual by task; you do not need to learn technical commands.
 
 [Documents](#documents) · [Accounts and payments](#accounts-and-payments) · [Taxes and letters](#taxes-and-letters) · [Reports](#reports) · [Continue](#continue) · [States](#states) · [Help](#help) · [Backups](#backups)

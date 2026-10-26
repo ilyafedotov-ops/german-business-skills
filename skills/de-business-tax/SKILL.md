@@ -27,6 +27,7 @@ and facts. Answer an ordinary question without requiring setup or month-end work
   inputs/results and distinguish manually entered, observed and not-run outputs.
 - For authority correspondence prepare a chronology, source-backed deadline
   assessment, evidence list and recipient-language draft under
+  [correspondence](../de-business-kit/references/correspondence.md) and
   [document authoring](../de-business-kit/references/document-authoring.md).
   A receipt is not an authority decision. If sending timed out, investigate the
   existing attempt before any repeat; preserve uncertainty.

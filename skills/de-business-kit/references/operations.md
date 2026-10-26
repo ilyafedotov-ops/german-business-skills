@@ -3,6 +3,10 @@
 Use the shared contract, [document authoring](document-authoring.md) and
 [lifecycle sources](lifecycle-sources.md). Support preparation and available
 verified actions; this reference does not implement invoicing software or debt collection.
+For a multi-step customer case use the private [EN worksheet](../assets/en/customer-case.md)
+or [RU worksheet](../assets/ru/customer-case.md) alongside recipient documents.
+For an ordinary question or letter use [correspondence](correspondence.md).
+The worksheet links actual records; it neither issues invoices nor replaces books.
 
 ## Customer request to payment
 

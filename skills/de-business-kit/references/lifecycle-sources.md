@@ -28,6 +28,15 @@ they do not establish another municipality's procedure.
 | [Bundesagentur für Arbeit: Betriebsnummern-Service](https://www.arbeitsagentur.de/unternehmen/weiterfuehrende-infos-betriebsnummern-service). Current employer registration resource; Unternehmensnummer prerequisite described since 2024. | Employers use an electronic Betriebsnummer application; the service explains that an Unternehmensnummer from the accident-insurance institution is required. It links the application and decision resources. | Before a synthetic first hire, establish the employment situation and existing identifiers, then follow the official decision/application resources. Recheck first-hire facts, exceptions, accident-insurance registration and the separate social-insurance, payroll-tax and employment-law requirements. A Betriebsnummer does not complete employee registration or establish working payroll. |
 | [BGB § 286](https://www.gesetze-im-internet.de/bgb/__286.html). Current consolidated debtor-default provisions. | Default depends on due performance and the statutory conditions; reminder exceptions, consumer distinctions and responsibility for nonpayment matter. | For a synthetic unpaid invoice, gather the contract, performance, invoice delivery, agreed terms, payments and disputes before drafting a reminder. Recheck governing law, due date, receipt, consumer/business status and the precise claim. An unpaid label alone does not establish default, enforceability, interest or recoverable fees. |
 
+## First employee and interruption follow-up
+
+The focused [employment preparation map](employment.md) records additional live
+checks on 2026-10-26 of DGUV company registration, BA identifiers, BMAS social
+reporting, ELSTER ELStAM and EStG § 41a, with practical outputs and limits.
+The [changes workflow](changes.md) adds a pause-versus-cessation fact check against
+EStG § 16(3b), rechecked on the same date. These references do not establish a
+case-specific employment classification, payroll result or cessation decision.
+
 ## Workflow assumptions and unverified points
 
 The consequences above are cautious workflow applications of the cited findings,

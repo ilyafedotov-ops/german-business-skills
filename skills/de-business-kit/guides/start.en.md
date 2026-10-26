@@ -2,6 +2,8 @@
 
 **English** · [Русский](start.ru.md) · [Deutsch](start.de.md)
 
+Choose a concrete outcome in the [task guide](tasks.en.md).
+
 German Business Kit is a system of skills for entrepreneur assistance: preparing to start, forms, questions, services, daily work and reporting. Development and closure are intended areas, but preparation guidance is available; real execution needs separate acceptance. Describe the result you need in ordinary language. A simple question requires neither the local application nor workspace creation; tools are introduced for the task.
 
 
@@ -34,7 +36,7 @@ For ongoing work choose a private folder separate from the downloaded project, i
 
 New workspaces can use English, Russian or German names. The English layout contains **Inbox, Documents, Accounts, Taxes, Business** and `START-HERE.md`. You can change conversation language later without renaming folders. Existing workspaces keep their older structure.
 
-The assistant will establish where authoritative accounts are kept: existing software or local records. You can defer that choice while organizing documents. It must not choose your tax regime or create parallel accounts on your behalf.
+When the task needs accounting records, the assistant will establish where authoritative accounts are kept: existing software or local records. You can defer that choice while organizing documents. It must not choose your tax regime or create parallel accounts on your behalf.
 
 ## 4. Complete one small task
 

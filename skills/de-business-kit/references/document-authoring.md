@@ -1,6 +1,6 @@
 # Readable documents and submission materials
 
-Use this module when creating a document/report for the user or an external recipient, including a return review, attachment, authority letter, bank/insurance correspondence or business report. It complements [forms](forms.md), [accounting](accounting-workflow.md) and [readable output](readable-output.md); it does not calculate tax or transmit anything. Keep one skill and profile. Discover available document/PDF/spreadsheet tools in the current host; do not assume separately installed skills or copy their private runtime dependencies into this package.
+Use this module when creating a document/report for the user or an external recipient, including a return review, attachment, authority letter, bank/insurance correspondence or business report. It complements [forms](forms.md), [accounting](accounting-workflow.md) and [readable output](readable-output.md); it does not calculate tax or transmit anything. Keep one shared entrepreneur profile across skills. Discover available document/PDF/spreadsheet tools in the current host; do not assume separately installed skills or copy their private runtime dependencies into this package.
 
 ## Choose the actual deliverable
 

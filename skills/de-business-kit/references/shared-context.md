@@ -62,6 +62,10 @@ The bundle contains no complete accounting ledger and no production banking, ELS
 
 Apply [readable output](readable-output.md) across every module: substantial work gets a readable result, not just JSON or logs. For recipient documents and print/export use [document authoring](document-authoring.md). Report the result, files changed, sources and dates, unresolved items, and the next concrete action. Save concise user-facing decisions and evidence references, not hidden reasoning or full chats. Update tasks only to states supported by evidence. Do not say “bookkeeping is correct” because amounts match. Keep reminders as dated tasks unless an actual scheduler was configured and returned success.
 
+For an unfinished or resumed task, use [continuation](continuation.md). For a
+standalone answer or letter, use [correspondence](correspondence.md). Load these
+only when relevant; they share existing records rather than adding state schemas.
+
 ## Passing a related task between skills
 
 Keep the same entrepreneur, workspace identity, activity, period and authoritative

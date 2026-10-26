@@ -3,6 +3,9 @@
 Use with [existing data](existing-data.md) and [data-source access](data-source-access.md).
 The bundle contains no production banking/accounting/ELSTER connector or scheduler.
 This workflow uses tools actually supplied by the host and authorized for the task.
+Use the [EN operation note](../assets/en/connection-check.md) or
+[RU operation note](../assets/ru/connection-check.md) for a durable check. Keep
+provider observations distinct from user-supplied files and simulated test outcomes.
 
 1. Identify the requested operation, exact service/product/edition, account or
    workspace, source of truth and necessary data scope. Reuse known facts.
@@ -34,4 +37,20 @@ requires a concrete supported operation and separate security/runtime acceptance
 
 For reminders, verify a real available scheduler, destination, timezone, recurrence
 and authorization; inspect the created job and supported delivery evidence. A due
- date, drafted message or scheduler instruction alone is not a configured reminder.
+date, drafted message or scheduler instruction alone is not a configured reminder.
+
+## Incomplete access and bounded retries
+
+| Observation | Continue safely | Do not claim |
+| --- | --- | --- |
+| Tool absent or operation unsupported | Inspect an authorized export or prepare exact manual steps | A configured integration or completed operation |
+| Authentication expired / denied | Preserve selected scope; use official reauthentication by the user | That requesting read access authorizes a write |
+| Partial pages or skipped records | Record actual coverage, filters and cursor/time; fetch only the missing scope through a supported route | A complete month/year or “no documents” from a partial result |
+| Write timed out / result ambiguous | Preserve payload/version and attempt; query history/readback; stop automatic retries if result remains unknown | Failure, success or permission to submit again without evidence |
+| Readback disagrees | Preserve both observations, identify the exact discrepancy, prepare correction | That a successful request alone establishes the final state |
+
+For an export fallback, preserve original bytes and provider selection details
+before normalizing a derivative. Map columns only from observed headers/documentation;
+check identifiers, currency, date scope, duplicate records and omitted pages or
+attachments. Use existing intake/bank-mapping tools where the format is supported.
+An offline inspection proves only the supplied snapshot, not current account state.

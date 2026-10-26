@@ -2,6 +2,10 @@
 
 Use with [formation](formation.md) and the dated [lifecycle source map](lifecycle-sources.md).
 This is agent-led preparation, not a registration or forecasting engine.
+Use the [EN launch plan](../assets/en/launch-plan.md) or
+[RU launch plan](../assets/ru/launch-plan.md) for a durable result, and the existing
+form worksheet for observed official fields. Omit irrelevant sections; a simple
+question needs no plan file.
 
 Establish the actual offer, customers/countries, delivery location, known
 qualifications or restrictions, intended start and other activities. Separate

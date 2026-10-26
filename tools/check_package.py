@@ -90,7 +90,8 @@ def main():
         locales = manifest["languages"]
         if set(locales) != {"en", "ru"}:
             errors.append("Complete English and Russian locale definitions are required")
-        roles = {"bookkeeping_workflow", "month_close", "form_worksheet", "tax_consultation", "overview", "source_map", "service_comparison", "readable_report", "submission_review"}
+        roles = {"bookkeeping_workflow", "month_close", "form_worksheet", "tax_consultation", "overview", "source_map", "service_comparison", "readable_report", "submission_review",
+                 "launch_plan", "customer_case", "annual_readiness", "change_plan", "connection_check"}
         for language, locale in locales.items():
             templates = locale["templates"]
             if set(templates) != roles:

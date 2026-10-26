@@ -4,6 +4,9 @@ Use the dated [lifecycle source map](lifecycle-sources.md), reopening the compet
 authority's current sources for the event/date. This is a preparation and execution
 workflow using available tools, not an automatic registration, payroll, migration
 or closure service. Preserve the same entrepreneur's history across all activities.
+Use the [EN change plan](../assets/en/change-plan.md) or
+[RU change plan](../assets/ru/change-plan.md) for a durable result. For a first hire,
+load [employment preparation](employment.md) only when that branch applies.
 
 ## Establish the change
 
@@ -49,6 +52,16 @@ block changing configured authority after records exist: report that limit and
 prepare the migration, never edit canonical JSON to bypass it.
 
 ## Pause or closure
+
+First establish intended restart, retained assets, continuing contracts and actual
+activity. [EStG § 16(3b)](https://www.gesetze-im-internet.de/estg/__16.html),
+rechecked 2026-10-26, treats the specified commercial-business interruption/leasing
+cases separately from an explicit cessation declaration or known cessation facts.
+This is not a universal freelancer or trade-registration classification. For a
+synthetic temporary pause with retained assets, prepare the fact sheet and check
+the competent routes before drafting a cessation declaration. Do not turn “pause”
+into an irreversible tax election or cancel shared services by assumption.
+
 
 Build a case-specific dependency list covering:
 
