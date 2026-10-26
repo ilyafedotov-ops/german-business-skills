@@ -6,6 +6,16 @@ Current capabilities are summarized in [project status](project-status.md). Date
 
 Checked **2026-10-26**. Tests use synthetic temporary data, never live business records or accounts.
 
+## 0.8.0-preview.1 release preparation (2026-10-26)
+
+The user authorized commit, push, PR, release and production delivery. This repository's delivery target is the verified GitHub release with two skill bundles and three native GUI archives; no hosted application deployment is configured. Version metadata/current instructions were advanced without changing workspace schemas or historical release entries.
+
+Independent integration review found a legacy installer regression: an explicit catalog-less source with a noncanonical directory name could be ignored in favor of a sibling `de-business-kit`. Both regressions failed before the fix; `68c7a94` preserves the explicitly selected source while retaining catalog-based complete-bundle checks. Independent follow-up found no remaining blocker. Installer tests: **18 passed**; complete-bundle tests: **4 passed**.
+
+The first fresh local full run failed two PowerShell overview subprocess timeouts at the unchanged 40-second limit: **273 tests, 2 errors, 5 skips**, 223.868 s. Sampling showed filesystem directory enumeration but did not establish a root cause. An unchanged focused repeat passed **9 tests** in 64.379 s. The final integrated run, including the installer regressions, passed **275 tests: 270 passed, 5 skipped**, 130.952 s, macOS arm64/Python 3.14.6. No timeouts, assertions or native protection rules were relaxed. The intermittent local PowerShell limitation remains unresolved. Logs: `/private/tmp/gbk-080-full-tests.log`, `/private/tmp/gbk-080-native-overview-repeat.log`, `/private/tmp/gbk-080-final-full-tests.log`.
+
+`npm test`: **8 passed**; `npm audit --audit-level=high`: **0 vulnerabilities**. Package/version, Markdown link/anchor and diff checks passed. PR [#10](https://github.com/ilyafedotov-ops/german-business-skills/pull/10) runs exact-head platform/security checks; the release tag reruns those gates before publication. This preparation entry is not evidence that the final PR/tag has passed or that publication has completed. Ordinary-user first launch and real service operations remain open; Lexware remains on local examples.
+
 ## Documentation consolidation (2026-10-26)
 
 Documentation-only refresh on top of `223194b`: README and package introductions, start/user guides, documentation navigation, current status, modes/accounting/preparation, architecture and ontology now describe the seven-skill lifecycle and optional GUI consistently. The new Unreleased changelog section records accumulated source changes without changing version `0.7.0-preview.1` or rewriting historical release entries. The user guides expose annual/change preparation, supplied exports, correction evidence and cross-period continuation; no runtime, schema, tax rule or execution workflow was added.
