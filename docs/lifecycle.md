@@ -239,3 +239,7 @@ P7 now has automated acceptance for the immutable 0.8.0-preview.1 release: Windo
 Every development task must identify its lifecycle stage, user outcome and acceptance. New infrastructure, a proprietary calculator, journal expansion or GUI work does not gain priority simply because it is easier to measure with tests. Update this plan and related product commitments before changing scope.
 
 No day estimates are assigned: P2–P6 depend on source research, tool access and acceptance results. The order and criteria above support sequential delivery without unverified schedule promises. Commits, publication and external actions remain subject to separate user authorization.
+
+### P7 beginner setup and first conversation (2026-10-26)
+
+The [new illustrated installation guide](../skills/de-business-kit/guides/install.en.md) starts with choosing/installing the AI host and ends with a first task and later continuation. Fresh Codex EN/RU and constrained normal-mode Claude EN trials now exercise installed skill loading and conversation. A first-answer scope failure in Claude was corrected in shared onboarding and retested. Packaging includes the reviewed artwork; desktop first installation, ordinary-user testing and live provider operations remain open. See [validation](validation.md) for the exact evidence and limits.

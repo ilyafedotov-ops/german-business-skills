@@ -6,6 +6,12 @@ Versions follow Semantic Versioning. All releases below are previews, not a
 certification of accounting correctness or desktop compatibility. Historical
 milestones are first published on 2026-10-26; their original commits are retained.
 
+## Unreleased
+
+- Add EN/RU desktop-first installation guides from choosing an AI app through seven-skill discovery and a first task; simplify README and quick starts.
+- Package an original illustration and editable EN/RU setup diagrams through an exact-path allowlist, with detached-resource and rejection tests.
+- Keep explicit one-small-step requests focused before full registration planning; add bilingual scenarios and record fresh Codex/Claude trials and remaining acceptance gaps.
+
 ## 0.8.0-preview.1
 
 Lifecycle skill bundle preview. Publication requires the matching tag checks and verified assets; previously published versions remain unchanged.

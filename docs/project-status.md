@@ -2,6 +2,8 @@
 
 [English](project-status.md) | [Русский](project-status.ru.md) | [Documentation](index.md)
 
+**Beginner onboarding update (2026-10-26):** [illustrated installation from zero](../skills/de-business-kit/guides/install.en.md) now covers the host and complete skill setup. Fresh Codex EN/RU and constrained Claude EN conversations exercised real installed skills; a Claude first-answer scope regression was fixed and retested. Desktop installation/sign-in and ordinary-user acceptance remain open. [Exact evidence](validation.md).
+
 Reviewed against the source on **2026-10-26**, version **0.8.0-preview.1**.
 This page describes implemented capabilities. Download availability depends on
 successful platform gates, publication and verification of the matching assets on

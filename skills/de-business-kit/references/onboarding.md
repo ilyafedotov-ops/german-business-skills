@@ -10,6 +10,23 @@ If the user already has email, cloud/accounting records or a nonempty folder, fo
 
 Only when the requested task needs accounting records, establish where the user wants to keep their accounts: an existing exact software product or local records. Do not choose a default or infer the accounting method from that decision. Follow [accounting workflow](accounting-workflow.md) to save the evidenced choice with `desk.py accounting-configure` and inspect it with `accounting-status` on resume. The user can defer this choice while intake/research continue. Existing external books remain authoritative; a local EÜR cash journal is limited preparation, not complete statutory accounting. Once records exist, changing the authoritative system requires a separately reviewed migration.
 
+## One small first step
+
+When a new user asks only where to begin, one small step or a fictional first try,
+match that scope before starting the full setup/registration journey. Give one
+concrete, low-commitment action, a short example if helpful, and what makes that
+step complete. Ask at most the facts needed for that action. A plain activity
+sentence can be enough; do not turn it into a full intake questionnaire.
+
+Do not append a registration checklist, tax classification, deadlines, financial
+thresholds or account-opening advice that the user did not need for this step.
+Offer the next stage after they respond. This is progressive disclosure, not a
+reason to withhold a material issue when the user's actual situation needs it.
+If a legal/tax conclusion is necessary to answer their question, follow the
+current-source requirements; dated reference notes alone do not establish the
+current rule. Do not create a workspace, choose accounting software or write
+records for a simple first-step conversation.
+
 ## First useful task
 
 First distinguish a question, a document/form preparation, persistent record work
