@@ -1,24 +1,25 @@
-# Getting started
+# Quick start: your first answer
 
-[English](quickstart.md) | [Русский](quickstart.ru.md)
+**English** · [Русский](quickstart.ru.md)
 
-Open [Start here](../skills/de-business-kit/guides/start.en.md): five steps from a first message to a saved result. Use the [user guide](../skills/de-business-kit/guides/user-guide.en.md) for ongoing work.
+New to AI assistants? **[Follow the illustrated, step-by-step installation guide](../skills/de-business-kit/guides/install.en.md)**. It explains each step below, with download links, a copyable setup message and checks before continuing.
 
-| What you need now | Where to go |
-| --- | --- |
-| Choose among lifecycle tasks | [Launch, annual preparation and changes](../skills/de-business-kit/guides/user-guide.en.md#launch-annual-preparation-and-business-changes), [task menu](../skills/de-business-kit/guides/tasks.en.md) |
-| Work through the optional local application | [GUI launch instructions](../gui/README.md), [implemented operations](gui.md) |
-| Start or try fictional data | [Short start guide](../skills/de-business-kit/guides/start.en.md) |
-| Understand daily work or an error | [User guide](../skills/de-business-kit/guides/user-guide.en.md) |
-| Connect a downloaded project | [Installation options](../README.md#install) and [packages/updates](distribution.md); the assistant can perform technical steps |
-| Start on Windows without Python | [Windows](windows.md) |
-| Find guidance on a particular topic | [Documentation index](index.md) |
+1. **Choose one app.** Codex is OpenAI's assistant; Claude Code is Anthropic's. They can work with local files and use specialist instructions called skills. German Business Kit adds seven skills for the business lifecycle.
+2. **Install the app and sign in.** Use the [official Codex desktop setup](https://learn.chatgpt.com/docs/app) or [Claude desktop setup](https://code.claude.com/docs/en/desktop-quickstart). Open **Codex**, or Claude **Code → Local**. Check account access before purchasing a subscription.
+3. **Create a project folder.** Make **Business Assistant** in a private location using File Explorer/Finder. Open that folder as the app's local project.
+4. **Download the skill bundle.** From [0.8.0-preview.1 Assets](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1), choose `-codex.zip` or `-claude.zip` and `SHA256SUMS`. The `-gui-` files are an optional records application.
+5. **Verify and install.** Use the [ready-to-copy setup message](../skills/de-business-kit/guides/install.en.md#5-ask-the-assistant-to-install-the-seven-skills). It asks the assistant to check the download and put all seven complete skill folders in this project's `.agents/skills` (Codex) or `.claude/skills` (Claude Code), preserving existing files.
+6. **Open a fresh conversation in that project.** Select `de-business-kit`; in Claude Code use `/de-business-kit`. Ask which kit skills are actually available. [Discovery checks and troubleshooting](../skills/de-business-kit/guides/install.en.md#6-start-a-fresh-conversation-and-check-discovery).
+7. **Send one small request:**
 
-Use your existing app and begin with one small task. Keep business documents separate from the project. Installing a skill does not itself grant access to email or banking. You do not need every accounting category, terminal commands or full setup before asking a simple question.
+> Use de-business-kit. I am just trying the assistant with a fictional example: I want to start working as a translator in Germany. I do not know where to begin. Help me choose one small first step.
 
-Installed packages contain both guides under `skills/de-business-kit/guides/`; you do not need the repository open. New workspaces have their own short start note. Updating the skill does not rewrite older workspaces.
+![Open an assistant, add seven skills, ask one question](../skills/de-business-kit/guides/images/setup-map.en.svg)
 
-[Actual validation and limitations](validation.md) are separate from instructions: describing a step does not prove it works in every Windows/macOS or AI-app version.
+**Success:** you receive one understandable action and know what to do next. A simple question needs no accounting-system choice, real documents or business workspace. You can use English or Russian.
 
+When you want to save ongoing work, ask for a separate private business folder and a readable continuation note. Return to the same assistant project and ask it to continue from that note. Before real personal documents, establish what content will reach the AI service.
 
-[For the local cash journal + manual ELSTER month](../skills/de-business-kit/references/monthly-workflow.md), follow the preserved evidence and review sequence. Use [the real overview](document-workflow.md) to resume and [verified full recovery](../skills/de-business-kit/references/recovery.md) before a move or protected migration. [Runtime and capability limits](project-status.md).
+**Already set up?** [Choose a task](../skills/de-business-kit/guides/start.en.md) · [Everyday help](../skills/de-business-kit/guides/user-guide.en.md) · [Optional records application](../gui/README.md).
+
+**Need help?** [Full walkthrough and manual fallback](../skills/de-business-kit/guides/install.en.md) · [Advanced installation/updates](distribution.md) · [Actual validation and limits](validation.md).

@@ -2,6 +2,8 @@
 
 **English** · [Русский](start.ru.md) · [Deutsch](start.de.md)
 
+**New to Codex or Claude Code?** Follow [the complete installation walkthrough](install.en.md) first: choose an app, install it, add all seven skills and check discovery. Then return here for your task.
+
 Choose a concrete outcome in the [task guide](tasks.en.md).
 
 German Business Kit is a system of skills for entrepreneur assistance: preparing to start, forms, questions, services, daily work and reporting. Preparation guidance also covers changes, first hire, pause and closure; real execution needs separate acceptance. Describe the result you need in ordinary language. A simple question requires neither the local application nor workspace creation; tools are introduced for the task.
