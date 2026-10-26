@@ -43,8 +43,12 @@ with tempfile.TemporaryDirectory() as directory:
         threading.Thread(target=lambda: lines.put(child.stdout.readline()), daemon=True).start()
         startup = lines.get(timeout=30)
         if not startup.strip():
-            diagnostic = child.stderr.read(12000)
-            raise RuntimeError('Packaged application exited before readiness: ' + diagnostic)
+            try:
+                _, diagnostic = child.communicate(timeout=5)
+            except subprocess.TimeoutExpired:
+                child.kill()
+                _, diagnostic = child.communicate(timeout=5)
+            raise RuntimeError('Packaged application exited before readiness: ' + diagnostic[:12000])
         ready = json.loads(startup)
         sequence, identity = 0, None
         def call(op, **values):
