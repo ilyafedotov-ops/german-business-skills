@@ -103,6 +103,17 @@ class PackagingTests(unittest.TestCase):
                     self.assertTrue((private / view["html_path"]).is_file())
                     snapshot = json.loads((private / Path(view["html_path"]).with_suffix('.json')).read_text(encoding="utf-8"))
                     self.assertEqual(snapshot["capabilities"]["elster_submission"], "not_implemented")
+                    backup = self.base / (host + "-" + language + "-backup")
+                    recovered = self.base / (host + "-" + language + "-restored")
+                    for args in (["backup", "--root", str(private), "--destination", str(backup)],
+                                 ["restore", "--backup", str(backup), "--root", str(recovered)]):
+                        recovery = subprocess.run([sys.executable, "-B", str(skill / "scripts/recovery.py"), *args],
+                                                  cwd=self.base, capture_output=True, text=True, encoding="utf-8")
+                        self.assertEqual(recovery.returncode, 0, recovery.stderr)
+                    self.assertEqual((private / Path(view["html_path"]).with_name("workspace.json")).read_bytes(),
+                                     (recovered / Path(view["html_path"]).with_name("workspace.json")).read_bytes())
+                    for native in ("windows-overview.ps1", "recovery.ps1"):
+                        self.assertTrue((skill / "scripts" / native).is_file())
                     source_folder = self.base / (host + "-" + language + "-existing")
                     source_folder.mkdir()
                     (source_folder / "invoice.pdf").write_bytes(b"Synthetic preserved file")
