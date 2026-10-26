@@ -294,3 +294,11 @@ still verifies identity, timestamps, bytes and registry state. A delayed-timesta
 regression failed before the fix. After the fix, 216 local tests ran: 211 passed,
 five native checks skipped. Independent review and all 40 workspace tests passed.
 The Windows CI rerun is required before release acceptance.
+
+## Published release verification — 2026-10-26
+
+[Release v0.6.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.6.0-preview.1) was published from `3a563834fa8b6f91c137634a9a142d24ce8d3228`. The [complete tag pipeline](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40283707712) passed: Windows Python 3.9/3.14, macOS Python 3.10/3.14, native Windows PowerShell 5.1, Windows Chromium/macOS WebKit, three CodeQL languages with severity gates, reproducible build, signing and publication. PR-only dependency review was skipped on the tag event; npm audit ran.
+
+All five published assets were downloaded into a fresh directory. Their hashes and bytes matched the local build. GitHub CLI 2.103.2 verified the immutable release and every asset with both `release verify-asset` and `attestation verify`, constrained to the expected repository, signer workflow, tag, source commit and hosted runner. The API reports `immutable:true`. The historical v0.3/v0.4/v0.5 releases also passed release-signature verification; they remain source-only snapshots without new build provenance. v0.5 notes disclose the Windows rollback issue fixed in v0.6.
+
+This verifies distribution integrity and automated utility/browser behavior. It does not establish desktop host installation, live ELSTER/account integration, tax correctness or personal Git commit signing.
