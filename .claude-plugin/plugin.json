@@ -1,7 +1,7 @@
 {
   "name": "de-business-kit",
   "version": "0.7.0-preview.1",
-  "description": "Self-managed accounting and tax preparation for German sole traders: organized documents, limited cash records, readable reports and manual ELSTER guidance in English and Russian.",
+  "description": "Seven skills for the German sole-trader lifecycle: formation, daily operations, accounting, tax preparation, services and business changes, with shared context in English and Russian.",
   "author": {
     "name": "German Business Kit contributors"
   },

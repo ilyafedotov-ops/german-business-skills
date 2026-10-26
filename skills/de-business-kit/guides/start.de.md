@@ -2,7 +2,7 @@
 
 **Deutsch** · [Русский](start.ru.md) · [English](start.en.md)
 
-German Business Kit unterstützt Sie dabei, eigene Geschäftsunterlagen zu ordnen, verfügbare Buchhaltungsabläufe zu nutzen und Steuerunterlagen vorzubereiten. Sie beschreiben Ihr Anliegen in normalen Worten. Die Vorschauversion ist keine vollständige Buchhaltungssoftware und enthält keine ELSTER-Übermittlung.
+German Business Kit ist ein System von Skills für Selbstständige in Deutschland: Gründungsvorbereitung, Formulare, Fragen, Dienstleistungen, laufende Arbeit und Berichte. Änderungen und die Beendigung einer Tätigkeit gehören zum geplanten Umfang; Anleitungen zur Vorbereitung sind vorhanden; die tatsächliche Ausführung wird separat geprüft. Beschreiben Sie das gewünschte Ergebnis in normalen Worten. Eine einfache Frage erfordert weder die lokale Anwendung noch einen neuen Arbeitsordner. Eine vollständige Buchhaltungssoftware und ELSTER-Übermittlung sind nicht enthalten.
 
 ## Ihr erster Schritt
 

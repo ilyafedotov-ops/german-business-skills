@@ -8,9 +8,16 @@ Use for first use, “help me set this up,” “continue,” or a confused user
 
 If the user already has email, cloud/accounting records or a nonempty folder, follow [existing-data onboarding](existing-data.md) before proposing fresh setup. Inspect source access and existing workspace markers; do not initialize over the source or reset accounting/VAT history.
 
-During the welcome dialog, establish where the user wants to keep their accounts: an existing exact software product or local records. Do not choose a default or infer the accounting method from that decision. Follow [accounting workflow](accounting-workflow.md) to save the evidenced choice with `desk.py accounting-configure` and inspect it with `accounting-status` on resume. The user can defer this choice while intake/research continue. Existing external books remain authoritative; a local EÜR cash journal is limited preparation, not complete statutory accounting. Once records exist, changing the authoritative system requires a separately reviewed migration.
+Only when the requested task needs accounting records, establish where the user wants to keep their accounts: an existing exact software product or local records. Do not choose a default or infer the accounting method from that decision. Follow [accounting workflow](accounting-workflow.md) to save the evidenced choice with `desk.py accounting-configure` and inspect it with `accounting-status` on resume. The user can defer this choice while intake/research continue. Existing external books remain authoritative; a local EÜR cash journal is limited preparation, not complete statutory accounting. Once records exist, changing the authoritative system requires a separately reviewed migration.
 
 ## First useful task
+
+First distinguish a question, a document/form preparation, persistent record work
+and an external action. For a question or preparation, use the relevant direct
+skill and needed facts immediately. Steps involving a private folder/runtime
+below apply only when files or persistent workspace operations are required.
+Do not require accounting configuration for registration or a letter. For an
+existing workspace, reuse identity, preferences and task history without restarting.
 
 1. Identify whether the user means their own business or a service for others. For the latter, apply [legal boundaries](legal-boundaries.md). Ask/reuse the language, actual host and Windows/macOS environment. Inspect available tools; do not assume Python, web research or browser control from plugin installation.
 2. Explain that the assistant can organize evidence, prepare drafts and research questions. Distinguish this from professional representation, an accounting system's confirmed postings, or a tax submission. Explain the specific limits relevant to the chosen task rather than reciting every warning.

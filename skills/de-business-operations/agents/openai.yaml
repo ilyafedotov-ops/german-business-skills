@@ -1,0 +1,4 @@
+interface:
+  display_name: "Business Operations"
+  short_description: "Prepare invoices, correspondence and daily work"
+  default_prompt: "Use $de-business-operations to help me prepare a customer document and its next action."

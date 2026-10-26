@@ -1,0 +1,4 @@
+interface:
+  display_name: "Business Changes"
+  short_description: "Plan activity changes, hiring, pause and closure"
+  default_prompt: "Use $de-business-changes to help me plan a change or closure without losing business history."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Business Services"
+  short_description: "Choose services and verify available connections"
+  default_prompt: "Use $de-business-services to compare services for my needs or check an existing connection."

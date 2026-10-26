@@ -1,6 +1,7 @@
 """Installer safety tests; these are not desktop-app integration tests."""
 
 import importlib.util
+import json
 from pathlib import Path
 import tempfile
 import unittest
@@ -35,6 +36,71 @@ class InstallerTests(unittest.TestCase):
         if options["scope"] == "project":
             options.setdefault("project", self.project)
         return installer.install(source_skill=self.source, **options)
+
+    def make_bundle(self):
+        (self.source / "assets").mkdir()
+        (self.source / "agents").mkdir()
+        (self.source / "agents/openai.yaml").write_text('interface:\n  display_name: "Core"\n')
+        (self.source / "assets/skill-set.json").write_text(json.dumps({
+            "schema_version": 1, "skills": ["de-business-kit", "de-business-tax"]}))
+        sibling = self.source.parent / "de-business-tax"
+        sibling.mkdir()
+        (sibling / "SKILL.md").write_text(
+            "---\nname: de-business-tax\ndescription: Synthetic tax route.\n---\n"
+            "[Shared](../de-business-kit/references/intake.md)\n")
+        (sibling / "agents").mkdir()
+        (sibling / "agents/openai.yaml").write_text('interface:\n  display_name: "Tax"\n')
+        return sibling
+
+    def test_bundle_installs_siblings_and_shared_resources_without_source(self):
+        import shutil
+        self.make_bundle()
+        destinations = self.run_install()
+        self.assertEqual(len(destinations), 4)
+        shutil.rmtree(self.source.parent)
+        for host in (".agents", ".claude"):
+            skills = self.project / host / "skills"
+            self.assertTrue((skills / "de-business-tax/SKILL.md").is_file())
+            self.assertEqual((skills / "de-business-kit/references/intake.md").read_text(),
+                             "Synthetic fixture.\n")
+
+    def test_bundle_sibling_collision_preflights_all_hosts(self):
+        self.make_bundle()
+        occupied = self.project / ".claude/skills/de-business-tax"
+        occupied.mkdir(parents=True)
+        (occupied / "keep.txt").write_text("user work")
+        with self.assertRaises(installer.InstallError):
+            self.run_install()
+        self.assertFalse((self.project / ".agents").exists())
+        self.assertFalse((occupied.parent / "de-business-kit").exists())
+        self.assertEqual((occupied / "keep.txt").read_text(), "user work")
+
+    def test_bundle_missing_dependency_or_unsafe_catalog_writes_nothing(self):
+        import shutil
+        sibling = self.make_bundle()
+        shutil.rmtree(sibling)
+        with self.assertRaises(installer.InstallError):
+            self.run_install()
+        self.assertEqual(list(self.project.iterdir()), [])
+        (self.source / "assets/skill-set.json").write_text(json.dumps({
+            "schema_version": 1, "skills": ["de-business-kit", "../escape"]}))
+        with self.assertRaises(installer.InstallError):
+            self.run_install()
+        self.assertEqual(list(self.project.iterdir()), [])
+
+    def test_bundle_identity_and_metadata_checked_before_writes(self):
+        sibling = self.make_bundle()
+        entry = sibling / "SKILL.md"
+        original = entry.read_text()
+        entry.write_text(original.replace("name: de-business-tax", "name: de-business-kit"))
+        with self.assertRaises(installer.InstallError):
+            self.run_install()
+        self.assertEqual(list(self.project.iterdir()), [])
+        entry.write_text(original)
+        (sibling / "agents/openai.yaml").unlink()
+        with self.assertRaises(installer.InstallError):
+            self.run_install()
+        self.assertEqual(list(self.project.iterdir()), [])
 
     def test_both_targets_preserve_resources_and_existing_configuration(self):
         (self.project / ".claude").mkdir()
@@ -121,6 +187,21 @@ class InstallerTests(unittest.TestCase):
             destination.symlink_to(source, target_is_directory=is_directory)
         except (OSError, NotImplementedError):
             self.skipTest("Creating symlinks is unavailable for this test user/platform")
+
+    def test_catalog_parent_symlink_is_rejected_before_reading(self):
+        external = self.root / "external-catalog"
+        external.mkdir()
+        (external / "skill-set.json").write_text('{"schema_version":1,"skills":["de-business-kit"]}')
+        self._symlink(self.source / "assets", external, is_directory=True)
+        original = Path.read_bytes
+        def guarded_read(path):
+            if path == self.source / "assets/skill-set.json":
+                self.fail("Read through a symlinked catalog parent")
+            return original(path)
+        with mock.patch.object(Path, "read_bytes", guarded_read):
+            with self.assertRaises(installer.InstallError):
+                self.run_install()
+        self.assertEqual(list(self.project.iterdir()), [])
 
     def test_source_symlink_is_rejected(self):
         self._symlink(self.source / "references" / "linked.md", self.source / "SKILL.md")

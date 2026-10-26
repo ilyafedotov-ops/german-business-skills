@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Copy the self-contained skill into a supported local skills directory.
+"""Copy the complete skill bundle into a supported local skills directory.
 
 Python 3.9+, standard library only. No network requests, dependencies, settings
 changes, or automatic updates. Existing installations must be reviewed and
@@ -16,6 +16,14 @@ import stat
 import sys
 from typing import List, Optional, Tuple, Union
 
+
+try:
+    from .skill_catalog import skill_names, validate_links
+except ImportError:
+    try:
+        from skill_catalog import skill_names, validate_links
+    except ImportError:
+        from tools.skill_catalog import skill_names, validate_links
 
 SKILL_NAME = "de-business-kit"
 PathInput = Union[str, Path]
@@ -101,7 +109,7 @@ def install(
     source_skill: Optional[PathInput] = None,
     dry_run: bool = False,
 ) -> Tuple[Path, ...]:
-    """Install one skill, preflighting every target before any write.
+    """Install a bundle, preflighting every skill and target before any write.
 
     ``home`` and ``source_skill`` are explicit API seams for isolated tests or
     embedding. The CLI uses Path.home() and this repository's canonical skill.
@@ -130,17 +138,37 @@ def install(
         source_skill if source_skill is not None
         else Path(__file__).absolute().parent.parent / "skills" / SKILL_NAME
     )
-    directories, files = _read_package(source)
+    # Explicit source_skill retains the legacy single-skill API for old bundles.
+    catalog = source / "assets/skill-set.json"
+    _check_directory_chain(catalog.parent)
+    if catalog.is_symlink():
+        raise InstallError("Linked skill catalog rejected.")
+    try:
+        names = skill_names(catalog.read_bytes()) if catalog.exists() else (SKILL_NAME,)
+        if source_skill is None and not catalog.exists():
+            raise InstallError("The complete bundle catalog is missing.")
+        packages = {name: _read_package(source.parent / name) for name in names}
+        if catalog.exists():
+            for name, (_, files) in packages.items():
+                captured = {path.as_posix(): data for path, data, _ in files}
+                entry = captured["SKILL.md"].decode("utf-8").replace("\r\n", "\n")
+                if not entry.startswith(f"---\nname: {name}\n") or "agents/openai.yaml" not in captured:
+                    raise InstallError(f"Skill identity or UI metadata missing: {name}")
+        validate_links({name + "/" + path.as_posix(): data
+                        for name, (_, files) in packages.items() for path, data, _ in files})
+    except (OSError, ValueError) as exc:
+        raise InstallError(str(exc)) from exc
     hosts = ("codex", "claude") if target == "both" else (target,)
     roots = {"codex": ".agents", "claude": ".claude"}
-    destinations = tuple(base / roots[host] / "skills" / SKILL_NAME for host in hosts)
+    destinations = tuple(base / roots[host] / "skills" / name
+                         for host in hosts for name in names)
 
     for destination in destinations:
         _check_directory_chain(destination.parent)
         if destination.exists() or destination.is_symlink():
             raise InstallError(f"Refusing to overwrite an existing path: {destination}")
-        if source == destination or source in destination.parents:
-            raise InstallError("A destination cannot be inside the source skill.")
+        if source.parent == destination or source.parent in destination.parents:
+            raise InstallError("A destination cannot be inside the source bundle.")
 
     if dry_run:
         return destinations
@@ -155,6 +183,7 @@ def install(
             destination.mkdir()
             created_destinations.append(destination)
         for destination in destinations:
+            directories, files = packages[destination.name]
             for relative in directories:
                 (destination / relative).mkdir()
             for relative, content, executable in files:

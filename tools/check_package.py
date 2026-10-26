@@ -5,6 +5,11 @@ from pathlib import Path
 import re
 import sys
 
+try:
+    from .skill_catalog import skill_names, validate_links
+except ImportError:
+    from skill_catalog import skill_names, validate_links
+
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills" / "de-business-kit"
 
@@ -66,11 +71,20 @@ def main():
     for name in required:
         if not (ROOT / name).is_file():
             errors.append("Missing required file: " + name)
-    skill_text = (SKILL / "SKILL.md").read_text(encoding="utf-8")
-    if not skill_text.startswith("---\nname: de-business-kit\n") or "\ndescription:" not in skill_text:
-        errors.append("Missing skill name/description frontmatter")
-    if len(skill_text.splitlines()) >= 500:
-        errors.append("SKILL.md must stay under 500 lines")
+    try:
+        names = skill_names((SKILL / "assets/skill-set.json").read_bytes())
+        for name in names:
+            folder = ROOT / "skills" / name
+            text = (folder / "SKILL.md").read_text(encoding="utf-8")
+            if not text.startswith(f"---\nname: {name}\n") or "\ndescription:" not in text:
+                errors.append(f"Missing skill name/description: {name}")
+            if len(text.splitlines()) >= 500 or not (folder / "agents/openai.yaml").is_file():
+                errors.append(f"Oversized entry or missing UI metadata: {name}")
+        validate_links({p.relative_to(ROOT / "skills").as_posix(): p.read_bytes()
+                        for name in names for p in (ROOT / "skills" / name).rglob('*')
+                        if p.is_file() and not p.is_symlink()})
+    except (OSError, ValueError, TypeError) as exc:
+        errors.append(f"Invalid skill bundle: {exc}")
     try:
         manifest = json.loads((SKILL / "assets/locales.json").read_text(encoding="utf-8"))
         locales = manifest["languages"]
@@ -106,7 +120,7 @@ def main():
                 target = (file.parent / link.split("#")[0]).resolve()
                 if not target.is_file() and not target.is_dir():
                     errors.append(f"Missing local link: {file.relative_to(ROOT)} -> {link}")
-                if file.is_relative_to(SKILL) and not target.is_relative_to(SKILL):
+                if file.is_relative_to(ROOT / "skills") and not target.is_relative_to(ROOT / "skills"):
                     errors.append(f"Skill link escapes its installed package: {link}")
     if errors:
         print("\n".join(errors), file=sys.stderr)

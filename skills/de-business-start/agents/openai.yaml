@@ -1,0 +1,4 @@
+interface:
+  display_name: "Business Start"
+  short_description: "Prepare formation, registration and launch plans"
+  default_prompt: "Use $de-business-start to prepare a plan for starting my activity in Germany."

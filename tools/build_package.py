@@ -20,6 +20,11 @@ from typing import Dict, Optional, List
 import zipfile
 
 
+try:
+    from .skill_catalog import skill_names, validate_links
+except ImportError:
+    from skill_catalog import skill_names, validate_links
+
 NAME = "de-business-kit"
 MARKETPLACE = "de-business-kit-preview"
 
@@ -92,32 +97,33 @@ def snapshot(source: Path) -> Dict[str, bytes]:
              "LICENSE": read_file(source / "LICENSE")}
     for name in ("README.md", "README.ru.md"):
         files[name] = read_file(source / "packaging" / name)
-    skill = source / "skills" / NAME
-    directory_chain(skill)
-    if not skill.is_dir():
-        raise BuildError("The canonical skill directory is missing.")
-    for current, directories, filenames in os.walk(skill, followlinks=False):
-        for name in sorted(directories + filenames):
-            entry = Path(current) / name
-            if (any(ord(character) < 32 for character in name)
-                    or any(character in name for character in '\\:*?"<>|')
-                    or name.endswith((".", " "))
-                    or name.split(".")[0].upper() in {"CON", "PRN", "AUX", "NUL",
-                        *{f"COM{number}" for number in range(1, 10)},
-                        *{f"LPT{number}" for number in range(1, 10)}}):
-                raise BuildError(f"Nonportable resource name rejected: {entry}")
-            info = entry.lstat()
-            if stat.S_ISDIR(info.st_mode):
-                if name.startswith(".") or name == "__pycache__":
-                    raise BuildError(f"Unexpected hidden/cache directory in skill: {entry}")
-                continue
-            if not stat.S_ISREG(info.st_mode):
-                raise BuildError(f"Symlink or special resource rejected: {entry}")
-            if name.startswith(".") or (entry.suffix not in {".md", ".json", ".yaml", ".py"}
-                    and entry.relative_to(skill).as_posix() not in {"scripts/windows.ps1", "scripts/windows-overview.ps1", "scripts/recovery.ps1", "assets/readable-document.html"}):
-                raise BuildError(f"Unreviewed skill resource type: {entry}")
-            files[entry.relative_to(source).as_posix()] = read_file(entry)
-
+    names = skill_names(read_file(source / "skills" / NAME / "assets/skill-set.json"))
+    for skill_name in names:
+        skill = source / "skills" / skill_name
+        directory_chain(skill)
+        if not skill.is_dir():
+            raise BuildError("The canonical skill directory is missing.")
+        for current, directories, filenames in os.walk(skill, followlinks=False):
+            for name in sorted(directories + filenames):
+                entry = Path(current) / name
+                if (any(ord(character) < 32 for character in name)
+                        or any(character in name for character in '\\:*?"<>|')
+                        or name.endswith((".", " "))
+                        or name.split(".")[0].upper() in {"CON", "PRN", "AUX", "NUL",
+                            *{f"COM{number}" for number in range(1, 10)},
+                            *{f"LPT{number}" for number in range(1, 10)}}):
+                    raise BuildError(f"Nonportable resource name rejected: {entry}")
+                info = entry.lstat()
+                if stat.S_ISDIR(info.st_mode):
+                    if name.startswith(".") or name == "__pycache__":
+                        raise BuildError(f"Unexpected hidden/cache directory in skill: {entry}")
+                    continue
+                if not stat.S_ISREG(info.st_mode):
+                    raise BuildError(f"Symlink or special resource rejected: {entry}")
+                if name.startswith(".") or (entry.suffix not in {".md", ".json", ".yaml", ".py"}
+                        and entry.relative_to(skill).as_posix() not in {"scripts/windows.ps1", "scripts/windows-overview.ps1", "scripts/recovery.ps1", "assets/readable-document.html"}):
+                    raise BuildError(f"Unreviewed skill resource type: {entry}")
+                files[entry.relative_to(source).as_posix()] = read_file(entry)
     prefix = f"skills/{NAME}/"
     required = {
         "SKILL.md", "agents/openai.yaml", "scripts/workspace.py", "scripts/desk.py",
@@ -142,15 +148,14 @@ def snapshot(source: Path) -> Dict[str, bytes]:
                 raise BuildError("A localized template escapes its language directory.")
             if prefix + "assets/" + str(relative) not in files:
                 raise BuildError(f"Missing localized template: {template}")
-    for name, content in files.items():
-        if name.startswith(prefix) and name.endswith(".md"):
-            for link in re.findall(r"\]\(([^)]+)\)", content.decode("utf-8")):
-                if re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*:", link) or link.startswith("#"):
-                    continue
-                target = os.path.normpath(str(PurePosixPath(name).parent / link.split("#")[0])).replace("\\", "/")
-                if not target.startswith(prefix) or (target not in files and not any(
-                        item.startswith(target.rstrip("/") + "/") for item in files)):
-                    raise BuildError(f"Missing or escaping skill reference: {name} -> {link}")
+    for skill_name in names:
+        for resource in ("SKILL.md", "agents/openai.yaml"):
+            if f"skills/{skill_name}/{resource}" not in files:
+                raise BuildError(f"Missing skill entry resource: {skill_name}/{resource}")
+        if not files[f"skills/{skill_name}/SKILL.md"].decode('utf-8').replace('\r\n', '\n').startswith(f"---\nname: {skill_name}\n"):
+            raise BuildError(f"Skill identity mismatch: {skill_name}")
+    validate_links({name[len("skills/"):]: content for name, content in files.items()
+                    if name.startswith("skills/")})
     return files
 
 

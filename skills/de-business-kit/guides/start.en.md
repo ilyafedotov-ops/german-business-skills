@@ -2,7 +2,10 @@
 
 **English** · [Русский](start.ru.md) · [Deutsch](start.de.md)
 
-German Business Kit helps you organize documents, perform supported accounting work and prepare tax materials yourself. Write in ordinary language; the assistant operates files and explains the result. This is a preview, not a separate complete accounting application.
+German Business Kit is a system of skills for entrepreneur assistance: preparing to start, forms, questions, services, daily work and reporting. Development and closure are intended areas, but preparation guidance is available; real execution needs separate acceptance. Describe the result you need in ordinary language. A simple question requires neither the local application nor workspace creation; tools are introduced for the task.
+
+
+You can directly select `de-business-start`, `de-business-operations`, `de-business-accounting`, `de-business-tax`, `de-business-services` or `de-business-changes`. The general `de-business-kit` helps select the next action. See the [map and shared resources](../references/lifecycle.md). Install the complete bundle; keep one profile.
 
 ## 1. Open your assistant
 

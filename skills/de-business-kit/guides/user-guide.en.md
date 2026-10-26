@@ -6,11 +6,14 @@ New here? Follow the [short start guide](start.en.md). Read this manual by task;
 
 [Documents](#documents) · [Accounts and payments](#accounts-and-payments) · [Taxes and letters](#taxes-and-letters) · [Reports](#reports) · [Continue](#continue) · [States](#states) · [Help](#help) · [Backups](#backups)
 
+
+You can directly select `de-business-start`, `de-business-operations`, `de-business-accounting`, `de-business-tax`, `de-business-services` or `de-business-changes`. The general `de-business-kit` helps select the next action. See the [map and shared resources](../references/lifecycle.md). Install the complete bundle; keep one profile.
+
 ## What this assistant is
 
 German Business Kit is a set of instructions and tools for Codex and Claude Code. It helps you work independently with your own German business records. The app, file access, AI subscription and service connections are provided separately. The skill alone does not grant access to email or banking.
 
-The main work is to retrieve and preserve selected documents, review suggested facts, investigate payments, and prepare readable reports and form materials. A complete accounting/tax engine and ELSTER transmission integration are not implemented. If you use existing accounting software, it remains authoritative. Professional consultation is an optional route for a specific issue, not a required handoff of all your work.
+This manual describes existing document, payment, reporting and recovery tasks within the wider entrepreneur skill system. Formation, questions and service selection also have dedicated modules; change and closure guidance is available. See the [portable lifecycle map](../references/lifecycle.md). A complete accounting/tax engine and ELSTER transmission integration are not implemented. Existing accounting software remains authoritative. Professional consultation is optional for a specific issue.
 
 ## Ask for a result
 
