@@ -208,33 +208,37 @@ def period_report(root, period):
     wf.period(period)
     with ws._locked(root):
         state = _load(root)
-        config = _config(root, state, local=True)
-        selected = [entry for entry in state["entries"].values() if _in_period(entry["date"], period)]
-        totals, categories = {}, {}
-        unresolved = False
-        for entry in selected:
-            _entry({key: entry[key] for key in template("entry")})
-            st.check_evidence(root, entry["evidence"])
-            row = totals.setdefault(entry["currency"], dict.fromkeys(("income", "expense", "transfer", "unresolved"), Decimal(0)))
-            for line in entry["lines"]:
-                amount = ws._amount(line["amount"])
-                row[line["kind"]] = ws._add(row[line["kind"]], amount)
-                key = (entry["currency"], line["kind"], line["category"], line["activity_id"])
-                categories[key] = ws._add(categories.get(key, Decimal(0)), amount)
-                unresolved |= line["kind"] == "unresolved"
-        for row in totals.values():
-            row["operating_cash_net"] = ws._add(row["income"], row["expense"])
-        issues = ["coverage_not_confirmed", "statutory_adjustments_not_calculated", "tax_form_mapping_not_verified"]
-        if not selected:
-            issues.append("no_entries")
-        if unresolved:
-            issues.append("unclassified_movements")
-        return {"schema_version": 1, "kind": "cash_movement_report", "period": period,
-                "accounting_system": config["system"], "entries_sha256": st.digest(selected),
-                "configuration_sha256": st.digest(config), "entries": selected,
-                "totals": {currency: {key: format(value, "f") for key, value in row.items()} for currency, row in sorted(totals.items())},
-                "categories": [{"currency": key[0], "kind": key[1], "category": key[2], "activity_id": key[3], "amount": format(value, "f")} for key, value in sorted(categories.items())],
-                "readiness": "needs_review", "tax_return_status": "not_calculated", "open_items": issues}
+        return _period_report(root, period, state)
+
+
+def _period_report(root, period, state):
+    config = _config(root, state, local=True)
+    selected = [entry for entry in state["entries"].values() if _in_period(entry["date"], period)]
+    totals, categories = {}, {}
+    unresolved = False
+    for entry in selected:
+        _entry({key: entry[key] for key in template("entry")})
+        st.check_evidence(root, entry["evidence"])
+        row = totals.setdefault(entry["currency"], dict.fromkeys(("income", "expense", "transfer", "unresolved"), Decimal(0)))
+        for line in entry["lines"]:
+            amount = ws._amount(line["amount"])
+            row[line["kind"]] = ws._add(row[line["kind"]], amount)
+            key = (entry["currency"], line["kind"], line["category"], line["activity_id"])
+            categories[key] = ws._add(categories.get(key, Decimal(0)), amount)
+            unresolved |= line["kind"] == "unresolved"
+    for row in totals.values():
+        row["operating_cash_net"] = ws._add(row["income"], row["expense"])
+    issues = ["coverage_not_confirmed", "statutory_adjustments_not_calculated", "tax_form_mapping_not_verified"]
+    if not selected:
+        issues.append("no_entries")
+    if unresolved:
+        issues.append("unclassified_movements")
+    return {"schema_version": 1, "kind": "cash_movement_report", "period": period,
+            "accounting_system": config["system"], "entries_sha256": st.digest(selected),
+            "configuration_sha256": st.digest(config), "entries": selected,
+            "totals": {currency: {key: format(value, "f") for key, value in row.items()} for currency, row in sorted(totals.items())},
+            "categories": [{"currency": key[0], "kind": key[1], "category": key[2], "activity_id": key[3], "amount": format(value, "f")} for key, value in sorted(categories.items())],
+            "readiness": "needs_review", "tax_return_status": "not_calculated", "open_items": issues}
 
 
 def export_report(root, period):
@@ -417,27 +421,31 @@ def check_filing(root, identifier):
     root = ws._workspace(root)
     with ws._locked(root):
         state = _load(root)
-        record = state["filings"].get(identifier)
-        if record is None:
-            raise ws.WorkspaceError("Filing not found.")
-        current = record["state"]
-        if current not in STATES:
-            raise ws.WorkspaceError("Unknown filing state; inspect preserved history.")
-        action = PREFLIGHT_ACTIONS.get(current)
-        issues = _filing_issues(root, record, state, live=action is not None)
-        next_step = action or {"submission_unconfirmed": "resolve_submission_outcome",
-                               "submitted": "follow_up", "cancelled": "prepare_replacement"}[current]
-        return {"filing_id": identifier, "state": current, "sha256": st.digest(record),
-                "accounting_system": record["system"], "product": record["product"],
-                "form": record["form"], "form_version": record["form_version"],
-                "period": record["period"], "recipient": record["recipient"],
-                "payload_sha256": record["payload"]["sha256"],
-                "source_scope": "frozen_and_current_evidence" if action else "frozen_evidence_only",
-                "issues": issues, "next_step": "resolve_issues" if issues else next_step,
-                "allowed_preflight_actions": [action] if action and not issues else [],
-                "tax_correctness": "not_assessed", "transmission": "not_implemented",
-                "scope": "Local evidence and state only. Actions need their own evidence and current hash; "
-                         "this snapshot grants no approval or external permission. Actions recheck current sources."}
+        return _check_filing(root, identifier, state)
+
+
+def _check_filing(root, identifier, state):
+    record = state["filings"].get(identifier)
+    if record is None:
+        raise ws.WorkspaceError("Filing not found.")
+    current = record["state"]
+    if current not in STATES:
+        raise ws.WorkspaceError("Unknown filing state; inspect preserved history.")
+    action = PREFLIGHT_ACTIONS.get(current)
+    issues = _filing_issues(root, record, state, live=action is not None)
+    next_step = action or {"submission_unconfirmed": "resolve_submission_outcome",
+                           "submitted": "follow_up", "cancelled": "prepare_replacement"}[current]
+    return {"filing_id": identifier, "state": current, "sha256": st.digest(record),
+            "accounting_system": record["system"], "product": record["product"],
+            "form": record["form"], "form_version": record["form_version"],
+            "period": record["period"], "recipient": record["recipient"],
+            "payload_sha256": record["payload"]["sha256"],
+            "source_scope": "frozen_and_current_evidence" if action else "frozen_evidence_only",
+            "issues": issues, "next_step": "resolve_issues" if issues else next_step,
+            "allowed_preflight_actions": [action] if action and not issues else [],
+            "tax_correctness": "not_assessed", "transmission": "not_implemented",
+            "scope": "Local evidence and state only. Actions need their own evidence and current hash; "
+                     "this snapshot grants no approval or external permission. Actions recheck current sources."}
 
 
 def filing_action(root, value, expected):
@@ -512,3 +520,35 @@ def status(root):
                 "filings": [{"filing_id": row["filing_id"], "form": row["form"], "period": row["period"],
                              "state": row["state"], "responses": len(row["responses"])} for row in state["filings"].values()],
                 "transmission": "not_implemented", "tax_form_calculations": "not_implemented"}
+
+
+def overview_state(root, period):
+    """Projection for overview; caller holds the workspace lock across all reads."""
+    state = _load(root)
+    config = state["configuration"]
+    result = {"accounting_system": config["system"] if config else "undecided",
+              "product": config["product"] if config else None,
+              "method": config["method"] if config else "unresolved",
+              "period_entry_count": None, "totals": {}, "issues": [],
+              "coverage": "not_confirmed", "tax_return_status": "not_calculated"}
+    if config:
+        try:
+            _config(root, state)
+            if config["system"] == "local":
+                report = _period_report(root, period, state)
+                result.update(period_entry_count=len(report["entries"]), totals=report["totals"],
+                              issues=[{"code": code} for code in report["open_items"]])
+        except (OSError, ws.WorkspaceError) as exc:
+            result["issues"].append({"code": "accounting_evidence", "detail": str(exc)})
+    filings = []
+    for identifier, record in sorted(state["filings"].items()):
+        # Uncertain attempts and dated authority responses remain visible across months.
+        if (_in_period(period + "-01", record["period"])
+                or record["state"] == "submission_unconfirmed"
+                or any(event.get("due_date") for event in record["responses"])):
+            check = _check_filing(root, identifier, state)
+            check["responses"] = [{"kind": event["response_kind"], "due_date": event["due_date"],
+                                    "evidence_path": event["evidence"]["path"]}
+                                   for event in record["responses"]]
+            filings.append(check)
+    return result, filings

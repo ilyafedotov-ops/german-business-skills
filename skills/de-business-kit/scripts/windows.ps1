@@ -5,7 +5,7 @@
 #>
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true)][ValidateSet('install','start','scan','ingest','verify','folders')][string]$Action,
+    [Parameter(Mandatory=$true)][ValidateSet('install','start','scan','ingest','verify','folders','overview')][string]$Action,
     [Parameter(Mandatory=$true)][string]$Root,
     [string]$Source,
     [ValidateRange(1900,9999)][int]$Year = (Get-Date).Year,
@@ -70,7 +70,10 @@ function ReadJson([string]$path) {
     $text = $utf8.GetString((ReadBytes $path))
     # 5.1 preserves top-level arrays; 7 needs NoEnumerate to preserve []/[null].
     # Parse the original text, never embed unvalidated JSON into a wrapper.
-    if ((Get-Command ConvertFrom-Json).Parameters.ContainsKey('NoEnumerate')) {
+    if ((Get-Command ConvertFrom-Json).Parameters.ContainsKey('DateKind')) {
+        # ISO timestamps are fingerprinted strings; DateTime parsing loses precision.
+        $parsed = ConvertFrom-Json -InputObject $text -NoEnumerate -DateKind String
+    } elseif ((Get-Command ConvertFrom-Json).Parameters.ContainsKey('NoEnumerate')) {
         $parsed = ConvertFrom-Json -InputObject $text -NoEnumerate
     } else {
         $parsed = ConvertFrom-Json -InputObject $text
@@ -289,6 +292,10 @@ try {
                 $result = @{status='resumed'; language=$marker.language; mode=$marker.mode; integrity=$integrity; setup='not_assessed_by_native_command'; next='Read existing profile, tasks and processing evidence; do not reset or infer approval.'}
             }
             'verify' { $result = Verify }
+            'overview' {
+                . (Join-Path $PSScriptRoot 'windows-overview.ps1')
+                $result = NativeOverview
+            }
             'folders' {
                 $info = FolderLayout
                 $paths = @{}

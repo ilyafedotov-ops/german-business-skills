@@ -18,7 +18,7 @@ class MonthlyJourneyTests(unittest.TestCase):
                     html = (Path(result["root"]) / result["overview"]["html_path"]).read_text(encoding="utf-8")
                     self.assertIn('id="accounting-tax"', html)
                     snapshot = __import__("json").loads(synthetic_journey.ws._inside(Path(result["root"]), "00_admin/overview.json").read_text())
-                    self.assertEqual(snapshot["capabilities"]["accounting_ledger"], "not_implemented")
+                    self.assertEqual(snapshot["capabilities"]["accounting_ledger"], "limited_cash_journal")
                     self.assertEqual(snapshot["capabilities"]["elster_submission"], "not_implemented")
                     self.assertIn("Clarify the authority request and its stated date", html)
 
