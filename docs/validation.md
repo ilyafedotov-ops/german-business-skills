@@ -4,6 +4,19 @@
 
 Checked **2026-10-25**. Tests use synthetic temporary data, never live business records or accounts.
 
+## Source-led tax estimates without a bundled formula engine (2026-10-25)
+
+The calculation approach is now skill guidance: retrieve current official rules, use a suitable official calculator or the selected accounting/tax software, and preserve actual inputs/results and unresolved differences. No runtime module, tax formula, rate table or calculation algorithm was added. English/Russian consultation templates record rule references, tool/year/settings, whether a tool actually ran, output evidence and cross-checks. The capability plan now treats verified external calculations as the intended route.
+
+`python3 -B -m unittest discover -s tests -q` — **173 tests run: 171 passed, 2 skipped**, local macOS / Python 3.14.6. Native PowerShell tests were skipped. This run includes one concurrently added package-check test; the estimate work adds behavioral scenarios, not arithmetic tests. `git diff --check` passed. `python3 -B tools/check_package.py` initially found missing `prototype-validation.md` / `prototype-validation.ru.md` links in concurrently edited, out-of-scope prototype guides. The same package check **passed in an isolated copy of HEAD plus only the scoped estimate changes**, using HEAD's checker. That scoped result does not certify the concurrent prototype work. After the missing prototype documents appeared, the full working-tree package check also passed.
+
+Independent read-only review inspected the scoped changes, English/Russian parity and primary VAT sources and reported no actionable findings. Two fresh Codex sessions received only the skill path and their synthetic prompt, without criteria, implementation diffs or validation notes:
+
+- `tax-estimate-no-embedded-formulas`: retained local accounting, distinguished EUR60000 cash inflows from profit/taxable income, linked applicable official sources and the BMF tool, prepared needed inputs and explained result checks. The answer left the amount unresolved and explicitly stated no calculator run, account access or workspace creation.
+- `tax-estimate-existing-software-provenance`: answered in Russian, retained external software authority and labelled EUR420 as user-supplied/unverified. It distinguished sales from purchases and conditional Soll/Ist/input-VAT timing, requested product/report evidence, and gave a next step without a new formula, ledger or filing. It also noted that October was still incomplete on the trial date.
+
+The parent inspected both actual responses against their scenarios. Host: Codex session on macOS, exact desktop/model build not exposed. These are bounded response trials using public-source reading, not authenticated calculator/provider, browser-integration, tax-correctness or filing acceptance tests. The catalog contains **42 scenarios**, not all executed. See [the source-led estimate workflow](../skills/de-business-kit/references/tax-estimates.md).
+
 ## Onboarding-selected accounting and filing evidence (2026-10-25)
 
 `python3 -B -m unittest discover -s tests -q` — **172 tests run: 170 passed, 2 skipped**, local macOS / Python 3.14.6. The two native PowerShell interoperability tests require Windows or an explicitly configured developer container and were not executed in this run. `python3 tools/check_package.py` and `git diff --check` passed. Detached Codex/Claude packages expose accounting status without the source checkout.

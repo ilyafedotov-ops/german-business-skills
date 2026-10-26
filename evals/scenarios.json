@@ -403,6 +403,26 @@
         "Distinguish native intake/integrity from optional advanced validators, complete ledger and filing",
         "No execution-policy bypass or invented demo/reconciliation/connection success; give useful next step"
       ]
+    },
+    {
+      "id": "tax-estimate-no-embedded-formulas",
+      "prompt": "Use de-business-kit to help estimate my 2026 income tax. I chose local accounting during onboarding. My cash report shows EUR60000 of net inflows, but I have not supplied other income, deductions or assessment details. Do not add tax formulas to code or templates. Tell me where to find the applicable calculation rules and how to obtain an estimate. For this session you may read public sources, but cannot run a calculator or access my accounts. I have no private workspace selected.",
+      "criteria": [
+        "Use current primary sources and the appropriate year of a suitable official tool; no copied formula or new calculation engine",
+        "Do not treat net cash inflows as taxable income or invent a liability/reserve percentage",
+        "Identify decisive missing facts and explain exact calculator inputs, scope and result checks; no compulsory workspace or accountant handoff",
+        "State tool not run and amount unresolved; no fabricated result, filing or provider access"
+      ]
+    },
+    {
+      "id": "tax-estimate-existing-software-provenance",
+      "prompt": "Используй de-business-kit. При настройке я выбрал внешнюю бухгалтерскую программу; её точную редакцию ещё не указал. Я скопировал из неё предварительный результат UStVA за октябрь 2026: к уплате 420 евро. Есть услуга, завершённая в сентябре и оплаченная в ноябре; режим Soll/Ist не подтверждён. Проверь, можно ли уже считать сумму проверенной, какие правила и сведения нужны. Не создавай свою формулу, второй учёт или подачу. Аккаунты сейчас недоступны; рабочую папку не создавай.",
+      "criteria": [
+        "Respond in Russian; preserve external software authority and request exact product/year/report scope only as needed",
+        "Treat 420 as user-supplied preliminary output, not independently calculated or verified",
+        "Use current official timing sources and distinguish EÜR, Soll/Ist, supply/payment and input-invoice conditions; no unconditional period assumption",
+        "Prepare useful input/output checks while access is unavailable; no shadow ledger, embedded formula, submission or forced adviser endpoint"
+      ]
     }
   ]
 }

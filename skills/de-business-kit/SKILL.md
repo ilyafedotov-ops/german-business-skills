@@ -52,6 +52,7 @@ For first use, setup confusion, a demonstration or “continue,” follow [guide
 | Payment providers, payouts, refunds, disputes or FX | [payments](references/payments.md) | Normalized events, statement arithmetic, bank payout links and exceptions |
 | Explain German rules and identify exceptions | [German rules](references/german-rules.md) | Sources, applicability, explicit assumptions and review questions |
 | Tax questions, choices and estimates (`tax-consultant`) | [tax preparation](references/tax-consultant.md) | Direct answer; applicable sources; calculations/assumptions; consultation record |
+| Find calculation rules, estimate tax or check a software result | [source-led estimates](references/tax-estimates.md) | Current official rule/tool references, evidenced inputs and observed result; no embedded tax formulas |
 | Non-tax legal questions, disputes or services for other people | [legal boundaries](references/legal-boundaries.md) | Factual preparation, precise review issue and qualified handoff when needed |
 | Receipts, invoices and monthly close preparation | [bookkeeping](references/bookkeeping.md) | Evidence index, proposals, reconciliation and exception list |
 | Lexware Office and optional exports | [Lexware](references/lexware.md) | Actual accounting-state checks; export only when useful/requested |

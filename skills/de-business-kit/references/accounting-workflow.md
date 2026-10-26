@@ -37,7 +37,7 @@ Reports always retain `needs_review` / `not_calculated`: account coverage, year-
 
 ## Filing lifecycle for either route
 
-The user can prepare the real return in their existing accounting software or official portal. Save the exact reviewed export/summary and relevant source files. A filing draft names form, observed version, period, actual recipient, unresolved items and optional `supersedes`. The tool copies the payload and sources into `05_tax/YYYY/filing-evidence/`; it does not generate an ERiC payload or validate official fields. Never use an incomplete cash report as a submission-ready tax return.
+The user can prepare the real return in their existing accounting software or official portal. Follow [source-led estimates and report checks](tax-estimates.md) to find the current calculation rules and appropriate tool; local accounting does not authorize inventing a tax formula. Save the exact reviewed export/summary and relevant source files. A filing draft names form, observed version, period, actual recipient, unresolved items and optional `supersedes`. The tool copies the payload and sources into `05_tax/YYYY/filing-evidence/`; it does not generate an ERiC payload or validate official fields. Never use an incomplete cash report as a submission-ready tax return.
 
 Use `workflows.py catalog` or [the form catalogue](../assets/form-catalog.json) for the machine `form` ID: for example `ustva` for Umsatzsteuer-Voranmeldung, `ust` for annual VAT and `euer` for Anlage EÜR. Keep the German display label in user-facing explanations, not in the `form` field. The catalogue is routing information, not proof of the obligation or an inspected current schema.
 

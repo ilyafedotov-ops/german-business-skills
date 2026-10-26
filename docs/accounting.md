@@ -19,6 +19,12 @@ The local report separates recorded income, expenses, transfers and unresolved m
 
 English/Russian Markdown reports and machine-readable JSON are saved together. Missing coverage and statutory calculations remain visible. The assistant must review the real reporting period's rules and form before preparing an actual return.
 
+## Tax estimates and report checks
+
+The skill finds current official rules and helps use the appropriate official calculator or your selected accounting/tax software. It records the year, evidenced inputs, assumptions, actual output and unresolved differences. With local records, it prepares inputs for that tool; with existing software, that system remains authoritative. No tax formulas or rate tables are added to the package.
+
+An estimate stays labelled as an estimate. If the calculation tool cannot be used, the assistant prepares the inputs and explains how to obtain the result; it does not invent an amount or claim the tool ran. ELSTER is not assumed to calculate every field. See the [source-led estimate workflow](../skills/de-business-kit/references/tax-estimates.md). These are agent instructions, not a new calculator or connector.
+
 ## Filing and Finanzamt follow-up
 
 Either route can preserve a specific return draft and supporting evidence. Review and authorization are tied to that version. A changed payload or a changed underlying local JSON cash report blocks further preflight until a new version is prepared and reviewed.

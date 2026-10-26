@@ -8,6 +8,8 @@ For a saved, validated preparation use [the preparation commands](preparation.md
 
 ## Workflow
 
+For calculated amounts, follow [source-led estimates and report checks](tax-estimates.md). Retrieve rules and field definitions for the actual form/year, use the selected software or a suitable official tool, and retain the observed output. ELSTER is not assumed to calculate every field. Do not replace an unavailable calculation with a formula from memory or a new package tax engine.
+
 1. Identify the form purpose, legal entity/natural person, tax year, authority and official portal. For registration, read `formation.md`; for tax choices, check current `german-rules.md` sources.
 2. Save `02_registration/<form>-worksheet.md` or `05_tax/<year>/<form>-worksheet.md` containing: exact field label, proposed value, evidence reference, explanation, unresolved issue, and status (`empty`, `proposed`, `reviewed`). Keep assumptions visible.
 3. Inspect actual host capabilities. Prefer a documented connector for supported actions, then dedicated Browser/Chrome tools, then permitted native UI tools. If these cannot perform the task, provide a field-by-field guide. Do not install extensions, MCP servers or weaken sandbox settings just because this reference mentions them.
