@@ -36,6 +36,11 @@ class ArtifactTransferTests(unittest.TestCase):
     def test_three_matching_platform_archives_pass(self):
         self.verify(True)
 
+    def test_windows_crlf_checksum_record_passes_without_changing_payload(self):
+        checksum = self.root / (self.files[0].name + '.sha256')
+        checksum.write_bytes(checksum.read_bytes().replace(b'\n', b'\r\n'))
+        self.verify(True)
+
     def test_tampered_payload_fails(self):
         self.files[0].write_bytes(b'changed after upload')
         self.verify(False)

@@ -168,6 +168,9 @@ jobs:
             file=${files[0]}
             # Each named payload must have its own matching checksum record.
             [[ $(wc -l < "$file.sha256") -eq 1 ]] || exit 1
-            [[ $(cut -c 67- "$file.sha256") == "$file" ]] || exit 1
-            sha256sum --check --strict "$file.sha256"
+            record=$(cat "$file.sha256")
+            # Windows writes CRLF; remove only the terminal carriage return.
+            record=${record%$'\r'}
+            [[ ${record:66} == "$file" ]] || exit 1
+            printf '%s\n' "$record" | sha256sum --check --strict -
           done
