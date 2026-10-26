@@ -393,7 +393,13 @@ ws.save_entry(root, 'tasks', dict(cancelled, status='cancelled'), previous['sha2
     await page.getByLabel('Exact payload file').selectOption({index:1});
     await page.getByLabel('Source evidence').selectOption([{index:0}]);
     await click(page,'Save filing version');
-    await click(page,'Confirm and save');
+    // Save and draft persistence precede the snapshot; give its completion the
+    // existing bounded wait once that request actually starts.
+    await Promise.all([
+      page.waitForRequest(request => request.url()===url+'api' && request.method()==='POST' && request.postDataJSON()?.op==='status'),
+      click(page,'Confirm and save'),
+    ]);
+    await page.waitForFunction(()=>document.querySelector('main').getAttribute('aria-busy')==='false');
     await page.getByText('Saved to your workspace.',{exact:true}).waitFor();
     assert.equal(await page.locator('tbody tr').count(),3,'Cancelled and submitted versions remain alongside linked replacement');
     await page.getByRole('link', { name: 'Settings and recovery', exact: true }).click();
