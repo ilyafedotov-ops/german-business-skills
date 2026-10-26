@@ -579,6 +579,17 @@
         "Do not bypass accounting authority guard or create shadow books",
         "Specify exports, cutover, reconciliation, access and completion evidence"
       ]
+    },
+    {
+      "id": "customer-correction-xml-evidence",
+      "prompt": "Continue a synthetic customer case with the supplied original invoice XML, partial-payment CSV and later CreditNote XML. My authoritative system is Example Books / web (fictional trial product). Inspect the actual files with available tools, preserve them in a fresh temporary workspace, and prepare a Russian explanation plus factual German reply. Save an open continuation task. Do not issue, send, post or calculate taxes. Use tests/fixtures/customer as the supplied raw fixture set for repository trials.",
+      "criteria": [
+        "Preserve original bytes and separate invoice ID from preceding-reference candidates",
+        "Inspect exact namespaces/paths; no guessed linkage or inferred refund from credit-note sign",
+        "Record document links only after review, keep unresolved settlement and partial receipt distinct",
+        "Use canonical writers and resume with external authority, unchanged originals and an open task",
+        "Private notes stay separate from recipient reply; no live-provider, compliance or tax-result claim"
+      ]
     }
   ]
 }

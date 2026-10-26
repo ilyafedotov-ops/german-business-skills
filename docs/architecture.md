@@ -134,7 +134,7 @@ These components describe code present in this source snapshot. `SKILL.md` route
 | [documents.py](../skills/de-business-kit/scripts/casefiles/documents.py) | Reuse preserved originals; catalog metadata, typed relations and repeated receipt events | Catalog and receipt collections |
 | [reviews.py](../skills/de-business-kit/scripts/casefiles/reviews.py) | Extracted-field checks, proposal arithmetic and review, source checks, provider observations | Proposals, source checks and observations |
 | [bank.py](../skills/de-business-kit/scripts/casefiles/bank.py) | Explicit CSV mapping, review preview, normalization and overlapping-ID checks | Preview, normalized CSV and bank-import record |
-| [invoice_xml.py](../skills/de-business-kit/scripts/casefiles/invoice_xml.py) | Bounded standalone UBL Invoice / CII field inspection | Derived report and inspection record |
+| [invoice_xml.py](../skills/de-business-kit/scripts/casefiles/invoice_xml.py) | Bounded standalone UBL Invoice / CreditNote / CII header and preceding-reference inspection | Derived report and inspection record |
 | [summary.py](../skills/de-business-kit/scripts/casefiles/summary.py) | Read-only projection of documents, open reviews, deadlines and reconciliation evidence | In-memory snapshot consumed by overview/archive |
 | [overview.py](../skills/de-business-kit/scripts/casefiles/overview.py) | English/Russian static HTML, Markdown and JSON generation | `00_admin/overview.*`, initial `START-HERE.md` |
 | [archive.py](../skills/de-business-kit/scripts/casefiles/archive.py) | Select linked records/evidence, build a manifest, verify directory and ZIP | Unique `07_exports/YYYY-MM/archive-*` artifacts |

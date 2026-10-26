@@ -144,3 +144,8 @@ The implementation owns the exact fields and validation rules: [workspace core](
 Filing versions accept `draft`, `reviewed`, `authorized`, `submission_unconfirmed`, `submitted` and `cancelled`. Authority responses append to a submitted filing; they do not introduce an `accepted` state. `filing-check` reports local evidence blockers without changing state or granting approval. Generic `operation.json` uses a separate template vocabulary and is not the filing writer.
 
 A backup ID identifies a captured manifest and its complete file tree. Verification concerns byte/path equality; it does not certify the source records, repair them or advance their states. Restore uses a new destination and preserves workspace identity. Logical path names in this document resolve through the EN/RU/DE layout map.
+
+XML `preceding_invoices` contains unreviewed grouped number/date candidates in
+a derivative inspection report, not canonical document relations. Explicitly
+reviewed `corrects` links remain in catalog metadata. A CreditNote's ID, signs and
+references do not establish refund, payment, posting or legal correction effect.

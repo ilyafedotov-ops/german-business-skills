@@ -6,6 +6,53 @@ Current capabilities are summarized in [project status](project-status.md). Date
 
 Checked **2026-10-26**. Tests use synthetic temporary data, never live business records or accounts.
 
+## CreditNote and correction evidence cycle (2026-10-26)
+
+P3/P6 source implementation extends `inspect-xml` to standalone UBL CreditNote
+and adds grouped `preceding_invoices` candidates for UBL Invoice/CreditNote/CII.
+Amounts retain source signs; CII reference dates use `qdt`, not the current-date
+`udt` namespace. Unexpected CII multiplicity is retained with a subset warning.
+No schema/profile validation, tax calculation, automatic relation matching,
+refund, posting or provider execution is added. Source checks are recorded in
+[correction XML sources](../skills/de-business-kit/references/correction-xml-sources.md).
+
+- Red/green: the first four added regressions failed on unsupported CreditNote or
+  absent reference extraction before implementation. A further CII multiplicity
+  assertion failed before adding the warning. Independent review found that two
+  malformed `InvoiceDocumentReference` children could combine an unrelated ID and
+  date. Its exact regression failed before the fix; both fields now remain
+  unavailable with explicit ambiguity. All **11 XML tests passed** afterward.
+- `python3 -B -m unittest discover -s tests -v`: **258 tests, 253 passed,
+  5 skipped**, 53.370 seconds, macOS/Python 3.14.6. The prior native-install timing
+  instability did not recur in this run; this does not establish its cause/fix
+  or Windows PowerShell 5.1 acceptance. Existing platform skips remain.
+- New CLI customer-cycle regression runs in EN/RU: receives actual synthetic
+  invoice/payment/credit-note files, inspects XML, explicitly saves reviewed
+  catalog links through expected hashes, preserves original bytes and v01,
+  resumes the pending task and retains external authority with zero local entries.
+  Two separate retained runs were executed with `tests/customer_journey.py` under
+  `/private/tmp/gbk-correction-cycle-en-20261026` and the corresponding `-ru-` path.
+- A fresh independent operations-skill trial read only supplied raw fixtures and
+  relevant skill resources, without evaluation criteria/test implementation.
+  It used actual intake/inspection/accounting-configuration/task writers, read
+  the CSV and verified all three originals. It produced a Russian private
+  explanation and German unsent reply, leaving the correction/settlement outcome
+  open. Parent read the actual outputs and re-inspected the pending task with
+  evidence health `checked`. No provider account or live bank data was accessed.
+- Trial artifacts: `/private/tmp/business-correction-trial-v5j1zb79`. One exploratory
+  `desk.py template --kind catalog` failed because that kind is unsupported;
+  no mutation occurred and the agent continued with supported commands. Text was
+  inspected; HTML/PDF/browser/native-desktop acceptance was not performed.
+- `python3 -B tools/check_package.py`, local Markdown file/anchor check,
+  `python3 -B tools/release.py check` and `git diff --check`: **passed**.
+  Independent read-only review rechecked the association fix and found no remaining
+  actionable issues in the parser, fixture and CLI-journey scope.
+
+These header-only XML fixtures are not valid/certified commercial e-invoices.
+The evidence cycle establishes local preparation and preservation, not actual
+issuance, tax correctness, provider correction/settlement or refund execution.
+No GUI, production dependencies, workspace migration or live connector changed.
+
 ## Practical lifecycle outcomes P1–P7 (2026-10-26)
 
 Added five EN/RU worksheet roles (launch plan, customer case, annual readiness,

@@ -197,6 +197,17 @@ No tax formulas, new production dependencies, autonomous services, payroll engin
 GUI screens or live transports are introduced. See [validation](validation.md)
 for observed trial results and defects corrected during acceptance.
 
+## 5.3. Correction-document evidence cycle (2026-10-26)
+
+P3/P6 now includes bounded standalone UBL CreditNote inspection and grouped
+preceding-invoice candidates for UBL/CII. The local CLI journey preserves an
+invoice, partial payment and credit note; explicitly records reviewed links;
+keeps external books authoritative and an unresolved continuation task. It runs
+in EN/RU without adding a task register or calculating tax/refund amounts.
+This is local evidence handling. Issuance, correction posting, settlement and
+provider readback in an actual chosen system remain unverified; the broader P3/P6
+acceptance is still open. See [validation](validation.md).
+
 ## 6. Queue and drift control
 
 **After the local P1–P7 materials and synthetic preparation trials, the next queue is actual document-cycle execution, a chosen service operation and supported-host acceptance.** P6 accompanies specific needs; P7 follows accepted journeys. Security maintenance and fixes to existing capabilities continue as necessary.

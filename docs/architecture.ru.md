@@ -134,7 +134,7 @@ flowchart TB
 | [documents.py](../skills/de-business-kit/scripts/casefiles/documents.py) | Использование оригиналов, карточки, типизированные связи и повторные получения | Коллекции карточек и получений |
 | [reviews.py](../skills/de-business-kit/scripts/casefiles/reviews.py) | Проверки полей, арифметика и проверка предложений, источники, наблюдения провайдера | Предложения, проверки источников и наблюдения |
 | [bank.py](../skills/de-business-kit/scripts/casefiles/bank.py) | Явное сопоставление CSV, предпросмотр, нормализация и проверка пересечения ID | Предпросмотр, CSV и запись импорта |
-| [invoice_xml.py](../skills/de-business-kit/scripts/casefiles/invoice_xml.py) | Ограниченная инспекция полей отдельного UBL Invoice / CII XML | Производный отчёт и запись инспекции |
+| [invoice_xml.py](../skills/de-business-kit/scripts/casefiles/invoice_xml.py) | Ограниченная инспекция заголовков и ссылок на исходные счета в UBL Invoice / CreditNote / CII XML | Производный отчёт и запись инспекции |
 | [summary.py](../skills/de-business-kit/scripts/casefiles/summary.py) | Читаемая без изменения записей проекция документов, проверок, сроков и сверок | Снимок в памяти для обзора/архива |
 | [overview.py](../skills/de-business-kit/scripts/casefiles/overview.py) | Статические HTML, Markdown и JSON на английском/русском | `00_admin/overview.*`, первоначальный `START-HERE.md` |
 | [archive.py](../skills/de-business-kit/scripts/casefiles/archive.py) | Выбор связанных записей, манифест, проверка каталога и ZIP | Уникальные артефакты `07_exports/YYYY-MM/archive-*` |
