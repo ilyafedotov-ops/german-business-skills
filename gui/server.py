@@ -12,6 +12,7 @@ import os
 from pathlib import Path
 import re
 import secrets
+from socketserver import TCPServer
 import subprocess
 import sys
 import tempfile
@@ -335,8 +336,16 @@ class Handler(BaseHTTPRequestHandler):
             return self.reply(400, {'ok': False, 'error': str(exc)})
 
 
+class LoopbackHTTPServer(ThreadingHTTPServer):
+    def server_bind(self):
+        # This app has a fixed numeric loopback host. HTTPServer's reverse-DNS
+        # lookup can block offline startup and supplies no information we need.
+        TCPServer.server_bind(self)
+        self.server_name, self.server_port = self.server_address
+
+
 def create_server(app, port=0):
-    server = ThreadingHTTPServer(('127.0.0.1', port), Handler)
+    server = LoopbackHTTPServer(('127.0.0.1', port), Handler)
     server.daemon_threads = True
     server.app = app
     server.token = secrets.token_urlsafe(32)

@@ -33,6 +33,15 @@ class GuiTests(unittest.TestCase):
         return self.call('receive', period='2026-10', received_on='2026-10-20', type='receipt',
                          files=[{'name': 'proof.csv', 'content': base64.b64encode(b'date,amount\n2026-10-20,100.00\n').decode()}])
 
+    def test_loopback_startup_does_not_depend_on_dns(self):
+        with patch('socket.getfqdn', side_effect=AssertionError('DNS unavailable')):
+            server = gui.create_server(self.app)
+        self.addCleanup(server.server_close)
+        self.assertEqual(server.server_address[0], '127.0.0.1')
+        self.assertEqual(server.server_name, '127.0.0.1')
+        self.assertEqual(server.server_port, server.socket.getsockname()[1])
+        self.assertGreater(server.server_port, 0)
+
     def configure(self):
         self.assertFalse(self.receive()['errors'])
         proof = self.call('status', period='2026-10')['documents'][0]['path']
