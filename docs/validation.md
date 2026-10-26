@@ -6,6 +6,66 @@ Current capabilities are summarized in [project status](project-status.md). Date
 
 Checked **2026-10-26**. Tests use synthetic temporary data, never live business records or accounts.
 
+## Native timeout investigation and Codex CLI discovery (2026-10-26)
+
+Source under test: `1a01b57`. No production script, test assertion, timeout or
+host-wide installation/configuration was changed in this investigation.
+
+### Native installer diagnosis
+
+- The preceding 90-second native dry-run timeout remains unresolved. Independent
+  inspection found finite path traversal and no explicit installer thread/lock
+  wait. The earlier process sample showed a worker in filesystem/mount metadata
+  calls (`lstat`/`statfs`); this does not establish a deadlock or its cause.
+- Temporary copies outside the checkout recorded script entry, file reads, link
+  validation and destination checks. The first run finished in **8.535 seconds**;
+  three further traced dry-runs finished in **2.992 / 3.227 / 3.296 seconds**.
+  Small sequential startup, provider and metadata controls also completed.
+  These successful probes do not demonstrate that the intermittent failure is fixed.
+- Unmodified focused command:
+  `python3 -B -m unittest discover -s tests -p test_skill_bundle.py -v`:
+  **4 passed**, 35.376 seconds. This exercised complete installation, detached
+  execution, sibling conflicts and invalid/missing resources.
+- A diagnostic full-suite run added timestamps around `Test-Path`/`Get-Item`
+  **only in temporary native test copies**. Existing assertions remained intact:
+  **258 tests, 253 passed, 5 skipped**, 63.694 seconds. This is an instrumented run,
+  not an unmodified full-suite pass or proof that instrumentation has no timing effect.
+- Local evidence: `/private/tmp/gbk-native-diagnosis-l0sb1xg8`,
+  `/private/tmp/gbk-native-focused-20261026.log`, and
+  `/private/tmp/gbk-native-trace-suite-20261026.log`; the diagnostic harness is
+  `/private/tmp/gbk-native-trace-suite.py`, with per-operation logs in
+  `/private/tmp/gbk-native-trace-full-20261026`. No speculative runtime fix was made.
+- Inspected hosted Checks run **40308343747**, commit `aaba637`: native Windows
+  PowerShell 5.1 and all four Python platform jobs passed, but the overall run
+  failed WebKit. This older ref does not validate the current seven-skill source.
+
+### Actual CLI discovery, separately from conversational execution
+
+Used installed **Codex CLI 0.164.0**, macOS 27.0.1 arm64. The existing installer
+copied all seven skills into a new isolated project at
+`/private/tmp/gbk-host-discovery-y20jrub3/project`, using
+`python3 -B tools/install.py --target codex --scope project --project <project>`.
+No user/global skill location or marketplace registration was changed.
+
+The CLI itself generated its protocol schema. Two fresh local
+`codex app-server --listen stdio://` processes received `initialize`, `initialized`
+and `skills/list` with that project in `cwds` and `forceReload: true`. Both returned
+**7/7 catalog members, enabled, scope `repo`, exact installed SKILL.md paths,
+display names/default prompts and zero project errors**. All 128 installed files
+matched source bytes; local sibling links resolved against the installed inventory.
+
+Evidence: `discovery-first.json`, `discovery.json` and the reproducible `probe.py`
+under `/private/tmp/gbk-host-discovery-y20jrub3`. Only the seven project skill
+records were retained in these JSON artifacts. No model turn, provider change,
+account operation, GUI action or business record was involved. Processes were
+closed after inspection.
+
+This establishes project-scoped CLI discovery and rediscovery after process
+restart. Automatic task routing, conversation/workspace resumption, Claude
+runtime discovery, desktop permission/UI flows, Windows host discovery and
+nontechnical-user acceptance remain unverified. P7 is partially accepted;
+the native timing issue stays open.
+
 ## P6 Lexware export routes and supplied evidence (2026-10-26)
 
 Implemented a supplied-export coverage procedure, EN/RU operation-note fields and

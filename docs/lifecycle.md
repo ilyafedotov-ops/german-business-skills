@@ -214,6 +214,10 @@ P6 now includes a bounded export-coverage procedure and EN/RU operation-note fie
 
 The first selected live P6 acceptance target is **Lexware Office document reading**: a user-designated synthetic test account, bounded period, one document and, where available, its original. This development test choice does not change per-user onboarding. Live acceptance remains open until actual access and observed results exist.
 
+## 5.5. CLI discovery acceptance (2026-10-26)
+
+P7 now has actual project-scoped discovery evidence for Codex CLI 0.164.0 on macOS arm64: seven installed skills were enabled and rediscovered in two fresh host processes. Installed files and sibling resources matched the bundle. This does not establish automatic conversational routing, desktop UI, Claude or Windows discovery. Native installer timing remains unresolved despite passing focused and instrumented diagnostic runs; retain that gate. See [validation](validation.md).
+
 ## 6. Queue and drift control
 
 **After the local P1–P7 materials and synthetic preparation trials, the next queue is actual document-cycle execution, a chosen service operation and supported-host acceptance.** P6 accompanies specific needs; P7 follows accepted journeys. Security maintenance and fixes to existing capabilities continue as necessary.

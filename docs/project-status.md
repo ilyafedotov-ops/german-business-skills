@@ -18,7 +18,7 @@ P6 export inspection now records the selected export route/date basis, supplied 
 | Capability | Current implementation | Boundary |
 | --- | --- | --- |
 | Lifecycle preparation | EN/RU launch, customer-case, annual-readiness, change and operation worksheets; correspondence, continuation and first-hire routes | Agent-led preparation; current-source research and actual host/service execution still need case-specific acceptance |
-| Skill system | Optional router and six directly usable domain skills; shared contract/profile; complete-set installation | Instructions and local packaging do not establish discovery in every host, legal correctness or external execution |
+| Skill system | Optional router and six directly usable domain skills; shared contract/profile; complete-set installation | Project-scoped discovery verified in Codex CLI 0.164.0 on macOS; other hosts, conversational routing, legal correctness and external execution remain separate |
 | Intake and continuity | One profile, preserved originals, EN/RU/DE physical folders, start/resume and integrity checks | A folder language is not a tax fact; no silent migration |
 | Native Windows | PowerShell 5.1 entry points for install, intake, integrity, real overview and full backup/restore; no Python installation required | Standalone PowerShell retains its narrower operation set; exact runner evidence is in validation. GUI installation and nontechnical-user acceptance remain separate |
 | Document desk | Catalog, reviewed proposals, source checks, bank mapping, reconciliation and bounded UBL Invoice/CreditNote/CII header/reference extraction in the optional Python engine | No complete OCR, embedded-PDF XML or technical e-invoice validation pipeline |
