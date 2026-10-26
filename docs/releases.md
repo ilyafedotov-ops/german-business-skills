@@ -35,28 +35,38 @@ the current preview's named packages for the attested distribution.
 ## Download and verify
 
 On the repository's [Releases page](https://github.com/ilyafedotov-ops/german-business-skills/releases),
-choose the intended version and confirm the **Immutable** marker. Download the
-named Codex or Claude ZIP and `SHA256SUMS` into a new folder. On Windows, native
+choose [version 0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1) and confirm the **Immutable** marker. Availability requires completed
+publication and verification; an absent platform archive is not ready for use.
+Download the matching GUI archive or optional Codex/Claude ZIP, plus `SHA256SUMS`,
+into a new folder. Application archives are named:
+
+- `de-business-kit-0.7.0-preview.1-gui-windows-x64.zip`
+- `de-business-kit-0.7.0-preview.1-gui-macos-arm64.tar.gz` (Apple Silicon)
+- `de-business-kit-0.7.0-preview.1-gui-macos-x86_64.tar.gz` (Intel)
+
+The examples below verify the optional Codex ZIP; substitute the exact downloaded
+GUI filename to verify an application archive. On Windows, native
 PowerShell can compute the hash without Python:
 
 ```powershell
-Get-FileHash .\de-business-kit-0.6.0-preview.4-codex.zip -Algorithm SHA256
+Get-FileHash .\de-business-kit-0.7.0-preview.1-codex.zip -Algorithm SHA256
 ```
 
-On macOS use `shasum -a 256 de-business-kit-0.6.0-preview.4-codex.zip`. Compare with
+On macOS use `shasum -a 256 de-business-kit-0.7.0-preview.1-codex.zip`. Compare with
 the matching line of `SHA256SUMS`. A checksum from the same untrusted source is
 not authentication. With a current optional GitHub CLI, verify the downloaded archive
-(2.103.2 verified these releases; 2.80 failed to read their attestation bundles):
+(historical validation used 2.103.2; 2.80 could not read those attestation bundles):
 
 ```sh
-gh release verify v0.6.0-preview.4 -R ilyafedotov-ops/german-business-skills
-gh release verify-asset v0.6.0-preview.4 de-business-kit-0.6.0-preview.4-codex.zip -R ilyafedotov-ops/german-business-skills
-gh attestation verify de-business-kit-0.6.0-preview.4-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.6.0-preview.4 --deny-self-hosted-runners
+gh release verify v0.7.0-preview.1 -R ilyafedotov-ops/german-business-skills
+gh release verify-asset v0.7.0-preview.1 de-business-kit-0.7.0-preview.1-codex.zip -R ilyafedotov-ops/german-business-skills
+gh attestation verify de-business-kit-0.7.0-preview.1-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.7.0-preview.1 --deny-self-hosted-runners
 ```
 
 For stricter pinning add `--source-digest` with the expected full Git commit from
 the release tag. Do not execute downloaded scripts before verification. Extract
-into a new folder and follow [installation guidance](distribution.md); preserve
+into a new folder and follow [application instructions](../gui/README.md) for a GUI
+archive or [skill installation guidance](distribution.md) for a Codex/Claude ZIP; preserve
 the previous package and back up the private workspace before upgrading. No
 Python installation or automatic update is required for Windows users.
 
@@ -84,7 +94,7 @@ Python installation or automatic update is required for Windows users.
 Local rehearsal after creating the exact tag:
 
 ```sh
-python3 -B tools/release.py prepare --tag v0.6.0-preview.4 --output /absolute/new/release-assets
+python3 -B tools/release.py prepare --tag v0.7.0-preview.1 --output /absolute/new/release-assets
 python3 -B tools/release.py verify --directory /absolute/new/release-assets
 ```
 
@@ -103,9 +113,9 @@ Primary sources checked 2026-10-26: [GitHub attestations](https://docs.github.co
 [release integrity](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/verify-release-integrity),
 and [secure Actions use](https://docs.github.com/en/actions/reference/security/secure-use).
 
-## Native GUI archives from the 0.7 candidate
+## Native GUI archives in 0.7.0-preview.1
 
-The candidate adds separate Windows x64, macOS arm64 and macOS x86_64 applications.
+Version 0.7.0-preview.1 adds separate Windows x64, macOS arm64 and macOS x86_64 applications.
 The `gui-package` CI matrix builds them with hash-locked build tools and exercises
 the extracted archive with no external Python on `PATH`. Each bundle includes
 `GUI-MANIFEST.json` covering regular files and native library links. The archive
@@ -119,5 +129,6 @@ project code or native binary. Native bundles are not claimed byte-reproducible;
 the existing build-twice check applies to the portable skill packages. GitHub
 provenance does not provide Windows Authenticode or Apple notarization.
 
-Current local candidate results and remaining gates are in [GUI guidance](gui.md)
-and [validation](validation.md). No GUI asset has been published by this source edit.
+Actual results and remaining gates are in [GUI guidance](gui.md) and
+[validation](validation.md). Confirm publication and verification on the exact
+version’s release page; source documentation alone does not establish either.

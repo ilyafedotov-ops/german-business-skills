@@ -8,7 +8,7 @@ milestones are first published on 2026-10-26; their original commits are retaine
 
 ## 0.7.0-preview.1
 
-Release candidate in development; not yet published.
+Version [0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1). Download availability requires successful platform gates, publication and verification of the matching assets.
 
 - Add a real local workspace GUI with English/Russian/German navigation, document
   import/review, private saved drafts and contextual assistant requests.

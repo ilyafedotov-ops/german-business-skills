@@ -2,25 +2,24 @@
 
 **English** · [Русский](README.ru.md) · [Deutsche Startanleitung](skills/de-business-kit/guides/start.de.md)
 
-**Manage your own German business records and prepare your tax reporting with an AI assistant.** German Business Kit is a set of instructions and local tools for Codex and Claude Code. It helps Freiberufler and sole traders with a Gewerbe organize documents, review accounting work, understand tax questions and continue where they stopped.
+**Manage your own German business records and prepare your tax reporting in a private local workspace.** German Business Kit combines a local workspace application with optional instructions and tools for Codex and Claude Code. It helps Freiberufler and sole traders with a Gewerbe organize documents, review accounting work, understand tax questions and continue where they stopped.
 
-You work in ordinary language and keep your records in a separate private folder. The assistant explains what it found, saves readable results and shows the next action. You do not need to edit JSON or remember commands.
+Keep your records in a separate private folder and use the local interface to import documents, review records and continue your work. An optional AI assistant explains questions and prepares readable results in ordinary language. You do not need to edit JSON or remember commands.
 
-**GUI release candidate: 0.7.0-preview.1 (not yet published).** The new [real workspace interface](docs/gui.md) supports document import/review, cash-entry corrections, filing-evidence editing and backup/recovery with EN/RU/DE navigation. Packaged builds include their runtime; users do not install Python. Platform release checks and first-launch acceptance remain separate gates.
+**Version [0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1).** The [real workspace interface](docs/gui.md) supports document import/review, cash-entry corrections, filing-evidence editing and backup/recovery with EN/RU/DE navigation. Packaged builds include their runtime; users do not install Python. Download availability depends on completed publication and verification of the matching platform archive. Platform checks and first-launch acceptance remain separate gates.
 
-**Current published skill release: [0.6.0-preview.4](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.6.0-preview.4).** This is a preview, not a complete accounting application. It includes a limited cash journal and filing-evidence tracking; it has no complete tax calculation engine or direct ELSTER transmission. The interactive GUI is a separate demonstration with fictional data.
+This preview includes a limited cash journal and filing-evidence tracking. It has no complete tax calculation engine or direct ELSTER transmission. The separate interactive prototype uses fictional data.
 
 [Start guide](skills/de-business-kit/guides/start.en.md) · [User guide](skills/de-business-kit/guides/user-guide.en.md) · [All topics](docs/index.md) · [Capabilities and limits](docs/project-status.md)
 
 ## Quick start
 
-You need an existing **Codex or Claude Code local session with permitted file access**, and a private location for your business records. Windows users can start with native PowerShell; installing Python, Git or WSL is not required for setup, document intake, overview or backup. Advanced accounting operations have additional runtime limits described below.
+1. **Download your application.** Open [version 0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1) and choose the archive ending in `-gui-windows-x64.zip`, `-gui-macos-arm64.tar.gz` (Apple Silicon) or `-gui-macos-x86_64.tar.gz` (Intel), plus `SHA256SUMS`. Use only a published archive that passes the [verification guide](docs/releases.md). If the matching archive is unavailable, its platform release is not ready.
+2. **Extract and start.** Extract into a new folder using Explorer or Finder. Keep the extracted application folder together. Open `GermanBusinessKit.exe` on Windows or `GermanBusinessKit` on macOS; your normal browser opens the interface. Keep the launcher running while you work. No Python, Node, Git, WSL, AI account or cloud service is required for this local application. Native OS code signing/notarization is not supplied; follow device policy if launch is blocked and do not disable protection.
+3. **Open your private workspace.** Choose English, Russian or German navigation. Open your existing business workspace, or create one in a new/empty private folder outside the application and every Git repository. Navigation language does not rename folders. If you already use accounting software, select it as authoritative.
+4. **Start small and save.** Import one document or a small batch, inspect the actual result and save unfinished forms as drafts before closing. Review, cash posting and filing-evidence actions are separate. Use Settings for full backup/verification/restore. See the [application instructions](gui/README.md).
 
-1. **Get the kit.** Open the [current release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.6.0-preview.4). Download the named ZIP ending in `-codex.zip` or `-claude.zip`, plus `SHA256SUMS`. Use the [verification guide](docs/releases.md) before running downloaded scripts. These named packages include provenance verification; the separate GitHub “Source code” downloads are not the same packages.
-2. **Extract and connect it.** Extract into a new folder using Explorer or Finder. Open that folder in your assistant and paste the setup request below. The assistant inspects the package and helps install it for your actual app. Extracting a ZIP alone does not install a skill. [Installation details](#install).
-3. **Choose one task.** Organize existing records, prepare to start a business, continue existing work, or try a fictional example. Start with one document or a small batch; a simple question does not require full setup.
-4. **Choose your private folder and language.** Keep real records outside the downloaded kit and every Git repository. Resume an existing workspace instead of creating another. Choose English, Russian or German folder names. Say whether you already keep accounts in another program; that program remains authoritative when selected.
-5. **Open the result and save your next step.** Ask for a link to the readable result, anything unresolved, and a continuation point. Your first success is a preserved document, an understandable result and a clear next action—not a completed tax return.
+**Optional AI assistance:** download the matching `-codex.zip` or `-claude.zip` from the same release and verify it before connecting it to your existing Codex or Claude Code local session with permitted file access. Extracting a ZIP does not install a skill. [Installation details](#install).
 
 **Copy this for setup:**
 
@@ -53,18 +52,18 @@ The first developed monthly route uses **local cash records plus manual ELSTER**
 | Your task | What the kit provides | Current boundary |
 | --- | --- | --- |
 | Organize a mixed folder | Preview, selected intake, preserved originals and integrity checks | Copying a file does not review or post it |
-| Review documents and payments | Catalog, proposed fields, reviewed bank mappings and reconciliation | Advanced validated tools need an existing supported Python runtime |
+| Review documents and payments | Catalog, proposed fields, reviewed bank mappings and reconciliation | Catalog review is in the bundled GUI; bank mapping/reconciliation use standalone utilities with an existing Python runtime |
 | Manage local cash records | Reviewed entries, splits, reversals and period reports | Limited journal, not a complete statutory ledger or tax engine |
 | Prepare taxes and letters | Source-based analysis, form worksheets, readable reports and recipient documents | Official forms/calculations must be checked for the actual year; submission is separate |
-| Track a filing | Versioned drafts, checks, authorization and observed receipt/response records | Protected writers and full preflight require the optional engine; no direct ELSTER transmission |
+| Track a filing | Versioned drafts, checks, authorization and observed receipt/response records | GUI uses the bundled protected engine; standalone utilities need their runtime. No direct ELSTER transmission |
 | Continue or recover work | Real EN/RU overview, open questions, next action and verified full backup/restore | Overview is a read-only snapshot; no automatic reminders or scheduled backups |
 | Compare business services | Needs-based banking, insurance and software research using current sources | No automatic account opening, purchase or policy selection |
 
-**Windows without Python:** native tools cover installation, start/resume, folder preview, intake, integrity, real overview and full backup/restore. Protected journal/filing writes, catalog updates and full filing preflight are not yet native. The assistant must identify an unavailable operation instead of claiming it succeeded. See [Windows guidance](docs/windows.md).
+**Windows application:** the packaged GUI includes its engine for supported document, cash-entry, filing-evidence and recovery operations. **Standalone PowerShell without Python:** native tools cover installation, start/resume, folder preview, intake, integrity, real overview and full backup/restore. Protected journal/filing writes, catalog updates and full filing preflight are not yet native. The assistant must identify an unavailable operation instead of claiming it succeeded. See [Windows guidance](docs/windows.md).
 
-**macOS:** use the tools actually available in your assistant. Advanced Python utilities require an existing Python 3.9+ runtime; macOS does not guarantee it is installed. Node and Playwright are developer tools, not onboarding requirements.
+**macOS:** choose the application archive for your Mac architecture; its engine is bundled. Standalone Python utilities require an existing Python 3.9+ runtime; macOS does not guarantee it is installed. Node and Playwright are developer tools, not onboarding requirements.
 
-**Languages:** user guides and report templates are English/Russian. Folder names and the short start guide also support German. Official form labels remain in German; full German report coverage is unfinished.
+**Languages:** application navigation supports English/Russian/German; user guides and report templates are English/Russian. Folder names and the short start guide also support German. Official form labels remain in German; full German report coverage is unfinished.
 
 ## Example requests
 
@@ -113,16 +112,17 @@ Changing the conversation language does not rename folders. Existing workspaces 
 
 ## Install
 
-The quick start above is the recommended assisted route. For detailed steps:
+The quick start above opens the local application. AI host installation is optional. For detailed steps:
 
 | Situation | Guide |
 | --- | --- |
-| Windows, no Python | [Native Windows setup and limits](docs/windows.md) |
+| Local Windows/macOS application | [Application instructions](gui/README.md), [scope and delivery](docs/gui.md) |
+| Standalone Windows tools, no Python | [Native Windows setup and limits](docs/windows.md) |
 | Downloaded Codex/Claude release package | [Verify the download](docs/releases.md), then [register/install the extracted marketplace](docs/distribution.md#optional-host-installation-after-review) |
 | Start from source or maintain the project | [Distribution and build instructions](docs/distribution.md), [Contributing](CONTRIBUTING.md) |
 | Understand host differences | [Platform compatibility](skills/de-business-kit/references/platforms.md) |
 
-There is no standalone desktop installer or public one-click marketplace listing. Installation depends on the host's permitted local skill/plugin mechanism. Avoid enabling both the standalone skill and the same plugin in one session.
+The application runs from its extracted folder; no desktop installer is supplied. Optional AI skills use the host's permitted local skill/plugin mechanism; there is no public one-click marketplace listing. Avoid enabling both the standalone skill and the same plugin in one session.
 
 **Updating:** preserve the previous skill and any customizations, verify the new package in a separate folder, then replace the installed skill through the documented host route. The standalone installer refuses to overwrite an existing installation. Keep the private business workspace in place; do not initialize it again or rename managed folders as part of an update. See [updates](docs/distribution.md) and [backup/recovery](skills/de-business-kit/references/recovery.md).
 
@@ -130,7 +130,7 @@ There is no standalone desktop installer or public one-click marketplace listing
 
 The **[new local GUI](docs/gui.md)** connects those records to controlled actions. The generated **real workspace overview** reads your saved records and shows issues and next steps. The separate **[interactive prototype](docs/prototype.md)** demonstrates onboarding, document review, unmatched payments and resuming work with fictional data in browser storage. It is not connected to your real accounts.
 
-The [0.6.0-preview.4 release workflow](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40288755911) passed Windows/macOS utility checks, native Windows PowerShell 5.1 checks, browser/document checks, security gates and release verification. These results do not establish nontechnical-user usability, live service integration or tax correctness. [Validation records](docs/validation.md) preserve the exact scope and remaining acceptance work.
+Historical evidence: the [0.6.0-preview.4 release workflow](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40288755911) passed Windows/macOS utility checks, native Windows PowerShell 5.1 checks, browser/document checks, security gates and release verification. That run covers the earlier skill baseline, not the 0.7 GUI. It does not establish nontechnical-user usability, live service integration or tax correctness. [Validation records](docs/validation.md) preserve the exact scope and remaining acceptance work.
 
 The named release assets include checksums and signed build provenance. A verified signature establishes origin and integrity; it does not certify accounting results. [Release history](CHANGELOG.md) · [Verification instructions](docs/releases.md).
 

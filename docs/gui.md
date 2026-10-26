@@ -1,13 +1,15 @@
-# Real workspace interface — 0.7 release candidate
+# Real workspace interface — 0.7.0-preview.1
 
 [English](gui.md) | [Русский](gui.ru.md) | [User instructions](../gui/README.md)
 
-The new `gui/` application connects a browser interface to the real workspace
-writers. The older `prototype/` remains a fictional demonstration. This source
-candidate is **0.7.0-preview.1**; the last published skill release is
-[0.6.0-preview.4](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.6.0-preview.4)
-and does not contain this GUI. A local build or passing test is not a published
-platform release.
+The `gui/` application connects a browser interface to the real workspace writers.
+The separate `prototype/` remains a fictional demonstration. Version
+[0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1)
+adds standalone Windows x64, macOS Apple Silicon and macOS Intel packages. Use a
+matching archive only after publication and verification; a local build or
+passing test is not a published platform release. [Download verification](releases.md)
+and [application instructions](../gui/README.md) explain how to start without
+installing Python.
 
 ## Supported work
 
@@ -47,9 +49,9 @@ forms; save them explicitly in the workspace before closing.
 [PyInstaller](https://pyinstaller.org/en/stable/) is a **build-only dependency**:
 platform builds bundle the interpreter with the existing engine. Windows users
 do not install Python. Build tools are pinned with wheel hashes. Windows x64,
-macOS Apple Silicon and macOS Intel have separate CI build/smoke jobs; each
-packaged executable is exercised with an empty `PATH`. This does not claim native
-PowerShell parity for advanced accounting operations.
+macOS Apple Silicon and macOS Intel have separate CI build/smoke jobs; the
+workflow requires each packaged executable to pass a smoke test with an empty `PATH`.
+This does not claim native PowerShell parity for advanced accounting operations.
 
 Portable skill ZIPs remain reproducible. Native GUI archives include a file/link
 manifest and archive checksum; byte reproducibility is not claimed for compiled
