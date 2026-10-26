@@ -4,14 +4,17 @@ The [local GUI application](gui.md) bundles its engine for document review, cash
 
 [English](distribution.md) | [Русский](distribution.ru.md)
 
-The maintained workflow lives only in `skills/de-business-kit`. Root `plugin.json` declares the portable Agent Plugins identity; `.claude-plugin/plugin.json` is its thin Claude adapter. The offline builder copies that same skill into two independent local marketplace bundles. It includes the license, manifests, authored EN/RU readmes from `packaging/` and complete skill resources; repository tests, Git history, root-level private files and machine settings are excluded. Review the canonical skill before packaging: the builder is not a secret scanner.
+The maintained bundle lives in `skills/` and contains seven skills listed in `skills/de-business-kit/assets/skill-set.json`. Shared instructions, templates and utilities remain in `de-business-kit`; sibling domain skills reference them directly. Python/PowerShell installers preflight the complete set and destination conflicts before writing. The builder creates independent Codex/Claude marketplace bundles with all resources, readmes and manifests. Do not install a dependent skill alone; private business data is not migrated. Installer safety checks do not replace source review for secrets.
 
 This preview supplies no MCP server, lifecycle hook, credential, automatic installer or updater. Installing a plugin does not grant Python execution, filesystem access, browser tools, subscriptions or access to banking, Lexware or ELSTER. Actual host tools, permissions and account policy control those capabilities.
+
+
+Install the complete set together: domain skills use shared resources in `de-business-kit`. Invoke a domain skill directly when appropriate. The shared profile and chosen accounting system persist; changing skills does not restart setup. These changes are in source and local builds; previously published archives remain unchanged.
 
 ## Use a published package
 
 For the standalone application, use [application downloads and instructions](gui.md).
-The rest of this page covers optional AI skill/plugin packages. Users do not need
+The rest of this page covers the primary skill/plugin bundle. Users do not need
 to build the project. Once published, download the named Codex or Claude ZIP from
 [release 0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1),
 follow [download verification](releases.md), and extract it into a new folder using
@@ -45,10 +48,10 @@ The result contains:
 new-review-bundle/
   codex/.agents/plugins/marketplace.json
   codex/plugins/de-business-kit/plugin.json
-  codex/plugins/de-business-kit/skills/de-business-kit/...
+  codex/plugins/de-business-kit/skills/{de-business-kit,de-business-start,de-business-operations,...}/...
   claude/.claude-plugin/marketplace.json
   claude/plugins/de-business-kit/.claude-plugin/plugin.json
-  claude/plugins/de-business-kit/skills/de-business-kit/...
+  claude/plugins/de-business-kit/skills/{de-business-kit,de-business-start,de-business-operations,...}/...
   codex.zip
   claude.zip
   SHA256SUMS

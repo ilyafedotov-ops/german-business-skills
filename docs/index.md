@@ -6,6 +6,8 @@
 
 [Current project status](project-status.md) separates implemented capabilities, runtime limits and remaining work.
 
+[Full correction plan and lifecycle](lifecycle.md): target skill structure, coverage, P0–P7 packages and acceptance criteria.
+
 ## Find your task
 
 | Task | Guide |

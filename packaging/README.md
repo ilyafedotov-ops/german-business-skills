@@ -6,13 +6,27 @@ Windows users can start without Python using native Windows tools (see `skills/d
 
 [English](README.md) | [Русский](README.ru.md)
 
-German Business Kit supports self-managed accounting and tax preparation for German sole traders: organized documents, limited cash records, readable reports and manual ELSTER guidance using evidence and current official sources. It supports English and Russian; official German form labels stay in German. This is a local preview package, with no certification or completed desktop compatibility claim.
+German Business Kit contains seven skills for the entrepreneur lifecycle: formation, daily operations, accounting, taxes, services, changes and closure. Shared context and evidence connect tasks; guidance is supported by validated local tools. English and Russian are supported, with official German form labels retained. Real connections, sending and exact-host acceptance are verified separately.
+
+## Bundle contents
+
+| Skill | When to use |
+| --- | --- |
+| `de-business-kit` | Start, resume or choose the next action |
+| `de-business-start` | Prepare launch and registration |
+| `de-business-operations` | Proposals, invoices, payment follow-up and correspondence |
+| `de-business-accounting` | Documents, reconciliation and authoritative records |
+| `de-business-tax` | Tax questions, reporting and Finanzamt replies |
+| `de-business-services` | Banking, insurance, software and service access |
+| `de-business-changes` | Changes, hiring, pause and closure |
+
+Install the complete set together: domain skills use shared resources in `de-business-kit`. Invoke a domain skill directly when appropriate. The shared profile and chosen accounting system persist; changing skills does not restart setup. These changes are in source and local builds; previously published archives remain unchanged.
 
 ## Start with a small guided setup
 
 After reviewing and installing the plugin through your host, open a fresh chat and send:
 
-> Use German Business Kit to help me get started. First ask whether I prefer English or Russian and what I want to do. Explain which tools are actually available, help me choose a separate private folder, and offer a synthetic demo before using real business documents.
+> Use German Business Kit to help me get started. Use the language of my request and clarify the result I need. Select a suitable skill; introduce private-folder setup when the task needs it. Use synthetic data for a demonstration.
 
 The shared workflow and references are in `skills/de-business-kit/SKILL.md`. Setup should preserve unknown facts and distinguish creating a workspace from completing business or tax setup. Keep real records outside this plugin and public source repositories. Do not recreate an existing private workspace to change its language or working mode.
 

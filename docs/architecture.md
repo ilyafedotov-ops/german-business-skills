@@ -12,13 +12,13 @@ The [accounting workflow](accounting.md) adds an onboarding-selected authoritati
 
 ## Intended result
 
-An entrepreneur brings a task: open an activity, manage their own accounting and tax reporting, organize receipts, understand a tax question or prepare an official form. The skill resumes from private files, collects the few missing facts that affect the result and produces work the user can inspect. Evidence and recorded decisions remain available after the conversation ends. Self-managed bookkeeping/accounting and tax reporting are the primary workflow; consultation and accountant exports are optional branches for a specific need. Complete ledger functionality and ELSTER submission integration are core capabilities still to be completed, not replaced by an archive or handoff.
+An entrepreneur brings a task at any stage: prepare to start, register an activity, choose a service, fill in a form, answer a question, manage daily work or prepare reporting. Changes and closure have journey instructions; real execution needs separate acceptance. The [lifecycle map](lifecycle.md) defines coverage and priorities. The router or a directly selected domain skill loads relevant modules and available tools; shared facts and decisions support continuation. Local utilities, the GUI and integrations serve these outcomes. Self-managed accounting and filing use the chosen system; a proprietary complete ledger and ELSTER connector are not prerequisites for every route. Consultation and exports remain optional.
 
 The supported scope is a natural person operating in Germany: Freiberufler, Einzelunternehmen/Gewerbe and multiple activities of the same person. Corporations, partnerships, payroll, complex international structures and cash-register systems are outside the promised automation scope. The skill can collect facts and prepare a specific specialist handoff for those cases.
 
-## One entry point, shared state
+## Seven entry points, shared state
 
-The portable entry point is `de-business-kit`. Its `SKILL.md` routes to task-specific reference modules, loaded as the task requires. The business profile, VAT history, evidence, questions and decisions are shared, which avoids creating conflicting records for separate modes or languages. Independent skills could be extracted later while preserving the common data contract.
+The bundle contains seven directly usable skills with one shared profile. `de-business-kit` starts/resumes mixed work; `de-business-start`, `de-business-operations`, `de-business-accounting`, `de-business-tax`, `de-business-services` and `de-business-changes` can be invoked directly. Shared contracts and utilities remain in `skills/de-business-kit`; installers and the builder use `assets/skill-set.json`. Load only relevant modules; a transition passes the task and evidence references without new profiles, shadow registers or automatic subagents. Install the complete set without migrating private data.
 
 | Layer | Responsibility |
 |---|---|

@@ -4,14 +4,17 @@
 
 [English](distribution.md) | [Русский](distribution.ru.md)
 
-Общие инструкции поддерживаются только в `skills/de-business-kit`. Корневой `plugin.json` задаёт переносимые метаданные Agent Plugins; `.claude-plugin/plugin.json` — небольшой адаптер Claude. Офлайн-сборщик копирует один и тот же skill в два независимых локальных marketplace-пакета. Включены лицензия, манифесты, подготовленные EN/RU README из `packaging/` и все ресурсы skill; тесты проекта, история Git, личные файлы в корне и настройки компьютера исключены. Перед сборкой проверьте общий skill: сборщик не ищет секреты в содержимом файлов.
+Комплект находится в `skills/` и содержит семь скиллов по каталогу `skills/de-business-kit/assets/skill-set.json`. Общие инструкции, шаблоны и инструменты остаются в `de-business-kit`; соседние предметные скиллы используют их напрямую. Python/PowerShell-установщики проверяют весь набор и конфликты перед записью. Сборщик создаёт два самостоятельных marketplace-комплекта Codex/Claude со всеми ресурсами, описаниями и манифестами. Зависимый скилл отдельно не устанавливается; пользовательские рабочие данные не мигрируют. Проверки безопасности установки не заменяют проверку исходников на секреты.
 
 В этой версии нет MCP-сервера, lifecycle hooks, учётных данных, автоматической установки или обновления. Установка плагина не предоставляет Python, доступ к файлам, браузерные инструменты, подписки или доступ к банку, Lexware либо ELSTER. Возможности определяются инструментами хоста, разрешениями и политикой аккаунта.
+
+
+Установите весь комплект вместе. Предметный скилл можно использовать напрямую; профиль и выбранная система учёта сохраняются. Изменения находятся в исходниках и локальных сборках; прежние опубликованные архивы не меняются.
 
 ## Использовать опубликованный пакет
 
 Для отдельного приложения используйте [инструкцию загрузки и запуска GUI](gui.ru.md).
-Остальная страница описывает необязательные пакеты AI-skill/плагина. Пользователю
+Остальная страница описывает основной комплект скиллов/плагина. Пользователю
 не нужно собирать проект. После публикации скачайте именованный ZIP Codex или Claude из
 [выпуска 0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1),
 выполните [проверку загрузки](releases.ru.md) и распакуйте его в новую папку через
@@ -45,10 +48,10 @@ python3 -B tools/build_package.py --output /absolute/path/to/new-review-bundle
 new-review-bundle/
   codex/.agents/plugins/marketplace.json
   codex/plugins/de-business-kit/plugin.json
-  codex/plugins/de-business-kit/skills/de-business-kit/...
+  codex/plugins/de-business-kit/skills/{de-business-kit,de-business-start,de-business-operations,...}/...
   claude/.claude-plugin/marketplace.json
   claude/plugins/de-business-kit/.claude-plugin/plugin.json
-  claude/plugins/de-business-kit/skills/de-business-kit/...
+  claude/plugins/de-business-kit/skills/{de-business-kit,de-business-start,de-business-operations,...}/...
   codex.zip
   claude.zip
   SHA256SUMS

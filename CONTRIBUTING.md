@@ -4,7 +4,7 @@
 
 Read [AGENTS.md](AGENTS.md) for repository maintenance rules; `CLAUDE.md` points to that same source. [Current status](docs/project-status.md) is the scope summary. Preserve existing user work and authorization boundaries. Commits, pushes, publication and external actions require applicable explicit authorization.
 
-Keep the portable skill self-contained under `skills/de-business-kit`. Host-specific metadata must not change the meaning of shared workflows. Use concise modules; do not load every reference for every task. No credentials, customer records, user memories, telemetry or automatic external services belong in the package.
+Keep the seven-skill bundle self-contained under `skills/`, with shared resources in `skills/de-business-kit` and membership in its `assets/skill-set.json`. Install and version the complete set together; validate sibling links without the source checkout. Host-specific metadata must not change the meaning of shared workflows. Use concise modules; do not load every reference for every task. No credentials, customer records, user memories, telemetry or automatic external services belong in the package.
 
 Maintain English/Russian parity in README, user mode guides, architecture, validation notes and user-facing Markdown templates. Register every template role for both languages in `assets/locales.json`. Translate user-visible explanations without translating machine keys, IDs, enum values or German official form labels. Agent reference instructions stay shared in English to avoid divergent tax workflows. A change to either mode must preserve the shared profile and evidence; switching mode is never a change of tax regime.
 
@@ -16,7 +16,7 @@ For behavior changes, run `python3 -B -m unittest discover -s tests -v`, `python
 
 Use only synthetic examples in public issues and pull requests. Do not paste invoices, statements, tax IDs, IBANs, local transcripts, credentials or screenshots containing real personal data. Discuss security reports using the procedure in [SECURITY.md](SECURITY.md).
 
-When capabilities change, update the affected current-status, architecture/ontology, EN/RU user docs and portable references together. Keep one compact skill entry point and one shared profile. Native user tools, optional Python automation and development dependencies must remain distinct. Date implementation reviews separately from legal/provider research; preserve historical validation, never relabel it as a new run. Treat plugin descriptions as capability claims and keep Codex/Claude metadata aligned.
+When capabilities change, update the affected current-status, architecture/ontology, EN/RU user docs and portable references together. Keep compact domain entry points, an optional router and one shared profile. Native user tools, optional Python automation and development dependencies must remain distinct. Date implementation reviews separately from legal/provider research; preserve historical validation, never relabel it as a new run. Treat plugin descriptions as capability claims and keep Codex/Claude metadata aligned.
 
 Contributions are licensed under this repository's MIT licence. Linked external laws and provider documents retain their own status and rights; link and summarize them instead of copying entire manuals.
 

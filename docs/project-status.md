@@ -11,14 +11,11 @@ actual runs and their limits. Historical release runs do not establish acceptanc
 of the new GUI; neither local checks nor hosted CI establish nontechnical-user
 usability or a certified accounting process.
 
-The primary workflow is **self-managed accounting and tax reporting**. The first
-end-to-end route under development is the **local cash journal plus manual
-ELSTER**. This does not preselect local accounting for every user: existing
-accounting software remains authoritative when chosen. Consultation and sharing
-an archive are optional.
+The product is a **system of skills for the entrepreneur lifecycle**. The [full correction plan](lifecycle.md) defines structure, coverage, P0–P7 sequencing and acceptance. Guidance already covers formation, forms, questions, services, documents and reporting; daily-work, annual-preparation, change and closure instructions have been added, with real execution subject to separate acceptance. The table below primarily describes technical foundations, not the entire product scope. Self-managed accounting and filing remain important: local cash records with manual ELSTER are one route, and existing software stays authoritative when selected. Consultation and exports are optional.
 
 | Capability | Current implementation | Boundary |
 | --- | --- | --- |
+| Skill system | Optional router and six directly usable domain skills; shared contract/profile; complete-set installation | Instructions and local packaging do not establish discovery in every host, legal correctness or external execution |
 | Intake and continuity | One profile, preserved originals, EN/RU/DE physical folders, start/resume and integrity checks | A folder language is not a tax fact; no silent migration |
 | Native Windows | PowerShell 5.1 entry points for install, intake, integrity, real overview and full backup/restore; no Python installation required | Standalone PowerShell retains its narrower operation set; exact runner evidence is in validation. GUI installation and nontechnical-user acceptance remain separate |
 | Document desk | Catalog, reviewed proposals, source checks, bank mapping, reconciliation and limited XML inspection in the optional Python engine | No complete OCR, embedded-PDF XML or technical e-invoice validation pipeline |
@@ -35,7 +32,11 @@ available route and states the exact blocked operation when the host lacks one.
 Node/Playwright and developer Python tests are development requirements, not
 onboarding requirements. macOS also does not guarantee Python is installed.
 
-## Next acceptance gates
+## Next product work
+
+After bundle separation and instruction implementation, the next work is direct-entry P1 and P2–P5 journey acceptance on supported hosts and representative tasks. P6 needs a specific chosen service and verifiable operation; P7 needs separate interface and published-package acceptance. Exact state, dependencies and criteria are in the [plan](lifecycle.md); actual checks are in [validation](validation.md).
+
+## Technical acceptance gates for existing routes
 
 1. Verify the exact version’s native GUI package gates and first-launch acceptance on Windows
    and both Mac architectures; the packaged engine needs no user-installed Python.
