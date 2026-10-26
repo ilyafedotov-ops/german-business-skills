@@ -31,7 +31,7 @@ Follow the user's concrete task without forcing a mode menu. An explicit mode sw
 
 ## Start each task
 
-For first use, setup confusion, a demonstration or “continue,” follow [guided onboarding](references/onboarding.md). Use outcomes in the user's language; keep technical commands and mode IDs behind the conversation. `start` safely creates or resumes; `doctor` diagnoses local health. A recorded configuration is not legal certification.
+For user-facing help, provide the [Russian start](guides/start.ru.md), [English start](guides/start.en.md) or [German start](guides/start.de.md); the [Russian manual](guides/user-guide.ru.md) and [English manual](guides/user-guide.en.md) cover daily work and recovery. Link or explain the relevant section; do not make reading the whole manual a prerequisite. For first use, setup confusion, a demonstration or “continue,” follow [guided onboarding](references/onboarding.md). Use outcomes in the user's language; keep technical commands and mode IDs behind the conversation. `start` safely creates or resumes; `doctor` diagnoses local health. A recorded configuration is not legal certification.
 
 1. Identify the requested result, entrepreneur, year/period, workspace and actual runtime capabilities. Reuse confirmed session context. Do useful preparation before asking questions; ask at most 3 related questions at a time.
 2. Read `00_admin/workspace.json`, `00_admin/runtime.json`, `01_profile/business.json`, and the relevant open questions/tasks if the workspace exists. Load only relevant records, never the entire client archive. Do not borrow personal facts from other clients or unrelated memory.

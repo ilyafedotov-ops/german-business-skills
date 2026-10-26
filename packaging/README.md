@@ -1,5 +1,7 @@
 # German Business Kit — local preview 0.5.0
 
+**Start here:** `skills/de-business-kit/guides/start.en.md` · `skills/de-business-kit/guides/user-guide.en.md`. These files ship inside the extracted package; the source checkout is not needed.
+
 Windows users can start without Python using native Windows tools (see `skills/de-business-kit/references/native-windows.md`). The native entry point shares the existing workspace and covers installation, start/resume, preview, intake and integrity; advanced validated automation remains an optional Python-engine capability.
 
 [English](README.md) | [Русский](README.ru.md)
