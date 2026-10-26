@@ -222,6 +222,12 @@ P7 now has actual project-scoped discovery evidence for Codex CLI 0.164.0 on mac
 
 P1/P7 now connects the existing task register to Python/native overview and GUI home: undated and other-month active tasks, dependencies, current evidence and a proposed next task. Empty undecided workspaces start with the intended business task. Existing errors, drafts and uncertain filings retain priority. The assistant-request dialog supports continuation without a new task store, automatic execution or accounting default. Local synthetic acceptance is recorded in [validation](validation.md); native Windows, published packages and ordinary-user acceptance remain separate.
 
+## 5.7. Host discovery and focused consultation acceptance (2026-10-26)
+
+P7 now includes two fresh Claude Code 2.1.310 control-initialize processes on macOS, discovering all seven installed skills through an explicitly added project directory. Installed bytes and sibling links were verified. This does not prove automatic normal-mode discovery, model routing or Windows execution. The Windows 5.1 jobs already exist, but the latest hosted run is for an older ref; the current changes need a new authorized branch/PR run.
+
+P4 consultation guidance now keeps first answers focused and requests acquisition/delivery year/month and accounting method before concrete asset entries or amounts. A fresh smartphone-installment question retrieved official sources and asked those missing facts without creating accounts or records. GUI package instructions now start with the user's task; document intake and accounting setup are conditional. See [validation](validation.md) for the source checks, exact host route, passed local package smoke and incomplete desktop launch.
+
 ## 6. Queue and drift control
 
 **After the local P1–P7 materials and synthetic preparation trials, the next queue is actual document-cycle execution, a chosen service operation and supported-host acceptance.** P6 accompanies specific needs; P7 follows accepted journeys. Security maintenance and fixes to existing capabilities continue as necessary.

@@ -103,4 +103,6 @@ The CI workflow runs native `windows-latest` (Python 3.9/3.14) and `macos-latest
 
 No desktop installation, discovery, permission prompt, account synchronization or complete live workflow has been tested by this packaging work. Record host/product version, OS, language, discovery, setup, resumption and synthetic-file results before claiming desktop support. Use the [validation notes](validation.md) and [scenario cases](../evals/scenarios.json).
 
+On **2026-10-26**, Claude Code **2.1.310** also discovered all seven standalone project skills in two fresh control-initialize processes using explicit `--add-dir`. No model turn was sent. This is a separate bounded CLI result, not automatic discovery or desktop acceptance; see the [validation record](validation.md).
+
 [Versions, signatures and release verification](releases.md)
