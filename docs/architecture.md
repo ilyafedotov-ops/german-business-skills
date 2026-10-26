@@ -181,3 +181,7 @@ The [core capability plan](core-capabilities.md) defines the unfinished ledger a
 ## Existing sources and folder inventory
 
 [Existing-data onboarding](../skills/de-business-kit/references/existing-data.md) discovers actual host plugins/API/browser/computer tools and records bounded access observations in a localized, human-maintained source map. It introduces no network adapter or automatic connection registry. `casefiles/folders.py`, exposed by `desk.py scan-folder`, writes a bounded metadata-only preview before selected intake. It leaves source contents unchanged, excludes detected links/reparse points, hidden entries, key files and nested workspaces, and reports omissions and traversal limits. Cloud residency is not independently verified. A source map or inventory is not import completeness or permission to write to a service.
+
+## Readable document authoring
+
+[Document authoring](../skills/de-business-kit/references/document-authoring.md) and the shared [readable-output contract](../skills/de-business-kit/references/readable-output.md) route all substantial skill results to user-readable views. EN/RU report/review Markdown, a German recipient-letter template and one static printable HTML asset are packaged with the skill. Rendering/export uses available host/browser tools; no new document runtime or transmission adapter is bundled. Canonical records remain authoritative; readable copies and recipient artifacts do not advance filing states.

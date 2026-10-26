@@ -166,3 +166,5 @@ python3 tools/check_package.py
 Используйте синтетические или надёжно обезличенные данные в публичных issues, PR и примерах. Репозиторий: [ilyafedotov-ops/german-business-skills](https://github.com/ilyafedotov-ops/german-business-skills).
 
 Банковские, страховые и другие услуги сравниваются по вашим потребностям, актуальным ценам и условиям. См. [выбор услуг](docs/service-selection.ru.md).
+
+О читаемых отчётах, документах для адресата и проверке приложений — [документы и отчёты](docs/documents.ru.md).

@@ -168,3 +168,5 @@ See [validation status](docs/validation.md), [architecture](docs/architecture.md
 Use synthetic or reliably anonymized data in public issues, pull requests and examples. Repository: [ilyafedotov-ops/german-business-skills](https://github.com/ilyafedotov-ops/german-business-skills).
 
 Banking, insurance and other services are researched against your needs, current costs and terms. See [service selection](docs/service-selection.md).
+
+For readable reports, recipient documents and reviewed attachments, see [documents and reports](docs/documents.md).

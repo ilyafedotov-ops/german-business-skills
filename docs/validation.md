@@ -4,6 +4,20 @@
 
 Checked **2026-10-26**. Tests use synthetic temporary data, never live business records or accounts.
 
+## Readable documents and submission preparation (2026-10-26)
+
+Added a document-authoring module and a shared readable-output contract, routed from the skill and existing accounting/forms/intake/payment/provider workflows. Assets include EN/RU report and private-review templates, a German recipient-letter template and one static printable HTML template. These are agent authoring aids; they do not automatically render every CLI output or add a filing connector. The catalogue has **45 behavioral scenarios**, not all executed.
+
+- `python3 -B -m unittest discover -s tests -v`: **190 tests: 187 passed, 3 native interoperability tests skipped** on macOS/Python 3.14.6. Packaging was red before the HTML asset was supplied, then green for detached Codex/Claude packages. A regression test confirms other unreviewed HTML resources remain rejected.
+- The first full run with `GBK_TEST_DOCKER_IMAGE=mcr.microsoft.com/dotnet/sdk:9.0` reproduced the previously observed Docker marker-read failure after host atomic replacement. No native/accounting code changed. A focused rerun of `test_native_windows.py` in that image passed **all 4 tests**. This records a flaky container seam, not Windows PowerShell 5.1 acceptance.
+- `node tests/document-template-browser.cjs` (also available as `npm run test:documents`): passed in Chromium/WebKit, EN/RU/DE, 390/1280 px. Checks cover 90-row tables, readable amounts despite a long reference, visible draft status, escaped source markup, no active elements/external requests, no horizontal overflow and actual Chromium A4 PDF creation. Initial visual/PDF inspection found narrow amount columns; a failing browser assertion preceded the fixed-width-table correction.
+- `pdftotext -layout` checked all **90 intact amounts** and searchable draft text in each generated EN/RU/DE PDF. Selected first/last PDF pages and narrow-window screenshots were visually inspected. These checks do not establish PDF/A, tagged-PDF accessibility, all-page visual acceptance, native Windows print behavior or recipient acceptance.
+- `python3 -B tools/check_package.py` and `git diff --check` passed. The separate skill-creator `quick_validate.py` could not run because its host PyYAML dependency was absent; no dependency was installed. Repository frontmatter/locale/link/JSON validation passed.
+
+A fresh Codex session received only the skill path and the `readable-german-recipient-russian-review` synthetic request. It created a German draft and a separate private Russian HTML review outside Git. Parent inspected both files and browser-check results: missing addresses/reference and absent attachment were explicit; no invented signature, approval or submission; actual form route remained conditional. Both artifacts opened in isolated Chromium at 1200/390 px without overflow or page errors. PDF was not requested/generated in that trial. The shared MCP browser profile was busy; the trial used a separate existing browser without installing anything. Host: Codex/macOS, exact desktop/model build not exposed. No real data/account access or transmission.
+
+Independent read-only review found no actionable P1/P2 in skill routing, source boundaries, recipient/privacy separation, exact-version review, assets or packaging. Public ELSTER and Microsoft sources were checked; one Rheinland-Pfalz refresh returned HTTP 429. No authenticated form/upload was tested. The Windows-without-Python scenario is catalogued but has not been executed on Windows. Research: [delivery sources](../skills/de-business-kit/references/document-delivery-sources.md).
+
 ## Localized physical workspace folders (2026-10-26)
 
 New CLI workspaces use EN/RU/DE physical folders, a localized start guide and fixed folder-language metadata; existing layouts remain unchanged. Shared resolution now covers native intake/integrity checks, Python casework, accounting, filing evidence, archives and overview links. Source scanners exclude localized and interrupted workspaces. This is not automatic migration or complete German report/prototype translation.
