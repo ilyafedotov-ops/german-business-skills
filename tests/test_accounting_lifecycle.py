@@ -295,6 +295,118 @@ class AccountingTests(unittest.TestCase):
         with self.assertRaises(ws.WorkspaceError):
             self.action("return-1", "review")
 
+    def test_filing_check_is_read_only_and_exposes_each_required_step(self):
+        self.configure("external")
+        self.filing()
+        before = {str(p.relative_to(self.root)): p.read_bytes() for p in self.root.rglob("*") if p.is_file()}
+        check = ac.check_filing(self.root, "return-1")
+        self.assertEqual(check["next_step"], "review")
+        self.assertEqual(check["allowed_preflight_actions"], ["review"])
+        self.assertEqual(check["issues"], [])
+        self.assertEqual(check["tax_correctness"], "not_assessed")
+        self.assertEqual(check["transmission"], "not_implemented")
+        self.assertEqual(before, {str(p.relative_to(self.root)): p.read_bytes() for p in self.root.rglob("*") if p.is_file()})
+        self.action("return-1", "review")
+        self.assertEqual(ac.check_filing(self.root, "return-1")["allowed_preflight_actions"], ["authorize"])
+        self.action("return-1", "authorize")
+        self.assertEqual(ac.check_filing(self.root, "return-1")["allowed_preflight_actions"], ["begin"])
+        self.action("return-1", "begin")
+        check = ac.check_filing(self.root, "return-1")
+        self.assertEqual(check["next_step"], "resolve_submission_outcome")
+        self.assertEqual(check["allowed_preflight_actions"], [])
+
+    def test_filing_check_reports_multiple_issues_without_changing_draft(self):
+        self.configure()
+        self.filing(unresolved_items=["Unverified VAT timing"])
+        (self.root / self.proof).unlink()
+        (self.root / "05_tax/2026/draft.json").write_text("Changed draft")
+        check = ac.check_filing(self.root, "return-1")
+        codes = {item["code"] for item in check["issues"]}
+        self.assertTrue({"configuration_evidence", "source_changed", "unresolved_item"} <= codes)
+        self.assertEqual(check["allowed_preflight_actions"], [])
+        self.assertEqual(check["next_step"], "resolve_issues")
+        self.assertEqual(check["state"], "draft")
+        with self.assertRaises(ws.WorkspaceError):
+            self.action("return-1", "review")
+
+    def test_filing_check_detects_missing_frozen_evidence_and_never_calls_it_ready(self):
+        self.configure()
+        self.filing()
+        saved = ac.get_filing(self.root, "return-1")["record"]
+        (self.root / saved["payload"]["path"]).unlink()
+        check = ac.check_filing(self.root, "return-1")
+        self.assertIn("snapshot_changed", [item["code"] for item in check["issues"]])
+        self.assertEqual(check["allowed_preflight_actions"], [])
+
+    def test_filing_check_reports_stale_cash_sources_and_actions_recheck(self):
+        self.configure()
+        ac.post(self.root, self.entry())
+        report = ac.export_report(self.root, "2026-10")
+        self.filing(source_files=[report["path"]])
+        self.action("return-1", "review")
+        self.action("return-1", "authorize")
+        self.assertEqual(ac.check_filing(self.root, "return-1")["allowed_preflight_actions"], ["begin"])
+        ac.post(self.root, self.entry("later", "7.00"))
+        check = ac.check_filing(self.root, "return-1")
+        self.assertIn("local_report_invalid", [item["code"] for item in check["issues"]])
+        with self.assertRaises(ws.WorkspaceError):
+            self.action("return-1", "begin")
+        self.assertEqual(ac.get_filing(self.root, "return-1")["record"]["state"], "authorized")
+
+    def test_check_historical_attempt_uses_frozen_evidence_and_does_not_allow_retry(self):
+        self.configure()
+        self.filing()
+        for action in ("review", "authorize", "begin"):
+            self.action("return-1", action)
+        (self.root / self.proof).write_text("New current records")
+        (self.root / "05_tax/2026/draft.json").unlink()
+        check = ac.check_filing(self.root, "return-1")
+        self.assertEqual(check["issues"], [])
+        self.assertEqual(check["source_scope"], "frozen_evidence_only")
+        self.assertEqual(check["allowed_preflight_actions"], [])
+        self.action("return-1", "receipt", external_id="actual-reference-for-synthetic-test")
+        self.assertEqual(ac.check_filing(self.root, "return-1")["next_step"], "follow_up")
+
+    def test_filing_check_cli_and_unknown_record(self):
+        self.configure()
+        self.filing()
+        result = subprocess.run([sys.executable, "-B", str(SCRIPTS / "desk.py"),
+                                 "filing-check", "--root", str(self.root), "--id", "return-1"],
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads(result.stdout)["next_step"], "review")
+        with self.assertRaises(ws.WorkspaceError):
+            ac.check_filing(self.root, "missing")
+
+    def test_filing_check_keeps_independent_report_blockers_when_one_snapshot_is_missing(self):
+        self.configure()
+        ac.post(self.root, self.entry())
+        month = ac.export_report(self.root, "2026-10")
+        year = ac.export_report(self.root, "2026")
+        self.filing(source_files=[month["path"], year["path"]])
+        ac.post(self.root, self.entry("late", "7.00"))
+        check = ac.check_filing(self.root, "return-1")
+        invalid = {item["path"] for item in check["issues"] if item["code"] == "local_report_invalid"}
+        self.assertEqual(invalid, {month["path"], year["path"]})
+        record = ac.get_filing(self.root, "return-1")["record"]
+        (self.root / record["sources"][0]["path"]).unlink()
+        check = ac.check_filing(self.root, "return-1")
+        self.assertIn("snapshot_changed", [item["code"] for item in check["issues"]])
+        self.assertIn(year["path"], [item["path"] for item in check["issues"] if item["code"] == "local_report_invalid"])
+
+    def test_filing_check_lists_independent_changed_cash_entry_evidence(self):
+        self.configure()
+        paths = ["08_correspondence/one.md", "08_correspondence/two.md"]
+        for i, path in enumerate(paths):
+            (self.root / path).write_text("Synthetic cash entry evidence")
+            ac.post(self.root, self.entry("sale-" + str(i), evidence_file=path))
+        report = ac.export_report(self.root, "2026-10")
+        self.filing(source_files=[report["path"]])
+        for path in paths:
+            (self.root / path).unlink()
+        check = ac.check_filing(self.root, "return-1")
+        self.assertEqual({item["path"] for item in check["issues"] if item["code"] == "local_entry_evidence"}, set(paths))
+
 
 if __name__ == "__main__":
     unittest.main()

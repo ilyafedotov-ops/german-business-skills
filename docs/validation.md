@@ -4,6 +4,16 @@
 
 Checked **2026-10-25**. Tests use synthetic temporary data, never live business records or accounts.
 
+## Read-only filing readiness checks (2026-10-25)
+
+`desk.py filing-check` now reports local evidence blockers and the next eligible local transition without changing records. Review/authorization/begin share the same checks under the writer lock. Historical attempts use frozen copies, preserve uncertain outcomes and do not acquire retry permission from a clean check. No tax formula, provider integration or transmission was added.
+
+`python3 -B -m unittest discover -s tests -q` — **181 tests run: 179 passed, 2 skipped**, macOS / Python 3.14.6. Native PowerShell tests remain skipped. All **31 accounting tests** passed, including 8 new tests for read-only behavior, lifecycle guidance, multiple blockers, missing snapshots, stale local sources, historical evidence, CLI/unknown IDs and independent report/entry failures. The initial feature cases failed before implementation; two additional regression cases failed before the review fix. `python3 -B tools/check_package.py` and `git diff --check` passed.
+
+Independent read-only review found that one broken frozen copy or report could hide independent report blockers. The checker now inspects each intact report and each entry's evidence separately. The reviewer rechecked the fixes and bilingual guidance and reported no remaining actionable findings.
+
+A fresh Codex session received only the skill location, synthetic private workspace and `filing-readiness-changed-evidence` prompt. It used the actual CLI and found both the changed export and unresolved VAT timing, with no eligible transition. Parent verified all **16 workspace files unchanged**, state `draft`, zero events/local entries and no receipt. A parallel status read encountered the existing exclusive lock; the filing check succeeded and established the external route. Guidance now explicitly says to serialize same-workspace commands. The first response omitted cancelling the active draft before creating a replacement; the reference was clarified and a follow-up response correctly explained cancel → linked replacement → new check, with no writes. This was a recovery/follow-up trial, not flawless first-pass guidance. Host: Codex on macOS, exact desktop/model build not exposed. No real account, tax calculation or submission was tested. The catalog now contains **43 scenarios**, not all executed.
+
 ## Source-led tax estimates without a bundled formula engine (2026-10-25)
 
 The calculation approach is now skill guidance: retrieve current official rules, use a suitable official calculator or the selected accounting/tax software, and preserve actual inputs/results and unresolved differences. No runtime module, tax formula, rate table or calculation algorithm was added. English/Russian consultation templates record rule references, tool/year/settings, whether a tool actually ran, output evidence and cross-checks. The capability plan now treats verified external calculations as the intended route.

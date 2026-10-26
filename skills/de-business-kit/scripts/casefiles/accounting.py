@@ -17,6 +17,7 @@ from . import storage as st
 
 STATE = "04_accounting/register.json"
 STATES = {"draft", "reviewed", "authorized", "submission_unconfirmed", "submitted", "cancelled"}
+PREFLIGHT_ACTIONS = {"draft": "review", "reviewed": "authorize", "authorized": "begin"}
 
 
 def template(kind):
@@ -295,31 +296,26 @@ def _snapshot(root, path, year):
     return {"path": relative, "sha256": source["sha256"], "source": source}
 
 
-def _check_snapshots(root, record, live=False):
+def _check_snapshots(root, record):
     sources = [record["payload"], *record["sources"], *(event["evidence"] for event in record["events"])]
     for source in sources:
         st.check_evidence(root, source)
-    if live:
-        for source in [record["payload"], *record["sources"]]:
-            st.check_evidence(root, source["source"])
 
 
-def _check_local_reports(root, record, state):
-    for source in [record["payload"], *record["sources"]]:
-        if Path(source["path"]).suffix != ".json":
-            continue
-        report = ws._load(ws._inside(root, source["path"]))
-        if not isinstance(report, dict) or report.get("kind") != "cash_movement_report":
-            continue
-        if source is record["payload"]:
-            raise ws.WorkspaceError("A cash-movement summary is supporting evidence, not a completed tax return payload.")
-        wf.period(report.get("period"))
-        entries = [entry for entry in state["entries"].values() if _in_period(entry["date"], report["period"])]
-        if (report.get("entries_sha256") != st.digest(entries)
-                or report.get("configuration_sha256") != st.digest(state["configuration"])):
-            raise ws.WorkspaceError("Source cash report is stale; regenerate it and prepare a newly reviewed filing version.")
-        for entry in entries:
-            st.check_evidence(root, entry["evidence"])
+def _local_report_evidence(root, source, payload, state):
+    if Path(source["path"]).suffix != ".json":
+        return []
+    report = ws._load(ws._inside(root, source["path"]))
+    if not isinstance(report, dict) or report.get("kind") != "cash_movement_report":
+        return []
+    if payload:
+        raise ws.WorkspaceError("A cash-movement summary is supporting evidence, not a completed tax return payload.")
+    wf.period(report.get("period"))
+    entries = [entry for entry in state["entries"].values() if _in_period(entry["date"], report["period"])]
+    if (report.get("entries_sha256") != st.digest(entries)
+            or report.get("configuration_sha256") != st.digest(state["configuration"])):
+        raise ws.WorkspaceError("Source cash report is stale; regenerate it and prepare a newly reviewed filing version.")
+    return [entry["evidence"] for entry in entries]
 
 
 def _scope(record):
@@ -376,6 +372,74 @@ def get_filing(root, identifier):
         return {"record": record, "sha256": st.digest(record)}
 
 
+def _filing_issues(root, record, state, live):
+    """Shared local gates; callers hold the workspace lock. Never assess tax law."""
+    issues = []
+
+    def check(code, operation, path=None):
+        try:
+            operation()
+        except (OSError, ws.WorkspaceError) as exc:
+            issues.append({"code": code, "path": path, "detail": str(exc)})
+            return False
+        return True
+
+    sources = [record["payload"], *record["sources"]]
+    intact = set()
+    for source in [*sources, *(event["evidence"] for event in record["events"])]:
+        if check("snapshot_changed", lambda: st.check_evidence(root, source), source["path"]):
+            intact.add(source["path"])
+    if live:
+        for source in sources:
+            check("source_changed", lambda: st.check_evidence(root, source["source"]), source["source"]["path"])
+        check("configuration_evidence", lambda: _config(root, state))
+        if st.digest(state["configuration"]) != record["configuration_sha256"]:
+            issues.append({"code": "configuration_changed", "path": STATE,
+                           "detail": "Prepare a new filing version against the current accounting configuration."})
+        issues.extend({"code": "unresolved_item", "path": None, "detail": item}
+                      for item in record["unresolved_items"])
+        for source in sources:
+            # A broken snapshot must not hide independent intact report failures.
+            if source["path"] not in intact:
+                continue
+            try:
+                evidence = _local_report_evidence(root, source, source is record["payload"], state)
+            except (OSError, ws.WorkspaceError) as exc:
+                issues.append({"code": "local_report_invalid", "path": source["source"]["path"], "detail": str(exc)})
+                continue
+            for item in evidence:
+                check("local_entry_evidence", lambda: st.check_evidence(root, item), item["path"])
+    return issues
+
+
+def check_filing(root, identifier):
+    """Read-only readiness snapshot, not approval or an external transmission check."""
+    root = ws._workspace(root)
+    with ws._locked(root):
+        state = _load(root)
+        record = state["filings"].get(identifier)
+        if record is None:
+            raise ws.WorkspaceError("Filing not found.")
+        current = record["state"]
+        if current not in STATES:
+            raise ws.WorkspaceError("Unknown filing state; inspect preserved history.")
+        action = PREFLIGHT_ACTIONS.get(current)
+        issues = _filing_issues(root, record, state, live=action is not None)
+        next_step = action or {"submission_unconfirmed": "resolve_submission_outcome",
+                               "submitted": "follow_up", "cancelled": "prepare_replacement"}[current]
+        return {"filing_id": identifier, "state": current, "sha256": st.digest(record),
+                "accounting_system": record["system"], "product": record["product"],
+                "form": record["form"], "form_version": record["form_version"],
+                "period": record["period"], "recipient": record["recipient"],
+                "payload_sha256": record["payload"]["sha256"],
+                "source_scope": "frozen_and_current_evidence" if action else "frozen_evidence_only",
+                "issues": issues, "next_step": "resolve_issues" if issues else next_step,
+                "allowed_preflight_actions": [action] if action and not issues else [],
+                "tax_correctness": "not_assessed", "transmission": "not_implemented",
+                "scope": "Local evidence and state only. Actions need their own evidence and current hash; "
+                         "this snapshot grants no approval or external permission. Actions recheck current sources."}
+
+
 def filing_action(root, value, expected):
     root = ws._workspace(root)
     wf.exact(value, template("filing-action"), "filing action")
@@ -393,7 +457,8 @@ def filing_action(root, value, expected):
         if record is None:
             raise ws.WorkspaceError("Filing not found.")
         st.version(record, expected)
-        _check_snapshots(root, record, live=action in {"review", "authorize", "begin"})
+        if action not in PREFLIGHT_ACTIONS.values():
+            _check_snapshots(root, record)
         if action == "cancel":
             if record["state"] not in {"draft", "reviewed", "authorized"}:
                 raise ws.WorkspaceError("An attempted/submitted filing cannot be cancelled locally; investigate the external result.")
@@ -404,11 +469,11 @@ def filing_action(root, value, expected):
                 raise ws.WorkspaceError("Invalid filing transition; inspect current state and evidence before proceeding.")
         else:
             raise ws.WorkspaceError("Unknown filing action.")
-        if action in {"review", "authorize", "begin"}:
-            config = _config(root, state)
-            if st.digest(config) != record["configuration_sha256"] or record["unresolved_items"]:
-                raise ws.WorkspaceError("Resolve draft questions or changed accounting configuration in a new version.")
-            _check_local_reports(root, record, state)
+        if action in PREFLIGHT_ACTIONS.values():
+            issues = _filing_issues(root, record, state, live=True)
+            if issues:
+                raise ws.WorkspaceError("Filing preflight blocked: " + "; ".join(
+                    item["code"] + ": " + item["detail"] for item in issues))
         if action == "receipt":
             wf.text(value["external_id"], "actual transmission reference")
             if any(row["receipt"] and row["receipt"]["external_id"] == value["external_id"] for row in state["filings"].values()):

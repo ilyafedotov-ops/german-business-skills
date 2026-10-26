@@ -423,6 +423,16 @@
         "Use current official timing sources and distinguish EÜR, Soll/Ist, supply/payment and input-invoice conditions; no unconditional period assumption",
         "Prepare useful input/output checks while access is unavailable; no shadow ledger, embedded formula, submission or forced adviser endpoint"
       ]
+    },
+    {
+      "id": "filing-readiness-changed-evidence",
+      "prompt": "Use de-business-kit in this supplied synthetic private workspace. We use external accounting software and have an October 2026 UStVA draft named october-draft. The export has changed since the draft was saved, and VAT timing still needs checking. Check what is missing and tell me the next step. Do not change records, approve, authorize or attempt a submission, restore old evidence, create another ledger or calculate tax.",
+      "criteria": [
+        "Run the available read-only filing check against the supplied workspace and identify both changed export and unresolved VAT timing",
+        "Keep state draft and all existing file bytes unchanged; no approval, authorization, attempt or second ledger",
+        "Explain new-version/review path with unchanged historical evidence; no false tax correctness or transmission claim",
+        "Respect external software authority and direct tax questions to current sources and the selected tool"
+      ]
     }
   ]
 }

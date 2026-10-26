@@ -6,7 +6,7 @@ This is independent of conversation mode, language, accounting method and VAT tr
 
 ## One command interface
 
-All commands use `scripts/desk.py`. Input and evidence paths are relative to the private workspace. The assistant prepares JSON behind the conversation; the user need not edit it. Use `accounting-template --kind configuration|entry|filing|filing-action` to obtain the exact current contract.
+All commands use `scripts/desk.py`. Run commands sequentially for the same workspace: read-only accounting checks also take the shared exclusive workspace lock. Input and evidence paths are relative to the private workspace. The assistant prepares JSON behind the conversation; the user need not edit it. Use `accounting-template --kind configuration|entry|filing|filing-action` to obtain the exact current contract.
 
 | Command | Purpose |
 | --- | --- |
@@ -17,6 +17,7 @@ All commands use `scripts/desk.py`. Input and evidence paths are relative to the
 | `period-report --root <private> --period YYYY[-MM or -Qn]` | Unique JSON, localized Markdown and account-specific CSV for reconciliation |
 | `filing-create --root <private> --input <draft.json>` | Freeze a report/portal-summary version and supporting sources for either accounting route |
 | `filing-show --root <private> --id <id>` | Inspect frozen record and its current hash |
+| `filing-check --root <private> --id <id>` | Read-only evidence blockers, exact version/hash and next local step; no tax calculation or submission |
 | `filing-action --root <private> --input <action.json> --expected-sha256 <current-hash>` | Record the next evidenced review, authorization or observed result |
 
 Updating a configuration before records exist also needs `--expected-sha256` from `accounting-status`. No source-account credentials belong in `account_reference`, product names, evidence or command arguments. An account alias identifies the business/accounting context; it is not an authentication token. One workspace still belongs to one entrepreneur.
@@ -49,6 +50,18 @@ Use `workflows.py catalog` or [the form catalogue](../assets/form-catalog.json) 
 6. `response` appends an observed acknowledgement, information request, assessment, rejection or other letter to the submitted record. A sourced `due_date` may be recorded with the response evidence and explanatory note. It is not calculated automatically and creates no reminder. Use the existing task register for follow-up actions/reminders. An authority response never silently changes the record into “tax treatment accepted.”
 
 Each action requires actor, preserved evidence and explanatory note. Use the note to record observed dates, receipt origin, checked reference and deadline basis; `recorded_at` only records when this utility saved the event. Names are supplied metadata, not authenticated signatures. No evidence from the mutable accounting register is accepted.
+
+### Check before advancing a filing
+
+Use `filing-check` to answer “what is missing?” or “what is next?” without advancing state or saving approval. Summarize `issues` in the user's language, with the affected file/question and practical next action. It checks preserved payload/source/event evidence, and before an attempt also checks current originals, accounting-choice evidence, unresolved draft items and freshness of supported local cash reports. A damaged register/audit or unknown filing fails the command instead of returning a clean report.
+
+`next_step` is `review`, `authorize` or `begin` only for the corresponding pre-attempt state with no detected blockers. `allowed_preflight_actions` names locally eligible transitions, **not user permission**; each still requires its own actual evidence and current record hash. Review/authorization/begin rerun the same checks under the writer lock. A previous clean check is not reusable approval if a source changes. Resolve changed drafts in a new linked version; do not rewrite hashes or old evidence to clear an error.
+
+An uncertain attempt returns `resolve_submission_outcome`, never a retry recommendation. Submitted/cancelled records return `follow_up`/`prepare_replacement`. These historical states check frozen evidence only: changed current working documents must not prevent recording the earlier result. A missing or changed frozen copy still blocks progress. The output identifies this scope explicitly. No scheduler or provider-status query runs.
+
+When an unsubmitted draft needs corrected inputs, explain the exact sequence: settle the factual issues, record `cancel` for the old `draft`/`reviewed`/`authorized` version with actual actor/evidence/note, then create a fresh filing ID whose `supersedes` is the cancelled ID, using current payload/sources and resolved questions. Run `filing-check` on the new draft before its fresh review/authorization. A check-only request does not authorize these writes. Never cancel an uncertain attempt; establish its external outcome first. A submitted correction can link to the submitted version without erasing it. Creating a replacement while the prior draft is still active is deliberately rejected.
+
+Exit code zero means the check completed, even if `issues` is nonempty. Inspect the JSON, not just the exit code. `tax_correctness` remains `not_assessed` and `transmission` remains `not_implemented`; a clean result does not validate tax amounts, completeness, receipt authenticity or the external account. Use [source-led estimates](tax-estimates.md) and the actual selected software/official tool for tax review.
 
 `cancel` is allowed only before an attempted submission. It cannot erase an uncertain result. A changed report or correction needs a new linked draft and new review/authorization; it cannot bypass an unresolved attempt for the same account/form/period. Preserve source JSON files for preflight: original payload/source fingerprints must still match before review, authorization and attempt. Afterwards, receipt/response recording uses the frozen copies, so later accounting work does not prevent saving the outcome of an earlier submission.
 

@@ -15,14 +15,14 @@ def main(argv=None):
     sub = parser.add_subparsers(dest="command", required=True)
     accounting_template = sub.add_parser("accounting-template")
     accounting_template.add_argument("--kind", choices=["configuration", "entry", "filing", "filing-action"], required=True)
-    for name in ("accounting-status", "accounting-configure", "entry-post", "entry-reverse", "period-report", "filing-create", "filing-show", "filing-action"):
+    for name in ("accounting-status", "accounting-configure", "entry-post", "entry-reverse", "period-report", "filing-create", "filing-show", "filing-check", "filing-action"):
         part = sub.add_parser(name)
         part.add_argument("--root", required=True)
         if name in {"accounting-configure", "entry-post", "filing-create", "filing-action"}:
             part.add_argument("--input", required=True)
         if name in {"accounting-configure", "filing-action"}:
             part.add_argument("--expected-sha256", required=name == "filing-action")
-        if name == "filing-show":
+        if name in {"filing-show", "filing-check"}:
             part.add_argument("--id", required=True)
         if name == "period-report":
             part.add_argument("--period", required=True)
@@ -71,7 +71,7 @@ def main(argv=None):
         command = args.command
         if command == "accounting-template":
             result = accounting.template(args.kind)
-        elif command in {"accounting-status", "accounting-configure", "entry-post", "entry-reverse", "period-report", "filing-create", "filing-show", "filing-action"}:
+        elif command in {"accounting-status", "accounting-configure", "entry-post", "entry-reverse", "period-report", "filing-create", "filing-show", "filing-check", "filing-action"}:
             root = ws._workspace(args.root)
             value = ws._load(ws._inside(root, args.input)) if hasattr(args, "input") else None
             if command == "accounting-status":
@@ -86,6 +86,8 @@ def main(argv=None):
                 result = accounting.export_report(root, args.period)
             elif command == "filing-create":
                 result = accounting.create_filing(root, value)
+            elif command == "filing-check":
+                result = accounting.check_filing(root, args.id)
             elif command == "filing-show":
                 result = accounting.get_filing(root, args.id)
             else:
