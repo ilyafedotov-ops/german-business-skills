@@ -175,9 +175,31 @@ Deliver each package as a separately reviewable change. Before implementation it
 
 See [validation](validation.md) for actual checks and fresh trials. Unperformed acceptance remains in the plan even where instructions have been written.
 
+## 5.2. Practical P1–P7 delivery (2026-10-26)
+
+The next implementation adds reusable outcomes to the instructions. This table
+tracks local delivery separately from acceptance; it is not a declaration that
+all real-world lifecycle operations are complete.
+
+| Package | Added capability in the skill bundle | Acceptance still needed beyond local trials |
+| --- | --- | --- |
+| P1 | Task-first outcome menu and continuation from saved evidence; no folder required for a question/reply | Exact host discovery and nontechnical users returning across sessions |
+| P2 | EN/RU launch-plan worksheet linked to factual forms, assumptions and dependencies | Actual chosen registration route and observed authority outcomes |
+| P3 | EN/RU customer-case worksheet; question/letter route; recipient draft separated from private review; no unsolicited commitments | Complete issued invoice → payment → correction cycle in the chosen system; exact format validation |
+| P4 | EN/RU annual-readiness worksheet; changed inputs invalidate prior results; uncertain attempts and unrelated receipts remain distinct | Actual chosen form/year calculation output and authorized submission with matching receipt |
+| P5 | EN/RU change plan; sourced first-hire preparation; pause fact check; retained access and open matters | Actual employer/service/authority execution; migration reconciliation and applicable closure follow-up |
+| P6 | EN/RU operation note and failure handling for unavailable/expired access, partial results, uncertain writes and conflicting readback | Chosen real service operation, permissions and readback; actual scheduler only if requested |
+| P7 | EN/RU task guide and task-oriented documentation navigation; GUI scope remains explicit | Native platforms, nontechnical-user acceptance and exact published-package verification |
+
+All five new worksheet roles are declared for both languages in `locales.json`.
+They are readable authoring aids, not new canonical registers or official forms.
+No tax formulas, new production dependencies, autonomous services, payroll engine,
+GUI screens or live transports are introduced. See [validation](validation.md)
+for observed trial results and defects corrected during acceptance.
+
 ## 6. Queue and drift control
 
-**After local S0/P1 implementation, the next queue is P2–P5 acceptance on representative tasks and supported hosts.** P6 accompanies specific needs; P7 follows accepted journeys. Security maintenance and fixes to existing capabilities continue as necessary.
+**After the local P1–P7 materials and synthetic preparation trials, the next queue is actual document-cycle execution, a chosen service operation and supported-host acceptance.** P6 accompanies specific needs; P7 follows accepted journeys. Security maintenance and fixes to existing capabilities continue as necessary.
 
 Every development task must identify its lifecycle stage, user outcome and acceptance. New infrastructure, a proprietary calculator, journal expansion or GUI work does not gain priority simply because it is easier to measure with tests. Update this plan and related product commitments before changing scope.
 

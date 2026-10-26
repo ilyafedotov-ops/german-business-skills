@@ -4,11 +4,11 @@ Windows users can start without Python using [native Windows tools](windows.md).
 
 [English](architecture.md) · [Русский](architecture.ru.md)
 
-Project version: **0.6.0-preview.4**. Implementation reviewed **2026-10-26**; external-source checks retain their recorded dates. [Current scope](project-status.md).
+Project version: **0.7.0-preview.1**. Implementation reviewed **2026-10-26**; external-source checks retain their recorded dates. [Current scope](project-status.md).
 
 Read the [domain ontology](ontology.md) for entities, relationships and state meanings. The **local casework extension** is part of the source implementation; it is not evidence of a published release or completed desktop integration.
 
-The [accounting workflow](accounting.md) adds an onboarding-selected authoritative system, limited local cash journal and filing evidence lifecycle through the existing `desk.py` entry point. `casefiles/accounting.py` stores additive state in `04_accounting/register.json`; it reuses workspace locks, evidence fingerprints and history, and checks register state against its latest audit checkpoint. Local cash reports include source-entry/configuration fingerprints and per-account reconciliation CSVs. Filing versions freeze payload/source files, separate review/authorization from uncertain attempts and manually observed receipts/responses, and block stale local-report preflight. No provider/ERiC transport or complete statutory tax calculator is added.
+The [accounting workflow](accounting.md) adds an explicitly selected authoritative system when accounting work needs it, limited local cash journal and filing evidence lifecycle through the existing `desk.py` entry point. `casefiles/accounting.py` stores additive state in `04_accounting/register.json`; it reuses workspace locks, evidence fingerprints and history, and checks register state against its latest audit checkpoint. Local cash reports include source-entry/configuration fingerprints and per-account reconciliation CSVs. Filing versions freeze payload/source files, separate review/authorization from uncertain attempts and manually observed receipts/responses, and block stale local-report preflight. No provider/ERiC transport or complete statutory tax calculator is added.
 
 ## Intended result
 
@@ -32,6 +32,8 @@ The bundle contains seven directly usable skills with one shared profile. `de-bu
 | Accounting product / authority | Actual postings, transmissions, receipts and official responses |
 
 The skill cannot create browser tools, API access or permissions. Availability depends on the host and current session. Bundled scripts operate offline; the host's model can still process selected data remotely.
+
+The lifecycle worksheets and continuation notes reuse existing tasks, decisions and evidence. They add no state schema or autonomous workflow runner; the assistant prepares and verifies each result through available tools.
 
 ## Languages and modes
 

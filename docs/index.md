@@ -12,6 +12,7 @@
 
 | Task | Guide |
 | --- | --- |
+| Start, reply, prepare the year, hire/change/close or resume | [Choose your task](../skills/de-business-kit/guides/tasks.en.md) |
 | Use the real GUI release candidate | [GUI capabilities and delivery](gui.md), [GUI user instructions](../gui/README.md) |
 | Set up the app or update the skill | [Getting started](quickstart.md), [Windows without Python](windows.md), [installation and updates](distribution.md) |
 | Organize existing records | [Email, services and folders](existing-data.md), [document workflow](document-workflow.md) |

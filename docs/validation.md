@@ -6,6 +6,109 @@ Current capabilities are summarized in [project status](project-status.md). Date
 
 Checked **2026-10-26**. Tests use synthetic temporary data, never live business records or accounts.
 
+## Practical lifecycle outcomes P1–P7 (2026-10-26)
+
+Added five EN/RU worksheet roles (launch plan, customer case, annual readiness,
+change plan, operation check), shared correspondence/continuation routes, sourced
+first-hire preparation and task-oriented user guides. These implement skill-led
+preparation and use existing writers; they add no runtime calculator, connector,
+state schema, GUI screen or live submission. Reviewed against `c3f426c` plus the
+working-tree changes; the earlier three grouped commits retain the bundle baseline.
+
+### Local source and package checks
+
+- macOS 27.0.1 arm64, Python 3.14.6, PowerShell 7.5.4. Trial subagents were requested
+  as gpt-6.1-sol/high; independent review as gpt-6-astra/high. Application runtime
+  version/effective model were not independently exposed. Locally installed CLI
+  versions do not establish the host used for the conversational trials.
+- `python3 -B -m unittest discover -s tests -v`: final run **251 tests, 246 passed,
+  5 skipped**, 48.405 seconds. Existing Windows/cross-runtime skips remain.
+- The first full run failed one native install dry-run on a **90-second timeout**
+  (251 tests, one error, five skips; 143.010 seconds). No production runtime source
+  was changed to hide the failure. A private instrumented copy completed preflight
+  in 2.7 seconds; focused `test_skill_bundle.py` passed all **4** tests in 31.362
+  seconds; the subsequent full run passed. Cause remains unestablished and native
+  installation timing remains an acceptance limitation, including the earlier
+  deep-path issue. A successful retry does not prove the instability fixed.
+- `TMPDIR=/private/tmp pwsh -NoProfile -File tests/native/windows-smoke.ps1`:
+  **passed** start/resume, preview, original preservation, duplicates, tamper,
+  locks, install and detached resources. This is macOS PowerShell 7 evidence,
+  **not Windows PowerShell 5.1 acceptance**.
+- `python3 -B tools/check_package.py`, `python3 -B tools/release.py check` and
+  `git diff --check`: **passed**. Seven skill frontmatter validations passed.
+  Local Markdown file/anchor checks found **0 errors**.
+- Local package built at `/private/tmp/gbk-p1-p7-package-20261026` using
+  `tools/build_package.py --output`. Both Claude marketplace/plugin validations
+  passed, with unchanged nonblocking icon/install-line advice. No host install,
+  publication, signature validation or actual automatic skill discovery occurred.
+- Independent read-only review inspected the new bilingual materials, routing,
+  source statements, writer contracts and plan claims: **no actionable findings**.
+  The timeout and external/native/user acceptance remain explicitly open.
+
+### Fresh synthetic preparation trials
+
+Criteria were not shown to the trial agents. Each used only synthetic statements
+and public primary sources; artifacts stayed outside the repository. Parent read
+actual outputs rather than treating a trial's final answer as execution evidence.
+
+- **P1/P3 authority reply, initial run:** created separate German HTML/text and
+  Russian private-review files without a workspace, account access or sending.
+  Chromium checks at 1100/390 px passed; parent inspected the narrow screenshot.
+  It nevertheless added an unsolicited extension request and invented proposed
+  date. This is a behavioral finding, not a pass. The correspondence workflow now
+  keeps new dates/commitments outside the recipient draft unless confirmed.
+- **P2 additional activity:** English launch plan and factual worksheet retained
+  existing translation activity/VAT history, no workspace or accounting selection.
+  Observed official help headings were separated from unobserved portal fields.
+  Berlin PDF retrieval, older help URL identifier and conflicting account-route
+  wording were disclosed; no registration or case-level tax conclusion was claimed.
+- **P5 first employee:** Russian plan and data checklist started with existing BG
+  correspondence, separated identifiers, reporting, calculation and payment, and
+  preserved the self-managed software route. No employee secrets, payroll run,
+  selected software suitability or individual deadline was invented. Parent ran
+  the artifact verifier: four UTF-8 documents across the two cases, six local links,
+  no reported errors or cross-case source-marker contamination.
+- **P4/P6 annual preparation and partial-export continuation:** v1 readiness/access
+  notes retained external sevdesk authority, missing December/assets/reconciliation,
+  stale calculation and the uncertain 2025 annual attempt. A 2026 monthly receipt
+  did not resolve it. The v2 update preserved “page 1 of 3” as incomplete, without
+  assuming its period. Parent read the reports and verified all three original v1
+  file hashes unchanged. No original account/export bytes were supplied; this is
+  a manual-route preparation trial, not a provider integration or tax result.
+
+- **P1/P3 authority reply, fresh corrected trial:** the German draft retained only
+  the user-supplied facts and missing proof. No extension request, invented date,
+  attachment or promise was added. Russian private notes kept receipt facts and
+  the reported deadline distinct. Parent inspected the actual recipient/private
+  files. Markdown text acceptance only; no new PDF/browser claim.
+- **P3 customer sequence:** proposal/private review v01 followed by a separate
+  customer reply/correction plan v02. External EX-1 issuance, EUR 100 receipt and
+  dispute remained user-reported because no originals were attached. No issued
+  correction, refund promise, posting or sending occurred. Parent inspected the
+  documents and verified both original v01 hashes unchanged. This is preparation
+  across the cycle, not execution in invoicing software.
+- **P1/P5 pause and actual local resume:** created an isolated Russian-layout
+  synthetic workspace, saved one pending continuation task with the existing
+  `entry` writer and reopened using `start`. Observed `created` then `resumed`,
+  `workspace_health: ok`, one task, unchanged identity/hash and checked plan evidence.
+  Parent repeated `entry --collection tasks --id task-pause-continue-001` and read
+  the plan: pending task/evidence checked. Other activity and external accounting
+  authority remained; no cancellation, migration or deletion. `setup_incomplete`
+  remains appropriate because no real-data processing assessment was performed.
+
+Additional local artifacts: `/private/tmp/business-reply-trials-tqSTKk` and
+`/private/tmp/gbk-pause-resume-20261026-2BZhWY`. The latter is an actual synthetic
+workspace, not a backup of external accounts. All command writes used existing
+writers; the resume trial did not edit canonical JSON directly.
+
+Local trial artifact directories: `finanzamt-correspondence-trial-s0o0bgta`,
+`de-business-fresh-formation-hiring-20261026.xuzlwR` and
+`annual-access-trial-lhm_n39y`, all under `/private/tmp`. Temporary trial outputs
+are not durable business storage. Registration, actual issued-document cycles,
+calculation/submission, payroll, service migration, authenticated operations,
+scheduler delivery, nontechnical users and published/native desktop acceptance
+remain outside this evidence. The plan's remaining acceptance is not marked done.
+
 ## Seven-skill bundle and lifecycle instructions (2026-10-26)
 
 Local implementation of the agreed split: optional router plus start, operations,

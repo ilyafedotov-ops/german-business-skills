@@ -15,6 +15,7 @@ The product is a **system of skills for the entrepreneur lifecycle**. The [full 
 
 | Capability | Current implementation | Boundary |
 | --- | --- | --- |
+| Lifecycle preparation | EN/RU launch, customer-case, annual-readiness, change and operation worksheets; correspondence, continuation and first-hire routes | Agent-led preparation; current-source research and actual host/service execution still need case-specific acceptance |
 | Skill system | Optional router and six directly usable domain skills; shared contract/profile; complete-set installation | Instructions and local packaging do not establish discovery in every host, legal correctness or external execution |
 | Intake and continuity | One profile, preserved originals, EN/RU/DE physical folders, start/resume and integrity checks | A folder language is not a tax fact; no silent migration |
 | Native Windows | PowerShell 5.1 entry points for install, intake, integrity, real overview and full backup/restore; no Python installation required | Standalone PowerShell retains its narrower operation set; exact runner evidence is in validation. GUI installation and nontechnical-user acceptance remain separate |

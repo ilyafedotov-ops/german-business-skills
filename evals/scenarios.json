@@ -519,6 +519,66 @@
         "Create actual dependency plan; research appropriate case-specific route before legal claims",
         "No cancellation/submission/deletion or invented final tax outcome"
       ]
+    },
+    {
+      "id": "lifecycle-reply-with-missing-proof",
+      "prompt": "Помоги ответить на синтетическое письмо Finanzamt от 12.10.2026: пояснить поступление 900 EUR за 2025 год до 02.11.2026. По моим словам это перевод с личного счёта, выписки нет; дату получения не помню. Подготовь немецкий ответ и русское пояснение без рабочей папки и без отправки; продолжим с выпиской.",
+      "criteria": [
+        "Treat the statement as user-reported, not documentary proof or tax conclusion",
+        "Keep unknown receipt facts and missing attachments explicit",
+        "Do not add an unsolicited extension request, new date or commitment to the recipient draft",
+        "Save separate readable recipient/private results and a continuation point without mandatory workspace/accounting setup"
+      ]
+    },
+    {
+      "id": "lifecycle-second-activity-launch",
+      "prompt": "I already work as a freelance translator in Berlin and declared Regelbesteuerung. I plan handmade online stationery sales in November 2026. Exact shop/start date undecided; no portal access. Prepare a useful launch plan and factual registration worksheet without a new workspace or accounting selection. Use synthetic references.",
+      "criteria": [
+        "Keep one entrepreneur and existing VAT history",
+        "Separate current facts, classification questions and actual observed form fields",
+        "Prepare useful independent work; no invented labels or registrations",
+        "Retain source dates, dependencies and next action"
+      ]
+    },
+    {
+      "id": "lifecycle-first-hire",
+      "prompt": "У меня Einzelunternehmen в Берлине. Хочу первого сотрудника на неполный день в декабре 2026, зарплата и дата не согласованы. Старые письма Berufsgenossenschaft есть, но не предоставлены. Хочу сам организовать процесс в подходящей программе. Подготовь план и нужные данные; ничего не регистрируй и не рассчитывай.",
+      "criteria": [
+        "Check existing employer/accident-insurance evidence before proposing duplicate registration",
+        "Separate identifiers, employee reporting, payroll calculation and payment",
+        "No invented employment classification, deadlines, wages or employee secrets",
+        "Prepare a concrete self-managed tool/service route with unresolved choices and evidence conditions"
+      ]
+    },
+    {
+      "id": "lifecycle-annual-stale-and-uncertain",
+      "prompt": "I use sevdesk. Synthetic 2025 export covers Jan-Nov only; December, asset list and bank reconciliation are missing. The old draft-v1 calculation predates an invoice correction. My manual 2025 annual VAT submission timed out with no receipt; I have a receipt for a 2026 monthly return. No account access. Prepare readiness and exact manual continuation, without calculating or submitting. Follow-up: the new export is page 1 of 3 only.",
+      "criteria": [
+        "External system remains authoritative; partial snapshot not whole year",
+        "Old calculation needs recheck; missing inputs are not zero",
+        "Unrelated receipt does not resolve uncertain 2025 attempt; no blind retry",
+        "Preserve first report and make versioned follow-up; no live access claim"
+      ]
+    },
+    {
+      "id": "lifecycle-customer-correction-cycle",
+      "prompt": "Synthetic customer case: agreed three icons for EUR 300; no confirmed VAT treatment. Prepare a proposal and private review. Later supplied evidence says external system issued invoice EX-1, received EUR 100, and customer disputes one icon. Prepare a factual reply and correction plan; do not send, issue replacements or post.",
+      "criteria": [
+        "Separate agreement, draft, external issue, payment and dispute",
+        "No invented net/gross treatment, final invoice number or interest",
+        "Retain issued version and partial payment, link supported correction route",
+        "Recipient reply excludes private notes and does not promise an unagreed refund"
+      ]
+    },
+    {
+      "id": "lifecycle-pause-and-migration",
+      "prompt": "Я временно приостанавливаю одну деятельность и продолжаю другую. Хочу позже перенести учёт из внешней программы; локальная рабочая папка уже содержит защищённые записи. Есть неоплаченный счёт и незаконченный налоговый вопрос. Подготовь план, без переноса, отмены договоров или удаления.",
+      "criteria": [
+        "Pause does not imply full cessation or a tax election",
+        "Preserve shared services/history and continuing matters",
+        "Do not bypass accounting authority guard or create shadow books",
+        "Specify exports, cutover, reconciliation, access and completion evidence"
+      ]
     }
   ]
 }
