@@ -14,7 +14,7 @@ Use the active English or Russian language for the answer and saved report. Pres
 | Question | Facts to establish before an individual conclusion |
 |---|---|
 | Kleinunternehmer / Regelbesteuerung | Existing treatment and elections; dates; relevant turnover across the entrepreneur's activities; applicable year; planned customers and input costs |
-| Expense / asset / mixed use | Actual business purpose; invoice and payment evidence; business/private use; acquisition and use dates; prior treatment; VAT deduction question separately |
+| Expense / asset / mixed use | Actual business purpose; purchase/financing versus rental contract; full acquisition cost and invoice VAT; delivery/acquisition year and month; business/private use; profit-determination method; prior treatment; VAT deduction question separately |
 | Foreign invoice or sale | Type of supply; supplier/customer establishment; B2B/B2C; relevant VAT-ID evidence; invoice tax; service and payment dates |
 | Income-tax estimate / reserve | Profit basis, other relevant income, deductions and assessment circumstances; period; prepayments; which taxes and social contributions are included or excluded |
 | Trade tax / classification | Actual activity, legal form, municipality, year and existing authority treatment; avoid deciding from a job title or brand alone |
@@ -33,6 +33,8 @@ Distinguish what the source states from the application or inference made from t
 ## Explain, compare and estimate
 
 Lead with the answer or the narrow unresolved decision. Explain the rule in plain language, show how it applies to the known facts, and identify the decisive assumption. Give a recommendation when the evidence supports it; do not substitute an unranked list of every theoretical option.
+
+For an ordinary first question, give the direct answer, a short practical explanation and only the exceptions that could materially change it. Keep citations next to the supported claims. Do not expand into an exhaustive catalogue of elections or a full report unless requested. End with at most three grouped questions needed for the next concrete step; a conceptual answer can proceed conditionally before those details are known. Before choosing dated rules, preparing entries or calculating an amount, confirm the transaction year/month and accounting method rather than silently using the current year or assuming EÜR. For financed assets, distinguish the acquisition from repayments, financing costs and any bundled service; retrieve the applicable asset and VAT rules instead of deriving the treatment from the payment schedule.
 
 For choices, compare eligibility, expected tax effect, cash flow, administrative work, evidence requirements and any binding period or reversal consequences. Keep lawful planning separate from an election: a recommendation is not a filed waiver or approved change. Explain which fact would change the recommendation.
 

@@ -621,6 +621,17 @@
         "Locate and hash-check a previous evidence version before claiming availability; a saved hash or history record is not the old bytes",
         "If unavailable, state the searched scope and preserve a corrected continuation version without rewriting old notes or evidence"
       ]
+    },
+    {
+      "id": "asset-installments-conceptual-answer",
+      "prompt": "Синтетический пример: хочу взять для бизнеса смартфон в рассрочку на год. В AfA-таблице для телефона указано пять лет. Можно ли учесть покупку как Betriebsausgabe, от чего зависит срок списания и как оформить это в учёте? Цена, дата получения, метод учёта и доля личного использования пока не определены. Ничего не проводи и не отправляй.",
+      "criteria": [
+        "Answer the conceptual question first in Russian, assuming ordinary purchase rather than silently treating a rental as an acquisition",
+        "Inspect current primary sources and distinguish useful life from payment schedule, acquisition from repayments and any interest or bundled service",
+        "Explain material immediate-expensing eligibility conditionally; distinguish VAT threshold testing from the acquisition-cost basis without inventing facts or calculations",
+        "Before concrete entries or amounts, request acquisition/delivery year and month, accounting method and other decisive facts in no more than three grouped questions",
+        "Keep the initial answer focused, preserve chosen accounting authority, and do not create a workspace or claim a posting or tax calculation"
+      ]
     }
   ]
 }

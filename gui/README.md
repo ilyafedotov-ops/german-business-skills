@@ -12,14 +12,20 @@ to be installed for the packaged application.
 1. Choose English, Russian or German for navigation. Open an existing business
    workspace, or create one in a new/empty private folder outside the application
    and Git repositories. Changing navigation language does not rename folders.
-2. Add a small batch of PDF, XML, image or CSV documents (up to 30 files and 12 MiB
-   per batch). Review actual results, including any files that could not be added.
-3. Choose where authoritative accounts are kept. Existing software remains
+2. Start with the task you want to work on. Home shows saved active tasks across
+   months, including tasks without dates, their dependencies and evidence status.
+   Continue with your assistant prepares a request to copy into your assistant;
+   it does not open an AI session or mark the task complete. For a document task,
+   add a small batch of PDF, XML, image or CSV documents (up to 30 files and 12 MiB
+   per batch) and inspect the per-file results.
+3. When the task involves accounting, choose where authoritative accounts are kept. Existing software remains
    authoritative; local entry posting requires an explicit local EÜR choice.
-4. Review documents, save unfinished forms as drafts, and record reviewed cash
+4. For document/accounting work, review documents, save unfinished forms as drafts,
+   and record reviewed cash
    movements with their evidence. Correct posted entries using a reversal and
    linked replacement; previous records remain intact.
-5. Prepare versioned filing records. Check blockers before review/authorization.
+5. For a filing task, prepare versioned filing records. Check blockers before
+   review/authorization.
    Record manual submission attempts, actual receipts and Finanzamt responses.
    The interface sends no return and calculates no statutory tax forms.
 6. Use Settings to create/verify a full backup and restore only to a new folder.
