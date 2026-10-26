@@ -27,3 +27,5 @@
 [What was actually tested](validation.md) · [Unfinished capabilities](core-capabilities.md) · [Architecture](architecture.md) · [Data model and states](ontology.md) · [Behavioral scenarios](../evals/scenarios.json) · [Contributing](../CONTRIBUTING.md)
 
 The start guide and manual ship with the skill. User documents belong in a separate private workspace; repository examples use fictional data only.
+
+[Versions, signatures and release verification](releases.md)

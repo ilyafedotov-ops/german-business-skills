@@ -23,7 +23,7 @@ class PackagingTests(unittest.TestCase):
         self.source = self.base / "source"
         self.source.mkdir()
         for name in ("plugin.json", ".claude-plugin/plugin.json", "LICENSE",
-                     "packaging/README.md", "packaging/README.ru.md"):
+                     "packaging/README.md", "packaging/README.ru.md", "VERSION"):
             target = self.source / name
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, target)
@@ -59,7 +59,7 @@ class PackagingTests(unittest.TestCase):
                 manifest_path = "plugin.json" if host == "codex" else ".claude-plugin/plugin.json"
                 manifest = json.loads((plugin / manifest_path).read_text(encoding="utf-8"))
                 self.assertEqual(manifest["name"], entry["name"])
-                self.assertEqual(manifest["version"], "0.5.0-preview")
+                self.assertEqual(manifest["version"], (ROOT / "VERSION").read_text().strip())
                 for readme in ("README.md", "README.ru.md"):
                     content = (plugin / readme).read_bytes()
                     self.assertEqual(content, (ROOT / "packaging" / readme).read_bytes())

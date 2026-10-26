@@ -1,0 +1,92 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  checks:
+    uses: ./.github/workflows/checks.yml
+
+  security:
+    permissions:
+      contents: read
+      security-events: write
+    uses: ./.github/workflows/security.yml
+
+  build:
+    needs: [checks, security]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Validate exact tag and build twice
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python -B tools/release.py prepare --tag "$RELEASE_TAG" --output "$RUNNER_TEMP/release-assets"
+          python -B tools/release.py prepare --tag "$RELEASE_TAG" --output "$RUNNER_TEMP/release-repeat"
+          diff -r "$RUNNER_TEMP/release-assets" "$RUNNER_TEMP/release-repeat"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-assets
+          path: ${{ runner.temp }}/release-assets/*
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      # No checkout or project-code execution in this privileged job.
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: release-assets
+          path: release-assets
+      - name: Check downloaded bytes
+        working-directory: release-assets
+        run: sha256sum --check --strict SHA256SUMS
+      - name: Sign build provenance
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
+        with:
+          subject-path: release-assets/*
+      - name: Verify provenance and publish complete immutable release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(gh api "repos/$GH_REPO/immutable-releases" --jq .enabled)" = true
+          for asset in release-assets/*; do
+            gh attestation verify "$asset" --repo "$GH_REPO" \
+              --signer-workflow "$GH_REPO/.github/workflows/release.yml" \
+              --source-ref "refs/tags/$RELEASE_TAG" --source-digest "$SOURCE_SHA" \
+              --deny-self-hosted-runners
+          done
+          flags=()
+          if [[ "$RELEASE_TAG" == *-* ]]; then flags+=(--prerelease); fi
+          gh release create "$RELEASE_TAG" release-assets/* --verify-tag --draft \
+            --title "German Business Kit $RELEASE_TAG" \
+            --notes-file release-assets/release-notes.md "${flags[@]}"
+          gh release edit "$RELEASE_TAG" --draft=false
+          gh release verify "$RELEASE_TAG"

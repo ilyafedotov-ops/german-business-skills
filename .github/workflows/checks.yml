@@ -1,15 +1,22 @@
-name: Offline package checks
+name: Checks
 
 on:
   push:
+    branches: ["**"]
   pull_request:
+  workflow_call:
 
 permissions:
   contents: read
 
+concurrency:
+  group: checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref_type != 'tag' }}
+
 jobs:
   prototype:
     name: Prototype / ${{ matrix.os }} / ${{ matrix.browser }}
+    timeout-minutes: 30
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -20,21 +27,24 @@ jobs:
           - os: macos-latest
             browser: webkit
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
           cache: npm
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: '3.12'
       - run: npm ci --ignore-scripts
+      - run: npm audit --audit-level=high
       - run: npx playwright install ${{ matrix.browser }}
       - run: npm test
       - run: npm run test:browser -- --browser=${{ matrix.browser }}
       - run: npm run test:documents -- --browser=${{ matrix.browser }}
       - run: npm run test:overview -- --browser=${{ matrix.browser }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
           name: prototype-${{ matrix.os }}-${{ matrix.browser }}
@@ -45,6 +55,7 @@ jobs:
 
   native-utilities:
     name: ${{ matrix.os }} / Python ${{ matrix.python }}
+    timeout-minutes: 30
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -63,20 +74,27 @@ jobs:
       PYTHONUTF8: '1'
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ matrix.python }}
       - name: Test offline workspace, installer and extracted packages
         run: python -B -m unittest discover -s tests -v
+      - name: Check release version contract
+        run: python -B tools/release.py check
       - name: Validate package structure and local references
         run: python -B tools/check_package.py
 
   windows-without-python:
     name: Windows PowerShell 5.1 / no Python setup
+    timeout-minutes: 15
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
       - name: Native install, start, preview, intake, resume and integrity
         shell: powershell
         run: |

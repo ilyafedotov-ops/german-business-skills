@@ -278,3 +278,9 @@ Use the dated primary-source references to check consequential decisions. Legal 
 Atomic JSON replacement protects individual files, but copies, registry updates, history and events are not one crash-atomic database transaction. A hard interruption can leave a detectable orphan or an absent audit event after an index update. Inspect state before retrying. Locks coordinate these utilities, not arbitrary external editors. Hashes are not signatures or a tamper-proof archive. POSIX modes are best-effort; Windows ACLs, encryption and backup remain the user's environment responsibility.
 
 The README gives the supported setup order: initialize a new private workspace before installing project-scoped skills into it. User-scoped installation can happen first.
+
+## Release preparation checks — 2026-10-26
+
+For 0.6.0-preview.1, local `python3 -B -m unittest discover -s tests -v` ran 214 tests: 209 passed, five native-runtime checks skipped on this Mac. New checks cover version/tag identity, clean sources, reproducibility, file inventories, byte tampering and the SARIF severity gate. `npm test`: five passed; `npm audit --audit-level=high`: zero vulnerabilities. `python3 -B tools/check_package.py`, `python3 -B tools/release.py check`, `git diff --check` and actionlint 1.7.12 passed. Independent release review completed; its CodeQL severity-gating finding was fixed and rechecked. Immutable releases and Dependabot security updates were enabled; secret scanning and push protection were already enabled.
+
+This is local evidence, not a published-release claim. Windows PowerShell 5.1, hosted CI and each published tag's signatures require separate verification through the [release procedure](releases.md).

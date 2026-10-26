@@ -10,7 +10,7 @@ You can also start from existing email, accounting services or a mixed folder. [
 
 Open-source assistance for starting and running a sole-trader business in Germany, including **Freiberufler** and **Einzelunternehmen/Gewerbe**. The primary workflow is managing your own bookkeeping/accounting and tax reporting. One portable skill for Codex and Claude Code provides a shared business profile, organized private files and three explicit working modes. Accountant consultation and exports are optional branches for a specific need.
 
-**Version 0.5.0 — preview.** User documentation, conversations and generated documents are supported in **English and Russian**. Official German form labels remain in German so users can find the corresponding fields. Internal agent references and machine-readable JSON keys remain in English; human-readable content follows the chosen language.
+**Version 0.6.0-preview.1 — preview.** User documentation, conversations and generated documents are supported in **English and Russian**. Official German form labels remain in German so users can find the corresponding fields. Internal agent references and machine-readable JSON keys remain in English; human-readable content follows the chosen language.
 
 The source and documentation are MIT-licensed. AI services, bank accounts and accounting products follow their own subscription terms.
 
@@ -177,3 +177,5 @@ Use synthetic or reliably anonymized data in public issues, pull requests and ex
 Banking, insurance and other services are researched against your needs, current costs and terms. See [service selection](docs/service-selection.md).
 
 For readable reports, recipient documents and reviewed attachments, see [documents and reports](docs/documents.md).
+
+[Versions, signatures and release verification](docs/releases.md)

@@ -1,2 +1,6 @@
-# Preserve PDF bytes; line-oriented whitespace checks do not apply.
+# Reproducible source bytes on Windows and macOS; PowerShell accepts LF.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
 *.pdf binary
+*.zip binary

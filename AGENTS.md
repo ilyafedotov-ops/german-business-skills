@@ -147,3 +147,16 @@ deployment, external messages/actions and destructive operations require explici
 user authorization; reuse authorization already given for the same scope. Stage
 only intended paths. Finish with changed files, actual check results, remaining
 limits and commit/push status when applicable.
+
+## Release maintenance
+
+`VERSION` owns the package version; both host manifests and both changelogs must
+match. Read [release rules](docs/releases.md) before publishing. Never move an
+existing release tag or replace published assets. Package versions do not migrate
+workspace schemas. Historical releases must preserve their original source commit
+and evidence limits. Pin external Actions to upstream commit SHAs; keep project
+code out of the privileged publication job. Run `python3 -B tools/release.py check`
+and release/package tests for packaging changes. Verify downloaded release assets
+and their expected repository/workflow/tag/commit attestations before claiming a
+signed release. Checksums, annotated Git tags and CODEOWNERS alone are not signing
+or enforced branch protection.

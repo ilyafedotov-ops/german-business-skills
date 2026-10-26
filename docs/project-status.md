@@ -2,7 +2,7 @@
 
 [English](project-status.md) | [Русский](project-status.ru.md) | [Documentation](index.md)
 
-Reviewed against the local source on **2026-10-26**, version **0.5.0-preview**.
+Reviewed against the local source on **2026-10-26**, version **0.6.0-preview.1**.
 This page describes implemented capabilities, not a published release, successful
 host installation or a certified accounting process. Exact runs and their limits
 are recorded in [validation](validation.md); older entries there are historical.
@@ -54,3 +54,5 @@ source checks, and validation records actual runs. Updating implementation docs
 does not renew legal/provider research or prove hosted CI. Maintain these
 distinctions when updating the project; see [AGENTS.md](../AGENTS.md) and
 [Contributing](../CONTRIBUTING.md).
+
+Releases: canonical versions, reproducible packages and provenance verification are described in [Versions, signatures and release verification](releases.md).

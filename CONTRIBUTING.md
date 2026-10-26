@@ -19,3 +19,5 @@ Use only synthetic examples in public issues and pull requests. Do not paste inv
 When capabilities change, update the affected current-status, architecture/ontology, EN/RU user docs and portable references together. Keep one compact skill entry point and one shared profile. Native user tools, optional Python automation and development dependencies must remain distinct. Date implementation reviews separately from legal/provider research; preserve historical validation, never relabel it as a new run. Treat plugin descriptions as capability claims and keep Codex/Claude metadata aligned.
 
 Contributions are licensed under this repository's MIT licence. Linked external laws and provider documents retain their own status and rights; link and summarize them instead of copying entire manuals.
+
+[Versions, signatures and release verification](docs/releases.md)

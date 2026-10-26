@@ -68,6 +68,8 @@ def snapshot(source: Path) -> Dict[str, bytes]:
         raise BuildError("Unexpected manifest fields; review packaging before adding capabilities.")
     if any(portable[key] != claude[key] for key in identity):
         raise BuildError("Host manifest identity/version mismatch.")
+    if read_file(source / "VERSION").decode("utf-8").strip() != portable["version"]:
+        raise BuildError("Package manifests must match VERSION.")
     if portable["name"] != NAME or portable["license"] != "MIT":
         raise BuildError("Unexpected package identity/license.")
     if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+(?:-[a-zA-Z0-9.-]+)?", portable["version"]):
@@ -182,6 +184,14 @@ def build(*, source: Path, output: Path) -> Path:
                 entry["source"] = f"./plugins/{NAME}"
                 catalog_path = ".claude-plugin/marketplace.json"
                 host_files = {key: value for key, value in files.items() if key != "plugin.json"}
+            # The attested outer ZIP authenticates this inventory. Its hashes alone
+            # are not a publisher signature and cannot protect a replaced ZIP.
+            manifest = json.loads(files["plugin.json"])
+            host_files["FILE-MANIFEST.json"] = json_bytes({
+                "schema_version": 1, "version": manifest["version"],
+                "files": {name: hashlib.sha256(data).hexdigest()
+                          for name, data in sorted(host_files.items())},
+            })
             package = {f"{host}/{catalog_path}": json_bytes(catalog)}
             package.update({f"{host}/plugins/{NAME}/{name}": data for name, data in host_files.items()})
             for name, data in sorted(package.items()):

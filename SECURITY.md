@@ -16,3 +16,5 @@ Language and mode settings are workflow preferences, not new permissions. Transl
 
 
 Full-workspace backups contain the same private information as the source, including hidden records and history. The recovery tools copy readable bytes; their manifest is not a signature, encryption or a tax-compliance certificate. They reject unsafe paths and existing restore destinations and lock cooperating writers during copy verification. Protect backup storage separately; never delete an old workspace merely because recovery verification passed.
+
+[Versions, signatures and release verification](docs/releases.md)

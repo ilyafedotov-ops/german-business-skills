@@ -1,4 +1,4 @@
-# Local plugin distribution — v0.5.0 preview
+# Local plugin distribution — v0.6.0-preview.1
 
 Windows users can start without Python using [native Windows tools](windows.md). The native entry point shares the existing workspace and covers installation, start/resume, preview, intake, integrity, real overview and full backup/restore; advanced validated automation remains an optional Python-engine capability.
 
@@ -78,3 +78,5 @@ On 2026-10-25, Claude Code **2.1.310** read-only `plugin validate` passed for a 
 The CI workflow runs native `windows-latest` (Python 3.9/3.14) and `macos-latest` (Python 3.10/3.14) jobs. [All four jobs passed on 2026-10-25](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40229530057) after fixing an installer drive-root error found by the first Windows run. Python 3.9 is covered on Windows because [GitHub's macOS ARM64 tool builds do not provide it](https://github.com/actions/python-versions/blob/main/versions-manifest.json). These checks execute offline Python utilities, not desktop apps.
 
 No desktop installation, discovery, permission prompt, account synchronization or complete live workflow has been tested by this packaging work. Record host/product version, OS, language, discovery, setup, resumption and synthetic-file results before claiming desktop support. Use the [validation notes](validation.md) and [scenario cases](../evals/scenarios.json).
+
+[Versions, signatures and release verification](releases.md)
