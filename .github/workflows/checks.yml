@@ -45,7 +45,7 @@ jobs:
       - run: npm run test:documents -- --browser=${{ matrix.browser }}
       - run: npm run test:overview -- --browser=${{ matrix.browser }}
       - run: npm run test:gui -- --browser=${{ matrix.browser }}
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: prototype-${{ matrix.os }}-${{ matrix.browser }}
@@ -132,7 +132,7 @@ jobs:
           archives=("$RUNNER_TEMP/gui-archives/"*.zip "$RUNNER_TEMP/gui-archives/"*.tar.gz)
           [[ ${#archives[@]} -eq 1 ]]
           python -B tests/gui-packaged-smoke.py --archive "${archives[0]}"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: gui-release-${{ matrix.os }}
           path: ${{ runner.temp }}/gui-archives/*
