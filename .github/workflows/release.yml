@@ -76,7 +76,7 @@ jobs:
           SOURCE_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          test "$(gh api "repos/$GH_REPO/immutable-releases" --jq .enabled)" = true
+          gh --version
           for asset in release-assets/*; do
             gh attestation verify "$asset" --repo "$GH_REPO" \
               --signer-workflow "$GH_REPO/.github/workflows/release.yml" \
@@ -89,4 +89,7 @@ jobs:
             --title "German Business Kit $RELEASE_TAG" \
             --notes-file release-assets/release-notes.md "${flags[@]}"
           gh release edit "$RELEASE_TAG" --draft=false
+          # The settings endpoint requires admin permissions, unavailable to
+          # GITHUB_TOKEN. The published release exposes this enforced outcome.
+          test "$(gh api "repos/$GH_REPO/releases/tags/$RELEASE_TAG" --jq .immutable)" = true
           gh release verify "$RELEASE_TAG"

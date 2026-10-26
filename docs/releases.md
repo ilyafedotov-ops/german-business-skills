@@ -17,8 +17,10 @@ must never imply automatic migration of private records.
 - The release workflow signs build provenance for all uploaded assets using
   GitHub Actions OIDC and Sigstore; no stored personal signing key is needed.
 - GitHub immutable releases protect published assets and their tags and add a
-  separate signed release attestation. The workflow refuses publication unless
-  immutability is enabled in repository settings.
+  separate signed release attestation. A repository administrator must enable
+  immutability before publishing. The workflow checks the published release's
+  immutable status and signature before reporting success. The settings endpoint
+  requires admin access, which is deliberately not granted to the workflow.
 - This does **not** sign every Git commit, add Windows Authenticode signatures,
   notarize an application, or prove tax correctness or absence of vulnerabilities.
   Commit signing requires a maintainer's separately managed trusted key. Never
@@ -43,7 +45,8 @@ Get-FileHash .\de-business-kit-0.6.0-preview.1-codex.zip -Algorithm SHA256
 
 On macOS use `shasum -a 256 de-business-kit-0.6.0-preview.1-codex.zip`. Compare with
 the matching line of `SHA256SUMS`. A checksum from the same untrusted source is
-not authentication. With the optional GitHub CLI, verify the downloaded archive:
+not authentication. With a current optional GitHub CLI, verify the downloaded archive
+(2.103.2 verified these releases; 2.80 failed to read their attestation bundles):
 
 ```sh
 gh release verify v0.6.0-preview.1 -R ilyafedotov-ops/german-business-skills
