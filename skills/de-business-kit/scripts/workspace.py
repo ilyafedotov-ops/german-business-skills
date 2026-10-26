@@ -80,7 +80,8 @@ def _check_chain(path: Path, final_file: bool = False) -> None:
         except FileNotFoundError:
             continue
         if stat.S_ISLNK(info.st_mode):
-            raise WorkspaceError("Symlinked paths are not allowed.")
+            raise WorkspaceError(f"Symlinked paths are not allowed: {item} links to {os.path.realpath(item)}. "
+                                 "Use the real location instead.")
         if item == path and final_file:
             if not stat.S_ISREG(info.st_mode):
                 raise WorkspaceError("A regular file is required.")
@@ -213,6 +214,22 @@ def _load(path: Path) -> Any:
     return _json_bytes(_read_regular(path))
 
 
+def _sync_directory(path: Path) -> None:
+    """Persist a new or renamed entry in its directory (POSIX); Windows has no directory sync."""
+    if os.name == "nt":
+        return
+    try:
+        descriptor = os.open(str(path), os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
+    except OSError:
+        return
+    try:
+        os.fsync(descriptor)
+    except OSError:
+        pass  # Some filesystems refuse directory sync; the file contents are already synced.
+    finally:
+        os.close(descriptor)
+
+
 def _write_exclusive(path: Path, data: bytes) -> os.stat_result:
     _check_chain(path, final_file=True)
     descriptor = os.open(str(path), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
@@ -225,6 +242,7 @@ def _write_exclusive(path: Path, data: bytes) -> os.stat_result:
     except BaseException:
         path.unlink(missing_ok=True)
         raise
+    _sync_directory(path.parent)
     # Windows finalizes write timestamps when the writer closes. Retain the
     # original identity if the path was replaced; never adopt another file as
     # our rollback target. Rollback additionally compares final metadata/bytes.
@@ -267,6 +285,7 @@ def _atomic_json(path: Path, value: Any, replace: bool = False) -> None:
         if not replace and path.exists():
             raise WorkspaceError("Refusing to overwrite an existing file.")
         os.replace(str(temporary), str(path))
+        _sync_directory(path.parent)
     finally:
         temporary.unlink(missing_ok=True)
 

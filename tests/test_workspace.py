@@ -279,6 +279,17 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual((self.root / workspace.PROFILE).read_bytes(), before)
         self.assertEqual(list((self.root / "09_audit/history").iterdir()), [])
 
+    def test_linked_folder_refusal_names_the_link_and_its_real_location(self):
+        real = self.base / "real-documents"
+        real.mkdir()
+        link = self.base / "Documents"
+        self._symlink(link, real, is_directory=True)
+        with self.assertRaises(workspace.WorkspaceError) as caught:
+            workspace.init_workspace(link / "business", 2026, "en")
+        self.assertIn(str(link), str(caught.exception))
+        self.assertIn(str(real), str(caught.exception))
+        self.assertFalse((real / "business").exists())
+
     @patch.object(workspace, "LOCK_WAIT_SECONDS", 0)
     def test_lock_prevents_mutation_and_is_not_removed_by_rejected_writer(self):
         before = (self.root / workspace.PROFILE).read_bytes()

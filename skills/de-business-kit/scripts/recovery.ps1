@@ -16,7 +16,7 @@ function Chain([string]$path, [bool]$file=$false) {
     while ($current) {
         if (Test-Path -LiteralPath $current) {
             $item=Get-Item -LiteralPath $current -Force
-            if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { throw 'Linked/reparse paths are not supported.' }
+            if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { throw "Linked/reparse paths are not supported: $current. Use the real location instead." }
             if ($current -eq $path -and $file) { if ($item.PSIsContainer) { throw 'Expected a regular file.' } }
             elseif (-not $item.PSIsContainer) { throw 'Expected a directory.' }
         }
