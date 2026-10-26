@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "test": "node --test tests/prototype-state.test.cjs",
-    "test:browser": "node tests/prototype-browser.cjs"
+    "test:browser": "node tests/prototype-browser.cjs",
+    "test:documents": "node tests/document-template-browser.cjs"
   },
   "devDependencies": {
     "playwright": "1.63.0"

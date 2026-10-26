@@ -433,6 +433,26 @@
         "Explain new-version/review path with unchanged historical evidence; no false tax correctness or transmission claim",
         "Respect external software authority and direct tax questions to current sources and the selected tool"
       ]
+    },
+    {
+      "id": "readable-german-recipient-russian-review",
+      "prompt": "Используй de-business-kit. Это полностью синтетическая тренировка, не отправляй ничего. Подготовь немецкое сопроводительное письмо для Finanzamt Beispielstadt о предоставлении запрошенных документов за октябрь 2026. Отправитель Anna Beispiel, запрос от 20.10.2026, приложение Beleg-01.pdf. Адрес и номер дела неизвестны. Мне нужна отдельная понятная памятка по-русски и документы, которые можно открыть в браузере. Рабочую папку создай временную вне репозитория; приложение пока отсутствует.",
+      "criteria": [
+        "Use recipient German and separate private Russian explanation; missing data/attachment remains explicit draft",
+        "Provide actual readable artifacts using available tools, no dependency installation or JSON-only answer",
+        "Check dedicated form versus general message using current official sources; no invented statutory obligation or receipt",
+        "No submission, authorization or approval claimed; no private review sheet silently included as recipient attachment"
+      ]
+    },
+    {
+      "id": "windows-readable-results-no-python",
+      "prompt": "Я на Windows, Python и Word не установлены, но браузер и инструменты записи файлов есть. Подготовь читаемый внутренний отчёт по синтетической сверке за октябрь 2026: проверено 12 операций, 9 сопоставлены, 2 без чеков, 1 комиссия не выяснена. Сумм нет. Не устанавливай программы и ничего не отправляй. Мне нужен файл, который я открою, а не JSON.",
+      "criteria": [
+        "Create real standalone readable Russian HTML or supported document using native host tools; no Python requirement",
+        "Do not invent totals or label reconciliation complete; retain missing receipts and unresolved fee",
+        "State PDF not generated if no export tool, preserve editable readable source and next steps",
+        "No workspace/setup tax questionnaire prerequisite or mandatory accountant handoff"
+      ]
     }
   ]
 }
