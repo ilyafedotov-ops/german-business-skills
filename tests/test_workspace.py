@@ -355,6 +355,45 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual(workspace.ingest_document(self.root, source, "2026-10")["status"], "imported")
         self.assertEqual(workspace.verify_workspace(self.root)["status"], "ok")
 
+    def test_failed_ingest_uses_final_timestamps_after_writer_closes(self):
+        # Windows guarantees final write times only after closing the writer.
+        # Emulate that observable filesystem behavior on every test platform.
+        original_fdopen = workspace.os.fdopen
+        original_write = workspace._atomic_json
+        source = self.source()
+        target = self.root / ("06_bookkeeping/2026/10/originals/" +
+                              hashlib.sha256(source.read_bytes()).hexdigest() + ".pdf")
+
+        class ClosingWriter:
+            def __init__(self, stream):
+                self.stream = stream
+
+            def __enter__(self):
+                return self.stream.__enter__()
+
+            def __exit__(self, *args):
+                result = self.stream.__exit__(*args)
+                if target.exists():
+                    info = target.stat()
+                    os.utime(target, ns=(info.st_atime_ns, info.st_mtime_ns + 1000000000))
+                return result
+
+        def delayed_close(fd, mode, *args, **kwargs):
+            stream = original_fdopen(fd, mode, *args, **kwargs)
+            return ClosingWriter(stream) if mode == "wb" else stream
+
+        def fail_registry(path, *args, **kwargs):
+            if path == self.root / workspace.DOCUMENTS:
+                raise OSError("Simulated registry write failure")
+            return original_write(path, *args, **kwargs)
+
+        with patch.object(workspace.os, "fdopen", side_effect=delayed_close), \
+                patch.object(workspace, "_atomic_json", side_effect=fail_registry):
+            with self.assertRaises(OSError):
+                workspace.ingest_document(self.root, source, "2026-10")
+        self.assertFalse(target.exists())
+        self.assertEqual(source.read_bytes(), b"synthetic-original\n")
+
     def test_failed_ingest_preserves_a_modified_copy_and_verify_flags_it(self):
         source = self.source()
         digest = hashlib.sha256(source.read_bytes()).hexdigest()
@@ -375,6 +414,28 @@ class WorkspaceTests(unittest.TestCase):
         result = workspace.verify_workspace(self.root)
         self.assertEqual(result["status"], "needs_review")
         self.assertEqual(result["unindexed_originals"], 1)
+
+    def test_failed_ingest_preserves_replacement_even_with_identical_bytes(self):
+        source = self.source()
+        digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        target = self.root / f"06_bookkeeping/2026/10/originals/{digest}.pdf"
+        replacement = self.base / "replacement.pdf"
+        replacement.write_bytes(source.read_bytes())
+        original_write = workspace._atomic_json
+
+        def fail_registry(path, *args, **kwargs):
+            if path == self.root / workspace.DOCUMENTS:
+                info = target.stat()
+                os.utime(replacement, ns=(info.st_atime_ns, info.st_mtime_ns))
+                os.replace(replacement, target)
+                raise OSError("Simulated registry write failure after replacement")
+            return original_write(path, *args, **kwargs)
+
+        with patch.object(workspace, "_atomic_json", side_effect=fail_registry):
+            with self.assertRaises(OSError):
+                workspace.ingest_document(self.root, source, "2026-10")
+        self.assertEqual(target.read_bytes(), source.read_bytes())
+        self.assertEqual(workspace.verify_workspace(self.root)["unindexed_originals"], 1)
 
     def test_failed_ingest_does_not_delete_a_copy_after_registry_committed(self):
         source = self.source()

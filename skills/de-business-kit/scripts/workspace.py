@@ -218,10 +218,22 @@ def _write_exclusive(path: Path, data: bytes) -> os.stat_result:
             stream.write(data)
             stream.flush()
             os.fsync(stream.fileno())
-            return os.fstat(stream.fileno())
+            created = os.fstat(stream.fileno())
     except BaseException:
         path.unlink(missing_ok=True)
         raise
+    # Windows finalizes write timestamps when the writer closes. Retain the
+    # original identity if the path was replaced; never adopt another file as
+    # our rollback target. Rollback additionally compares final metadata/bytes.
+    try:
+        closed = path.lstat()
+        if (stat.S_ISREG(closed.st_mode)
+                and (closed.st_dev, closed.st_ino, closed.st_size)
+                == (created.st_dev, created.st_ino, created.st_size)):
+            return closed
+    except OSError:
+        pass
+    return created
 
 
 def _remove_unchanged_created_copy(path: Path, created: os.stat_result, data: bytes) -> None:

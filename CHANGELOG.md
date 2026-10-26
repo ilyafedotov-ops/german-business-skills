@@ -8,6 +8,8 @@ milestones are first published on 2026-10-26; their original commits are retaine
 
 ## 0.6.0-preview.1
 
+- Fix Windows import rollback by capturing final timestamps after the write handle closes, while preserving modified/replaced files.
+
 - Add one checked version contract, versioned release archives, per-file manifests
   and exact source-commit metadata. Existing workspace records are not migrated.
 - Gate release publishing on Windows/macOS utility, native PowerShell 5.1 and

@@ -284,3 +284,13 @@ The README gives the supported setup order: initialize a new private workspace b
 For 0.6.0-preview.1, local `python3 -B -m unittest discover -s tests -v` ran 214 tests: 209 passed, five native-runtime checks skipped on this Mac. New checks cover version/tag identity, clean sources, reproducibility, file inventories, byte tampering and the SARIF severity gate. `npm test`: five passed; `npm audit --audit-level=high`: zero vulnerabilities. `python3 -B tools/check_package.py`, `python3 -B tools/release.py check`, `git diff --check` and actionlint 1.7.12 passed. Independent release review completed; its CodeQL severity-gating finding was fixed and rechecked. Immutable releases and Dependabot security updates were enabled; secret scanning and push protection were already enabled.
 
 This is local evidence, not a published-release claim. Windows PowerShell 5.1, hosted CI and each published tag's signatures require separate verification through the [release procedure](releases.md).
+
+The first hosted release-preparation run exposed a Windows Python 3.14 rollback
+failure: an unchanged imported copy remained after a registry write failure.
+Windows finalizes file timestamps after closing the writer ([Microsoft file
+times](https://learn.microsoft.com/en-us/windows/win32/sysinfo/file-times)). The
+writer now captures post-close metadata only for the same file identity; rollback
+still verifies identity, timestamps, bytes and registry state. A delayed-timestamp
+regression failed before the fix. After the fix, 216 local tests ran: 211 passed,
+five native checks skipped. Independent review and all 40 workspace tests passed.
+The Windows CI rerun is required before release acceptance.
