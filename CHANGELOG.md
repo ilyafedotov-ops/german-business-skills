@@ -10,6 +10,7 @@ milestones are first published on 2026-10-26; their original commits are retaine
 
 Lifecycle skill bundle preview. Publication requires the matching tag checks and verified assets; previously published versions remain unchanged.
 
+- Preserve explicitly selected legacy installation sources even when the source folder has a different name or an unrelated sibling exists.
 - Deliver the router and six domain skills as one portable bundle with shared profile/evidence, complete-set installation and detached resource checks.
 - Add EN/RU preparation and continuation across launch, customer work, correspondence, annual readiness, services, first hire, changes and closure.
 - Show active lifecycle tasks, including undated/cross-month tasks, dependencies and evidence health, in the real overview and GUI home. GUI continuation prepares a request for the assistant without executing it.

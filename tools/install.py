@@ -147,7 +147,8 @@ def install(
         names = skill_names(catalog.read_bytes()) if catalog.exists() else (SKILL_NAME,)
         if source_skill is None and not catalog.exists():
             raise InstallError("The complete bundle catalog is missing.")
-        packages = {name: _read_package(source.parent / name) for name in names}
+        packages = ({name: _read_package(source.parent / name) for name in names}
+                    if catalog.exists() else {SKILL_NAME: _read_package(source)})
         if catalog.exists():
             for name, (_, files) in packages.items():
                 captured = {path.as_posix(): data for path, data, _ in files}
