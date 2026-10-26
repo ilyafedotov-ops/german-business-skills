@@ -37,7 +37,7 @@ onboarding requirements. macOS also does not guarantee Python is installed.
 
 ## Next product work
 
-Local direct-entry and synthetic P1–P7 trials, correction/export inspection and task continuation are recorded in [validation](validation.md). They do not close the full plan. The next acceptance work is current-ref Windows PowerShell 5.1 and other supported-platform checks, ordinary-user/first-launch journeys, and actual outcomes in selected services. Lexware remains on local examples by user choice. Publication and verification of a matching package are separate; [release changes](../CHANGELOG.md#080-preview1) describe the accumulated source work. The [plan](lifecycle.md) retains the remaining dependencies and criteria.
+Release 0.8.0-preview.1 has passed the automated Windows/macOS, native Windows 5.1, browser, package and security gates, and all eight published assets were downloaded and verified. The [validation record](validation.md) identifies the exact tag/commit and separates this evidence from skill discovery and user trials. Remaining acceptance covers ordinary-user first launch/continuation, other supported host discovery routes and actual outcomes in selected services. Lexware remains on local examples by user choice. The [plan](lifecycle.md) retains these dependencies; automated release acceptance does not close all P1–P7 journeys.
 
 ## Technical acceptance gates for existing routes
 

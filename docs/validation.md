@@ -6,6 +6,14 @@ Current capabilities are summarized in [project status](project-status.md). Date
 
 Checked **2026-10-26**. Tests use synthetic temporary data, never live business records or accounts.
 
+## Published 0.8.0-preview.1 verification (2026-10-26)
+
+[PR #10](https://github.com/ilyafedotov-ops/german-business-skills/pull/10) merged after all **17 checks** passed on `66973306f70d1a8ae5e547503a2d30469afa6e0b`. Merge/tag source `04bcd80a008d48fcd4cdc635988440e17291c5a1` has identical file content. The [tag pipeline](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40342363902) passed **16 jobs**; the PR-only dependency-review job was intentionally skipped on the tag, while npm audit and CodeQL ran. Native Windows PowerShell 5.1, Windows/macOS Python matrices, Chromium/WebKit, all three GUI archive smoke checks, artifact transfer, reproducible skill packaging and publication passed. The separate main-branch checks also passed. Exact PR and tag refs returned zero open CodeQL alerts.
+
+The [release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1) is a published immutable preview with **eight assets**: two skill ZIPs, three native application archives and three metadata/checksum files. GitHub CLI **2.103.2** verified the release signature and every downloaded asset with both `release verify-asset` and `attestation verify`. Provenance was constrained to this repository, `.github/workflows/release.yml`, the exact tag and source commit, excluding self-hosted runners. All payload hashes matched `SHA256SUMS`; both skill ZIPs, `release.json` and release notes also matched the local exact-tag rehearsal byte-for-byte. Local verification evidence: `/private/tmp/gbk-080-published-verification-20261026/summary.json`; hosted jobs: `/private/tmp/gbk-080-release-run.json`.
+
+This closes automated platform/package publication gates for this source. It does not certify tax results, ordinary-user desktop usability, other AI-host discovery routes or live Lexware/ELSTER operations. The intermittent local PowerShell timeouts recorded below remain unexplained. GitHub provenance is separate from Windows Authenticode/Apple notarization. This repository delivers release artifacts; no hosted production service was deployed. The follow-up documentation changes only this record and current readiness summaries; published assets/tags and historical entries are unchanged.
+
 ## 0.8.0-preview.1 release preparation (2026-10-26)
 
 The user authorized commit, push, PR, release and production delivery. This repository's delivery target is the verified GitHub release with two skill bundles and three native GUI archives; no hosted application deployment is configured. Version metadata/current instructions were advanced without changing workspace schemas or historical release entries.
