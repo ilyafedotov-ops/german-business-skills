@@ -177,6 +177,8 @@ previous = ws.save_entry(root, 'tasks', cancelled)
 ws.save_entry(root, 'tasks', dict(cancelled, status='cancelled'), previous['sha256'])
 `,root],{cwd:process.cwd()});
     await click(page,'Refresh records');
+    // The short render assertion starts after the filesystem snapshot is ready.
+    await page.waitForFunction(()=>document.querySelector('main').getAttribute('aria-busy')==='false');
     await page.getByText('Prepare my first business activity',{exact:true}).first().waitFor({timeout:3000});
     const taskList=page.getByRole('list',{name:'Active tasks'});
     await taskList.getByText('Prepare my first business activity',{exact:true}).waitFor();

@@ -18,6 +18,8 @@ milestones are first published on 2026-10-26; their original commits are retaine
 
 All seven skills remain one bundle. Workspace schemas and runtime accounting behavior are unchanged. This preview has no live ELSTER transport, complete statutory tax calculator or production service connectors; Lexware remains on local examples. Browser artifact retrieval and ordinary-user desktop acceptance remain open. Publication and platform acceptance require the exact tag's checks and verified assets.
 
+- Improve GUI browser-test startup diagnostics and wait for snapshot completion before checking refreshed tasks; preserve application behavior and existing assertion deadlines.
+
 ## 0.8.0-preview.1
 
 Lifecycle skill bundle preview. Publication requires the matching tag checks and verified assets; previously published versions remain unchanged.
