@@ -1,8 +1,8 @@
-# German Business Kit — local preview 0.8.0-preview.1
+# German Business Kit — local preview 0.9.0-preview.1
 
-**First-time installation:** open `skills/de-business-kit/guides/install.en.md` inside this plugin folder. It explains the AI app, account sign-in, project-local installation, all seven skills and your first fictional task. [Online guide](https://github.com/ilyafedotov-ops/german-business-skills/blob/main/skills/de-business-kit/guides/install.en.md).
+**First-time installation:** open `skills/de-business-kit/guides/install.en.md` inside this plugin folder. It explains the AI app, account sign-in, project-local installation, all seven skills and your first fictional task. [Online guide](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/skills/de-business-kit/guides/install.en.md).
 
-**Start here:** `skills/de-business-kit/guides/start.en.md` · `skills/de-business-kit/guides/user-guide.en.md`. These files ship inside the extracted package; the source checkout is not needed.
+**Start here:** `skills/de-business-kit/guides/user-guide.en.md`. These files ship inside the extracted package; the source checkout is not needed.
 
 Windows users can start without Python using native Windows tools (see `skills/de-business-kit/references/native-windows.md`). The native entry point shares the existing workspace and covers installation, start/resume, preview, intake, integrity, real overview and full backup/restore; advanced validated automation remains an optional Python-engine capability.
 
@@ -22,7 +22,7 @@ German Business Kit contains seven skills for the entrepreneur lifecycle: format
 | `de-business-services` | Banking, insurance, software and service access |
 | `de-business-changes` | Changes, hiring, pause and closure |
 
-Install the complete set together: domain skills use shared resources in `de-business-kit`. Invoke a domain skill directly when appropriate. The shared profile and chosen accounting system persist; changing skills does not restart setup. These changes are in source and local builds; previously published archives remain unchanged.
+Install the complete set together: domain skills use shared resources in `de-business-kit`. Invoke a domain skill directly when appropriate. The shared profile and chosen accounting system persist; changing skills does not restart setup. Package updates do not migrate private workspaces or replace earlier published archives.
 
 ## Start with a small guided setup
 
@@ -38,7 +38,7 @@ A useful first task is a focused answer, a launch plan, a reply draft or a selec
 
 The advanced optional utilities require **Python 3.9+**, with no additional Python packages. The host must separately provide and permit file access and code execution. Browser tools, paid accounts, banking access and external connectors are not supplied by this plugin. If a required tool is unavailable, ask for manual steps instead of treating an operation as completed.
 
-Published release ZIPs are named `de-business-kit-<version>-codex.zip` and `de-business-kit-<version>-claude.zip`; local development builds use `codex.zip` and `claude.zip`. Both contain local marketplace folders. **Extract the archive into a new folder before registering the marketplace directory.** These transport ZIPs are not direct plugin-upload files, and building or extracting them does not install anything. Follow the source project's [verification](https://github.com/ilyafedotov-ops/german-business-skills/blob/main/docs/releases.md) and [installation guide](https://github.com/ilyafedotov-ops/german-business-skills/blob/main/docs/distribution.md) for host-specific steps; ask the assistant to explain them before execution. No background hook, MCP server, credential or automatic updater is included.
+Published release ZIPs are named `de-business-kit-<version>-codex.zip` and `de-business-kit-<version>-claude.zip`; local development builds use `codex.zip` and `claude.zip`. Both contain local marketplace folders. **Extract the archive into a new folder before registering the marketplace directory.** These transport ZIPs are not direct plugin-upload files, and building or extracting them does not install anything. Follow the source project's [verification](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/docs/releases.md) and [installation guide](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/docs/distribution.md) for host-specific steps; ask the assistant to explain them before execution. No background hook, MCP server, credential or automatic updater is included.
 
 Use synthetic data to verify discovery, guided setup, language, continuation and file operations in your exact app/OS version. This preview cannot submit filings or certify bookkeeping, legal compliance or account readiness. External actions still require the user's authorization and the host's actual capabilities.
 

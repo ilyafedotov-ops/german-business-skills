@@ -3,6 +3,10 @@
 Use with [existing data](existing-data.md) and [data-source access](data-source-access.md).
 The bundle contains no production banking/accounting/ELSTER connector or scheduler.
 This workflow uses tools actually supplied by the host and authorized for the task.
+For selecting/setup of a practical route and executing a browser/desktop draft,
+use [assisted service operations](assisted-services.md). Work through available
+authorized tools; missing API access does not preclude browser help. Record the
+exact manual/user-held boundary and verify any later result.
 Use the [EN operation note](../assets/en/connection-check.md) or
 [RU operation note](../assets/ru/connection-check.md) for a durable check. Keep
 provider observations distinct from user-supplied files and simulated test outcomes.

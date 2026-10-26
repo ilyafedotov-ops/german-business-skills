@@ -1,70 +1,54 @@
-# Current project status
+# Current project status and roadmap
 
-[English](project-status.md) | [Русский](project-status.ru.md) | [Documentation](index.md)
+[English](project-status.md) · [Русский](project-status.ru.md) · [Technical documentation](index.md)
 
-**Beginner onboarding update (2026-10-26):** [illustrated installation from zero](../skills/de-business-kit/guides/install.en.md) now covers the host and complete skill setup. Fresh Codex EN/RU and constrained Claude EN conversations exercised real installed skills; a Claude first-answer scope regression was fixed and retested. Desktop installation/sign-in and ordinary-user acceptance remain open. [Exact evidence](validation.md).
+Reviewed against source on **2026-10-26**. German Business Kit is a seven-skill system for a natural-person entrepreneur in Germany: preparation, formation, everyday work, accounting, reporting, changes and closure. Users can ask a question before creating a workspace or choosing accounting software. Self-managed accounting remains a supported goal; consultation and sharing with an accountant are optional.
 
-Reviewed against the source on **2026-10-26**, version **0.8.0-preview.1**.
-This page describes implemented capabilities. Download availability depends on
-successful platform gates, publication and verification of the matching assets on
-the [version's release page](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1).
-See [GUI guidance](gui.md) for delivery scope and [validation](validation.md) for
-actual runs and their limits. Historical release runs do not establish acceptance
-of the new GUI; neither local checks nor hosted CI establish nontechnical-user
-usability or a certified accounting process.
+## Source and published release
 
-The product is a **system of skills for the entrepreneur lifecycle**. The [full correction plan](lifecycle.md) defines structure, coverage, P0–P7 sequencing and acceptance. Guidance already covers formation, forms, questions, services, documents and reporting; daily-work, annual-preparation, change and closure instructions have been added, with real execution subject to separate acceptance. The table below primarily describes technical foundations, not the entire product scope. Self-managed accounting and filing remain important: local cash records with manual ELSTER are one route, and existing software stays authoritative when selected. Consultation and exports are optional.
+`VERSION` is **0.9.0-preview.1**, covering beginner installation, assisted-service refinements and documentation consolidation. The [release page](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.9.0-preview.1) is the destination for new archives after successful gates and publication. The latest downloaded-asset verification recorded here is still the immutable `0.8.0-preview.1` from `04bcd80a008d48fcd4cdc635988440e17291c5a1`; it does not validate the new tag. See [validation](validation.md) for exact results. Existing tags/assets are not replaced. This repository distributes skills and local applications; it has no hosted production application.
 
-P6 export inspection now records the selected export route/date basis, supplied originals, inspected pages and missing scope in the existing operation note. Lexware Office guidance distinguishes document/PDF selection from DATEV posting exports and preserves self-managed accounting. This is an agent workflow for supplied evidence, not a live connector or automatic archive importer.
+## Implemented scope
 
-| Capability | Current implementation | Boundary |
+| Area | Available now | Boundary |
 | --- | --- | --- |
-| Lifecycle preparation | EN/RU launch, customer-case, annual-readiness, change and operation worksheets; correspondence, continuation and first-hire routes | Agent-led preparation; current-source research and actual host/service execution still need case-specific acceptance |
-| Skill system | Optional router and six directly usable domain skills; shared contract/profile; complete-set installation | Project-scoped discovery verified in Codex CLI 0.164.0 and Claude Code 2.1.310 on macOS (Claude: explicit added-directory route); automatic routing, other platforms and external execution remain separate |
-| Intake and continuity | One profile, preserved originals, EN/RU/DE physical folders, start/resume and integrity checks | A folder language is not a tax fact; no silent migration |
-| Native Windows | PowerShell 5.1 entry points for install, intake, integrity, real overview and full backup/restore; no Python installation required | Standalone PowerShell retains its narrower operation set; exact runner evidence is in validation. GUI installation and nontechnical-user acceptance remain separate |
-| Document desk | Catalog, reviewed proposals, source checks, bank mapping, reconciliation and bounded UBL Invoice/CreditNote/CII header/reference extraction in the optional Python engine | No complete OCR, embedded-PDF XML or technical e-invoice validation pipeline |
-| Accounting | Validated local cash entries, splits, reversals, period reports and account CSVs for an explicitly selected EÜR workflow | No complete statutory ledger, tax adjustments or bundled tax formulas; native protected writes remain unfinished |
-| Filing evidence | Frozen versions, preflight, review/authorization, uncertain attempts, observed receipts and authority responses | Local evidence tracking sends nothing; calculation tools and manual ELSTER require actual user access and observed results |
-| Real overview | EN/RU HTML/Markdown/JSON with active lifecycle tasks, including undated tasks, dependencies and current evidence, plus questions, accounting and filings | Read-only snapshot; the native view inspects saved evidence but does not run full filing preflight |
-| Recovery | Full directory backup with manifest/hashes; verified restore into a new location; shared Python/PowerShell format | No overwrite, automatic repair, encryption, off-site retention or scheduled backup service |
-| Real local GUI | EN/RU/DE interface using validated import/review, cash entries/corrections, versioned filing actions, drafts and recovery | Standalone application with bundled runtime; published assets, platform CI and user acceptance must be verified separately. No ELSTER transport |
-| Interactive demonstration | Separate English prototype with synthetic records and browser storage | Fictional data only; not the real GUI |
-| External sources and reminders | Guidance for host plugins/API/browser/computer access; source maps and sourced dates | No bundled production connectors or automatic reminder scheduler |
+| Skills and lifecycle | Optional router plus six directly usable domain skills; shared profile, EN/RU worksheets and continuation | Guidance/preparation does not establish registration, contract, hire or closure |
+| Access and assisted services | Operation-specific discovery of host connector, browser, permitted computer-use or manual routes; authorized draft entry, readback, export checks and user-held final action | Instructions over available host tools; no bundled production connectors. Real ELSTER/Lexware acceptance is open; Lexware uses local examples by user choice |
+| Intake and documents | Preserved originals, hashes, catalog, reviewed proposals, bank mapping/reconciliation and bounded standalone UBL Invoice/CreditNote/CII inspection | No complete OCR, embedded-PDF XML or technical e-invoice validation pipeline |
+| Accounting | Explicit local/external choice; limited reviewed EÜR cash entries, splits, reversals/corrections, period reports and account CSVs | Existing software stays authoritative when selected. No complete statutory ledger or bundled tax formulas; eligibility is not inferred |
+| Filing evidence | Frozen versions, preflight, review/authorization, uncertain attempts, observed receipts and authority responses | Tracks local evidence; calculates no statutory return and sends nothing to ELSTER |
+| Continuation and overview | Active tasks across periods, undated work, dependencies and changed evidence; EN/RU HTML/Markdown/JSON | Read-only projection, not approval, task completion or automatic reminder |
+| Recovery | Full directory backup, manifest/hash verification and restore into a new destination; shared Python/PowerShell format | No overwrite, encryption, off-site service or scheduled backups |
+| Real local GUI | EN/RU/DE interface for validated intake/review, cash records, filing evidence, drafts and recovery; bundled runtime | No automatic AI call or filing transport; ordinary-user desktop acceptance remains open |
+| Standalone native Windows | PowerShell 5.1 installation, start/resume, intake, integrity, overview and full recovery without Python installation | Protected journal/filing writers and full filing preflight are not native PowerShell operations; the GUI bundles its separate engine |
 
-Users need neither commands nor JSON editing. The assistant chooses an actually
-available route and states the exact blocked operation when the host lacks one.
-Node/Playwright and developer Python tests are development requirements, not
-onboarding requirements. macOS also does not guarantee Python is installed.
+Physical folder names support EN/RU/DE; full user manuals and report templates cover EN/RU. German navigation and the short German guide do not imply complete German reporting. Users need neither JSON editing nor development dependencies. Native applications, assistant tools and standalone scripts have different capability sets; see [architecture](architecture.md) and [GUI](gui.md).
 
-## Next product work
+## Roadmap
 
-Release 0.8.0-preview.1 has passed the automated Windows/macOS, native Windows 5.1, browser, package and security gates, and all eight published assets were downloaded and verified. The [validation record](validation.md) identifies the exact tag/commit and separates this evidence from skill discovery and user trials. Remaining acceptance covers ordinary-user first launch/continuation, other supported host discovery routes and actual outcomes in selected services. Lexware remains on local examples by user choice. The [plan](lifecycle.md) retains these dependencies; automated release acceptance does not close all P1–P7 journeys.
+P1–P7 are **partially accepted**, not a completed end-to-end lifecycle. The [original correction plan](history/lifecycle-plan-2026-10-26.md) is historical; this table owns the remaining work.
 
-## Technical acceptance gates for existing routes
+| Package | Delivered foundation | Remaining acceptance or implementation |
+| --- | --- | --- |
+| P1 — Welcome and routing | Task-first onboarding, direct domain skills, shared continuation; fresh Codex/Claude trials | Ordinary-user first conversation and continuation across supported hosts; avoid forced setup |
+| P2 — Preparation and formation | Launch/classification research, form worksheets and assisted draft workflow | Verify selected authority/form/year, real authentication, field review and separately evidenced registration outcomes |
+| P3 — Daily work and questions | Proposals, invoices, letters, correction/partial-payment evidence and saved follow-up | Representative customer journeys in chosen software, actual document issue/delivery/payment evidence; complete download retrieval in the tested browser route |
+| P4 — Accounting and reporting | Limited local cash journal, external-system route, monthly/annual preparation and filing evidence | Representative complete period through selected calculation/form tools and manual ELSTER; criteria below |
+| P5 — Change, hire, pause and close | Before/after plans, dependencies, first-hire preparation and history/access retention | Real selected service/authority outcomes; payroll and legal filings require their own supported tools |
+| P6 — Service access | Needs-led comparison, supplied-export inspection and capability/setup discovery | Real operation-scoped access/readback in selected products; account/edition permissions and source coverage. Lexware stays local until the user changes that choice |
+| P7 — Delivery and usability | Illustrated installation, complete-bundle packaging, local GUI and verified preview release | Nontechnical Windows/macOS first launch, install/update/continuation and error-recovery trials; other host routes; real installation screenshots/video after those journeys are observed |
 
-1. Verify the exact version’s native GUI package gates and first-launch acceptance on Windows
-   and both Mac architectures; the packaged engine needs no user-installed Python.
-   Standalone PowerShell still has its narrower operation set.
-2. Check a representative real month and supported form/year through the chosen
-   calculation tool and manual ELSTER; preserve real evidence without publishing it.
-3. Test the connected GUI first use, error recovery and multi-session workflow
-   with nontechnical Windows/macOS users.
-4. Add reminders only through a defined, authorized scheduler with verified
-   delivery; a saved deadline is not a reminder.
+Automatic reminders require a defined authorized scheduler and verified delivery; no such service exists. Additional connectors, statutory ledger features and e-invoice validation should be selected for a concrete journey, not required for every user. Do not replace the chosen accounting system just to complete the roadmap.
 
-Use [accounting](accounting.md), [the monthly recipe](../skills/de-business-kit/references/monthly-workflow.md),
-[Windows](windows.md), [recovery](../skills/de-business-kit/references/recovery.md)
-and [capability acceptance criteria](core-capabilities.md) for details.
+## Accounting acceptance
 
-## Documentation ownership
+The first developed monthly route is **explicitly chosen local cash records plus manual ELSTER**, not a default for everyone. Follow the [monthly](../skills/de-business-kit/references/monthly-workflow.md) and [annual](../skills/de-business-kit/references/annual-workflow.md) workflows. Full backup/restore and the real overview are implemented; they do not establish complete statutory accounting.
 
-Code, CLI schemas and tests establish what exists. This page summarizes current
-scope; the architecture and ontology explain mechanisms; portable references
-guide the installed assistant; user guides explain tasks. Dated research records
-source checks, and validation records actual runs. Updating implementation docs
-does not renew legal/provider research or prove hosted CI. Maintain these
-distinctions when updating the project; see [AGENTS.md](../AGENTS.md) and
-[Contributing](../CONTRIBUTING.md).
+| Area | Evidence still needed before an end-to-end claim |
+| --- | --- |
+| Documents and ledger | Complete source/account/period coverage; reviewed treatment, assets/noncash adjustments, closing rules and verified reports in the authoritative system; format/host and technical e-invoice validation where applicable |
+| Tax estimates and returns | Applicable official rules and form/year support; evidenced inputs and actual selected official/provider tool output; reconcile differences. No package tax formulas, rate tables or invented amounts |
+| Submission | Supported official route/access; user-controlled authentication; exact payload preview and matching authorization; technical validation, duplicate prevention, timeout/retry investigation, actual receipt and correction workflow. A new adapter needs a supported official test environment and independent credential/authorization review |
+| Authority follow-up | Observed response linked to the exact filing version; separately sourced deadline checks and objections/corrections. A transmission receipt is not substantive acceptance |
 
-Releases: canonical versions, reproducible packages and provenance verification are described in [Versions, signatures and release verification](releases.md).
+The evidence chain remains **source → proposal → review → actual accounting entry → return draft → submission authorization → observed submission → authority response**. A verified manual step can complete part of a supported assistance journey; it is not evidence of automated integration. See [validation](validation.md) for what has actually been tested.

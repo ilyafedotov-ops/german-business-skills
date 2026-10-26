@@ -1,8 +1,8 @@
-# Local plugin distribution — v0.8.0-preview.1
+# Local plugin distribution — v0.9.0-preview.1
 
 **New users:** follow the [desktop-first illustrated setup](../skills/de-business-kit/guides/install.en.md). It covers host installation and a project-local copy of all seven skills without requiring terminal commands. This page covers advanced source, plugin and update routes.
 
-The [local GUI application](gui.md) bundles its engine for document review, cash entries, filing evidence and recovery on Windows/macOS; users do not install Python. Download availability requires publication and verification of the matching platform archive. Optional [standalone Windows tools](windows.md) cover installation, start/resume, preview, intake, integrity, real overview and full backup/restore; their advanced protected writers still require an existing supported engine.
+The [local GUI application](gui.md) bundles its engine for document review, cash entries, filing evidence and recovery on Windows/macOS; users do not install Python. Download availability requires publication and verification of the matching platform archive. Optional [standalone Windows tools](../skills/de-business-kit/guides/user-guide.en.md#check-your-own-environment) cover installation, start/resume, preview, intake, integrity, real overview and full backup/restore; their advanced protected writers still require an existing supported engine.
 
 [English](distribution.md) | [Русский](distribution.ru.md)
 
@@ -18,17 +18,17 @@ Install the complete set together: domain skills use shared resources in `de-bus
 For the standalone application, use [application downloads and instructions](gui.md).
 The rest of this page covers the primary skill/plugin bundle. Users do not need
 to build the project. Once published, download the named Codex or Claude ZIP from
-[release 0.8.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1),
+[release 0.9.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.9.0-preview.1),
 follow [download verification](releases.md), and extract it into a new folder using
 Explorer or Finder. Published filenames include the version, for example
-`de-business-kit-0.8.0-preview.1-codex.zip`.
+`de-business-kit-0.9.0-preview.1-codex.zip`.
 
 Inside the extracted folder, `codex` or `claude` is the marketplace root. Skip the
 build section and go to [host installation](#optional-host-installation-after-review).
 In those examples replace `/absolute/path/to/new-review-bundle/codex` or
 `/absolute/path/to/new-review-bundle/claude` with that actual extracted directory.
 Ask the assistant to resolve the path and explain the installation before running
-it. The [start guide](../skills/de-business-kit/guides/start.en.md) covers your first
+it. The [start guide](../skills/de-business-kit/guides/user-guide.en.md#first-task) covers your first
 useful task. Published archives stay unchanged; source documentation edits appear
 in packages only after a new release.
 

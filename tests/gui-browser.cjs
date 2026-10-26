@@ -42,7 +42,7 @@ function start(root) {
       try { const value = JSON.parse(line); if (value.url && value.token) { clearTimeout(timer); resolve(value); } } catch { /* not readiness */ }
     });
   });
-  return { child, ready };
+  return { child, ready, stderr: () => stderr };
 }
 (async () => {
   const temp = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), 'gbk-gui-browser-')));
@@ -50,18 +50,29 @@ function start(root) {
   await fixture(root);
   await fs.mkdir(output,{recursive:true});
   const server = start(root);
-  let browser, page, failure;
-  const pendingRequests = new Map(), apiResults = [];
+  let browser, page, failure, sessionToken = '';
+  const pendingRequests = new Map(), apiResults = [], issues = [], assets = [];
+  const staticRequests = new WeakMap();
+  const redact = value => sessionToken ? String(value).replaceAll(sessionToken, '[redacted-session]') : String(value);
   try {
     const { url, token } = await server.ready;
+    sessionToken = token;
     browser = await playwright[browserName].launch();
     const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, locale: 'en-GB', timezoneId: 'Europe/Berlin' });
     context.on('request', request => {
+      const target = new URL(request.url());
+      if (request.method() === 'GET' && target.origin === new URL(url).origin && ['/', '/app.js', '/i18n.js', '/style.css'].includes(target.pathname)) {
+        const asset = { path: target.pathname, started: Date.now() };
+        staticRequests.set(request, asset); assets.push(asset);
+        if (assets.length > 12) assets.shift();
+      }
       if (request.url() === url+'api' && request.method() === 'POST') {
         pendingRequests.set(request, { op: request.postDataJSON()?.op, started: Date.now() });
       }
     });
     context.on('response', async response => {
+      const asset = staticRequests.get(response.request());
+      if (asset) { asset.status = response.status(); asset.elapsedMs = Date.now()-asset.started; }
       const request = response.request(), pending = pendingRequests.get(request);
       if (!pending) return;
       const value = await response.json().catch(() => ({}));
@@ -69,7 +80,10 @@ function start(root) {
       apiResults.push({ op: pending.op, elapsedMs: Date.now()-pending.started, status: response.status(), ok: value.ok, error: value.error });
       if (apiResults.length > 12) apiResults.shift();
     });
-    const issues = [];
+    context.on('requestfailed', request => {
+      const asset = staticRequests.get(request);
+      if (asset) { asset.error = request.failure()?.errorText; asset.elapsedMs = Date.now()-asset.started; }
+    });
     context.on('page', p => {
       p.on('pageerror', err => issues.push(String(err)));
       p.on('requestfailed', req => issues.push(`${req.url()}: ${req.failure()?.errorText}`));
@@ -163,6 +177,8 @@ previous = ws.save_entry(root, 'tasks', cancelled)
 ws.save_entry(root, 'tasks', dict(cancelled, status='cancelled'), previous['sha256'])
 `,root],{cwd:process.cwd()});
     await click(page,'Refresh records');
+    // The short render assertion starts after the filesystem snapshot is ready.
+    await page.waitForFunction(()=>document.querySelector('main').getAttribute('aria-busy')==='false');
     await page.getByText('Prepare my first business activity',{exact:true}).first().waitFor({timeout:3000});
     const taskList=page.getByRole('list',{name:'Active tasks'});
     await taskList.getByText('Prepare my first business activity',{exact:true}).waitFor();
@@ -496,6 +512,10 @@ ws.save_entry(root, 'tasks', dict(cancelled, status='cancelled'), previous['sha2
     failure = error;
     // Synthetic fixtures only; never log session tokens or request bodies.
     console.error('GUI failure state:', await page?.evaluate(() => ({
+      readyState: document.readyState,
+      mainText: document.querySelector('main')?.textContent?.slice(0, 500),
+      navigationLinks: document.querySelectorAll('nav a').length,
+      translationsLoaded: typeof window.GUI_I18N,
       busy: document.querySelector('main')?.getAttribute('aria-busy'),
       error: document.querySelector('#error')?.textContent,
       errorHidden: document.querySelector('#error')?.hidden,
@@ -504,6 +524,10 @@ ws.save_entry(root, 'tasks', dict(cancelled, status='cancelled'), previous['sha2
     })).catch(() => null));
     console.error('Recent GUI operations:', apiResults);
     console.error('Pending GUI operations:', [...pendingRequests.values()].map(item => ({ op:item.op, elapsedMs:Date.now()-item.started })));
+    console.error('GUI browser errors:', issues.slice(-20).map(redact));
+    console.error('GUI static requests:', assets.map(({ started, ...asset }) => ({ ...asset, elapsedMs: asset.elapsedMs ?? Date.now()-started })));
+    console.error('GUI server diagnostics:', redact(server.stderr().slice(-4000)));
+    if (page) await capture(page, { path: path.join(output, `${browserName}-failure.png`), fullPage: true, timeout: 5000 }).catch(() => {});
     throw error;
   } finally {
     const cleanupErrors = [];

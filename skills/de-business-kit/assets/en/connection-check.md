@@ -11,6 +11,23 @@ A documented route or file import does not prove a live connection. Never includ
 - Actual available tool and access/permissions: [observed / unavailable]
 - Existing authorization for this exact action: [scope and reference / missing]
 
+## Selected route and control handoff
+
+| Candidate route | Actual capability/permission observed | Available for this operation? | Reason selected or remaining setup |
+| --- | --- | --- | --- |
+| [Connector/API, browser, desktop UI, local file or guided manual] | [Documentation only / actual tool + inspected account scope] | [Yes / no / unknown; read, draft edit, upload and download separately] | [Specific reason; no automatic plan upgrade] |
+
+- What the assistant will do: [bounded preparation/entry/save/export; autosave effect]
+- What the user will do: [official login / missing decision / upload / final confirmation]
+- Draft/object, version, company/recipient and year: [actual reference; no token-bearing URL]
+- Values/files entered or changed: [exact evidence-linked summary; readback result]
+- Missing values and validation warnings: [unresolved, not invented]
+- Manual handoff location and next action: [observed screen/button; only if ready]
+- After the user acts: [status/receipt to inspect; user report versus observed result]
+
+This note does not grant authorization or change canonical filing states. Preserve
+manual-only preferences; an entered/saved draft is not an issued or submitted item.
+
 ## Attempt and readback
 
 | Attempt / target / exact payload or export reference | Observed result | Completeness / pagination / warnings | Readback or receipt | Safe next action |

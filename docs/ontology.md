@@ -2,13 +2,28 @@
 
 [English](ontology.md) · [Русский](ontology.ru.md) · [Architecture](architecture.md)
 
-Source snapshot: **2026-10-26**, version **0.8.0-preview.1**, including the local casework extension. The extension is present in the working tree; its presence does not establish release, installation or desktop integration. This document describes the implemented domain concepts and their relationships. It is a conceptual ontology mapped to JSON/Python contracts, not an RDF/OWL schema or a new storage format.
+This conceptual ontology maps implemented domain concepts and relationships to JSON/Python contracts; it is not an RDF/OWL schema or a new storage format. [Current status](project-status.md) owns delivery scope and remaining work.
+
+## Assisted-service context
+
+An access route (connector, browser, desktop UI or guided manual) is a property
+of the concrete operation and observed host capability, not a permanent service
+integration or a new canonical entity. The existing operation note records
+account/object/version, tool permissions, proposed and entered values, autosave
+scope, warnings and the assistant/user handoff. A manual-only final-action
+preference constrains execution even when a tool could click the button.
+
+A field sheet distinguishes proposed values from observed saved values. Neither
+its labels nor a user saying “done” advances the canonical filing lifecycle.
+Observed receipt/status and user-reported outcomes remain separate evidence;
+unknown attempts remain unresolved. No schema, credential store, task register
+or parallel accounting ledger is introduced.
 
 ## Domain and identity
 
-The [accounting workflow](accounting.md) adds three related concepts: an **accounting configuration** chosen when accounting work requires it (`local` or `external`, never defaulted), immutable **cash entries** with split lines and linked reversals/replacements, and **filing versions** binding a frozen report to its source evidence, review/authorization events and separately observed receipt/responses. Their additive register is `04_accounting/register.json`. Cash entries are recorded local cash movements, not merely proposals; filing records track evidence; neither establishes complete tax calculation or a live transport. Existing external software remains authoritative when selected.
+The [accounting workflow](../skills/de-business-kit/guides/user-guide.en.md#accounts-and-payments) adds three related concepts: an **accounting configuration** chosen when accounting work requires it (`local` or `external`, never defaulted), immutable **cash entries** with split lines and linked reversals/replacements, and **filing versions** binding a frozen report to its source evidence, review/authorization events and separately observed receipt/responses. Their additive register is `04_accounting/register.json`. Cash entries are recorded local cash movements, not merely proposals; filing records track evidence; neither establishes complete tax calculation or a live transport. Existing external software remains authoritative when selected.
 
-The domain is one entrepreneur and their activities throughout the business lifecycle. [Stages and tasks](lifecycle.md) organize assistance journeys; they are not a new persisted enum or state machine. Current records cover facts, documents, proposals, reconciliation, limited cash entries, filing evidence and recovery. One private workspace preserves shared context across activities, periods, languages and modes. Its UUID is not an official taxpayer identifier. Separate workspaces for different people are a workflow boundary, not a central identity registry.
+The domain is one entrepreneur and their activities throughout the business lifecycle. [Stages and tasks](history/lifecycle-plan-2026-10-26.md) organize assistance journeys; they are not a new persisted enum or state machine. Current records cover facts, documents, proposals, reconciliation, limited cash entries, filing evidence and recovery. One private workspace preserves shared context across activities, periods, languages and modes. Its UUID is not an official taxpayer identifier. Separate workspaces for different people are a workflow boundary, not a central identity registry.
 
 All seven skills use these entities through the shared contract. Selecting a skill or passing a task is not a new persisted entrepreneur state, tax decision or external-action authorization. Workspace schemas and existing identifiers remain unchanged. A launch/customer/annual/change/access worksheet is an authored view over evidence; it is not another canonical task register.
 

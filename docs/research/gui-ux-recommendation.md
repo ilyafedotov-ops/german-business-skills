@@ -1,10 +1,12 @@
+> Dated research, not current implementation status. Original source-check dates are retained. See [current status](../project-status.md) for delivery and acceptance.
+
 # GUI/UX research recommendation
 
-Historical research: the proposals and source-check dates below describe that investigation. For subsequent implementation and remaining gaps, see [current project status](../project-status.md), [prototype](../prototype.md) and [validation](../validation.md). This note does not renew the external-source checks.
+Historical research: the proposals and source-check dates below describe that investigation. For subsequent implementation and remaining gaps, see [current project status](../project-status.md), [prototype](../gui.md#fictional-prototype) and [validation](../validation.md). This note does not renew the external-source checks.
 
 Research date: **2026-10-25**. Baseline inspected: **`c4c00ab`**. This is a maintainer design brief, not an implemented interface, a usability-test result or a change to the accounting contract. Concurrent uncommitted accounting work is outside this assessment. See the [primary UX sources](gui-ux-primary-sources.md) for source findings and their authority.
 
-Implementation follow-up: the [synthetic clickable prototype](../prototype.md) now exercises the four proposed journeys. Its [verification record](../prototype-validation.md) is separate from this research baseline; production integration and participant testing remain open.
+Implementation follow-up: the [synthetic clickable prototype](../gui.md#fictional-prototype) now exercises the four proposed journeys. Its [verification record](../history/validation-2026-10-26.md#prototype-validation) is separate from this research baseline; production integration and participant testing remain open.
 
 ## Recommendation
 
@@ -18,7 +20,7 @@ The committed [overview generator](../../skills/de-business-kit/scripts/casefile
 
 The five navigation links are anchors into one page. The next action is text; document rows and open issues do not open review flows. There is no file picker, source connection flow, search/filter, editable field review, per-item action, live refresh or saved UI position. The page deliberately runs no application JavaScript. Adding buttons would require a real command/data boundary, not just styling this report.
 
-The [native Windows path](../windows.md) removes Python from basic setup/intake, but does not provide a GUI or full parity with the advanced engine. The [core capability plan](../core-capabilities.md) still describes the committed ledger/submission gaps. A GUI must expose actual available actions and keep useful preparation available. An archive or approved proposal must never appear as completed accounting or a submitted return.
+The [native Windows path](../../skills/de-business-kit/guides/user-guide.en.md#check-your-own-environment) removes Python from basic setup/intake, but does not provide a GUI or full parity with the advanced engine. The [core capability plan](../project-status.md#accounting-acceptance) still describes the committed ledger/submission gaps. A GUI must expose actual available actions and keep useful preparation available. An archive or approved proposal must never appear as completed accounting or a submitted return.
 
 This is a source-based interface audit. No new screenshot evaluation, screen-reader test or participant session was performed in this research.
 

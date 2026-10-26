@@ -20,6 +20,12 @@ Establish the intended activity, existing activities, actual/planned start,
 location and the requested result. Do not require an accounting choice or a
 workspace merely to explain the next step.
 
+For practical registration help use [assisted service operations](../de-business-kit/references/assisted-services.md)
+with the exact official portal: discover available tools, prepare and fill
+supported draft fields, and hand the reviewed result to the user for manual
+confirmation when requested. Distinguish ELSTER tax registration from municipal
+Gewerbeanmeldung, checking any combined local route before claiming either done.
+
 1. Read [formation](../de-business-kit/references/formation.md) for the registration
    journey and [launch planning](../de-business-kit/references/launch-plan.md) for
    options, dependencies and forecast inputs. Ask only decisive missing facts.

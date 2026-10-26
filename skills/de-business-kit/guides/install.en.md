@@ -51,16 +51,16 @@ If your computer or organization blocks installation, use its approved installat
 
 ## 4. Download German Business Kit
 
-1. Open the project's [0.8.0-preview.1 release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1).
+1. Open the project's [0.9.0-preview.1 release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.9.0-preview.1).
 2. Expand **Assets** if the files are hidden. Choose exactly one skill archive:
-   - Codex: **`de-business-kit-0.8.0-preview.1-codex.zip`**.
-   - Claude Code: **`de-business-kit-0.8.0-preview.1-claude.zip`**.
+   - Codex: **`de-business-kit-0.9.0-preview.1-codex.zip`**.
+   - Claude Code: **`de-business-kit-0.9.0-preview.1-claude.zip`**.
 3. Download **`SHA256SUMS`** from that same release into the same download folder. This file lists checksums used to detect a damaged or changed download.
 4. Keep both files together. The `-gui-` archives are a separate optional records application; **Source code** archives are for another installation route.
 
-The next step asks the assistant to verify the selected archive before using its contents. A matching checksum checks file integrity; release/provenance verification checks origin. They are different checks. The [full verification procedure](https://github.com/ilyafedotov-ops/german-business-skills/blob/main/docs/releases.md#download-and-verify) is available for the assistant or a technical helper.
+The next step asks the assistant to verify the selected archive before using its contents. A matching checksum checks file integrity; release/provenance verification checks origin. They are different checks. The [full verification procedure](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/docs/releases.md#download-and-verify) is available for the assistant or a technical helper.
 
-**Done when:** you have the correct ZIP and `SHA256SUMS` from the named release. This newer guide may describe source documentation that is not yet included in that immutable release; the seven-skill directory layout is the same.
+**Done when:** you have the correct ZIP and `SHA256SUMS` from the named release. Use the named assets only after the release is published; an absent archive is not ready to install.
 
 ## 5. Ask the assistant to install the seven skills
 
@@ -68,7 +68,7 @@ In your **Business Assistant** conversation, provide access to just the download
 
 Copy this message, adding the two paths and your chosen app:
 
-> I am setting up German Business Kit in this local Business Assistant project, using [Codex / Claude Code]. My downloaded ZIP is at [full ZIP path] and SHA256SUMS is at [full checksum-file path]. Check the ZIP against the matching checksum before using its contents. Verify release provenance for repository ilyafedotov-ops/german-business-skills and tag v0.8.0-preview.1 using https://github.com/ilyafedotov-ops/german-business-skills/blob/main/docs/releases.md#download-and-verify if the required verification tools are already available; state exactly what was and was not verified. Stop if a check fails. Extract into a new folder. Inspect the package, then install all seven complete skill folders into this project's .agents/skills for Codex, or .claude/skills for Claude Code. Use the existing supported installer where available, or copy complete folders with native file tools. Preserve existing files; stop if a destination already exists. Do not install runtimes, alter security settings, or change global app configuration. Tell me the seven installed names, the destination and how to start a fresh session.
+> I am setting up German Business Kit in this local Business Assistant project, using [Codex / Claude Code]. My downloaded ZIP is at [full ZIP path] and SHA256SUMS is at [full checksum-file path]. Check the ZIP against the matching checksum before using its contents. Verify release provenance for repository ilyafedotov-ops/german-business-skills and tag v0.9.0-preview.1 using https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/docs/releases.md#download-and-verify if the required verification tools are already available; state exactly what was and was not verified. Stop if a check fails. Extract into a new folder. Inspect the package, then install all seven complete skill folders into this project's .agents/skills for Codex, or .claude/skills for Claude Code. Use the existing supported installer where available, or copy complete folders with native file tools. Preserve existing files; stop if a destination already exists. Do not install runtimes, alter security settings, or change global app configuration. Tell me the seven installed names, the destination and how to start a fresh session.
 
 The app may ask to read these files or write the skill directories. Review that the requested paths match your download and **Business Assistant** project. If it cannot access files, use the [manual fallback](#manual-fallback). If provenance tools are unavailable, checksum success must not be described as signature verification; use the linked verification procedure with a helper if you need that assurance before proceeding.
 
@@ -119,7 +119,7 @@ For an ongoing task, ask:
 
 At your next visit, open the same assistant project and say: **“Continue from my saved result in [business folder]. Show the next action.”** Grant access to that separate folder when needed. Existing accounting software remains authoritative if you choose it; a question does not force that decision.
 
-**Next:** [first working task](start.en.md), [task menu](tasks.en.md), [everyday user guide](user-guide.en.md).
+**Next:** [choose your first task and continue everyday work](user-guide.en.md#first-task).
 
 ## Manual fallback
 
@@ -157,12 +157,12 @@ Business Assistant/
 | Downloaded files cannot be read | Provide exact paths and grant only the required local access. Do not paste passwords or security tokens. |
 | No skills after installation | Check the selected local project, leading-dot destination, all seven folders and fresh session. Avoid nested `skills/skills`. |
 | The app wants to install Python or change security policy | Stop that setup step and use native file copying or an approved helper; basic skill installation needs neither. |
-| Destination already exists | Preserve it. Follow [update instructions](https://github.com/ilyafedotov-ops/german-business-skills/blob/main/docs/distribution.md), keeping any customizations and business records. |
+| Destination already exists | Preserve it. Follow [update instructions](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/docs/distribution.md), keeping any customizations and business records. |
 | No access to bank, email or Lexware | Installing skills does not connect services. Continue with a fictional example or selected local export; establish each connection separately. |
 | A command fails | Keep the message, app version, operating system and step number. Ask for help with that specific step; remove personal details before sharing publicly. |
 
 ## Evidence and further help
 
-This desktop route follows [OpenAI app instructions](https://learn.chatgpt.com/docs/app), [OpenAI local skills](https://learn.chatgpt.com/docs/build-skills), [Claude desktop quickstart](https://code.claude.com/docs/en/desktop-quickstart) and [Claude skill locations](https://code.claude.com/docs/en/skills#choose-where-skills-load), checked **2026-10-26**. Installation instructions are not a claim that every app version or nontechnical-user journey has passed. See the [actual validation record](https://github.com/ilyafedotov-ops/german-business-skills/blob/main/docs/validation.md).
+This desktop route follows [OpenAI app instructions](https://learn.chatgpt.com/docs/app), [OpenAI local skills](https://learn.chatgpt.com/docs/build-skills), [Claude desktop quickstart](https://code.claude.com/docs/en/desktop-quickstart) and [Claude skill locations](https://code.claude.com/docs/en/skills#choose-where-skills-load), checked **2026-10-26**. Installation instructions are not a claim that every app version or nontechnical-user journey has passed. See the [actual validation record](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/docs/validation.md).
 
-For optional terminal/plugin routes, see [advanced installation](https://github.com/ilyafedotov-ops/german-business-skills/blob/main/docs/distribution.md). The [local records application](https://github.com/ilyafedotov-ops/german-business-skills/blob/main/gui/README.md) is an additional tool; it is not required to use the skills or ask a question.
+For optional terminal/plugin routes, see [advanced installation](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/docs/distribution.md). The [local records application](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/gui/README.md) is an additional tool; it is not required to use the skills or ask a question.

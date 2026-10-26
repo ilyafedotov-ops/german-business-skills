@@ -34,31 +34,31 @@ minor, совместимые исправления — patch, несовмес
 ## Скачать и проверить
 
 На [странице выпусков](https://github.com/ilyafedotov-ops/german-business-skills/releases)
-выберите [версию 0.8.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1) и найдите отметку **Immutable**. Доступность требует завершённой
+выберите [версию 0.9.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.9.0-preview.1) и найдите отметку **Immutable**. Доступность требует завершённой
 публикации и проверки; отсутствующий платформенный архив ещё не готов к использованию.
 Скачайте подходящий архив GUI или необязательный ZIP Codex/Claude и `SHA256SUMS`
 в новую папку. Имена архивов приложения:
 
-- `de-business-kit-0.8.0-preview.1-gui-windows-x64.zip`
-- `de-business-kit-0.8.0-preview.1-gui-macos-arm64.tar.gz` (Apple Silicon)
-- `de-business-kit-0.8.0-preview.1-gui-macos-x86_64.tar.gz` (Intel)
+- `de-business-kit-0.9.0-preview.1-gui-windows-x64.zip`
+- `de-business-kit-0.9.0-preview.1-gui-macos-arm64.tar.gz` (Apple Silicon)
+- `de-business-kit-0.9.0-preview.1-gui-macos-x86_64.tar.gz` (Intel)
 
 Примеры ниже проверяют необязательный ZIP Codex; подставьте точное имя скачанного
 архива GUI для проверки приложения. Windows проверяет хеш без Python:
 
 ```powershell
-Get-FileHash .\de-business-kit-0.8.0-preview.1-codex.zip -Algorithm SHA256
+Get-FileHash .\de-business-kit-0.9.0-preview.1-codex.zip -Algorithm SHA256
 ```
 
-В macOS: `shasum -a 256 de-business-kit-0.8.0-preview.1-codex.zip`. Сравните результат
+В macOS: `shasum -a 256 de-business-kit-0.9.0-preview.1-codex.zip`. Сравните результат
 с нужной строкой `SHA256SUMS`. Хеш из того же недоверенного источника не подтверждает
 автора. При наличии актуального необязательного GitHub CLI проверьте происхождение
 архива (исторические проверки использовали 2.103.2; 2.80 не смог прочитать те аттестации):
 
 ```sh
-gh release verify v0.8.0-preview.1 -R ilyafedotov-ops/german-business-skills
-gh release verify-asset v0.8.0-preview.1 de-business-kit-0.8.0-preview.1-codex.zip -R ilyafedotov-ops/german-business-skills
-gh attestation verify de-business-kit-0.8.0-preview.1-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.8.0-preview.1 --deny-self-hosted-runners
+gh release verify v0.9.0-preview.1 -R ilyafedotov-ops/german-business-skills
+gh release verify-asset v0.9.0-preview.1 de-business-kit-0.9.0-preview.1-codex.zip -R ilyafedotov-ops/german-business-skills
+gh attestation verify de-business-kit-0.9.0-preview.1-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.9.0-preview.1 --deny-self-hosted-runners
 ```
 
 Для строгой фиксации добавьте `--source-digest` с полным ожидаемым коммитом тега.
@@ -90,7 +90,7 @@ gh attestation verify de-business-kit-0.8.0-preview.1-codex.zip --repo ilyafedot
 Локальная репетиция после создания точного тега:
 
 ```sh
-python3 -B tools/release.py prepare --tag v0.8.0-preview.1 --output /absolute/new/release-assets
+python3 -B tools/release.py prepare --tag v0.9.0-preview.1 --output /absolute/new/release-assets
 python3 -B tools/release.py verify --directory /absolute/new/release-assets
 ```
 
