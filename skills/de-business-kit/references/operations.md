@@ -54,3 +54,27 @@ Deliver the document or factual result, its status, unresolved items and the nex
 step. Save only necessary task/evidence references in an existing workspace;
 respect [privacy](privacy.md). A question or draft does not require creating a
 workspace, running month-close or buying invoicing software.
+
+## Supplied correction XML and payment evidence
+
+When the user supplies an issued document and later correction, preserve both
+originals and inspect standalone XML through [document workflow](document-workflow.md).
+The inspector recognizes UBL CreditNote and selected UBL/CII preceding-invoice
+references; it does not issue, validate or post a correction. A positive or negative
+CreditNote amount stays exactly as supplied. See [source bindings](correction-xml-sources.md).
+
+Compare the reference ID/date with actual originals, seller/customer, currency and
+available authoritative-system evidence. A matching number alone is insufficient
+when multiple issuers or periods can share it. Missing/duplicate/malformed references
+remain unresolved. Save an explicit reviewed `corrects` relation through the
+catalog writer only after establishing which preserved original it concerns.
+Keep the document's overall review state unresolved while tax/format questions remain.
+
+Link actual payment evidence separately using the existing catalog payment references
+and the preserved bank original. `payment_refs` are evidence pointers, not a
+verified balance calculation. Do not populate `dates.paid` from a partial receipt,
+a credit-note issue date or an inferred net balance. A CreditNote is not proof of
+cash refund, customer agreement or resolved dispute. Preserve earlier drafts,
+write a new readable case summary, and keep a sourced follow-up task for settlement
+or correction questions. Resume it using [continuation](continuation.md), with the
+chosen external system still authoritative and without local shadow postings.

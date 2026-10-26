@@ -137,3 +137,14 @@ The real workspace overview now shows your accounting choice, period entries, op
 Ask: “Create and verify a complete backup at this protected location”, or “Restore this backup into a new folder and check it.” [Full backup and restore](../references/recovery.md) includes originals, records, evidence and history, and is available through native Windows tools without installing Python. An existing folder is never overwritten. Keep both the backup and original until you have checked the restored workspace.
 
 The native Windows overview reads saved records and checks local evidence hashes; it does not run the full filing preflight. Advanced protected accounting/filing writes still need a supported existing execution environment. It does not silently install Python. [Monthly workflow and exact limits](../references/monthly-workflow.md).
+
+## Invoice corrections and partial payments
+
+You can supply an original invoice, a later CreditNote and relevant payment
+records. The assistant can preserve and inspect supported standalone XML, explain
+its reference to the earlier invoice, and save a reviewed document link. The
+issued originals and earlier drafts remain available. Missing or ambiguous links
+stay open. A partial payment or CreditNote does not automatically mean the invoice
+is settled, money was refunded or accounting was corrected. Existing software
+remains authoritative; ask to continue the saved case when new evidence arrives.
+This is bounded evidence preparation, not technical e-invoice validation or sending.
