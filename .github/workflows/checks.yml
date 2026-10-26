@@ -44,11 +44,13 @@ jobs:
       - run: npm run test:browser -- --browser=${{ matrix.browser }}
       - run: npm run test:documents -- --browser=${{ matrix.browser }}
       - run: npm run test:overview -- --browser=${{ matrix.browser }}
+      - run: npm run test:gui -- --browser=${{ matrix.browser }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
           name: prototype-${{ matrix.os }}-${{ matrix.browser }}
           path: |
+            output/gui/
             output/prototype/
             output/document-template/
             output/overview/
@@ -103,3 +105,36 @@ jobs:
           & .\tests\native\windows-smoke.ps1
           & .\tests\native\overview-smoke.ps1
           & .\tests\native\recovery-smoke.ps1
+
+  gui-package:
+    name: GUI package / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, macos-15-intel]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Install locked build tools (not user prerequisites)
+        run: python -m pip install --require-hashes -r tools/gui-build-requirements.txt
+      - name: Build and exercise application without external Python
+        shell: bash
+        run: |
+          python -B tools/build_gui.py --output "$RUNNER_TEMP/gui-app"
+          python -B tools/package_gui.py --bundle "$RUNNER_TEMP/gui-app" --output "$RUNNER_TEMP/gui-archives"
+          shopt -s nullglob
+          archives=("$RUNNER_TEMP/gui-archives/"*.zip "$RUNNER_TEMP/gui-archives/"*.tar.gz)
+          [[ ${#archives[@]} -eq 1 ]]
+          python -B tests/gui-packaged-smoke.py --archive "${archives[0]}"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: gui-release-${{ matrix.os }}
+          path: ${{ runner.temp }}/gui-archives/*
+          if-no-files-found: error
+          retention-days: 7
