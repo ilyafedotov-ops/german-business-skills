@@ -4,6 +4,14 @@
 
 Checked **2026-10-26**. Tests use synthetic temporary data, never live business records or accounts.
 
+## User start guides and manual (2026-10-26)
+
+Added portable start guides EN/RU/DE and user manuals EN/RU under the installed skill's `guides/` directory. README, quickstart, documentation index and package readmes route to them. New workspace start-note text includes first-task, continuation and recovery prompts; existing files are not overwritten. This changes guidance and template text, not executable workspace behavior or installation capabilities.
+
+`python3 -B -m unittest discover -s tests -v`: **190 tests, 187 passed and 3 native interoperability tests skipped**, macOS/Python 3.14.6. `python3 -B tools/check_package.py` and `git diff --check` passed. A fresh build outside the repository verified that both Codex and Claude ZIPs contain all five guides and the package entry paths; the builder also validates in-skill local references.
+
+An independent read-only walkthrough followed a Russian-speaking Windows user with existing accounting software and no Python/Word, from first use through readable reporting, continuation and recovery. It checked 140 local linked file targets and found no missing files or material capability/language-parity issues. This was a documentation review, not a nontechnical-user study, actual installation, Windows desktop test or proof of service/filing access. Full German manuals and report translations remain incomplete.
+
 ## Readable documents and submission preparation (2026-10-26)
 
 Added a document-authoring module and a shared readable-output contract, routed from the skill and existing accounting/forms/intake/payment/provider workflows. Assets include EN/RU report and private-review templates, a German recipient-letter template and one static printable HTML template. These are agent authoring aids; they do not automatically render every CLI output or add a filing connector. The catalogue has **45 behavioral scenarios**, not all executed.

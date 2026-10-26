@@ -1,24 +1,25 @@
-# Documentation
-
-[Workspace folders and language](folder-structure.md) — current behavior and proposed English/Russian/German structure.
-
-[Try the guided workspace prototype](prototype.md) — fictional records, no installation needed.
-
-[Choose your accounting system, review cash records and track filings](accounting.md).
-
-Windows users can start without Python using [native Windows tools](windows.md). The native entry point shares the existing workspace and covers installation, start/resume, preview, intake and integrity; advanced validated automation remains an optional Python-engine capability.
+# Help and documentation
 
 [English](index.md) | [Русский](index.ru.md)
 
-| For | Start here |
+**First visit:** [Start here](../skills/de-business-kit/guides/start.en.md). **Already working:** [User guide](../skills/de-business-kit/guides/user-guide.en.md).
+
+## Find your task
+
+| Task | Guide |
 | --- | --- |
-| Users | [Quickstart](quickstart.md), [own documents and accounting](document-workflow.md), [working modes](modes.md), [international payments, classification and ELSTER worksheets](workflows.md) |
-| Installation | [Distribution and updates](distribution.md) |
-| Maintainers | [Architecture](architecture.md), [ontology and state meanings](ontology.md), [unfinished core capabilities](core-capabilities.md), [contributing](../CONTRIBUTING.md) |
-| Evidence | [Actual validation and limits](validation.md), [synthetic scenarios](../evals/scenarios.json), [document source checks](../skills/de-business-kit/references/document-sources.md) |
+| Set up the app or update the skill | [Getting started](quickstart.md), [Windows without Python](windows.md), [installation and updates](distribution.md) |
+| Organize existing records | [Email, services and folders](existing-data.md), [document workflow](document-workflow.md) |
+| Find files and choose folder language | [Folder structure](folder-structure.md) |
+| Manage your accounts and continue a month | [Accounting choice and records](accounting.md), [working modes](modes.md) |
+| Investigate international transactions or a form | [Payments, classification and ELSTER](workflows.md) |
+| Get a readable report or letter | [Documents and reports](documents.md) |
+| Compare banks, insurance or services | [Service selection](service-selection.md) |
+| Resolve a problem or recover work | [Help and backups](../skills/de-business-kit/guides/user-guide.en.md#help) |
+| See the proposed interface | [Prototype with fictional data](prototype.md) |
 
-The skill routes one task at a time through focused references. User files belong in a separate private workspace; public fixtures contain synthetic data only.
+## Validation and development
 
-[Existing email, accounting services and folders](existing-data.md).
+[What was actually tested](validation.md) · [Unfinished capabilities](core-capabilities.md) · [Architecture](architecture.md) · [Data model and states](ontology.md) · [Behavioral scenarios](../evals/scenarios.json) · [Contributing](../CONTRIBUTING.md)
 
-[Needs-led banking, insurance and service selection](service-selection.md).
+The start guide and manual ship with the skill. User documents belong in a separate private workspace; repository examples use fictional data only.

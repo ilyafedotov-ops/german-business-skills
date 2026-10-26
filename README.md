@@ -2,6 +2,8 @@
 
 **English** · [Русский](README.ru.md)
 
+**First use:** [Start here](skills/de-business-kit/guides/start.en.md) · **Daily work:** [User guide](skills/de-business-kit/guides/user-guide.en.md) · **All topics:** [Help](docs/index.md)
+
 The welcome dialog now records whether you use **local records or existing accounting software**, without preselecting either. [Accounting workflow](docs/accounting.md) covers the local reviewed cash journal, period reports, and versioned filing/Finanzamt evidence tracking. Existing software remains authoritative when selected. These additions do not yet provide complete statutory EÜR/VAT calculations or an ELSTER transport.
 
 You can also start from existing email, accounting services or a mixed folder. [Bring existing data](docs/existing-data.md).
