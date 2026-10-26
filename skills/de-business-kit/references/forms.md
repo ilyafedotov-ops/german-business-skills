@@ -1,8 +1,16 @@
 # Browser-assisted forms and ELSTER
 
+For readable drafts, recipient letters, attachments and a private user-language review sheet, follow [document authoring](document-authoring.md). Keep the official form payload separate from its readable explanation; inspect the exact final attachments and accepted route before sending.
+
 Prepare a field worksheet first. Use the live official form, year/version and authority; labels and routes can change. Never invent field numbers or submit an old template as current.
 
+Use the [form catalogue](../assets/form-catalog.json) for candidate routing and `workflows.py catalog`. It covers Einzelunternehmen registration (commercial or freelance), UStVA, annual Umsatzsteuer, Anlage EÜR, business inputs for Anlage S/G, conditional Gewerbesteuer/ZM, Dauerfristverlängerung/Sondervorauszahlung, advance-payment adjustment, supplementary evidence and messages. A catalogue entry is not a filing obligation. Confirm actual ELSTER account capability: a startup email-registration account may initially support only the registration questionnaire. Gewerbeanmeldung remains a separate municipal procedure.
+
+For a saved, validated preparation use [the preparation commands](preparation.md), kind `elster`. Keep exact observed German labels, evidence IDs, reviewer, period and calculation notes. Form inputs and source checks can be incomplete; the resulting report states what remains unresolved. Local `reviewed` fields never imply submission. For commercial/freelance ambiguity read [classification](classification.md); for international VAT/ZM read [international](international.md).
+
 ## Workflow
+
+For calculated amounts, follow [source-led estimates and report checks](tax-estimates.md). Retrieve rules and field definitions for the actual form/year, use the selected software or a suitable official tool, and retain the observed output. ELSTER is not assumed to calculate every field. Do not replace an unavailable calculation with a formula from memory or a new package tax engine.
 
 1. Identify the form purpose, legal entity/natural person, tax year, authority and official portal. For registration, read `formation.md`; for tax choices, check current `german-rules.md` sources.
 2. Save `02_registration/<form>-worksheet.md` or `05_tax/<year>/<form>-worksheet.md` containing: exact field label, proposed value, evidence reference, explanation, unresolved issue, and status (`empty`, `proposed`, `reviewed`). Keep assumptions visible.
@@ -12,9 +20,9 @@ Prepare a field worksheet first. Use the live official form, year/version and au
 6. Check consistency across sections, warnings, dates, estimates, other activities, VAT history and contact data. Stop only the fields requiring missing information; continue remaining preparation. For an unsupported upload, ask the user to upload the chosen file manually.
 7. Show the completed draft summary with exact recipient/form/year, material tax elections, amounts, remaining warnings and consequences. If final submission authorization is absent, ask only now. Reuse prior authorization when it clearly covers the final reviewed payload; material changes require renewed scope.
 8. Submit only through a supported, permitted route. On timeout or unclear response, inspect the official status before any retry; never send a duplicate blindly.
-9. Save receipt/transmission ID and date in the private workspace. Distinguish `draft`, `ready_for_review`, `authorized`, `submitted` and `authority_response_received`. Submission receipt is not substantive acceptance by the authority. If no receipt or status evidence exists, keep `submission_unconfirmed` and explain what to check.
+9. Save receipt/transmission ID and date in the private workspace. Distinguish `draft`, `ready_for_review`, `authorized`, `submitted` and `authority_response_received`. Submission receipt is not substantive acceptance by the authority. If no receipt or status evidence exists, keep `submission_unconfirmed` and explain what to check. For canonical filing records, use [accounting workflow](accounting-workflow.md): its saved states are `draft`, `reviewed`, `authorized`, `submission_unconfirmed`, `submitted` and `cancelled`; an authority response is appended separately. The external-operation template vocabulary above does not change that schema.
 
-## Scope of v0.3
+## Implemented scope
 
 These are agent instructions, not an implemented ELSTER connector. Do not claim unattended filing, complete UI coverage or a tested ELSTER integration. Native browser availability and file uploads differ by host; consult `platforms.md` and current host documentation. Manual guidance is a complete fallback for preparation, not evidence of a submitted form.
 

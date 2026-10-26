@@ -1,0 +1,24 @@
+# Completing self-managed accounting and tax reporting
+
+[English](core-capabilities.md) | [Русский](core-capabilities.ru.md)
+
+The product goal is that an entrepreneur manages their own accounting and tax reporting. Document preparation is an implemented part of that goal. A complete ledger and ELSTER submission are **unfinished core capabilities**, not optional adviser exports. This plan describes acceptance criteria; it does not claim implementation or a certified process.
+
+The welcome dialog now saves **local versus existing-software accounting** without a default; see [the accounting workflow](accounting.md). Implemented foundations include an evidence-linked local cash journal with duplicate checks and preserved corrections, period cash summaries/account reconciliation CSVs, and frozen filing versions with reviewed authorization, uncertain-attempt protection, manually evidenced receipts and separate authority responses. These are working local capabilities, not complete statutory accounting or live transmission. Existing software stays authoritative on the external route.
+
+| Capability | Current evidence | Required before completion |
+| --- | --- | --- |
+| Document and review desk | Original catalog, proposals, reviewed bank mapping, reconciliation, generated overview | Continue format/host acceptance and technical e-invoice validation; keep substantive review distinct |
+| Accounting ledger | Reviewed local cash journal for explicitly selected EÜR, splits, duplicate prevention, reversals/corrections and per-account CSV; external route blocks local postings | Complete statutory treatment, asset/noncash adjustments, balances/closing rules and complete representative periods; method eligibility is not inferred |
+| Tax estimates and report checks | Skill guidance for current official rules, suitable official/provider tools, evidenced inputs/results and period-specific worksheets; no bundled tax formulas | Verify the selected tool supports the form/year; reconcile authoritative accounting inputs, preserve its actual output and investigate differences. Validate access/export workflows before claiming integration; expose unsupported cases before approval |
+| ELSTER submission | Form worksheets and read-only filing checks for local evidence/state blockers; no implemented authenticated transmission | Verify official supported transport and access requirements, supported forms/year versions, user-controlled authentication, concrete payload preview/approval, technical validation, duplicate prevention, timeout/retry investigation, transmission receipt and correction workflow; test against the supported official environment before live claims |
+| Finanzamt follow-up | Observed responses and supplied deadlines linked to frozen filing versions; receipt and authority outcome remain separate | Live response retrieval, complete objections/corrections workflow and separately sourced deadline calculation; reminders require an actual scheduler |
+
+The intended lifecycle is **evidence → proposed treatment → user review/approval → actual accounting entry → return draft → separate submission approval → evidenced submission → authority response and any correction**. A user may perform the unsupported external steps in their chosen system; the assistant can help and preserve inspected results. That is an explicit interim workflow, not evidence that an integration exists.
+
+Complete the accounting workflow and verify calculations in the selected software or suitable official tools before claiming end-to-end reporting. Tax formulas, rate tables and rounding algorithms are deliberately not a package implementation goal. The skill retrieves applicable sources and guides estimation/checking; see [source-led estimates](../skills/de-business-kit/references/tax-estimates.md). Develop the submission adapter against a defined supported form/year and official interface, with independent security review of credentials, authorization, duplicate prevention and readback. Keep accountant consultation and archive sharing available for specific needs; neither is a required endpoint or substitutes for these capabilities.
+
+
+## Current delivery route
+
+The selected first route is the local cash journal plus manual ELSTER, with [one monthly workflow](../skills/de-business-kit/references/monthly-workflow.md). The integrated real overview and [full backup/restore](../skills/de-business-kit/references/recovery.md) are implemented. Native Windows has intake, integrity, overview and recovery without Python; protected journal/filing writes still require an existing supported runtime. No automatic reminders or real-record GUI mutations are supplied. The synthetic month proves local transitions, not calculation correctness or live submission. See [current validation](validation.md).

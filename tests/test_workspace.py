@@ -63,9 +63,7 @@ class WorkspaceTests(unittest.TestCase):
             self.assertIsNone(fact["value"])
             self.assertEqual(fact["status"], "unknown")
             self.assertEqual(fact["source"], {"kind": None, "ref": None})
-        for month in range(1, 13):
-            for part in ("originals", "derived", "proposals"):
-                self.assertTrue((self.root / f"06_bookkeeping/2026/{month:02d}/{part}").is_dir())
+        self.assertEqual(list((self.root / "06_bookkeeping").iterdir()), [])
         for name in ("tasks", "questions", "decisions"):
             self.assertEqual(self.load(f"00_admin/{name}.json"), [])
         self.assertEqual(self.load(workspace.DOCUMENTS)["documents"], [])
@@ -74,6 +72,19 @@ class WorkspaceTests(unittest.TestCase):
         if os.name == "posix":
             self.assertEqual(stat.S_IMODE(self.root.stat().st_mode), 0o700)
             self.assertEqual(stat.S_IMODE((self.root / workspace.PROFILE).stat().st_mode), 0o600)
+
+    def test_intake_creates_only_the_required_month_and_preserves_legacy_empty_folders(self):
+        archive = self.root / '06_bookkeeping'
+        workspace.ingest_document(self.root, self.source(), '2026-10')
+        self.assertEqual([p.name for p in archive.iterdir()], ['2026'])
+        self.assertEqual([p.name for p in (archive / '2026').iterdir()], ['10'])
+        self.assertEqual([p.name for p in (archive / '2026/10').iterdir()], ['originals'])
+        old_empty = archive / '2026/01/proposals'
+        old_empty.mkdir(parents=True)
+        workspace.start_workspace(self.root, 2027, 'de')
+        self.assertTrue(old_empty.is_dir())
+        self.assertFalse((archive / '2027').exists())
+        self.assertEqual(workspace.verify_workspace(self.root)['status'], 'ok')
 
     def test_init_persists_explicit_language_and_workflow_mode(self):
         target = self.base / "english-workspace"
@@ -84,7 +95,7 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual(json.loads(output.getvalue())["mode"], "tax-consultant")
         status = workspace.workspace_status(target)
         self.assertEqual((status["language"], status["mode"]), ("en", "tax-consultant"))
-        marker = json.loads((target / workspace.MARKER).read_text(encoding="utf-8"))
+        marker = json.loads(workspace._inside(target, workspace.MARKER).read_text(encoding="utf-8"))
         self.assertEqual(marker["schema_version"], 1)
         self.assertEqual(marker["mode"], "tax-consultant")
 
@@ -241,7 +252,7 @@ class WorkspaceTests(unittest.TestCase):
             workspace.ingest_document(self.root, self.source(), "2026-10")
         self.assertEqual((self.root / workspace.PROFILE).read_bytes(), before)
         self.assertEqual((self.root / workspace.DOCUMENTS).read_bytes(), registry_before)
-        self.assertEqual(list((self.root / "06_bookkeeping/2026/10/originals").iterdir()), [])
+        self.assertFalse((self.root / "06_bookkeeping/2026/10").exists())
 
     def test_record_keeps_before_after_history_and_evidence(self):
         first = workspace.record_fact(self.root, self.record())
@@ -344,6 +355,45 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual(workspace.ingest_document(self.root, source, "2026-10")["status"], "imported")
         self.assertEqual(workspace.verify_workspace(self.root)["status"], "ok")
 
+    def test_failed_ingest_uses_final_timestamps_after_writer_closes(self):
+        # Windows guarantees final write times only after closing the writer.
+        # Emulate that observable filesystem behavior on every test platform.
+        original_fdopen = workspace.os.fdopen
+        original_write = workspace._atomic_json
+        source = self.source()
+        target = self.root / ("06_bookkeeping/2026/10/originals/" +
+                              hashlib.sha256(source.read_bytes()).hexdigest() + ".pdf")
+
+        class ClosingWriter:
+            def __init__(self, stream):
+                self.stream = stream
+
+            def __enter__(self):
+                return self.stream.__enter__()
+
+            def __exit__(self, *args):
+                result = self.stream.__exit__(*args)
+                if target.exists():
+                    info = target.stat()
+                    os.utime(target, ns=(info.st_atime_ns, info.st_mtime_ns + 1000000000))
+                return result
+
+        def delayed_close(fd, mode, *args, **kwargs):
+            stream = original_fdopen(fd, mode, *args, **kwargs)
+            return ClosingWriter(stream) if mode == "wb" else stream
+
+        def fail_registry(path, *args, **kwargs):
+            if path == self.root / workspace.DOCUMENTS:
+                raise OSError("Simulated registry write failure")
+            return original_write(path, *args, **kwargs)
+
+        with patch.object(workspace.os, "fdopen", side_effect=delayed_close), \
+                patch.object(workspace, "_atomic_json", side_effect=fail_registry):
+            with self.assertRaises(OSError):
+                workspace.ingest_document(self.root, source, "2026-10")
+        self.assertFalse(target.exists())
+        self.assertEqual(source.read_bytes(), b"synthetic-original\n")
+
     def test_failed_ingest_preserves_a_modified_copy_and_verify_flags_it(self):
         source = self.source()
         digest = hashlib.sha256(source.read_bytes()).hexdigest()
@@ -365,6 +415,28 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual(result["status"], "needs_review")
         self.assertEqual(result["unindexed_originals"], 1)
 
+    def test_failed_ingest_preserves_replacement_even_with_identical_bytes(self):
+        source = self.source()
+        digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        target = self.root / f"06_bookkeeping/2026/10/originals/{digest}.pdf"
+        replacement = self.base / "replacement.pdf"
+        replacement.write_bytes(source.read_bytes())
+        original_write = workspace._atomic_json
+
+        def fail_registry(path, *args, **kwargs):
+            if path == self.root / workspace.DOCUMENTS:
+                info = target.stat()
+                os.utime(replacement, ns=(info.st_atime_ns, info.st_mtime_ns))
+                os.replace(replacement, target)
+                raise OSError("Simulated registry write failure after replacement")
+            return original_write(path, *args, **kwargs)
+
+        with patch.object(workspace, "_atomic_json", side_effect=fail_registry):
+            with self.assertRaises(OSError):
+                workspace.ingest_document(self.root, source, "2026-10")
+        self.assertEqual(target.read_bytes(), source.read_bytes())
+        self.assertEqual(workspace.verify_workspace(self.root)["unindexed_originals"], 1)
+
     def test_failed_ingest_does_not_delete_a_copy_after_registry_committed(self):
         source = self.source()
         original_write = workspace._atomic_json
@@ -383,6 +455,7 @@ class WorkspaceTests(unittest.TestCase):
 
     def test_verify_flags_crash_orphan_without_following_originals_symlinks(self):
         original = self.root / "06_bookkeeping/2026/10/originals/orphan.pdf"
+        original.parent.mkdir(parents=True)
         original.write_bytes(b"Unindexed crash orphan")
         external = self.base / "outside-originals"
         external.mkdir()
@@ -405,7 +478,7 @@ class WorkspaceTests(unittest.TestCase):
         with self.assertRaises(workspace.WorkspaceError):
             workspace.ingest_document(self.root, self.source("key.pfx"), "2026-10")
         originals = self.root / "06_bookkeeping/2026/10/originals"
-        originals.rmdir()
+        originals.parent.mkdir(parents=True)
         outside = self.base / "outside"
         outside.mkdir()
         self._symlink(originals, outside, True)
@@ -418,6 +491,7 @@ class WorkspaceTests(unittest.TestCase):
         source = self.source()
         digest = hashlib.sha256(source.read_bytes()).hexdigest()
         target = self.root / f"06_bookkeeping/2026/10/originals/{digest}.pdf"
+        target.parent.mkdir(parents=True)
         target.write_bytes(b"preexisting-do-not-overwrite")
         with self.assertRaises(FileExistsError):
             workspace.ingest_document(self.root, source, "2026-10")

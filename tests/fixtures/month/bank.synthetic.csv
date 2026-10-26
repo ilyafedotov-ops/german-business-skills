@@ -1,0 +1,4 @@
+ID;Buchungstag;Betrag;Waehrung;Text
+tx-1;02.10.2026;119,00;EUR;INV-SYN-001
+tx-2;03.10.2026;-5,00;EUR;Synthetic documented account fee
+tx-3;04.10.2026;-12,00;EUR;Receipt missing in synthetic fixture

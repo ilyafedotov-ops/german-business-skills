@@ -9,12 +9,27 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills" / "de-business-kit"
 
 
+def checked_files(root):
+    """Check authored source; development dependencies and reports are not shipped."""
+    local_only = {"node_modules", ".venv", "venv", "output", "dist", "test-results",
+                  "playwright-report", ".playwright-mcp"}
+    for file in root.rglob("*"):
+        parts = file.relative_to(root).parts
+        if parts[0] in local_only or any(part in {".git", "__pycache__"} for part in parts):
+            continue
+        yield file
+
+
 def main():
     errors = []
     required = [
         "README.md", "README.ru.md", "LICENSE", "SECURITY.md", "SECURITY.ru.md",
         "CONTRIBUTING.md", "CONTRIBUTING.ru.md",
         "tools/install.py", "docs/architecture.md", "docs/architecture.ru.md",
+        "docs/accounting.md", "docs/accounting.ru.md",
+        "skills/de-business-kit/scripts/casefiles/accounting.py",
+        "skills/de-business-kit/references/accounting-workflow.md",
+        "skills/de-business-kit/references/submission-integration-sources.md",
         "docs/validation.md", "docs/validation.ru.md", "docs/modes.md", "docs/modes.ru.md",
         "evals/scenarios.json", "skills/de-business-kit/SKILL.md",
         "skills/de-business-kit/agents/openai.yaml",
@@ -27,6 +42,26 @@ def main():
         "docs/quickstart.md", "docs/quickstart.ru.md", "docs/distribution.md", "docs/distribution.ru.md",
         "skills/de-business-kit/references/onboarding.md",
         "skills/de-business-kit/references/legal-boundaries.md",
+        "skills/de-business-kit/scripts/workflows.py", "skills/de-business-kit/scripts/payments.py",
+        "skills/de-business-kit/assets/form-catalog.json", "skills/de-business-kit/assets/preparation-messages.json",
+        "skills/de-business-kit/references/preparation.md", "skills/de-business-kit/references/international.md",
+        "skills/de-business-kit/references/payments.md", "skills/de-business-kit/references/classification.md",
+        "docs/service-selection.md", "docs/service-selection.ru.md",
+        "docs/windows.md", "docs/windows.ru.md",
+        "skills/de-business-kit/scripts/windows.ps1", "skills/de-business-kit/assets/workspace-seed.json", "skills/de-business-kit/assets/folder-layouts.json",
+        "skills/de-business-kit/references/native-windows.md",
+        "skills/de-business-kit/references/document-authoring.md", "skills/de-business-kit/references/readable-output.md",
+        "skills/de-business-kit/references/document-delivery-sources.md", "skills/de-business-kit/assets/readable-document.html",
+        "skills/de-business-kit/assets/de/recipient-letter.md",
+        "skills/de-business-kit/references/insurance.md", "skills/de-business-kit/references/service-research-sources.md",
+        "docs/workflows.md", "docs/workflows.ru.md", "docs/existing-data.md", "docs/existing-data.ru.md",
+        "skills/de-business-kit/scripts/casefiles/folders.py",
+        "skills/de-business-kit/references/existing-data.md", "skills/de-business-kit/references/data-source-access.md",
+        "docs/index.md", "docs/index.ru.md", "docs/document-workflow.md", "docs/document-workflow.ru.md",
+        "docs/core-capabilities.md", "docs/core-capabilities.ru.md",
+        "skills/de-business-kit/scripts/desk.py", "skills/de-business-kit/scripts/casefiles/archive.py",
+        "skills/de-business-kit/references/document-workflow.md", "skills/de-business-kit/references/task-recipes.md",
+        "skills/de-business-kit/assets/casework-messages.json",
     ]
     for name in required:
         if not (ROOT / name).is_file():
@@ -41,7 +76,7 @@ def main():
         locales = manifest["languages"]
         if set(locales) != {"en", "ru"}:
             errors.append("Complete English and Russian locale definitions are required")
-        roles = {"bookkeeping_workflow", "month_close", "form_worksheet", "tax_consultation"}
+        roles = {"bookkeeping_workflow", "month_close", "form_worksheet", "tax_consultation", "overview", "source_map", "service_comparison", "readable_report", "submission_review"}
         for language, locale in locales.items():
             templates = locale["templates"]
             if set(templates) != roles:
@@ -52,9 +87,7 @@ def main():
                     errors.append("Invalid localized template: " + str(name))
     except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
         errors.append("Invalid locale manifest: " + str(exc))
-    for file in ROOT.rglob("*"):
-        if any(part in {".git", "__pycache__"} for part in file.relative_to(ROOT).parts):
-            continue
+    for file in checked_files(ROOT):
         if file.is_symlink():
             errors.append("Symlink in distributable: " + str(file.relative_to(ROOT)))
             continue

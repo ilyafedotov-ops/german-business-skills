@@ -1,0 +1,8 @@
+# Ownership requests are enforced only when repository rules require review.
+/.github/ @ilyafedotov-ops
+/tools/ @ilyafedotov-ops
+/VERSION @ilyafedotov-ops
+/plugin.json @ilyafedotov-ops
+/.claude-plugin/ @ilyafedotov-ops
+/AGENTS.md @ilyafedotov-ops
+/SECURITY* @ilyafedotov-ops

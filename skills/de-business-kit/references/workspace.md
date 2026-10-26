@@ -1,5 +1,9 @@
 # Private workspace and offline utilities
 
+On Windows without Python, use [native Windows](native-windows.md) for supported setup/intake and host tools for readable preparation. Python commands below apply only when that optional runtime is available. Do not install it by default or claim native parity for unported validated operations.
+
+Additional offline tools and record contracts are described in [preparation](preparation.md) and [payments](payments.md). They write versioned reports without changing the workspace schema or canonical profile.
+
 Use Python 3.9+ and the bundled `scripts/workspace.py`. It makes no network calls. The assistant's own file-reading tools and remote model are separate data flows; apply `privacy.md` before reading real third-party records into context.
 
 Contents: [Create](#create-then-install-project-scoped-skills) · [State](#files-and-state) · [Language/mode](#language-and-working-mode) · [Facts](#profile-facts) · [Originals](#import-and-verify-documents) · [Reconcile](#reconcile-normalized-csvs) · [Templates](#templates-and-external-operations) · [Recovery](#exit-codes-and-recovery).
@@ -20,6 +24,10 @@ All relative input paths below are relative to `--root`, not the current shell d
 
 ## Files and state
 
+New CLI `init` and `start` use five everyday folders in `en`, `ru` or `de`, plus `.business-kit` for internal records and a localized root start guide. Folder language is pinned separately in `.workspace-layout.json` and the workspace marker. Include both the internal area and descriptor in backups. `--layout legacy` explicitly selects the old layout; existing workspaces resume unchanged. No automatic migration is implemented.
+
+The table below lists **stable logical references**, not necessarily physical paths. Before using ordinary file tools, run `workspace.py folders --root <private-folder>` (or native `-Action folders`) and translate the longest matching prefix. Under the document archive, `originals`, `derived` and `proposals` also have translated names. Prefer the actual paths returned by operations. Never create old English directories alongside a localized workspace. See `assets/folder-layouts.json` for the shared mapping. The low-level Python `init_workspace` API retains its legacy default for existing callers; `start_workspace` defaults to localized folders.
+
 | File / directory | Meaning |
 |---|---|
 | `00_admin/workspace.json` | Workspace UUID, schema version, initial year, language and working mode |
@@ -34,12 +42,12 @@ All relative input paths below are relative to `--root`, not the current shell d
 | `03_banking/`, `04_accounting/` | Provider requirements, statements/normalized files, workflow agreements |
 | `06_bookkeeping/YYYY/MM/originals/` | Immutable-by-workflow original copies; no legal immutability guarantee |
 | `06_bookkeeping/YYYY/MM/derived/` | OCR, extracted facts and normalized data |
-| `06_bookkeeping/YYYY/MM/proposals/` | Unposted proposals and review records |
-| `07_exports/YYYY-MM/` | Generated reconciliation and handoff files |
+| `06_bookkeeping/YYYY/MM/proposals/` | Legacy proposal files; new validated records use `00_admin/casework.json` |
+| `07_exports/YYYY-MM/` | Generated reconciliation and optional records archives |
 | `08_correspondence/` | Relevant correspondence |
 | `09_audit/events.json`, `09_audit/history/` | Local events and before/after profile snapshots |
 
-The initializer creates all twelve months for the chosen year. Later intake may create a further period. A folder period is not a tax-period determination. Keep invoice, service, receipt and payment dates in extracted records. Missing values stay unknown.
+The initializer leaves the document archive empty. Intake creates only the selected storage month; derived files and proposals get directories when an operation needs them. Existing empty month folders are preserved. A folder period is not a tax-period determination. Keep invoice, service, receipt and payment dates in extracted records. Missing values stay unknown.
 
 The task/question/decision files start as empty arrays. Use the validated `entry` command below to preserve IDs, transitions, locks and history. Legacy untyped records are flagged for reviewed conversion; never silently clear or migrate them. A due date in a file does not create an actual reminder.
 
@@ -140,7 +148,7 @@ Each fact has this shape:
 }
 ```
 
-Supported states: `unknown`, `declared`, `proposed`, `verified`, `needs_review`. A nonunknown fact needs a value and evidence source. `verified` means evidence was actually inspected; the script cannot validate the truth of a document or legal conclusion. Record money as decimal strings with currency and period identified, not binary floats.
+Supported states: `unknown`, `declared`, `proposed`, `verified`, `needs_review`. A nonunknown fact needs a value and evidence source. `verified` requires an inspected private file source; the writer stores its hash, and status detects missing/changed evidence. The script cannot validate document truth or a legal conclusion. Legacy verified facts without fingerprints require review, not silent migration. Record money as decimal strings with currency and period identified, not binary floats.
 
 New writes validate profile field types. VAT regime is `Kleinunternehmer`, `Regelbesteuerung` or `unresolved`; accounting method is `EÜR`, `Bilanzierung` or `unresolved`. Employee/cash/cross-border/existing-VAT flags are booleans. Dates use `YYYY-MM-DD`; `vat_prior_year` is an integer year. Client/country lists are string arrays. Activities are arrays with unique `activity_id`, optional text `description`, `classification` (`freiberuflich`, `gewerblich`, `mixed`, `unresolved`) and date/null `commenced_at`. VAT-history items contain `regime`, `effective_from`, and `source_ref`. Provider/bank requirements are objects; remaining text fields require nonempty strings. Unknown facts remain null.
 
@@ -223,7 +231,7 @@ Copy only needed templates into the private workspace:
 
 Create unique IDs. Do not reuse null IDs as real identifiers. Monetary fields in proposals are decimal strings; null means unknown. The templates are workflow schemas, not a provider's API request body.
 
-External operation states may be `draft`, `ready_for_review`, `authorized`, `submitted`, `submission_unconfirmed`, `authority_response_received` or `cancelled`. Use only the state the evidence supports. Bind authorization to the exact recipient, period and payload; a significant payload change invalidates the old scope. Maintain prior linked operations when correcting. No external execution engine is shipped in v0.3.
+External operation states may be `draft`, `ready_for_review`, `authorized`, `submitted`, `submission_unconfirmed`, `authority_response_received` or `cancelled`. Use only the state the evidence supports. Bind authorization to the exact recipient, period and payload; a significant payload change invalidates the old scope. Maintain prior linked operations when correcting. No external execution engine is shipped in this preview. These template states are distinct from the validated filing lifecycle in [accounting workflow](accounting-workflow.md); use that workflow’s exact states and writers for saved filings.
 
 ## Exit codes and recovery
 
@@ -232,3 +240,7 @@ External operation states may be `draft`, `ready_for_review`, `authorized`, `sub
 - `2`: invalid/unsafe input, schema issue or filesystem error; inspect before retry.
 
 The utilities refuse symlink paths, path traversal, existing content during initialization and work inside Git or skill directories. They use owner-only POSIX modes where supported, without Windows ACL or encryption guarantees. Public repository files and private business files remain separate.
+
+## Document review desk
+
+Use [document workflow](document-workflow.md) for `desk.py` commands and additive casework schema 1. Proposal template schema 2 and source checks have validated writers; external-operation templates do not execute integrations. The complete accounting ledger and ELSTER submission remain core gaps.

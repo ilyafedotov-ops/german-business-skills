@@ -10,6 +10,8 @@ Initialize using `workspace.py init --root <private-path> --year <year> --langua
 
 ## Stage 1 — minimum business context
 
+During welcome, ask/reuse whether the user already maintains accounts in a particular software product or wants local records. Save that explicit choice through the [accounting workflow](accounting-workflow.md); no route or vendor is preselected. Keep the choice separate from EÜR/Bilanzierung and VAT facts. An undecided user can continue collecting documents.
+
 Gather these in small batches:
 
 | Group | Facts | Why |
@@ -19,8 +21,8 @@ Gather these in small batches:
 | Existing business | All activities of the same person, existing tax/VAT treatment, elections and authority letters | Avoid resetting VAT history |
 | Turnover | Previous calendar year actual and current-year forecast across relevant activities; currency; source | Assess applicable questions, not just brand revenue |
 | Administration | Municipality, relevant authorities, existing Gewerbe/Finanzamt/ELSTER status | Appropriate registration path |
-| Operating needs | Transaction count, cash, currencies, recurring invoices, assets, mixed private use | Bank and software shortlist |
-| Work split | Existing Steuerberater/bookkeeper, who categorizes, reconciles, submits, and exports | Avoid duplicated or missing work |
+| Operating needs | Transaction count, cash, currencies, recurring invoices, assets, mixed private use, current services and material risk/coverage needs | Needs-led banking, insurance and service shortlist |
+| Work split | User-led responsibilities for categories, reconciliation and submission; existing adviser only if the user involves one | Avoid duplicated or missing work |
 
 Use stable activity IDs and preserve effective dates. The `activities` fact is an array of objects such as `{ "activity_id": "activity-001", "description": null, "classification": "unresolved", "commenced_at": null, "prior_year_turnover_eur": null }`. This is one natural person's profile, not a multi-client database.
 

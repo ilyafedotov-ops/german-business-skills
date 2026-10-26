@@ -2,9 +2,9 @@
 
 ## Identify the product and available access
 
-Ask whether the product is **Lexware Office** in the browser or an installed product such as **Lexware buchhaltung / financial office**. Do not reuse Office API assumptions for desktop products. Record the exact product, edition, adviser workflow and currently available access in `04_accounting/workflow.md` and the runtime register.
+Ask whether the product is **Lexware Office** in the browser or an installed product such as **Lexware buchhaltung / financial office**. Do not reuse Office API assumptions for desktop products. Record the exact product, edition, self-accounting workflow and currently available access in `04_accounting/workflow.md` and the runtime register.
 
-**Version 0.3 has no production Lexware connector.** These are preparation instructions and design constraints for a future adapter. Use supplied local utilities for evidence and reconciliation. Provide reviewed entry instructions or handoff files; never claim that this package uploaded, posted or submitted anything.
+**This package has no production Lexware connector.** These are preparation instructions and design constraints for a future adapter. Use supplied local utilities for evidence and reconciliation. Use [existing-data onboarding](existing-data.md) to choose available host plugins/API/browser tools or local exports. Provide reviewed self-entry steps; never claim that this package uploaded, posted or submitted anything.
 
 ## Diagnose missing documents correctly
 

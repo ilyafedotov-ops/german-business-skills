@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>{{TITLE}}</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f3ef;color:#202722;font:17px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}.document{max-width:900px;margin:32px auto;padding:48px 56px;background:white;border:1px solid #d8ded8}h1{font-size:30px;line-height:1.25;margin:16px 0}h2{font-size:21px;line-height:1.35;margin:30px 0 12px}p,ul{margin:12px 0}header{border-bottom:2px solid #375346;padding-bottom:24px}.status{display:inline-block;border:1px solid #94732d;padding:3px 10px;font-size:14px;font-weight:650;background:#fff9e9;color:#554017}.metadata,footer{font-size:14px;color:#48544c}footer{margin-top:32px;border-top:1px solid #d8ded8;padding-top:16px}a{color:#205d4b;text-decoration:underline}a:focus-visible{outline:3px solid #94732d;outline-offset:3px}p,li,td,th,a{overflow-wrap:anywhere}table{table-layout:fixed;border-collapse:collapse;width:100%;margin:18px 0;font-size:15px}th,td{padding:9px 10px;text-align:left;vertical-align:top;border-bottom:1px solid #d8ded8}th{font-weight:650;background:#edf2ee}.amount{text-align:right;font-variant-numeric:tabular-nums}thead{display:table-header-group}tr{break-inside:avoid}h1,h2{break-after:avoid}p{orphans:3;widows:3}@media(max-width:600px){.document{margin:0;padding:24px 18px;border:0}h1{font-size:25px}th,td{padding:7px 5px}table{font-size:14px}}@page{size:A4;margin:18mm}@media print{body{background:white;font-size:11pt}.document{max-width:none;margin:0;padding:0;border:0}h1{font-size:21pt}h2{font-size:15pt}.metadata,footer,.status{font-size:10pt}table{font-size:10pt}a{color:inherit}.status{background:transparent}footer{break-inside:avoid}}
+</style>
+</head>
+<body>
+<article class="document">
+<header>
+<p class="status">{{STATUS}}</p>
+<h1>{{TITLE}}</h1>
+<p class="metadata">{{METADATA}}</p>
+</header>
+<main>{{CONTENT}}</main>
+<footer>{{FOOTER}}</footer>
+</article>
+</body>
+</html>

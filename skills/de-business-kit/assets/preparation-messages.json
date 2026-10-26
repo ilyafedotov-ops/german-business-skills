@@ -1,0 +1,76 @@
+{
+  "en": {
+    "title": "Preparation report",
+    "boundary": "Evidence-linked draft. No entries posted and no form submitted.",
+    "status": "Status",
+    "period": "Period",
+    "missing": "Open checks and missing facts",
+    "review": "Inputs are recorded; review applicability and completeness before use.",
+    "evidence": "Source fingerprints",
+    "detail": "The adjacent JSON contains the exact inputs, fields, calculations and evidence. Machine identifiers stay in English.",
+    "routes": {
+      "classification_review": "Assess actual activities, qualifications and delivery against EStG §§15/18; this worksheet does not determine official classification.",
+      "person_wide_vat_review": "Keep legal form, income classification, VAT and profit method separate. Review VAT history across all activities of this entrepreneur.",
+      "mixed_activity_review": "Review whether mixed activities can be separated; do not automatically apply partnership rules to an individual.",
+      "form_eligibility_review": "Confirm form, year, eligibility, authority, deadline and exact current German field labels. Listed forms are candidates, not filing obligations.",
+      "draft_only": "This is preparation only. Login, authorization, transmission receipt and authority response are separate steps.",
+      "place_of_supply_review": "Determine actual supplier/customer establishments, service category and exceptions before proposing VAT treatment. Currency and IBAN do not determine jurisdiction.",
+      "payment_reporting_review": "Assess Bundesbank/AWV reporting using residency, transaction purpose, amount, period and exceptions; foreign payments are not automatically reportable.",
+      "goods_customs_review": "Goods and mixed supplies need separate import/export, intra-EU and customs analysis. Do not apply the general service rule.",
+      "reverse_charge_review": "Check German place of supply and recipient liability under §13b UStG. Kleinunternehmer status does not by itself remove that liability or establish input-tax deduction.",
+      "eu_b2b_place_and_zm_review": "Check B2B evidence, place-of-supply exceptions, invoice wording and conditional ZM. Businesses applying §19(1) require the §18a(4) exclusion check.",
+      "consumer_place_oss_review": "Identify the consumer service category and place-of-supply exceptions; assess OSS or foreign SME procedure only where applicable.",
+      "business_place_review": "Review business-recipient location, service exceptions, invoice requirements and any foreign obligations.",
+      "vat_id_evidence_review": "Record dated VAT-ID query evidence; unavailable or not checked is not invalid, and number syntax is not verification.",
+      "payment_review": "Amounts reconcile only against the supplied account/statement basis. Review invoices, fees, corrections, reserves, FX and contractual seller separately; no tax treatment is approved."
+    },
+    "states": {
+      "needs_review": "Needs review",
+      "ready_for_review": "Inputs recorded; ready for review",
+      "arithmetic_matched": "Arithmetic matches; review remains"
+    },
+    "balances": "Statement balances",
+    "balance_headers": "| Currency | Opening | Reported closing | Calculated closing | Difference |",
+    "totals_note": "Activity by type; payouts and transfers are not additional revenue.",
+    "facts": "Recorded facts",
+    "fields": "Observed form fields",
+    "field_headers": "| German label | Proposed value | Review status | Evidence IDs |"
+  },
+  "ru": {
+    "title": "Подготовка: отчёт",
+    "boundary": "Черновик со ссылками на подтверждения. Проводки не созданы, форма не отправлена.",
+    "status": "Статус",
+    "period": "Период",
+    "missing": "Открытые проверки и недостающие данные",
+    "review": "Данные записаны; перед использованием проверьте применимость и полноту.",
+    "evidence": "Контрольные суммы источников",
+    "detail": "Соседний JSON содержит точные исходные данные, поля, расчёты и подтверждения. Машинные идентификаторы остаются на английском.",
+    "routes": {
+      "classification_review": "Сопоставьте фактическую деятельность, квалификацию и способ работы с §§15/18 EStG; эта таблица не определяет официальную классификацию.",
+      "person_wide_vat_review": "Разделяйте правовую форму, вид дохода, НДС и метод определения прибыли. Проверьте историю НДС по всем видам деятельности предпринимателя.",
+      "mixed_activity_review": "Проверьте возможность разделения смешанной деятельности; не переносите автоматически правила товариществ на физическое лицо.",
+      "form_eligibility_review": "Подтвердите форму, год, применимость, орган, срок и точные актуальные немецкие названия полей. Каталог не устанавливает обязанность подачи.",
+      "draft_only": "Это только подготовка. Вход, разрешение на отправку, квитанция передачи и ответ органа — отдельные этапы.",
+      "place_of_supply_review": "Установите местонахождение поставщика и покупателя, вид услуги и исключения до выбора режима НДС. Валюта и IBAN не определяют юрисдикцию.",
+      "payment_reporting_review": "Оцените отчётность Bundesbank/AWV по резидентству, назначению, сумме, периоду и исключениям; не каждый иностранный платёж требует отчёта.",
+      "goods_customs_review": "Для товаров и смешанных поставок отдельно проверьте импорт/экспорт, операции внутри ЕС и таможню. Не применяйте общее правило для услуг.",
+      "reverse_charge_review": "Проверьте место оказания услуги в Германии и обязанность получателя по §13b UStG. Статус Kleinunternehmer сам по себе не отменяет эту обязанность и не даёт права на вычет.",
+      "eu_b2b_place_and_zm_review": "Проверьте подтверждение B2B, исключения по месту оказания, текст счёта и применимость ZM. При §19(1) проверьте исключение §18a(4).",
+      "consumer_place_oss_review": "Установите вид услуги потребителю и исключения по месту оказания; оцените OSS или зарубежный режим для малого бизнеса только при применимости.",
+      "business_place_review": "Проверьте местонахождение бизнес-получателя, исключения для услуги, требования к счёту и зарубежные обязанности.",
+      "vat_id_evidence_review": "Сохраните датированное подтверждение проверки USt-IdNr.; недоступность или отсутствие проверки не означает недействительность, а формат номера не подтверждает его действительность.",
+      "payment_review": "Суммы сверяются только в рамках указанного счёта и вида остатка. Отдельно проверьте счета, комиссии, исправления, резервы, конвертацию и продавца по договору; налоговый учёт не утверждён."
+    },
+    "states": {
+      "needs_review": "Требуется проверка",
+      "ready_for_review": "Данные записаны; готовы к проверке",
+      "arithmetic_matched": "Арифметика сходится; проверка остаётся"
+    },
+    "balances": "Остатки по выписке",
+    "balance_headers": "| Валюта | Начальный остаток | Конечный по выписке | Конечный расчётный | Разница |",
+    "totals_note": "Операции по типам; выплаты и переводы не являются дополнительной выручкой.",
+    "facts": "Записанные факты",
+    "fields": "Поля из актуальной формы",
+    "field_headers": "| Немецкое название | Предлагаемое значение | Статус проверки | ID подтверждений |"
+  }
+}

@@ -1,51 +1,22 @@
-# Start with German Business Kit
+# Getting started
 
 [English](quickstart.md) | [Русский](quickstart.ru.md)
 
-Version 0.3.0 preview helps you organize your own German sole-trader business. You can prepare registration documents, organize a month for your accountant, and research tax questions. It does not replace the accounting system, a licensed adviser, or official submission receipts.
+Open [Start here](../skills/de-business-kit/guides/start.en.md): five steps from a first message to a saved result. Use the [user guide](../skills/de-business-kit/guides/user-guide.en.md) for ongoing work.
 
-## Choose the app you already use
+| What you need now | Where to go |
+| --- | --- |
+| Start or try fictional data | [Short start guide](../skills/de-business-kit/guides/start.en.md) |
+| Understand daily work or an error | [User guide](../skills/de-business-kit/guides/user-guide.en.md) |
+| Connect a downloaded project | [Installation options](../README.md#install) and [packages/updates](distribution.md); the assistant can perform technical steps |
+| Start on Windows without Python | [Windows](windows.md) |
+| Find guidance on a particular topic | [Documentation index](index.md) |
 
-Use a local Codex or Claude Code session on Windows or macOS. The app must be able to access your selected folder and run Python 3.9 or newer for the local utilities. A plugin does not provide those capabilities itself. Claude Cowork and cloud sessions need separate testing; this preview does not promise the same local-file workflow there.
+Use your existing app and begin with one small task. Keep business documents separate from the project. Installing a skill does not itself grant access to email or banking. You do not need every accounting category, terminal commands or full setup before asking a simple question.
 
-Install the reviewed skill using the [installation guide](../README.md#install), or have a technical helper prepare the [local plugin package](distribution.md). Plugin bundles are available as locally built preview artifacts, not an already-published one-click marketplace listing. A ZIP must be extracted before its marketplace folder is registered. Installing the open-source kit does not include an AI subscription.
+Installed packages contain both guides under `skills/de-business-kit/guides/`; you do not need the repository open. New workspaces have their own short start note. Updating the skill does not rewrite older workspaces.
 
-After installation, choose **German Business Kit** from the available skill picker. In a local standalone Codex setup you can mention `$de-business-kit`; in Claude Code use `/de-business-kit` for a standalone installation or `/de-business-kit:de-business-kit` for the plugin.
+[Actual validation and limitations](validation.md) are separate from instructions: describing a step does not prove it works in every Windows/macOS or AI-app version.
 
-## Send this first message
 
-> Help me start German Business Kit in English. I am using it for my own business. Check the tools available here, guide me to a private folder, and show me the synthetic demonstration before using real documents. Ask only for what is needed for the next step.
-
-You do not need to edit JSON or choose accounting categories to begin. The assistant should guide the setup and explain anything that it cannot check. For tax questions, tell it the relevant year and whether you already have another business activity.
-
-Choose a private folder outside the downloaded source code and outside Git repositories. If the app offers to create a Git repository for that folder, use a local folder session instead. The assistant must explain where selected document contents may be sent: a local folder does not mean the AI model runs locally.
-
-The demonstration uses invented data. It finds three matching payment groups and one unmatched EUR 12 outflow. You can inspect this result before choosing to use real records. Keep the demo folder separate from your business folder.
-
-## Everyday requests
-
-- **Set up my business:** “Help me prepare the next registration step. I already have these activities: …”
-- **Organize this month:** “Prepare October for my accountant. Show missing documents and unresolved payments.”
-- **Tax questions and preparation:** “Explain this tax question using the relevant year's official sources. Show assumptions and anything needing review.”
-- **Continue:** “Continue work in my existing private folder. Show what is done, what needs attention, and the next action.”
-
-The tax-workflow ID remains `tax-consultant` for compatibility. The visible label describes preparation and research, not professional status.
-
-## Understand the status
-
-| What the assistant reports | Meaning |
-|---|---|
-| Setup incomplete | The workspace exists; some processing settings or assessment evidence are still missing. Synthetic/public-data preparation can continue. |
-| Needs attention | A listed file, record, evidence item or lock requires inspection. Do not recreate the workspace. |
-| Configuration recorded | An assessment was saved. It is limited to its stated scope; it is not legal certification or permission for every action. |
-| Needs review on a reconciliation | Some supplied records do not match or coverage needs attention. A successful command does not mean bookkeeping is complete. |
-
-Before anything is sent or changed in an external account, review the concrete destination and action. Authentication, certificates and TANs remain in the official login flow. A draft is not a submission, and a submission receipt is not acceptance of its tax treatment.
-
-## When something goes wrong
-
-Ask: “Run the local diagnosis for this workspace and explain the next safe step.” The assistant can use `doctor` and `verify`; neither establishes desktop or legal compliance. Keep error details private and use synthetic/redacted examples for support.
-
-Do not delete an existing folder, originals or a lock just because setup stopped. Keep protected backups, and verify a restoration into a separate folder. Skill updates should preserve the business workspace. See [workspace recovery](../skills/de-business-kit/references/onboarding.md#recovery).
-
-Native Windows/macOS utility CI has passed; desktop-app acceptance remains pending in [validation](validation.md). This guide describes the intended supported workflow, not evidence that every app version has passed it.
+[For the local cash journal + manual ELSTER month](../skills/de-business-kit/references/monthly-workflow.md), follow the preserved evidence and review sequence. Use [the real overview](document-workflow.md) to resume and [verified full recovery](../skills/de-business-kit/references/recovery.md) before a move or protected migration. [Runtime and capability limits](project-status.md).

@@ -1,5 +1,7 @@
 # English, Russian and working modes
 
+For recipient documents, separate the user explanation language from the accepted recipient language. A Russian user may need a German authority letter plus a private Russian review sheet. Use [document authoring](document-authoring.md); German letter guidance is not a claim of complete German report-template coverage.
+
 Use a single skill, profile and evidence history for both supported languages. Agent instructions and machine identifiers are kept in English; user conversations, explanations, questions, summaries and generated Markdown reports must use the selected language. Do not make the user understand internal English instructions to complete a workflow.
 
 ## Resolve the language
@@ -9,11 +11,11 @@ Use a single skill, profile and evidence history for both supported languages. A
 3. If no saved preference exists, use the dominant language of the user's task: Russian or English. Use English for an unclear/mixed request unless the session already establishes the preference.
 4. Persist a preference when the user asks to change the default, or when initializing with the language they chose. A request such as “write this report in English” changes that report only.
 
-The CLI accepts legacy `de` workspaces for compatibility. German has no complete localized template set in v0.3; do not silently claim that it does or migrate its saved setting. If the user needs German output, adapt the English template while retaining its evidence fields and state the supported document languages when relevant.
+New workspace folders and start guides support `en`, `ru` and `de`; folder language is chosen once and remains fixed when conversation preferences change. German has no complete localized template set in this preview; do not silently claim that it does or migrate its saved setting. If the user needs German output, adapt the English template while retaining its evidence fields and state the supported document languages when relevant.
 
 Keep official German labels such as **Kleinunternehmerregelung**, **Regelbesteuerung**, **Einnahmenüberschussrechnung (EÜR)** and **Fragebogen zur steuerlichen Erfassung**. Explain them in the user's language on first use. Quote actual form field labels exactly. Translate explanatory text, not legal quotations, authority names, document numbers or evidence.
 
-Keep JSON keys, enum values, directory names, document IDs and ISO dates stable. Record monetary values as decimal strings with a currency. In user tables, use readable local formatting without changing the underlying amount; explain net/gross and the tax period. Do not turn a German decimal comma into a thousands separator or infer an ambiguous date.
+Keep JSON keys, enum values, logical path references, document IDs and ISO dates stable. Resolve physical paths with `workspace.py folders` or native `-Action folders` before using ordinary file tools. Do not rename existing folders when switching language. Record monetary values as decimal strings with a currency. In user tables, use readable local formatting without changing the underlying amount; explain net/gross and the tax period. Do not turn a German decimal comma into a thousands separator or infer an ambiguous date.
 
 ## Resolve the mode
 

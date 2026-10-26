@@ -1,83 +1,63 @@
-# Select banking and accounting providers
+# Research and recommend services from the user's needs
 
-Use a requirements-led comparison. This skill prepares recommendations and opening/setup checklists; **v0.3 does not open accounts, buy subscriptions or provide production bank/accounting connectors**. Do not create an application or transmit identity documents as a side effect of comparison.
+Present substantial comparisons and decisions under [readable output](readable-output.md). For bank/insurance/provider correspondence use [document authoring](document-authoring.md), retaining the actual recipient language and authorization boundary.
 
-## Collect requirements before selecting candidates
+Use for banking, insurance, payment systems, accounting/invoicing software and other business services. Produce a useful reasoned recommendation when evidence supports one, or a conditional shortlist with the decisive missing fact. This package supplies a research workflow, not a marketplace, insurer/broker role, production connector or account-opening service. Comparison alone does not authorize an application, quote request containing personal data, purchase, cancellation or migration. For insurance also read [insurance](insurance.md); for access to existing services use [existing data](existing-data.md).
 
-Read `01_profile/business.json` and the existing accounting workflow. Ask only for missing details that could change the shortlist. Start with eligibility categories, not copies of passports, complete tax identifiers or banking credentials.
+## Start from the user's actual work
 
-| Area | Questions that affect selection |
+Reuse relevant profile facts, current contracts, source map and accounting workflow. Do not require complete onboarding or a new workspace to answer a service question. Ask only for missing details that can change suitability; distinguish declared needs, hard constraints, preferences and assumptions. An existing adequate service, retaining it with a small change, or buying nothing may be the best option.
+
+| Area | Material requirements |
 | --- | --- |
-| Business | Legal form, business activity, country of residence/establishment, personal-name versus business-name account |
-| Payments | Monthly incoming/outgoing transactions, cards and users, cash, foreign currencies/transfers, direct debits and payment providers |
-| Accounting | Bookkeeping method, VAT treatment, typical foreign transactions, e-invoicing, assets, cash, payroll and multiple activities |
-| Cooperation | Adviser's preferred product/export, responsibility for capture/posting/submissions, required access roles |
-| Integration | Existing banks, required bank feed, CSV fallback, actual API operations, plan eligibility and quotas |
-| Practical limits | Budget, contract term, language, support, credit needs, expected growth and migration/export requirements |
+| Business and eligibility | Country/residence/establishment, legal form, concrete activity, contracting/account name, relevant regulated occupation; broad eligibility categories before identity documents |
+| Money movement | Expected incoming/outgoing volumes, currencies, payment corridors, cash, cards/users, SEPA/direct debit, PSP payouts, account limits and credit needs |
+| Risk and insurance | Activities/deliverables, client countries/jurisdiction, contractual cover requirements, employees/subcontractors, premises/equipment, existing policies and uncovered events; use minimal nonmedical facts |
+| Accounting and reporting | Profit method, VAT treatment, foreign transactions, invoice formats, payment links, actual reporting workflow and export of original structured documents |
+| Existing services and integration | What already works, exact product/edition/version, needed data access/operations, supported bank feed/API, CSV fallback, practical Windows/macOS/host constraints |
+| Practical priorities | Budget and volume assumptions, language/support, reliability, growth, contract length, cancellation/renewal, data export, migration effort and accessibility |
 
-Add unresolved eligibility or tax questions to `00_admin/questions.json`. Do not turn an uncertain answer into an assumed eligibility result.
+Record unresolved material facts as questions, not assumed eligibility. Separate a legal/contractual requirement from a risk preference and from a provider's marketing recommendation. Distinguish essential-now, useful-later and unnecessary-for-this-scope services. Do not recommend every service category to every sole trader.
 
-## Bank/account shortlist
+## Research and compare
 
-Consider these candidates only where the user's needs fit; this is not a ranking:
+1. Translate the need into a short set of must-haves and preferences before choosing brands. Use a few plausible candidates plus the existing/no-change option when relevant; expand the search if those fail. Do not call a small shortlist a whole-market comparison.
+2. Check current primary sources for the exact country, product, legal entity, plan and version: official price lists, terms, policy wording, eligibility and technical docs. Search/review tools depend on the actual host; never claim a source was checked when unavailable. Comparison sites/reviews may suggest questions, but do not establish legal status, final terms or individual eligibility.
+3. Mark each material criterion `confirmed`, `not supported` or `not verified`, with source/date and conditions. A provider's general statement is not individual underwriting/account acceptance. An unknown must-have cannot silently score as a pass. Do not use a weighted total to conceal a disqualifying exclusion.
+4. Calculate costs with decimal arithmetic and the user's volumes. Show first-year cost separately from normal renewal/annual cost; state billing period, currency, taxes, discounts/expiry, per-event fees, FX assumptions, required add-ons and migration/exit costs. Unknown fees remain unknown, not zero. Use a low/high-volume scenario when forecasts are uncertain. Check whether the user's actual VAT position makes gross cash cost or net economic cost relevant; do not assume tax deductibility or input-tax recovery.
+5. Explain the recommended fit, why alternatives lose for this user, what would change the recommendation, and any unanswered eligibility/coverage questions. If evidence cannot establish suitability, recommend the next comparison/clarification step without pretending a winning product is ready to buy. Show disclosed commissions, sponsorship or referral relationships where relevant; never let an undisclosed incentive determine ranking.
+6. Save the reviewable comparison in the user's language, then record their actual decision separately. Recheck stale prices/terms and material changes in user needs before reusing a recommendation. Dated follow-up tasks are not automatic monitoring or scheduled renewals.
 
-| Candidate | Current official evidence and check to perform |
+## Banking and payment services
+
+Compare account eligibility, own-name/business-name needs, IBAN/country, transaction and balance limits, cash deposits, card/user charges, domestic and foreign payment routes, FX spread/rate basis, receiving/intermediary fees, payout timing, reserve/hold rules and support. A low monthly fee may be expensive at the user's transfer volume. If a charge is unknown, the total is incomplete. Distinguish a payment processor's gross charge, fee and payout; use [payment workflows](payments.md) for reconciliation rather than treating payout as new revenue.
+
+Identify the contracting entity and underlying service. Bank deposits, payment accounts and e-money arrangements have different protection mechanisms. Verify current disclosures/registers and the applicable scheme, scope and limits; do not attach a generic deposit-guarantee promise to every fintech account. Safeguarding is not the same as deposit insurance. See [official research sources](service-research-sources.md).
+
+Potential research starting points include [N26 Business](https://support.n26.com/en-de/memberships-and-account-types/business-accounts/how-does-n26-business-work), [DKB business accounts](https://www.dkb.de/geschaeftskunden/konto-anlage/geschaeftskonto), [Qonto legal documents](https://legal.qonto.com/de), and [Finom legal documents](https://finom.co/de-de/legal-documents/), as well as suitable local banks or other providers. These examples are not eligibility findings, an exhaustive market list or a ranking. Reopen their current country/plan terms for the user's needs.
+
+Keep KYC evidence, bank authentication and payments in the official user-controlled flow. Do not copy identity documents into comparison notes or open an account to test eligibility. Credit/investment products need their own suitability, cost and regulatory analysis; do not turn a business-current-account request into investment advice.
+
+## Insurance
+
+Use [insurance research](insurance.md) to separate obligations, existing cover, exposed risks and optional policies before comparing offers. Coverage and exclusions come before premium ranking. Do not claim the skill is a licensed intermediary or automatically stop all ordinary self-help research. An operator offering personalized distribution, leads or purchase-linked comparisons to others needs a separate assessment of its actual regulated role; [official sources](service-research-sources.md) explain the relevant distinctions.
+
+## Accounting software and other services
+
+For Lexware Office, sevdesk, WISO or another existing system use the [access map](data-source-access.md). Retain existing software unless a specific gap justifies migration. Verify actual transaction/form support, incoming/outgoing e-invoice handling, original XML export, bank integration, plan/API limits, read/write behavior and cancellation access. An adviser export is relevant only if the user chooses that cooperation. A generic PDF export is not complete accounting portability.
+
+| Other service | Needs and concrete comparison evidence |
 | --- | --- |
-| N26 Business | Official support describes self-employed/freelance customers operating under their own name. Verify accepted legal form, account-name needs, existing-account rules and current residency/identity-document eligibility. |
-| DKB-Business | Product page addresses free professions, healthcare professions, property management and self-employed users. Verify acceptance of the specific business and current application requirements. |
-| Qonto | German legal centre identifies a regulated payment institution. Check the actual contract, permitted activities, safeguarding arrangements, fees and integrations for the proposed plan. |
-| Finom | German legal page identifies Finom Payments BV as the licensed e-money provider. Check the current German contract and actual entity rather than relying on older partner-bank marketing. |
+| Payment processor / card terminal | Customer countries/methods, checkout or physical sales, merchant-of-record role, fees/FX, refunds/disputes, reserves, payout/reconciliation and export |
+| Invoicing / E-Rechnung tools | Required formats and channels, genuine technical validation versus rendering, corrections, originals/attachments, retrieval and integration |
+| Hosting / domain / email / communications | Actual site/mail/phone needs, account ownership, renewal price, support/language, export/portability, security and necessary data-processing terms |
+| Storage / backup / document management | Data volume and sensitivity, restore test, versions, permissions, export, retention/correction workflow and provider access; cloud sync alone does not prove backup or compliant retention |
+| Professional support / training / industry services | Concrete unresolved need, relevant qualification/registration, scope, price, availability and deliverable; optional support rather than a compulsory handoff |
 
-Distinguish a bank deposit from a payment/e-money account. Describe the actual protection mechanism and any applicable limits using the product's current legal disclosures; do not label every account with a generic deposit-insurance promise. Inspect the German/current-country documents where those govern the account.
+Use only the relevant rows. Avoid tool sprawl, speculative add-ons and switching costs without a demonstrated benefit. Verify provider features against current sources; generic categories do not certify any product's legal, security or accounting compliance.
 
-Calculate ordinary annual cost from the user's expected volumes: base fee, additional transfers/cards/users, cash, foreign transfers/FX and relevant add-ons. Show introductory offers separately with their expiry and post-offer price. Check VAT treatment of quoted fees rather than applying one blanket assumption.
+## Save a reviewable decision
 
-Do not retain KYC documents in this project. Provide a provider-specific checklist and let the user submit the required identity evidence directly through the legitimate provider process. Keep passwords, TANs and account-opening authentication outside workspace files.
+Use the localized comparison template: [English](../assets/en/service-comparison.md) / [Russian](../assets/ru/service-comparison.md). With an existing private workspace, use `03_banking/comparison.md`, `04_accounting/comparison.md`, or `00_admin/services/<category>-comparison.md` for insurance/other services, creating the latter directory only when needed. Preserve dated revisions and quoted-source evidence; these are human-reviewed reports, not an automatic procurement registry or a new profile schema. Without a workspace, answer usefully in the conversation first.
 
-## Accounting shortlist
-
-Start with Lexware Office, sevdesk and Papierkram when appropriate. Retain the user's existing product unless a concrete missing capability justifies comparing migration costs.
-
-| Candidate | Verified API consideration to recheck |
-| --- | --- |
-| Lexware Office | Current feature page lists Public API from XL. Confirm needed endpoints and exact write semantics; read `lexware.md`. |
-| sevdesk | Official help lists REST API in Buchhaltung Pro for German system version 2.0. Confirm the user's version and required operations. |
-| Papierkram | Current help documents read/write REST access, beta status and package-dependent credit quotas. Check endpoint coverage and quota costs. |
-
-Compare the actual required workflow, not the presence of a marketing checkbox:
-
-1. Validate representative domestic and foreign transaction types, correction invoices, partial payments, assets and mixed-use items where relevant.
-2. Check incoming/outgoing e-invoice formats, validation and export of original XML/hybrid files.
-3. Check bank-feed compatibility, reconciliation and a documented fallback for missing feeds.
-4. Confirm the adviser's exact export format and responsibilities; a PDF export may not be the required accounting export.
-5. Verify API access, quotas, credential model, current product/version and supported draft/final states separately.
-6. Examine complete export, cancellation access, migration and retention arrangements.
-7. Review the applicable data-processing terms, relevant subprocessors and the proposed data flow.
-8. Calculate ordinary total cost including API-eligible tiers, adviser-transfer extras and contract duration. Do not equate a free skills package with free third-party services.
-
-Use synthetic representative transactions to assess a candidate before proposing migration. Do not upload live client invoices merely to compare products.
-
-## Deliver a reviewable decision
-
-Save banking results in `03_banking/comparison.md` and accounting results in `04_accounting/comparison.md`. Include:
-
-- Requirements and user-specific priorities; identify assumptions.
-- A candidate matrix with `confirmed`, `not supported` or `not verified` for each material criterion.
-- Official source URLs, retrieval date, exact applicable plan/entity and ordinary cost calculation.
-- A recommendation with reasons, unresolved blockers and the consequence of choosing each alternative.
-- A setup/migration checklist and the next authorized action. Do not claim that opening, purchase, integration or migration has occurred.
-
-Record the selected option and decision date only after the user chooses it or an existing explicit instruction establishes that choice. Keep factual profile values separate from recommendations.
-
-## Official source directory
-
-Checked **2026-10-25**. Revisit these pages at the time of recommendation; do not hardcode prices or permanent eligibility rules.
-
-- [N26 Business eligibility and account name](https://support.n26.com/en-de/memberships-and-account-types/business-accounts/how-does-n26-business-work).
-- [DKB-Business product](https://www.dkb.de/geschaeftskunden/konto-anlage/geschaeftskonto).
-- [Qonto German legal centre](https://legal.qonto.com/de).
-- [Finom German legal documents and provider identity](https://finom.co/de-de/legal-documents/).
-- [Lexware Office API eligibility](https://www.lexware.de/funktionen/public-api/).
-- [sevdesk API availability](https://hilfe.sevdesk.de/de/articles/9374668-sevdesk-api).
-- [sevdesk API reference](https://api.sevdesk.de/).
-- [Papierkram REST API, quotas and documentation](https://www.papierkram.de/hilfe/api/).
+The report must connect requirements → evidence → total cost/coverage → recommendation → remaining conditions → next action. Keep product claims distinct from user needs and the final user choice. Use validated questions/tasks/decisions for unresolved points and actual decisions; do not mark a recommended option as purchased. Before any external application, personalized quote request, contract, cancellation or migration, present the concrete recipient/data/action and use only applicable authorization. A binding quote, acceptance, coverage commencement or completed account opening requires actual provider evidence, not a drafted form.

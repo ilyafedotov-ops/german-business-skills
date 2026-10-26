@@ -1,15 +1,17 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "de-business-kit",
-  "version": "0.3.0-preview",
-  "description": "English and Russian workflows for German sole traders: private setup, bookkeeping preparation and evidence-based tax research.",
-  "author": {"name": "German Business Kit contributors"},
+  "version": "0.6.0-preview.4",
+  "description": "English and Russian workspaces for German sole traders: evidence-linked cash records, readable reports and tax preparation.",
+  "author": {
+    "name": "German Business Kit contributors"
+  },
   "license": "MIT",
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "German Business Kit",
-        "shortDescription": "Private business setup, bookkeeping preparation and tax research"
+        "shortDescription": "German business records, reports and tax preparation"
       }
     }
   }

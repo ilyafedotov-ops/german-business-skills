@@ -1,0 +1,447 @@
+{
+  "01_profile/business.json": {
+    "schema_version": 1,
+    "facts": {
+      "legal_form": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "activity_classification": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "activities": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "existing_activities": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "owner_name": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "residence_address": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "business_address": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "residence_country": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "business_country": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "municipality": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "federal_state": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "competent_tax_office": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "registration_authority": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "business_start_date": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "preparation_start_date": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "commercial_launch_date": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "registration_date": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "vat_existing_registration": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "vat_current_regime": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "vat_history": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "vat_opt_out_date": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "vat_binding_until": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "vat_prior_year": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "vat_prior_year_turnover_all_activities": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "vat_current_year_turnover_all_activities": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "vat_current_year_forecast_all_activities": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "accounting_method": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "bookkeeper": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "accounting_software": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "client_types": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "client_countries": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "supplier_countries": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "cross_border_activity": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "employees": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "cash_transactions": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "provider_needs": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "bank_needs": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      },
+      "tax_identifiers_reference": {
+        "value": null,
+        "status": "unknown",
+        "source": {
+          "kind": null,
+          "ref": null
+        },
+        "recorded_at": null,
+        "effective_from": null,
+        "note": null
+      }
+    }
+  },
+  "00_admin/runtime.json": {
+    "schema_version": 1,
+    "assistant_product": null,
+    "app_version": null,
+    "session_execution": "unknown",
+    "model_provider": null,
+    "authentication_type": null,
+    "contract_plan": null,
+    "training_policy_checked_at": null,
+    "dpa_status": "unknown",
+    "retention_policy_reference": null,
+    "residency_scope": "unknown",
+    "third_party_connectors": [],
+    "client_data_mode": "synthetic_or_redacted_until_reviewed"
+  },
+  "00_admin/documents.json": {
+    "schema_version": 1,
+    "documents": []
+  },
+  "00_admin/tasks.json": [],
+  "00_admin/questions.json": [],
+  "00_admin/decisions.json": []
+}

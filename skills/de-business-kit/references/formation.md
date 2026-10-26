@@ -1,5 +1,7 @@
 # Formation and registration workflow
 
+For activity-specific Gewerbe/Freiberufler and mixed-activity facts, use [classification](classification.md) and its validated preparation record.
+
 Checked: **2026-10-25**. Use for a natural person preparing or adding service activities in Germany. Read [german-rules.md](german-rules.md) for the dated legal source map. Use the user's language for explanations and preserve official German field labels. Prepare useful work even when one classification or tax question remains unresolved.
 
 ## 1. Establish the starting point

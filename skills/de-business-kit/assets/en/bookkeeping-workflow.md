@@ -21,7 +21,7 @@
 | Resolve tax treatment and approve proposals | | | |
 | Enter or post in the accounting system | | | |
 | Allocate payments and reconcile | | | |
-| Review month and adviser handoff | | | |
+| Review own accounts and reporting needs | | | |
 | Submit returns and prepare year end | | | |
 
 ## Coverage and routine
@@ -33,12 +33,12 @@
 
 List existing reviewed rules with their evidence, dates and scope. Record exact authorized external operations separately. A working agreement or selected mode alone does not authorize tax filings, payments or contracts.
 
-## Storage and handoff
+## Storage and optional archive
 
 - Original storage / structured e-invoice components:
 - Derivatives and proposal locations:
 - Backup / retention process and owner:
-- Adviser-required export / period / transfer channel:
+- Optional consultation/export, only if requested / period / channel:
 - Export locking or correction behavior, if verified:
 - Open questions, owners and next actions:
 

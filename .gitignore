@@ -25,3 +25,46 @@ dist/
 07_exports/
 08_correspondence/
 09_audit/
+.playwright-mcp/
+
+# Local runtimes, dependencies and generated validation artifacts.
+.venv/
+venv/
+node_modules/
+*.egg-info/
+.coverage
+.coverage.*
+htmlcov/
+coverage/
+/output/
+/test-results/
+/playwright-report/
+/.de-business-kit-stage-*/
+/runtime-artifacts/
+/vendor/eric/
+
+# OS/editor leftovers; keep source, research and synthetic fixtures visible.
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+
+# Localized private workspace roots (never publish business records).
+/.workspace-layout.json
+/.business-kit/
+/01 Inbox/
+/02 Documents/
+/03 Accounts/
+/04 Taxes/
+/05 Business/
+/01 Входящие/
+/02 Документы/
+/03 Учёт/
+/04 Налоги/
+/05 Бизнес/
+/01 Eingang/
+/02 Dokumente/
+/03 Buchhaltung/
+/04 Steuern/
+/05 Unternehmen/

@@ -43,13 +43,17 @@ Separate the source's rule from the interpretation applied here. Preserve exact 
 - Included items / exclusions:
 - Input amounts, sources and assumptions:
 - Tax base; distinguish turnover, profit and `zu versteuerndes Einkommen`:
-- Formula / rule version / tool actually used:
-- Rounding:
+- Primary rule source / exact section / effective year (reference, not a copied formula):
+- Selected official calculator or accounting/tax product / edition / year / settings:
+- Tool status: not run / user-supplied result / observed run:
+- Observed rounding / unresolved rounding question:
+- Result evidence / export reference and time:
+- Input reconciliation / cross-check / unresolved differences:
 - Result and sensitivity to assumptions:
 - Prepayments already considered:
 - Review trigger:
 
-Label estimates and cash-reserve scenarios. An estimate is not a tax assessment. Do not fill missing inputs with invented values.
+Label estimates and cash-reserve scenarios. An estimate is not a tax assessment. Do not fill missing inputs with invented values or embed a reusable tax formula. If no suitable tool was run and no evidenced result is available, keep the amount unresolved and give the next steps to obtain it.
 
 ## Review issues and next actions
 

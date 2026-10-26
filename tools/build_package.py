@@ -68,6 +68,8 @@ def snapshot(source: Path) -> Dict[str, bytes]:
         raise BuildError("Unexpected manifest fields; review packaging before adding capabilities.")
     if any(portable[key] != claude[key] for key in identity):
         raise BuildError("Host manifest identity/version mismatch.")
+    if read_file(source / "VERSION").decode("utf-8").strip() != portable["version"]:
+        raise BuildError("Package manifests must match VERSION.")
     if portable["name"] != NAME or portable["license"] != "MIT":
         raise BuildError("Unexpected package identity/license.")
     if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+(?:-[a-zA-Z0-9.-]+)?", portable["version"]):
@@ -111,12 +113,23 @@ def snapshot(source: Path) -> Dict[str, bytes]:
                 continue
             if not stat.S_ISREG(info.st_mode):
                 raise BuildError(f"Symlink or special resource rejected: {entry}")
-            if name.startswith(".") or entry.suffix not in {".md", ".json", ".yaml", ".py"}:
+            if name.startswith(".") or (entry.suffix not in {".md", ".json", ".yaml", ".py"}
+                    and entry.relative_to(skill).as_posix() not in {"scripts/windows.ps1", "scripts/windows-overview.ps1", "scripts/recovery.ps1", "assets/readable-document.html"}):
                 raise BuildError(f"Unreviewed skill resource type: {entry}")
             files[entry.relative_to(source).as_posix()] = read_file(entry)
 
     prefix = f"skills/{NAME}/"
-    required = {"SKILL.md", "scripts/workspace.py", "agents/openai.yaml", "assets/locales.json"}
+    required = {
+        "SKILL.md", "agents/openai.yaml", "scripts/workspace.py", "scripts/desk.py",
+        "references/document-authoring.md", "references/readable-output.md", "references/document-delivery-sources.md",
+        "assets/readable-document.html", "assets/de/recipient-letter.md",
+        "scripts/workflows.py", "scripts/payments.py", "assets/locales.json",
+        "scripts/windows.ps1", "scripts/windows-overview.ps1", "scripts/recovery.ps1", "scripts/recovery.py", "references/recovery.md", "assets/workspace-seed.json", "assets/folder-layouts.json", "references/native-windows.md",
+        "assets/casework-messages.json", "assets/proposal.json", "assets/source-check.json",
+        "assets/extracted-field.json",
+        *("scripts/casefiles/" + name + ".py" for name in (
+            "__init__", "storage", "documents", "folders", "reviews", "bank", "summary", "overview", "archive", "invoice_xml", "accounting")),
+    }
     if not all(prefix + name in files for name in required):
         raise BuildError("The canonical skill is missing a required runtime resource.")
     locales = json.loads(files[prefix + "assets/locales.json"])
@@ -171,6 +184,14 @@ def build(*, source: Path, output: Path) -> Path:
                 entry["source"] = f"./plugins/{NAME}"
                 catalog_path = ".claude-plugin/marketplace.json"
                 host_files = {key: value for key, value in files.items() if key != "plugin.json"}
+            # The attested outer ZIP authenticates this inventory. Its hashes alone
+            # are not a publisher signature and cannot protect a replaced ZIP.
+            manifest = json.loads(files["plugin.json"])
+            host_files["FILE-MANIFEST.json"] = json_bytes({
+                "schema_version": 1, "version": manifest["version"],
+                "files": {name: hashlib.sha256(data).hexdigest()
+                          for name, data in sorted(host_files.items())},
+            })
             package = {f"{host}/{catalog_path}": json_bytes(catalog)}
             package.update({f"{host}/plugins/{NAME}/{name}": data for name, data in host_files.items()})
             for name, data in sorted(package.items()):

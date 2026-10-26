@@ -30,17 +30,17 @@ Record the source title, URL, precise provision or section, retrieval date, publ
 
 Distinguish what the source states from the application or inference made from the user's facts. Cite the source near the supported claim. If authoritative information cannot be retrieved, state which point remains unverified, offer conditional scenarios and continue factual preparation. Do not invent quotations, paragraph numbers, deadlines or successful source checks.
 
-## Explain, compare and calculate
+## Explain, compare and estimate
 
 Lead with the answer or the narrow unresolved decision. Explain the rule in plain language, show how it applies to the known facts, and identify the decisive assumption. Give a recommendation when the evidence supports it; do not substitute an unranked list of every theoretical option.
 
 For choices, compare eligibility, expected tax effect, cash flow, administrative work, evidence requirements and any binding period or reversal consequences. Keep lawful planning separate from an election: a recommendation is not a filed waiver or approved change. Explain which fact would change the recommendation.
 
-Calculate amounts with deterministic decimal arithmetic or an appropriate verified official calculator. Record inputs, currency, year, formula/rule version, rounding and output. Use the actual relevant tax base. Revenue, bank receipts, business profit, `zu versteuerndes Einkommen` and VAT are distinct. EÜR eligibility and adjustments require their own assessment; a bank total is not an EÜR.
+Follow [source-led tax estimates](tax-estimates.md): retrieve the applicable rule and use a suitable official calculator or the user's selected accounting/tax software. Do not embed tax formulas, rates, thresholds or rounding algorithms in package code/templates, or build an ad hoc tax engine as a fallback. Record inputs, currency, year, rule source, actual tool/settings, observed rounding and output. Existing decimal totals check recorded money, not tax treatment. Revenue, bank receipts, business profit, `zu versteuerndes Einkommen` and VAT are distinct. EÜR eligibility and adjustments require their own assessment; a bank total is not an EÜR.
 
 For income tax, use the applicable year's rules and assessment circumstances. The BMF income-tax calculator derives tariff tax from an entered `zu versteuerndes Einkommen`; it does not establish that input or a complete personal liability. Separate income tax, VAT, trade tax, surcharges, prepayments and social contributions as relevant. Do not add them twice or assume that a business-only profit figure is the person's taxable income. Avoid a universal “save X%” rule; a cash reserve can be a labelled scenario based on stated assumptions, with exclusions and a review trigger.
 
-Do not upload identifying financial details to a public calculator. An available local implementation or nonidentifying scenario can establish the arithmetic. Do not claim an official calculator or tool was run unless it actually was. This package bundles no income-tax engine.
+Do not upload identifying financial details to a public calculator. Use nonidentifying scenarios or the selected software within its verified scope. Do not claim a calculator or tool was run unless it actually was. When it is unavailable, provide the sourced method and prepared inputs, leaving the amount unresolved rather than inventing it. This package bundles no tax calculation engine.
 
 ## Apply the outcome to bookkeeping or forms
 

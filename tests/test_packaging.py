@@ -23,7 +23,7 @@ class PackagingTests(unittest.TestCase):
         self.source = self.base / "source"
         self.source.mkdir()
         for name in ("plugin.json", ".claude-plugin/plugin.json", "LICENSE",
-                     "packaging/README.md", "packaging/README.ru.md"):
+                     "packaging/README.md", "packaging/README.ru.md", "VERSION"):
             target = self.source / name
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, target)
@@ -59,14 +59,22 @@ class PackagingTests(unittest.TestCase):
                 manifest_path = "plugin.json" if host == "codex" else ".claude-plugin/plugin.json"
                 manifest = json.loads((plugin / manifest_path).read_text(encoding="utf-8"))
                 self.assertEqual(manifest["name"], entry["name"])
-                self.assertEqual(manifest["version"], "0.3.0-preview")
+                self.assertEqual(manifest["version"], (ROOT / "VERSION").read_text().strip())
                 for readme in ("README.md", "README.ru.md"):
                     content = (plugin / readme).read_bytes()
                     self.assertEqual(content, (ROOT / "packaging" / readme).read_bytes())
                     other = "README.ru.md" if readme == "README.md" else "README.md"
                     self.assertIn(("(" + other + ")").encode(), content)
                 skill = plugin / "skills/de-business-kit"
+                self.assertTrue((skill / "assets/readable-document.html").is_file())
                 locales = json.loads((skill / "assets/locales.json").read_text(encoding="utf-8"))
+                for script, arguments in (("workflows.py", ["catalog"]),
+                                          ("workflows.py", ["template", "--kind", "international"]),
+                                          ("payments.py", ["template"])):
+                    result = subprocess.run([sys.executable, "-B", str(skill / "scripts" / script), *arguments],
+                                            cwd=self.base, capture_output=True, text=True, encoding="utf-8")
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertEqual(json.loads(result.stdout)["schema_version"], 1)
                 for language in ("en", "ru"):
                     for template in locales["languages"][language]["templates"].values():
                         self.assertTrue((skill / "assets" / template).is_file())
@@ -82,6 +90,59 @@ class PackagingTests(unittest.TestCase):
                         capture_output=True, text=True, encoding="utf-8")
                     self.assertEqual(status.returncode, 0, status.stderr)
                     self.assertEqual(json.loads(status.stdout)["language"], language)
+                    choice = subprocess.run(
+                        [sys.executable, "-B", str(skill / "scripts/desk.py"), "accounting-status", "--root", str(private)],
+                        cwd=self.base, capture_output=True, text=True, encoding="utf-8")
+                    self.assertEqual(choice.returncode, 0, choice.stderr)
+                    self.assertEqual(json.loads(choice.stdout)["accounting_system"], "undecided")
+                    overview = subprocess.run(
+                        [sys.executable, "-B", str(skill / "scripts/desk.py"), "overview", "--root", str(private), "--period", "2026-10"],
+                        cwd=self.base, capture_output=True, text=True, encoding="utf-8")
+                    self.assertEqual(overview.returncode, 0, overview.stderr)
+                    view = json.loads(overview.stdout)
+                    self.assertTrue((private / view["html_path"]).is_file())
+                    snapshot = json.loads((private / Path(view["html_path"]).with_suffix('.json')).read_text(encoding="utf-8"))
+                    self.assertEqual(snapshot["capabilities"]["elster_submission"], "not_implemented")
+                    backup = self.base / (host + "-" + language + "-backup")
+                    recovered = self.base / (host + "-" + language + "-restored")
+                    for args in (["backup", "--root", str(private), "--destination", str(backup)],
+                                 ["restore", "--backup", str(backup), "--root", str(recovered)]):
+                        recovery = subprocess.run([sys.executable, "-B", str(skill / "scripts/recovery.py"), *args],
+                                                  cwd=self.base, capture_output=True, text=True, encoding="utf-8")
+                        self.assertEqual(recovery.returncode, 0, recovery.stderr)
+                    self.assertEqual((private / Path(view["html_path"]).with_name("workspace.json")).read_bytes(),
+                                     (recovered / Path(view["html_path"]).with_name("workspace.json")).read_bytes())
+                    for native in ("windows-overview.ps1", "recovery.ps1"):
+                        self.assertTrue((skill / "scripts" / native).is_file())
+                    source_folder = self.base / (host + "-" + language + "-existing")
+                    source_folder.mkdir()
+                    (source_folder / "invoice.pdf").write_bytes(b"Synthetic preserved file")
+                    scanned = subprocess.run(
+                        [sys.executable, "-B", str(skill / "scripts/desk.py"), "scan-folder", "--root", str(private), "--source", str(source_folder)],
+                        cwd=self.base, capture_output=True, text=True, encoding="utf-8")
+                    self.assertEqual(scanned.returncode, 0, scanned.stderr)
+                    self.assertEqual(json.loads(scanned.stdout)["counts"]["candidate"], 1)
+                    seed = subprocess.run(
+                        [sys.executable, "-B", str(skill / "scripts/workflows.py"), "template", "--kind", "classification"],
+                        cwd=self.base, capture_output=True, text=True, encoding="utf-8")
+                    self.assertEqual(seed.returncode, 0, seed.stderr)
+                    request = json.loads(seed.stdout)
+                    request.update(record_id="packaged-synthetic", period="2026-10")
+                    folders = subprocess.run(
+                        [sys.executable, "-B", str(skill / "scripts/workspace.py"), "folders", "--root", str(private)],
+                        cwd=self.base, capture_output=True, text=True, encoding="utf-8")
+                    self.assertEqual(folders.returncode, 0, folders.stderr)
+                    inbox = json.loads(folders.stdout)["paths"]["00_admin/inbox"]
+                    (private / inbox / "request.json").write_text(json.dumps(request), encoding="utf-8")
+                    prepared = subprocess.run(
+                        [sys.executable, "-B", str(skill / "scripts/workflows.py"), "prepare", "--root", str(private),
+                         "--kind", "classification", "--input", "00_admin/inbox/request.json"],
+                        cwd=self.base, capture_output=True, text=True, encoding="utf-8")
+                    self.assertEqual(prepared.returncode, 0, prepared.stderr)
+                    result = json.loads(prepared.stdout)
+                    self.assertEqual(result["status"], "needs_review")
+                    report = (private / result["markdown_path"]).read_text(encoding="utf-8")
+                    self.assertIn("Подготовка" if language == "ru" else "Preparation", report)
 
     def test_archives_are_byte_deterministic_and_include_only_reviewed_resources(self):
         (self.source / ".env").write_text("DO_NOT_SHIP=synthetic\n", encoding="utf-8")
@@ -106,6 +167,11 @@ class PackagingTests(unittest.TestCase):
                 for host in ("codex", "claude"):
                     self.assertEqual(source.read_bytes(),
                                      (first / host / "plugins/de-business-kit/skills/de-business-kit" / relative).read_bytes())
+
+    def test_unreviewed_html_resource_still_stops_packaging(self):
+        (self.source / "skills/de-business-kit/assets/unreviewed.html").write_text("<script>synthetic</script>")
+        output = self.build(success=False)
+        self.assertFalse(output.exists())
 
     def test_existing_output_is_preserved(self):
         output = self.base / "existing"

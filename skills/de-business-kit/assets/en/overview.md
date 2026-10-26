@@ -1,0 +1,7 @@
+# {title}
+
+{boundary}
+
+{snapshot}
+
+{body}
