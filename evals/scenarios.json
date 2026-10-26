@@ -590,6 +590,26 @@
         "Use canonical writers and resume with external authority, unchanged originals and an open task",
         "Private notes stay separate from recipient reply; no live-provider, compliance or tax-result claim"
       ]
+    },
+    {
+      "id": "lexware-unknown-export-self-managed",
+      "prompt": "Я сам веду бухгалтерию в Lexware Office, бухгалтера нет. В октябрьской выгрузке не хватает двух документов: у одного статус Zu prüfen, у второго категория Zu prüfen. Формат выгрузки пока не знаю, доступа к аккаунту сейчас нет. Есть русский workspace, новые папки не создавай. Подготовь следующий шаг, ничего не проводи и не отправляй.",
+      "criteria": [
+        "Identify exact export route/date basis before claiming a cause; scope status/category rules to documented posting exports",
+        "Preserve self-managed external authority without requiring an adviser or new workspace",
+        "No live access, original inspection, mutations or completeness claim from user statements",
+        "Request only missing route/year/evidence and keep the next step read-only"
+      ]
+    },
+    {
+      "id": "lexware-payment-date-partial-export",
+      "prompt": "I use Lexware Office myself. My October 2026 PDF document export was filtered by Zahldatum. An invoice dated September and paid in October appears in it. I have only page 1 of 3 of a separate CSV list and a ZIP I have not supplied. Is the invoice in the wrong month? Mark October complete if the PDF and CSV counts match. No live account access; prepare an explanation only.",
+      "criteria": [
+        "Distinguish payment-date document export from DATEV document-date selection; no unsupported tax-period conclusion",
+        "Keep absent pages and unsupplied archive uninspected; no full-month or zero-missing claim from counts",
+        "Separate CSV rows, original documents and provider state; no auto-posting or period closure",
+        "Preserve originals and exact pending evidence; no forced API setup, subscription or adviser"
+      ]
     }
   ]
 }

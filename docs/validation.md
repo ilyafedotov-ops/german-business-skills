@@ -6,6 +6,55 @@ Current capabilities are summarized in [project status](project-status.md). Date
 
 Checked **2026-10-26**. Tests use synthetic temporary data, never live business records or accounts.
 
+## P6 Lexware export routes and supplied evidence (2026-10-26)
+
+Implemented a supplied-export coverage procedure, EN/RU operation-note fields and
+route-specific Lexware guidance. Self-managed external books remain authoritative;
+no runtime adapter, ZIP importer, tax formula or workspace schema changed. The
+chosen first live target is Lexware Office document reading; the user selected
+local examples for this run after the browser reached the official login screen.
+No credentials, account documents, live reads, export generation or external
+mutations were performed. The temporary login tab was closed.
+
+- Baseline fresh RU trial reproduced an error: with the export format unknown,
+  the answer applied the DATEV document-date rule universally. Source investigation
+  found that the separate PDF export supports invoice-date or payment-date filters.
+  The corrected workflow establishes the route before applying date/status rules.
+  Primary findings are in [the source note](../skills/de-business-kit/references/lexware-export-sources.md).
+- Two fresh follow-up trials passed: RU kept the unknown route/year conditional
+  and requested existing selection evidence without forcing an adviser or new
+  folders; EN accepted the stated September-invoice/October-payment PDF selection
+  as consistent with Zahldatum while keeping pages 2–3 and the unsupplied ZIP
+  unverified. Matching counts did not close October. Parent read both actual
+  answers. These were synthetic descriptions, not file-import or live tests.
+- Artifacts: baseline `/private/tmp/gbk-export-baseline-9nabenpu/answer.md`;
+  follow-ups `/private/tmp/lexware-route-acceptance-7fjumxwn/ru-answer.md` and
+  `en-answer.md`. Trials requested gpt-6.1-sol/high; source research medium;
+  independent read-only review gpt-6-astra/high. Actual application runtime/model
+  was not independently exposed. Trials saw no eval criteria or test code.
+- Independent review checked authorization, original preservation, scope/date
+  handling, localized paths, EN/RU parity and the bounded live-read procedure:
+  **no actionable findings**. It separately verified the primary source distinctions.
+- Full required suite: `python3 -B -m unittest discover -s tests -v` ran
+  **258 tests: 252 passed, 1 error, 5 skipped** in 197.091 seconds on macOS,
+  Python 3.14.6 / PowerShell 7.5.4. `test_dry_run_then_detached_complete_install`
+  timed out in its initial native `-DryRun` after 90 seconds. This reproduces the
+  previously recorded native timing limitation; the suite is **not green**.
+  The remaining tests completed; no timeout increase or blind retry was used.
+  Log: `/private/tmp/gbk-p6-tests-20261026.log`. Root cause remains unresolved;
+  no Windows PowerShell 5.1 acceptance is claimed.
+- Both packaged skill trees contain **128 files** with identical paths/bytes to
+  current canonical `skills/`. The package check verifies EN/RU template parity;
+  the final local Markdown check covered **191 links/anchors in 17 changed files**.
+- Package, local Markdown links/anchors, version check and `git diff --check`
+  passed. The final bundle was built with `tools/build_package.py --output` at
+  `/private/tmp/gbk-p6-lexware-package-20261026`. Both Claude Code 2.1.310
+  `plugin validate` calls passed; existing icon/install-line advice remains.
+  Validation is not registration, installation, discovery or desktop acceptance.
+
+Live Lexware account/edition/permissions, original retrieval, full coverage,
+Windows/macOS host discovery and nontechnical-user acceptance remain open.
+
 ## CreditNote and correction evidence cycle (2026-10-26)
 
 P3/P6 source implementation extends `inspect-xml` to standalone UBL CreditNote
