@@ -228,6 +228,10 @@ P7 now includes two fresh Claude Code 2.1.310 control-initialize processes on ma
 
 P4 consultation guidance now keeps first answers focused and requests acquisition/delivery year/month and accounting method before concrete asset entries or amounts. A fresh smartphone-installment question retrieved official sources and asked those missing facts without creating accounts or records. GUI package instructions now start with the user's task; document intake and accounting setup are conditional. See [validation](validation.md) for the source checks, exact host route, passed local package smoke and incomplete desktop launch.
 
+## 5.8. Published platform acceptance (2026-10-26)
+
+P7 now has automated acceptance for the immutable 0.8.0-preview.1 release: Windows/macOS utilities, native Windows PowerShell 5.1, Chromium/WebKit and all three GUI packages passed on the tag source. All eight published assets were independently downloaded and verified against the expected repository/workflow/tag/commit. See [validation](validation.md) for exact refs and evidence limits. Ordinary-user first launch, additional AI-host discovery routes and real service operations remain open; this milestone does not complete the full P1–P7 plan.
+
 ## 6. Queue and drift control
 
 **After the local P1–P7 materials and synthetic preparation trials, the next queue is actual document-cycle execution, a chosen service operation and supported-host acceptance.** P6 accompanies specific needs; P7 follows accepted journeys. Security maintenance and fixes to existing capabilities continue as necessary.
