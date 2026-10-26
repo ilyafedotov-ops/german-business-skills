@@ -69,6 +69,13 @@ A supplied-export coverage note describes a snapshot, its selection/date basis a
 
 Task `readiness` (`ready`, `blocked`, `needs_review`), `pending_dependencies` and `next_task_id` are derived view fields, not new task states or approvals. Active tasks span the whole workspace; completed/cancelled tasks remain canonical but are omitted from the active list. A ready dependency requires completed work with current preserved evidence through its ancestry.
 
+
+Task prerequisites reuse profile facts, questions and decisions with their existing
+provenance/effective dates. An unknown or hypothetical input is not a durable
+confirmed fact. Case-specific calculations and independent-check evidence belong
+in the existing consultation/worksheet; their human-readable verification labels
+are not new persisted enums, a tax-correctness guarantee or filing authorization.
+
 ## Relationships
 
 ```mermaid

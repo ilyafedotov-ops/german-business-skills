@@ -940,3 +940,264 @@ Codex CLI **0.164.0**, explicitly selected configured host model `gpt-6-astra`, 
 Separate observer assessment of the original ten found **33 criteria evidenced and two uncertain**: a file-level retention inventory was not established with unspecified old-folder scope/dates; actual official submission status could not be checked without an official route. Refusal to delete/retry and truthful uncertainty were observed. The two repeated cases had seven evidenced criteria. These are transcript/artifact observations, not a legal or general behavioral certificate. Runner-produced rubric status intentionally remains `pending_review`; separate observer sheets preserve the distinction.
 
 Evidence: `/private/tmp/german-business-eval-live-20261026-{a,b,c}/report.json`, `observer-assessments.json`, and run c's `repeat-comparison.json`; final runner SHA-256 `7d722882e7fedff775227660ed90dbff6d3b2ccd87748c8f86442551d55170ff`. These runs used synthetic facts and made no live business-service submissions.
+
+## Assistant-first UX, shared prerequisites and bounded calculations — 2026-10-26
+
+Earlier local trials in this chat used Codex CLI 0.164.0 with clean host defaults,
+Python 3.14.6 and macOS 27.0.1 arm64. Nine ephemeral synthetic executions and
+source snapshots are retained under `/private/tmp/gbk-calculation-ux-20261026/`.
+The ordinary-request baseline refused calculation solely because no external
+calculator was available; the revised instructions executed sourced decimal
+arithmetic and honestly labelled the failed separate-reviewer check unverified.
+Other trials exercised ambiguous input, saved invoice prerequisites/preferences,
+fresh-session reuse, a conflicting gross/net note and historical VAT/rounding.
+Independent numerical checks ran, but current BMF rounding-source access remained
+incomplete; those trials do not establish complete tax correctness. The saved
+workspace passed integrity verification and the read-only second session left
+its bytes unchanged. Independent instruction review resolved copy contradictions.
+
+The earlier full unittest run had **340 tests: 328 passed, 11 skipped, one unchanged
+PowerShell overview timeout** (193.166 s); the affected module then passed **9/9**
+in isolation (84.645 s). Package/diff checks and **935 local links/anchors in 135
+Markdown files** passed at that point. These dated results do not validate later
+edits. No desktop usability, native Windows, provider or submission acceptance was
+claimed. This concise evidence entry repairs the existing summary's missing anchor;
+the retained transcripts/logs record the detailed trials and their limits.
+
+## Assisted installation and lifecycle examples — 2026-10-26
+
+README EN/RU now starts with a copyable assistant installation request, keeps manual
+installation as a fallback, and includes **24 task examples in four groups**:
+exploration/start, documents/daily work, integrations, and changes/edge cases.
+The portable installation guides explain supported host actions, user-held clicks,
+complete-bundle checks and fresh-session discovery. Router/onboarding instructions
+provide short requested usage help and relevant prompts; they do not invent host
+installation, file-editing or service capabilities. The RU troubleshooting rows
+were aligned with EN's combined Chat/Cowork-layout guidance. Two missing anchors
+from the earlier workflow validation summary were repaired with a concise record
+backed by the retained prior test artifacts; older results were not rerun or redated.
+
+Fresh synthetic read-only trials used **Codex CLI 0.164.0**, Python **3.14.6**,
+macOS **27.0.1 arm64**, copied skills and clean host defaults without explicit model
+selection. Effective model identity was not established. Evidence is local at
+`/private/tmp/gbk-readme-help-20261026/` (prompts, transcripts, copied sources and
+manifests); these are not packaged artifacts or OS-level read isolation.
+
+- Baseline usage help already offered useful examples; no failing baseline is
+  claimed. The revised trial explicitly gave invocation, three relevant requests,
+  expected results, document/tool limits, bank-access checks and optional folder
+  continuation. An initial search over absent optional directories returned 2;
+  subsequent reads succeeded. No editing/installation/account calls occurred.
+- The no-controls installation trial distinguished reading repository instructions
+  from installation, gave the actual user-held marketplace steps, required all
+  seven skills and fresh-task discovery, then offered an invocation/example.
+  It did not claim to click, install or connect anything. The trials are the two
+  new manual scenarios, not additions to the ten-case automated runner.
+- Independent read-only review found no actionable issues. EN/RU README and install
+  headings/table structures matched after the troubleshooting parity correction.
+- `python3 -B -m unittest discover -s tests -v`: **340 run, 329 passed, 11 skipped**,
+  **132.325 s**. No errors; this later successful run does not explain the earlier
+  PowerShell timeout recorded separately.
+- `python3 -B tools/check_package.py` and `git diff --check`: passed. Final local
+  Markdown link/anchor check: **941 references in 135 files**, all resolved.
+
+No real installation, desktop usability, account connection, native Windows
+acceptance or release publication was performed. Changes remain local; earlier
+unrelated working-tree edits were preserved.
+
+## Visual onboarding guides — 2026-10-26
+
+Added three pairs of EN/RU SVG workflow illustrations: assistant plus private
+folder, assisted installation, and a fictional proposal request with clarification,
+draft review and continuation. The README, installation guide and user guide use
+these local assets; copyable prompts remain ordinary text. The installation guide
+also includes an unmodified native capture from Claude Desktop **3.6556.2** on
+macOS, showing the public repository URL before **Sync**. The dialog was cancelled;
+no marketplace or plugin was installed. The guide now names the observed **Add
+from a repository**, repository selection and **Sync** controls. See the
+[host observation](../research/host-installation-sources.md#actual-claude-dialog-capture--2026-10-26).
+
+- Initial detached-image test correctly stopped the package build on the new,
+  unreviewed SVG. The seven new image paths were then individually allowlisted;
+  arbitrary images remain rejected. The existing detached test now checks both
+  installation and user guides in EN/RU for both hosts, including byte equality.
+- Independent read-only review caught JPEG bytes under a PNG filename. Renamed
+  the unmodified screenshot to `.jpg` and updated all references. No other
+  actionable findings; screenshot review found no personal chats or private data.
+- `python3 -B -m unittest discover -s tests -p test_packaging.py -v`: **16/16
+  passed** after the extension correction, including detached resources and
+  unreviewed-image rejection. Release/retry tests: **7/7 passed**.
+- Local Pandoc GFM previews of six EN/RU documents were rendered with the existing
+  Playwright **1.63.0** in Chromium and WebKit at **390 and 1280 px**: **24 page
+  cases**. All images loaded, no document-width overflow or console/page/request
+  failures. Six new SVGs in both engines: **12 text-bounds checks** passed.
+  Inspected the rendered diagrams and selected mobile/desktop views visually.
+- `tools/check_package.py`, `tools/release.py check`, local Markdown file/anchor
+  checks and `git diff --check` passed. Both host packages built outside the
+  checkout; the new guide assets remain local and portable.
+
+Evidence and preview scripts are local at
+`/private/tmp/gbk-visual-guides-20261026/`; final bundles are in `packages-final/`.
+Preview CSS approximates a Markdown reader; this is not GitHub's renderer or an
+ordinary-user desktop acceptance trial. Workflow illustrations are explicitly
+labelled, not presented as recorded chats. No application runtime changed; the
+previous full-suite result is not a new full-suite run. No commit, push or release
+was performed for this change.
+
+## Model recommendation guidance — 2026-10-26
+
+README and portable EN/RU installation/user guides now recommend Claude Opus 5.5
+with High effort or GPT-6 Astra with High reasoning effort for substantive work,
+qualified by actual host/account availability. The German start guide has a short
+matching note. Shared instructions cover all seven skills, preserve the user's
+model/budget preferences and retain input, source and calculation checks. No host
+configuration or model identifiers in tool settings were changed. Current primary
+sources and UI/availability distinctions are recorded in
+[host research](../research/host-installation-sources.md#capable-models-and-reasoning-effort--2026-10-26).
+
+Three fresh synthetic, read-only sessions used Codex CLI **0.164.0** with copied
+skills, clean host defaults and no explicit model selection. Effective model
+identity was not established; these are instruction checks, not comparisons of
+Opus and Astra. Evidence: `/private/tmp/gbk-model-guidance-20261026/`.
+
+- The existing usage-help scenario offered three relevant requests, brief model/
+  effort advice and optional folder continuation, without account access or writes.
+- A low-budget/default-model question received the requested two-sentence proposal
+  explanation without an upgrade gate.
+- Direct model-selection help named both recommended models with High, gave the
+  documented controls, qualified availability, noted usage and verification limits,
+  and did not claim to inspect or change the model picker.
+- Observed tool calls were local reads; all completed successfully. EN/RU heading
+  structure and named-model parity were inspected. `python3 -B tools/check_package.py`,
+  local Markdown file/anchor checks and `git diff --check` passed.
+
+No live model-picker selection, model-quality benchmark, tax-accuracy trial or new
+full runtime-suite run was performed. This change is documentation and portable
+prompt guidance; earlier runtime evidence applies only to unchanged code.
+
+## AI notice and provider data processing — 2026-10-26
+
+Added a visible AI/self-help and remote-processing notice to README and portable
+installation guides, with full EN/RU explanations in the existing user guides and
+a short German note. The guides distinguish personal OpenAI/Anthropic training
+controls from commercial/API defaults, training from storage/retention, local
+files from remote processing, and preparation from professional tax advice.
+Primary-source checks are recorded in
+[host research](../research/host-installation-sources.md#ai-limitations-and-provider-data-processing--2026-10-26).
+Existing privacy, legal-boundary, onboarding and shared instructions reuse the
+notice before relevant consequential work or real confidential documents, without
+blanket acceptance or repeated warnings. No account settings were changed.
+
+Independent read-only review of this turn's snapshot-relative diffs, followed by
+a separate check of the final shared-context paragraph, found no actionable
+issues. It spot-checked current official provider sources. This is documentation
+review, not legal approval of the project or verification of users' account terms.
+
+Three fresh synthetic read-only sessions used **Codex CLI 0.164.0**, clean host
+defaults and copied skills, without explicit model selection. Effective model
+identity was not established. Evidence: `/private/tmp/gbk-ai-notice-20261026/`.
+
+- `privacy-consumer` explained in Russian that local storage and a personal plan
+  do not establish appropriate remote processing, asked for actual route/terms,
+  and recommended minimal data and synthetic preparation.
+- `sensitive-record-before-model-access` required local minimization before model
+  access, protected the original, excluded unrelated sensitive transactions, gave
+  only necessary matching fields and did not claim a reconciled payment. Its final
+  answer did **not explicitly distinguish GDPR Article 6 from Article 9**; that
+  existing criterion is not evidenced by this run, so no all-criteria pass is claimed.
+- A direct AI-adviser/High-effort question clearly denied professional-adviser
+  status or guaranteed amounts/deadlines, preserved self-managed work and explained
+  source/input/numerical checks and focused professional help where needed.
+- All 12 observed command calls completed with exit 0 and only read local material;
+  no real documents, accounts, settings or writes were involved in the agent trials.
+- `python3 -B tools/check_package.py`, local Markdown file/anchor checks and
+  `git diff --check` passed. EN/RU notice, section and provider-table parity was
+  inspected. No application runtime or asset layout changed; no new full runtime
+  suite or desktop-account acceptance was claimed.
+
+The provider policy check does not establish any particular user's training
+setting, retention, residency, DPA coverage or GDPR compliance. No professional
+legal sign-off, model-quality benchmark, commit, push or release was performed.
+
+## Folder coverage and readable destinations — 2026-10-26
+
+Reviewed the folder manifest, Python/native path consumers, workspace utilities,
+existing localized tests and lifecycle output instructions. Kept the five visible
+areas and existing logical/physical mappings. README EN/RU now explains the private
+workspace tree separately from repository directories; portable user guides map
+requests to destinations. Updated only EN/RU/DE start-guide text in the folder
+manifest, not `paths`, `parts` or `guide_name`. Existing guides are not overwritten
+on resume. Clarified that CLI `init`/`start` default to localized layout while the
+low-level Python initializer retains its legacy default, and aligned recommended
+separate installation/workspace guidance without migrating existing co-located setups.
+
+The workspace reference now owns routing for readable plans, customer cases,
+service notes, changes and saved answers. New insurance/other-service reports go
+to visible correspondence cases; older hidden reports remain valid and are reused.
+Originals, canonical records, generated writer paths and task status stay unchanged.
+This is agent-level file-placement guidance, not an automatic organizer or schema
+migration. Independent snapshot-relative review found no actionable issues.
+
+Actual synthetic evidence in `/private/tmp/gbk-folders-20261026/`:
+
+- Python `start`/`folders` produced the expected five visible areas for EN/RU/DE.
+  Final new-workspace runs used the revised guide text; guide folder links resolved.
+  Resume with a different requested language/year preserved the guide bytes.
+- Baseline fresh Codex CLI **0.164.0** trial saved a fictional insurance comparison
+  under `.business-kit/admin/services/`. The same request with revised instructions
+  saved its only new file under `05 Бизнес/Переписка/Услуги/`. Hash comparison showed
+  no existing workspace files changed or disappeared.
+- A separate continuation trial retained an existing hidden service case and saved
+  version 2 beside it, without relocating or changing the old note. All existing
+  workspace files matched their captured hashes. Both outputs preserved unknown
+  coverage/terms and made no purchase recommendation or account-access claim.
+- Trials used copied skills, temporary synthetic workspaces and clean host defaults
+  without explicit model selection; effective model identity was not established.
+  Two reusable manual scenarios were added to `evals/scenarios.json`; they are not
+  additions to the existing ten-case automated runner.
+- `python3 -B -m unittest discover -s tests -p test_localized_workspace.py -v`:
+  **5/5 passed**. `test_workspace.py`: **41/41 passed**. `test_packaging.py`:
+  **16/16 passed**, including detached resources. Package/local-link/diff checks
+  passed. No runtime script, protected filesystem contract or package layout changed.
+
+No new full-suite run, native Windows desktop acceptance, automatic migration,
+real-data reorganization, commit, push or release is claimed. Prior runtime results
+remain evidence only for unchanged implementation.
+
+## Optional browser and computer-use guidance — 2026-10-26
+
+Added conditional tool/helper-skill recommendations to README, setup/user help and
+shared routing instructions. The existing assisted-services guide owns the EN/RU
+setup details: web search versus interaction, existing connectors, built-in/external
+browsers, native app control, account/OS availability, a public practice request
+and useful manual/file alternatives. Current official provider sources are recorded
+in [host research](../research/host-installation-sources.md#optional-browser-and-computer-assistance--2026-10-26).
+
+The instructions reuse working access and distinguish helper instructions from
+actual tools/permissions. They preserve user-held login/final actions and do not
+turn tool activation into action authorization. Current Claude sensitivity warnings
+are explicit; native control is not a workaround for blocked browser access.
+Independent read-only review of snapshot-relative changes and primary sources
+found no actionable issues. EN/RU heading structure and material content match.
+
+Three fresh synthetic read-only sessions used **Codex CLI 0.164.0**, clean host
+defaults and copied skills without explicit model selection. Effective model
+identity was not established. Evidence: `/private/tmp/gbk-browser-guidance-20261026/`.
+
+- Missing-interaction trial recommended conditional `@Browser`/official extension
+  setup, distinguished a skill from access, and offered copyable form preparation
+  while access was unavailable. It read public official help and did not claim
+  activation, typing into the form or installation.
+- Research-only trial respected the user's preference against screen access and
+  explained that search/page reads and selected files were sufficient.
+- Restricted-sensitive-route trial rejected native control as a bypass and offered
+  a tax-form worksheet with targeted missing facts and user-held portal operations.
+- All 12 local read commands returned 0. The setup trial also made two public web
+  lookup/read calls. No accounts, settings, permissions, extensions or installations
+  were changed. Three manual scenarios were added, not added to the ten-case runner.
+- `python3 -B tools/check_package.py`, local Markdown file/anchor checks and
+  `git diff --check` passed. No runtime scripts or package layout changed.
+
+These are source/instruction checks, not live desktop activation, browser/form
+acceptance, a new connector or a fresh full runtime-suite result. No commit, push
+or release was performed.

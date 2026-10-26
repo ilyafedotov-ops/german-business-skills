@@ -34,3 +34,22 @@ python3 -B -m unittest discover -s tests -p test_eval_runner.py -v
 python3 -B tools/check_package.py
 git diff --check
 ```
+
+## Prerequisites and calculation trials
+
+`scenarios.json` also contains `tax-bounded-local-calculation`,
+`general-prerequisites-ambiguous-tax`, `general-prerequisites-resume-invoice`,
+`calculation-historical-period-and-rounding` and
+`calculation-discrepancy-and-no-source`. These are fresh-session manual host trials,
+not selections in the ten-case runner above. Public-source cases need actual web
+access; the no-source case deliberately withholds it. Give the tested agent the
+prompt and synthetic inputs, never its criteria or expected numerical answers.
+Inspect actual retrieved sources, executed arithmetic and saved records before
+rating a result. A reported independent-check failure tests truthful fallback,
+not successful independent verification. See [validation](../docs/validation.md)
+for recorded host versions, outcomes and limitations.
+
+`usage-guidance-after-install` and `assistant-install-guidance-no-controls` also
+use manual fresh sessions: check a short relevant introduction and a truthful
+user-held installation step when plugin controls are unavailable. These read-only
+trials do not install a plugin or prove discovery in a desktop app.

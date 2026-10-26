@@ -8,6 +8,14 @@ Read the [domain ontology](ontology.md) for entities, relationships and state me
 
 The [accounting workflow](../skills/de-business-kit/references/accounting-workflow.md) adds an explicitly selected authoritative system when accounting work needs it, limited local cash journal and filing evidence lifecycle through the existing `desk.py` entry point. `casefiles/accounting.py` stores additive state in `04_accounting/register.json`; it reuses workspace locks, evidence fingerprints and history, and checks register state against its latest audit checkpoint. Cash lines record VAT as stated on their evidence and can link the current approved proposal they settle; the writer fingerprints each link, and reports and filing preflight stop when a linked proposal changes. Local cash reports include source-entry/configuration fingerprints, stated-VAT groups and per-account reconciliation CSVs. Filing versions freeze payload/source files, separate review/authorization from uncertain attempts and manually observed receipts/responses, and block stale local-report preflight. No provider/ERiC transport or complete statutory tax calculator is added.
 
+
+The primary interaction is the host assistant plus the existing private workspace.
+The shared execution contract owns prerequisite checks and reuse/persistence of
+confirmed facts for all seven skills. The tax-estimates reference adds researched,
+bounded calculations and explicit independent-check evidence; the consultation
+template records them without a new register or automated approval transition.
+The GUI remains an optional adapter to the same writers and records.
+
 ## Assisted external-service execution
 
 The services skill discovers an operation-specific route; the business-domain
@@ -50,6 +58,18 @@ An entrepreneur brings a task at any stage: prepare to start, register an activi
 The supported scope is a natural person operating in Germany: Freiberufler, Einzelunternehmen/Gewerbe and multiple activities of the same person. Corporations, partnerships, payroll, complex international structures and cash-register systems are outside the promised automation scope. The skill can collect facts and prepare a specific specialist handoff for those cases.
 
 Export coverage is a readable projection of supplied evidence: the selected route, date basis, inspected pages/originals and missing scope. It reuses operation notes and source maps; it adds no provider registry or automatic export engine.
+
+## Readable files and workspace folders
+
+The physical EN/RU/DE folder map remains unchanged: five visible areas with
+internal records in `.business-kit`. The workspace reference owns
+[task-based destinations](../skills/de-business-kit/references/workspace.md#route-readable-results-by-task)
+for launch plans, customer cases, service comparisons, changes and saved answers.
+New insurance/other-service reports use visible correspondence cases; existing
+hidden reports retain their location. Case folders are created only when needed,
+link canonical evidence/tasks and never establish workflow state. This is an
+agent authoring convention, not a migration or automatic organizer. Localized
+start guides explain folder roles; an update does not overwrite an existing guide.
 
 ## Seven entry points, shared state
 
