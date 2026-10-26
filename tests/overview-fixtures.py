@@ -13,16 +13,21 @@ import workspace as ws
 output = Path(sys.argv[1]).resolve()
 output.mkdir(parents=True, exist_ok=True)
 for language in ("en", "ru"):
-    for scenario in ("empty", "blocked", "corrupt"):
+    for scenario in ("empty", "blocked", "corrupt", "lifecycle"):
         case = OverviewTests()
         case.setUp()
         try:
-            if scenario != "empty":
+            if scenario in {"blocked", "corrupt"}:
                 case.configure()
                 ac.post(case.root, case.entry())
                 case.filing(unresolved_items=['Check invoice evidence <script>alert(1)</script>'])
                 ws.save_entry(case.root, "questions", {"schema_version": 1, "id": "question-1", "owner": "owner",
                               "status": "open", "title": "Clarify invoice country"})
+            if scenario == "lifecycle":
+                ws.save_entry(case.root, "tasks", {"schema_version": 1, "id": "launch", "owner": "owner",
+                              "status": "pending", "title": "Prepare registration <script>alert(1)</script>", "note": "Synthetic reference " + "x" * 180})
+                ws.save_entry(case.root, "tasks", {"schema_version": 1, "id": "reply", "owner": "owner",
+                              "status": "pending", "title": "Review authority reply", "depends_on": ["launch"]})
             if scenario == "corrupt":
                 (case.root / ac.STATE).unlink()
             rendered = overview.generate(case.root, "2026-10", "2026-10-26", language)
@@ -50,4 +55,4 @@ for language in ("en", "ru"):
                     (case.root / view["html_path"]).read_bytes())
         finally:
             case.doCleanups()
-print(json.dumps({"fixtures": 6, "scope": "synthetic canonical records; no external integration"}))
+print(json.dumps({"fixtures": 8, "scope": "synthetic canonical records; no external integration"}))

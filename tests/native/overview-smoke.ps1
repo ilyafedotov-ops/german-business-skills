@@ -16,6 +16,8 @@ try {
         & $kit -Action start -Root $root -Year 2026 -Language $language | Out-Null
         $folders=& $kit -Action folders -Root $root | ConvertFrom-Json
         $admin=Join-Path $root $folders.paths.'00_admin'
+        $empty=& $kit -Action overview -Root $root -Period '2026-10' | ConvertFrom-Json
+        Assert ($empty.next_action -eq 'choose_task' -and $null -eq $empty.next_task_id) 'Empty workspace forced an accounting choice'
         $questions=Join-Path $admin 'questions.json'
         [IO.File]::WriteAllText($questions,'[{"schema_version":1,"id":"vat-question","title":"VAT <script>unsafe</script>","owner":"owner","status":"open"}]',$utf8)
         $tasks=Join-Path $admin 'tasks.json'
@@ -32,6 +34,18 @@ try {
         Assert ($html.Contains('VAT &lt;script&gt;unsafe&lt;/script&gt;') -and -not $html.Contains('<script>')) 'Evidence markup executed'
         Assert ($html.Contains('Synthetic letter page 1') -and $html.Contains('Content-Security-Policy')) 'Deadline source/CSP missing'
         Assert ((Get-FileHash -LiteralPath $questions).Hash -eq $before) 'Overview changed canonical questions'
+        [IO.File]::WriteAllText($questions,'[]',$utf8)
+        [IO.File]::WriteAllText($tasks,'[{"schema_version":1,"id":"undated","title":"Prepare <script>customer</script> letter","owner":"owner","status":"pending","depends_on":[],"note":"Synthetic recipient details"},{"schema_version":1,"id":"cancelled","title":"Cancelled prerequisite","owner":"owner","status":"cancelled"},{"schema_version":1,"id":"blocked","title":"Wait for prerequisite","owner":"owner","status":"pending","depends_on":["cancelled"]}]',$utf8)
+        $beforeTasks=(Get-FileHash -LiteralPath $tasks).Hash
+        $taskView=& $kit -Action overview -Root $root -Period '2026-10' | ConvertFrom-Json
+        $taskProjection=Get-Content -LiteralPath (Join-Path $root $taskView.json_path) -Raw -Encoding UTF8 | ConvertFrom-Json
+        Assert ($taskView.next_action -eq 'continue_task' -and $taskView.next_task_id -eq 'undated') 'Undated task could not continue'
+        Assert ($taskProjection.active_tasks.Count -eq 2 -and $taskProjection.tasks.Count -eq 0) 'Active tasks were filtered by dates or included terminal work'
+        $blocked=@($taskProjection.active_tasks | Where-Object { $_.id -eq 'blocked' })[0]
+        Assert ($blocked.readiness -eq 'blocked' -and $blocked.pending_dependencies[0] -eq 'cancelled') 'Cancelled dependency was treated as satisfied'
+        $html=[IO.File]::ReadAllText((Join-Path $root $taskView.html_path),$utf8)
+        Assert ($html.Contains('Prepare &lt;script&gt;customer&lt;/script&gt; letter') -and $html.Contains('Synthetic recipient details')) 'Active task text or escaping missing'
+        Assert ((Get-FileHash -LiteralPath $tasks).Hash -eq $beforeTasks) 'Overview changed canonical tasks'
         & $kit -Action overview -Root $root -Period '2026-10' | Out-Null
         [IO.File]::WriteAllText((Join-Path $root '.workspace.lock'),'other writer',$utf8)
         Reject { & $kit -Action overview -Root $root -Period '2026-10' }

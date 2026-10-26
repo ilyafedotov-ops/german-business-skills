@@ -20,7 +20,7 @@ nav{display:flex;gap:8px;flex-wrap:wrap;padding-top:0}a{color:#165d4e;text-under
 a:focus-visible,summary:focus-visible{outline:3px solid #a65619;outline-offset:4px}section{scroll-margin-top:20px;background:#fff;border:1px solid #d7dfd9;border-radius:16px;padding:24px;margin:0 0 20px}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{padding:16px;background:#f1f5f0;border-radius:10px}.card strong{display:block;font-size:30px}.card strong.pending{font-size:18px;line-height:1.5;margin-bottom:8px}.next{border-left:4px solid #23745d;padding-left:16px;margin:22px 0 0}
 .warning{background:#fff5df;border:1px solid #d9bd7d;padding:16px;border-radius:10px}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse}th,td{text-align:left;vertical-align:top;padding:12px 8px;border-bottom:1px solid #e2e7e2}th{font-size:13px;color:#52635f}td{overflow-wrap:anywhere}
-.badge{white-space:nowrap;font-size:12px;background:#edf2ed;padding:4px 8px;border-radius:5px}li{margin-bottom:10px}code{font-size:12px;overflow-wrap:anywhere}details{margin-top:16px}summary{cursor:pointer}footer{font-size:13px;color:#52635f;padding:12px 0 32px}
+.badge{white-space:nowrap;font-size:12px;background:#edf2ed;padding:4px 8px;border-radius:5px}li{margin-bottom:10px}#active-tasks{overflow-wrap:anywhere}code{font-size:12px;overflow-wrap:anywhere}details{margin-top:16px}summary{cursor:pointer}footer{font-size:13px;color:#52635f;padding:12px 0 32px}
 @media(max-width:600px){main,header,nav{padding-left:16px;padding-right:16px}section{padding:18px}.cards{grid-template-columns:repeat(2,1fr)}.card strong{font-size:26px}nav a{font-size:14px}th,td{padding:10px 5px;font-size:14px}}
 @media print{nav{display:none}body{background:white}section{break-inside:avoid}a{color:inherit}}"""
 
@@ -72,6 +72,8 @@ def _generate(root, period, as_of, language):
                                     "period_entry_count": None, "totals": {}, "issues": [], "coverage": "not_assessed"})
     result.setdefault("filings", [])
     result.setdefault("open_questions", [])
+    result.setdefault("active_tasks", [])
+    result.setdefault("next_task_id", None)
     result["capabilities"] = {"accounting_ledger": "limited_cash_journal", "local_cash_journal": "available",
                               "complete_statutory_ledger": "not_implemented", "elster_submission": "not_implemented",
                               "tax_form_calculations": "not_implemented"}
@@ -89,6 +91,10 @@ def _generate(root, period, as_of, language):
         next_key = "resolve_filing"
     elif result["open_questions"]:
         next_key = "resolve_questions"
+    elif result["active_tasks"]:
+        next_key = "continue_task" if result["next_task_id"] else "review_tasks"
+    elif not result["workspace_has_documents"] and not result["filings"] and result["accounting"]["accounting_system"] == "undecided":
+        next_key = "choose_task"
     elif counts["awaiting_review"]:
         next_key = "review_docs"
     elif result["accounting"]["accounting_system"] == "undecided":
@@ -101,12 +107,26 @@ def _generate(root, period, as_of, language):
         next_key = "next_accounting"
     result["next_action"] = next_key
     e = html.escape
-    navigation = [("overview", "overview"), ("inbox", "inbox"), ("needs-review", "needs_review"), ("month", "month"), ("accounting-tax", "export")]
+    navigation = [("overview", "overview"), ("active-tasks", "active_tasks"), ("inbox", "inbox"), ("needs-review", "needs_review"), ("month", "month"), ("accounting-tax", "export")]
     sections = []
     cards = "".join(f'<div class="card"><strong class="{"pending" if number is None or errors else ""}">{number if number is not None and not errors else e(words["not_assessed"])}</strong>{e(words[key])}</div>' for key, number in counts.items())
     warning = (f'<p class="warning">{e(words["error"])}: {e(words["repair"])}</p><details><summary>{e(words["technical_details"])}</summary>'
                + "".join('<p><code>' + e(message) + '</code></p>' for message in errors) + '</details>') if errors else ""
     sections.append(f'<section id="overview"><h2>{e(words["overview"])}</h2>{warning}<div class="cards">{cards}</div><div class="next"><h3>{e(words["next"])}</h3><p>{e(words[next_key])}</p></div></section>')
+    task_text = []
+    task_titles = {item["id"]: item["title"] for item in result.get("tasks", [])}
+    for task in result["active_tasks"]:
+        text = task["title"] + " · " + words["task_states"][task["status"]]
+        text += " · " + words["task_" + task["readiness"]]
+        text += " · " + words["task_owner"] + ": " + task["owner"]
+        text += " · " + (task["due_date"] + " / " + task["deadline_source"] if task["due_date"] else words["task_no_date"])
+        if task["pending_dependencies"]:
+            text += " · " + words["task_dependencies"] + ": " + ", ".join(task_titles[key] for key in task["pending_dependencies"])
+        if task["note"]:
+            text += " · " + task["note"]
+        task_text.append(text)
+    task_html = '<ul>' + ''.join('<li>' + e(text) + '</li>' for text in task_text) + '</ul>' if task_text else '<p>' + e(words["repair"] if errors else words["no_active_tasks"]) + '</p>'
+    sections.append(f'<section id="active-tasks"><h2>{e(words["active_tasks"])}</h2><p class="muted">{e(words["tasks_scope"])}</p>{task_html}</section>')
     rows = "".join('<tr><td>' + e(item["title"]) + '</td><td>' + e(words["types"][item["type"]]) + '</td><td><span class="badge">' + e(words["states"][item["review_status"]]) + '</span></td></tr>' for item in result["documents"])
     inbox = ('<div class="table-wrap"><table><thead><tr>' + ''.join('<th scope="col">' + e(words[key]) + '</th>' for key in ("name", "type", "status")) + '</tr></thead><tbody>' + rows + '</tbody></table></div>') if rows else '<p>' + e(words["repair"] if errors else words["empty"]) + '</p>'
     sections.append(f'<section id="inbox"><h2>{e(words["inbox"])}</h2>{inbox}</section>')
@@ -157,6 +177,7 @@ def _generate(root, period, as_of, language):
     document = MARK + f'<!doctype html><html lang="{language}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; base-uri \'none\'; form-action \'none\'"><title>{e(words["title"])}</title><style>{CSS}</style></head><body><header><span class="eyebrow">German Business Kit</span><h1>{e(words["title"])}</h1><p class="muted">{e(words["subtitle"])}</p><p>{e(words["period"])}: <strong>{period}</strong> · {e(words["as_of"])}: {as_of}</p></header><nav aria-label="{e(words["overview"])}">' + ''.join(f'<a href="#{identifier}">{e(words[key])}</a>' for identifier, key in navigation) + '</nav><main>' + ''.join(sections) + '<footer>' + e(words["boundary"]) + '<br>' + e(words["snapshot"]) + '</footer></main></body></html>\n'
     body = f"{words['period']}: {period}\n{words['as_of']}: {as_of}\n\n## {words['next']}\n\n{words[next_key]}\n\n"
     body += "\n".join(f"- {words[key]}: {number if number is not None and not errors else words['not_assessed']}" for key, number in counts.items())
+    body += f"\n\n## {words['active_tasks']}\n\n{words['tasks_scope']}\n\n" + "\n".join("- " + re.sub(r'([\\`*_{}\[\]()#+.!|>~-])', r'\\\1', html.escape(text.replace("\n", " "))) for text in (task_text or [words["repair"] if errors else words["no_active_tasks"]]))
     body += f"\n\n## {words['open_items']}\n\n" + "\n".join("- " + html.escape(text.replace("\n", " ")) for text in open_text + errors)
     body += f"\n\n## {words['export']}\n\n" + "\n".join("- " + html.escape(text.replace("\n", " ")) for text in accounting_text)
     body += f"\n\n## {words['filings']}\n\n" + "\n".join("- " + html.escape(text.replace("\n", " ")) for text in (filing_text or [words["no_filings"]]))
