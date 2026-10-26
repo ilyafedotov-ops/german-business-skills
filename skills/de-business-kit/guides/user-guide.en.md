@@ -121,3 +121,14 @@ Skill updates and business data are separate. The installer refuses to overwrite
 ## Check your own environment
 
 Capabilities depend on the app version, permissions and tools. Basic Windows operations use native PowerShell without mandatory Python; some advanced validated operations still need an available additional engine. macOS does not guarantee Python either. Try a small fictional example in your environment before relying on an entire process. The project's demo interface uses fictional records and is not connected accounting software.
+
+
+## One month with your own cash journal and manual ELSTER
+
+Ask: “Continue October in my local cash journal, show unresolved items, and help me prepare the applicable return for manual ELSTER.” The assistant should organize documents, review bank mapping, record supported reviewed cash movements, reconcile and give you a readable report. Cash totals are not a calculated tax return. The form/year and any calculation tool require their own evidence and review.
+
+The real workspace overview now shows your accounting choice, period entries, open questions, saved filing versions and their blockers. It is a snapshot: ask to refresh it after changes. A submission with an unknown outcome remains visible even when you switch months. You authenticate and send in ELSTER after reviewing the exact version; preserve the actual receipt. A receipt and a Finanzamt decision are different records.
+
+Ask: “Create and verify a complete backup at this protected location”, or “Restore this backup into a new folder and check it.” [Full backup and restore](../references/recovery.md) includes originals, records, evidence and history, and is available through native Windows tools without installing Python. An existing folder is never overwritten. Keep both the backup and original until you have checked the restored workspace.
+
+The native Windows overview reads saved records and checks local evidence hashes; it does not run the full filing preflight. Advanced protected accounting/filing writes still need a supported existing execution environment. It does not silently install Python. [Monthly workflow and exact limits](../references/monthly-workflow.md).

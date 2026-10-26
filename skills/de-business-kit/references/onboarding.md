@@ -36,7 +36,7 @@ If web access is unavailable, identify which consequential rule remains unverifi
 - For malformed legacy records: keep the existing file and history, explain affected fields, and prepare a reviewed conversion to the documented format. `status` never silently migrates them. Profile corrections use `record`; register conversion needs a separately reviewed local edit because there was no old register schema.
 - For updates: install/review a fresh skill package separately, close active writers, verify a synthetic example, and reopen the same private workspace. Do not initialize business data again. Avoid duplicate standalone and plugin installations.
 
-Backup verification is a separate operation: preserve a protected copy outside the source checkout, restore into a fresh private location, then run `doctor` and `verify`. Never delete originals or backups based only on folder age. This preview does not encrypt files or configure Windows ACLs.
+Use the implemented [full backup and restore workflow](recovery.md). Backup verification is a separate operation: preserve a protected copy outside the source checkout, restore into a fresh private location, then run native `-Action verify` or the optional Python `doctor` and `verify` commands as available. Native verification does not replace the full Python diagnostics. Never delete originals or backups based only on folder age. This preview does not encrypt files or configure Windows ACLs.
 
 ## Folder language during setup
 

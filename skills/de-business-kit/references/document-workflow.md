@@ -8,7 +8,7 @@ Use this module for mixed document intake, review, bank-export mapping, the mont
 
 ## What exists and what remains core work
 
-`scripts/desk.py` implements local document/review records, bank normalization and a read-only overview. It does **not** implement a complete accounting ledger, posting engine, tax-return calculation engine or ELSTER transmission. An approved proposal is not a posted entry. A matched CSV comparison is not a closed month. Preserve separate evidence for preparation, user approval, actual posting/submission and the Finanzamt's response. Explain the specific missing capability and continue supported work in the user's chosen accounting system; never fabricate execution.
+`scripts/desk.py` implements local document/review records, bank normalization, a generated overview and the limited reviewed cash journal described in [accounting workflow](accounting-workflow.md). It does **not** implement a complete accounting ledger, general posting engine, tax-return calculation engine or ELSTER transmission. An approved proposal is not a posted entry. A matched CSV comparison is not a closed month. Preserve separate evidence for preparation, user approval, actual posting/submission and the Finanzamt's response. Explain the specific missing capability and continue supported work in the user's chosen accounting system; never fabricate execution.
 
 For Gmail/accounting-service records or a mixed folder, start with [existing-data onboarding](existing-data.md). `desk.py scan-folder` inventories a separate source without importing or changing it. Preserve source IDs and coverage in the private source map.
 

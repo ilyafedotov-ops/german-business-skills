@@ -4,9 +4,9 @@ For PSP exports, fees, refunds, chargebacks, payouts, FX and owned-account movem
 
 ## Scope and capability
 
-Use `bookkeeping` mode to carry a German sole proprietor's available records through capture, proposal, review, reconciliation, monthly self-review and tax-reporting preparation. Establish the actual bookkeeping method and the user’s chosen accounting system from `01_profile/business.json`. Continue work on clear transactions while isolating unresolved obligations, payroll, cash-register requirements or complex foreign transactions for the relevant review workflow.
+Use `bookkeeping` mode to carry a German sole proprietor's available records through capture, proposal, review, reconciliation, monthly self-review and tax-reporting preparation. Read the actual bookkeeping method from `01_profile/business.json` and the saved accounting-system choice through `desk.py accounting-status`. Follow [accounting workflow](accounting-workflow.md) to record an explicit choice; a profile or working agreement does not replace that configuration. Continue work on clear transactions while isolating unresolved obligations, payroll, cash-register requirements or complex foreign transactions for the relevant review workflow.
 
-Version 0.5 provides local tools and an operational workflow. It has **no complete accounting ledger or production accounting API connector and performs no automated postings**. Keep proposed treatment, reviewed decisions and observed provider state distinct. A receipt upload, local file or successful calculation does not establish a posting, payment, export or tax submission.
+Version 0.5 provides local tools, reviewed cash-entry recording for an explicitly selected local EÜR workflow, and an operational workflow. It has **no complete accounting ledger or production accounting API connector**. Local journal entries require the validated writer and reviewed evidence; document intake or proposal approval never posts them automatically. Keep proposed treatment, reviewed decisions and observed provider state distinct. A receipt upload, local file or successful calculation does not establish a posting, payment, export or tax submission.
 
 ## Activate and localize
 
@@ -30,7 +30,7 @@ Russian task example: «Используй bookkeeping для октября. О
 2. Record the accounting product, exact edition, tax year, bookkeeping method, VAT treatment and chart of accounts where known. Leave unknown values unresolved.
 3. Record who captures receipts, chooses categories, allocates payments, checks tax treatment, submits returns and prepares the year end. Identify the authoritative accounting system and retention process.
 4. Help the user manage their own work. Only if they choose external consultation, agree the needed export and any locking behavior. Check available capabilities before offering an integration.
-5. Write the agreement to `04_accounting/workflow.md`. Record missing decisions in `00_admin/questions.json` and actionable next steps in `00_admin/tasks.json`, preserving their existing schemas.
+5. Write the agreement to logical `04_accounting/workflow.md` after resolving its physical path. Save missing decisions and actionable next steps through `workspace.py entry` in the existing question/task registers. Do not edit canonical register JSON directly; if the validated writer is unavailable, retain a readable worksheet and state what remains unrecorded.
 
 ## Intake and evidence
 
@@ -60,11 +60,13 @@ Separate extraction confidence from tax certainty. Flag ambiguous business use, 
 
 For a tax question that can be analysed on the available facts, use `tax-consultant` mode to prepare a linked, sourced consultation in `05_tax/YYYY/consultations/`. Explain the provisional treatment or relevant scenarios and the precise evidence still needed. Preserve the bookkeeping proposal and continue processing unaffected documents; do not replace substantive analysis with a generic referral.
 
-## Review and external entry
+## Review and entry in the chosen system
 
 Prepare a table of proposed changes and unresolved items before entry into the accounting product. Reuse authorization already given for the concrete operation; seek additional authorization only when the proposed action exceeds it. Do not infer authority to submit tax returns or transfer money from permission to organize receipts.
 
-In v0.5, guide the user through their chosen accounting system, keeping local proposals separate from actual posted records. Do not claim that a connector exists, simulate API responses or mark records as posted. If a separate authorized tool is available, verify its operation and current provider documentation independently. Read back external IDs and states after a real write. After a timeout, inspect the provider before retrying a creation.
+For an explicitly chosen local EÜR route, use the validated `entry-post` / `entry-reverse` writers and `period-report` described in [accounting workflow](accounting-workflow.md). Reconcile the generated account CSV against independent statements; preserve reversals and replacement links. Cash totals remain supporting records, not a complete statutory EÜR or VAT calculation. The protected writers require an existing supported Python runtime.
+
+For existing accounting software, guide the user through that authoritative system, keeping local proposals separate from observed external postings. Do not claim that a connector exists, simulate API responses or mark external records as posted without evidence. If a separate authorized tool is available, verify its operation and current provider documentation independently. Read back external IDs and states after a real write. After a timeout, inspect the provider before retrying a creation.
 
 ## Reconcile and close a month
 

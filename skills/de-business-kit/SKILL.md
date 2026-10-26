@@ -15,7 +15,7 @@ description: >-
 
 Use one private workspace per natural-person entrepreneur. Keep multiple activities in that profile, with activity IDs. Support **English (`en`) and Russian (`ru`)** throughout conversation and user-facing reports; retain official German form labels. Version: **0.5.0 preview**, source review **2026-10-25**.
 
-Self-managed accounting and tax reporting are the primary workflow. Accountant consultation and export are optional. Complete ledger posting and ELSTER transmission are core capabilities still to implement; local preparation does not replace them.
+Self-managed accounting and tax reporting are the primary workflow. Accountant consultation and export are optional. The limited local cash journal and filing-evidence lifecycle are implemented; complete statutory accounting and ELSTER transmission remain unfinished. The first monthly route combines local cash records with manual ELSTER, without overriding an existing accounting-system choice. Native Windows supports intake, integrity, real overview and full recovery; protected accounting/filing writes and full preflight still require a supported existing runtime.
 
 ## Language and working mode
 
@@ -45,6 +45,8 @@ For user-facing help, provide the [Russian start](guides/start.ru.md), [English 
 |---|---|---|
 | First use, collect facts, establish work split | [intake](references/intake.md) | Provenanced profile; prioritized missing facts |
 | Existing Gmail/email, Lexware, sevdesk, WISO or mixed folders | [existing data](references/existing-data.md) | Verified access route, private source map, bounded folder preview and scoped intake |
+| Full workspace backup, verification or restore | [recovery](references/recovery.md) | Verified complete copy, fresh restored workspace and integrity result |
+| Local cash journal and manual ELSTER for one month | [monthly workflow](references/monthly-workflow.md) | Evidence-linked month, readable report, exact draft and observed manual submission outcome |
 | Setup, demonstration, resume or recovery | [onboarding](references/onboarding.md) | Guided first task, truthful setup status and next action |
 | Open, extend or change an activity | [formation](references/formation.md) | Registration plan; form worksheet; unresolved choices |
 | Clarify Gewerbe/Freiberufler or mixed activities | [classification](references/classification.md) | Evidence-linked activity worksheet and focused review questions |

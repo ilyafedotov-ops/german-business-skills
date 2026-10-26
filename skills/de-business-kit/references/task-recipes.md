@@ -16,3 +16,6 @@ Use the requested language and existing private workspace. Ask only for missing 
 | “Continue where we stopped.” / «Продолжим с прошлого раза» | Existing workspace and task/period if ambiguous | Read preferences, open registers and relevant evidence; `start` resumes, `overview` refreshes | Saved facts preserved, next unresolved useful action identified; diagnose missing/corrupt records without reinitializing or claiming previous approvals |
 
 Normal completion is useful self-managed work plus explicit remaining steps. An archive or professional consultation is an optional branch. The user reviews decisions in conversation; the assistant operates validated records behind it. Never mark approval, posting, ELSTER submission or Finanzamt acceptance from a plan or template alone.
+
+
+For the complete local cash journal → manual ELSTER route, use [the monthly workflow](monthly-workflow.md). For a move, recovery or protected copy, use [full backup and restore](recovery.md). The real overview includes saved accounting choices, period-entry counts, filing issues and open questions; an uncertain submission remains visible across months. The Python overview includes supported filing preflight checks; the native Windows overview inspects saved state and local evidence hashes without full filing preflight.

@@ -20,9 +20,9 @@ For calculated amounts, follow [source-led estimates and report checks](tax-esti
 6. Check consistency across sections, warnings, dates, estimates, other activities, VAT history and contact data. Stop only the fields requiring missing information; continue remaining preparation. For an unsupported upload, ask the user to upload the chosen file manually.
 7. Show the completed draft summary with exact recipient/form/year, material tax elections, amounts, remaining warnings and consequences. If final submission authorization is absent, ask only now. Reuse prior authorization when it clearly covers the final reviewed payload; material changes require renewed scope.
 8. Submit only through a supported, permitted route. On timeout or unclear response, inspect the official status before any retry; never send a duplicate blindly.
-9. Save receipt/transmission ID and date in the private workspace. Distinguish `draft`, `ready_for_review`, `authorized`, `submitted` and `authority_response_received`. Submission receipt is not substantive acceptance by the authority. If no receipt or status evidence exists, keep `submission_unconfirmed` and explain what to check.
+9. Save receipt/transmission ID and date in the private workspace. Distinguish `draft`, `ready_for_review`, `authorized`, `submitted` and `authority_response_received`. Submission receipt is not substantive acceptance by the authority. If no receipt or status evidence exists, keep `submission_unconfirmed` and explain what to check. For canonical filing records, use [accounting workflow](accounting-workflow.md): its saved states are `draft`, `reviewed`, `authorized`, `submission_unconfirmed`, `submitted` and `cancelled`; an authority response is appended separately. The external-operation template vocabulary above does not change that schema.
 
-## Scope of v0.4
+## Implemented scope
 
 These are agent instructions, not an implemented ELSTER connector. Do not claim unattended filing, complete UI coverage or a tested ELSTER integration. Native browser availability and file uploads differ by host; consult `platforms.md` and current host documentation. Manual guidance is a complete fallback for preparation, not evidence of a submitted form.
 
