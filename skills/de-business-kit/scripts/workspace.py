@@ -38,6 +38,7 @@ EVENTS = "09_audit/events.json"
 MARKER = "00_admin/workspace.json"
 RUNTIME = "00_admin/runtime.json"
 LOCK = ".workspace.lock"
+LAYOUT = ".workspace-layout.json"
 FIELDS = (
     "legal_form", "activity_classification", "activities", "existing_activities",
     "owner_name", "residence_address", "business_address", "residence_country", "business_country",
@@ -84,13 +85,69 @@ def _check_chain(path: Path, final_file: bool = False) -> None:
             raise WorkspaceError("A directory path contains a non-directory.")
 
 
-def _inside(root: Path, value: PathInput) -> Path:
+def _layout(root: Path):
+    descriptor = root / LAYOUT
+    if not descriptor.exists() and not descriptor.is_symlink():
+        if (root / '.business-kit').exists():
+            raise WorkspaceError('Localized workspace layout is missing; preserve the existing files.')
+        return None
+    record = _load(descriptor)
+    if (not isinstance(record, dict) or set(record) != {'schema_version', 'language'}
+            or type(record['schema_version']) is not int or record['schema_version'] != 1
+            or not isinstance(record['language'], str) or record['language'] not in LANGUAGES):
+        raise WorkspaceError('Unsupported folder layout; no automatic migration performed.')
+    words = _load(Path(__file__).resolve().parents[1] / 'assets/folder-layouts.json')['languages'][record['language']]
+    if any((root / prefix.split('/')[0]).exists() for prefix in words['paths']):
+        raise WorkspaceError('Conflicting legacy and localized directories; preserve both for review.')
+    return record, words
+
+
+def _mapped(relative: str, words, reverse=False) -> str:
+    paths = words['paths']
+    pairs = [(v, k) if reverse else (k, v) for k, v in paths.items()]
+    for source, target in sorted(pairs, key=lambda pair: len(pair[0]), reverse=True):
+        if relative == source or relative.startswith(source + '/'):
+            suffix = relative[len(source):].lstrip('/').split('/') if relative != source else []
+            if (target if reverse else source) == '06_bookkeeping' and len(suffix) >= 3:
+                parts = {v: k for k, v in words['parts'].items()} if reverse else words['parts']
+                suffix[2] = parts.get(suffix[2], suffix[2])
+            return '/'.join([target, *suffix])
+    return relative
+
+
+def _path(root: Path, value: PathInput) -> Path:
+    """Resolve stable record paths and physical user paths through a fixed layout."""
     supplied = Path(value).expanduser()
     if ".." in supplied.parts:
         raise WorkspaceError("Parent-directory components ('..') are not allowed.")
-    path = _absolute(supplied if supplied.is_absolute() else root / supplied)
+    if supplied.is_absolute():
+        path = _absolute(supplied)
+    else:
+        layout = _layout(root)
+        path = root / (_mapped(supplied.as_posix(), layout[1]) if layout else supplied)
     if path == root or root not in path.parents:
         raise WorkspaceError("This input/output must be inside the private workspace.")
+    return path
+
+
+def _physical(root: Path, relative: str) -> str:
+    return _path(root, relative).relative_to(root).as_posix()
+
+
+def _logical(root: Path, path: Path) -> str:
+    relative = path.relative_to(root).as_posix()
+    layout = _layout(root)
+    return _mapped(relative, layout[1], reverse=True) if layout else relative
+
+
+def _workspace_present(path: Path) -> bool:
+    # Detect incomplete layouts too: they must never be re-imported as ordinary files.
+    return any((path / name).exists() or (path / name).is_symlink()
+               for name in (MARKER, LAYOUT, '.business-kit'))
+
+
+def _inside(root: Path, value: PathInput) -> Path:
+    path = _path(root, value)
     _check_chain(path, final_file=True)
     return path
 
@@ -238,6 +295,9 @@ def _workspace(value: PathInput) -> Path:
         uuid.UUID(marker["workspace_id"])
     except (KeyError, TypeError, ValueError) as exc:
         raise WorkspaceError("Workspace ID is invalid.") from exc
+    layout = _layout(root)
+    if (layout and marker.get('folder_layout') != layout[0]) or (not layout and 'folder_layout' in marker):
+        raise WorkspaceError('Folder layout does not match the workspace identity; preserve all files.')
     return root
 
 
@@ -272,11 +332,11 @@ def _evidence_path(root: Path, value: str) -> Path:
     if not _text(value) or Path(value).is_absolute():
         raise WorkspaceError("Evidence must be a relative private-workspace file.")
     path = _inside(root, value)
-    mutable = {PROFILE, DOCUMENTS, EVENTS, MARKER, RUNTIME, LOCK,
+    mutable = {PROFILE, DOCUMENTS, EVENTS, MARKER, RUNTIME, LOCK, LAYOUT,
                "00_admin/tasks.json", "00_admin/questions.json", "00_admin/decisions.json", "00_admin/casework.json",
                "04_accounting/register.json"}
-    if (path.relative_to(root).as_posix() in mutable
-            or path.exists() and any((root / item).exists() and path.samefile(root / item) for item in mutable)):
+    if (_logical(root, path) in mutable
+            or path.exists() and any(_path(root, item).exists() and path.samefile(_path(root, item)) for item in mutable)):
         raise WorkspaceError("Use a preserved evidence document or history snapshot, not a mutable administrative file.")
     return path
 
@@ -608,10 +668,12 @@ def _preferences(marker: Dict[str, Any]) -> Dict[str, str]:
     return {"language": language, "mode": mode}
 
 
-def init_workspace(root: PathInput, year: int, language: str = "ru", mode: str = "general") -> Dict[str, Any]:
+def init_workspace(root: PathInput, year: int, language: str = "ru", mode: str = "general", layout: str = "legacy") -> Dict[str, Any]:
     if isinstance(year, bool) or not isinstance(year, int) or not 1900 <= year <= 9999:
         raise WorkspaceError("Year must be an integer between 1900 and 9999.")
     _preferences({"language": language, "mode": mode})
+    if layout not in {"legacy", "localized"}:
+        raise WorkspaceError("Folder layout must be legacy or localized.")
     location = _absolute(root)
     _check_chain(location)
     _private_boundary(location)
@@ -621,26 +683,32 @@ def init_workspace(root: PathInput, year: int, language: str = "ru", mode: str =
     with _locked(location):
         if any(child.name != LOCK for child in location.iterdir()):
             raise WorkspaceError("Initialization requires an empty directory.")
+        if layout == "localized":
+            _atomic_json(location / LAYOUT, {"schema_version": 1, "language": language})
         directories = ["00_admin", "00_admin/inbox", "01_profile", "02_registration",
                        "03_banking", "04_accounting", f"05_tax/{year}", "06_bookkeeping", "07_exports",
                        "08_correspondence", "09_audit/history"]
         for relative in directories:
-            _mkdir(location / relative)
+            _mkdir(_path(location, relative))
         marker = {"schema": SCHEMA, "schema_version": VERSION, "workspace_id": str(uuid.uuid4()),
                   "created_at": _now(), "initial_year": year, "language": language, "mode": mode}
-        _atomic_json(location / MARKER, marker)
-        _atomic_json(location / PROFILE, {"schema_version": VERSION, "facts": {field: _blank_fact() for field in FIELDS}})
+        if layout == "localized":
+            marker["folder_layout"] = {"schema_version": 1, "language": language}
+            words = _layout(location)[1]
+            _write_exclusive(location / words["guide_name"], words["guide"].encode("utf-8"))
+        _atomic_json(_inside(location, MARKER), marker)
+        _atomic_json(_inside(location, PROFILE), {"schema_version": VERSION, "facts": {field: _blank_fact() for field in FIELDS}})
         runtime = {"schema_version": VERSION, "assistant_product": None, "app_version": None,
                    "session_execution": "unknown", "model_provider": None,
                    "authentication_type": None, "contract_plan": None,
                    "training_policy_checked_at": None, "dpa_status": "unknown",
                    "retention_policy_reference": None, "residency_scope": "unknown",
                    "third_party_connectors": [], "client_data_mode": "synthetic_or_redacted_until_reviewed"}
-        _atomic_json(location / "00_admin/runtime.json", runtime)
+        _atomic_json(_inside(location, "00_admin/runtime.json"), runtime)
         for name in ("tasks", "questions", "decisions"):
-            _atomic_json(location / f"00_admin/{name}.json", [])
-        _atomic_json(location / DOCUMENTS, {"schema_version": VERSION, "documents": []})
-        _atomic_json(location / EVENTS, [])
+            _atomic_json(_inside(location, f"00_admin/{name}.json"), [])
+        _atomic_json(_inside(location, DOCUMENTS), {"schema_version": VERSION, "documents": []})
+        _atomic_json(_inside(location, EVENTS), [])
         _audit(location, "workspace_initialized", {"year": year, "language": language, "mode": mode})
     return {"status": "initialized", "year": year, "language": language, "mode": mode,
             "facts": len(FIELDS), "permissions": "owner POSIX modes best effort; no ACL or encryption guarantee"}
@@ -744,7 +812,7 @@ def ingest_document(root: PathInput, source: PathInput, period: str) -> Dict[str
     location = _workspace(root)
     period = _period(period)
     supplied = Path(source).expanduser()
-    source_path = _absolute(supplied if supplied.is_absolute() else location / supplied)
+    source_path = _absolute(supplied if supplied.is_absolute() else _path(location, supplied))
     suffix = source_path.suffix.lower()
     if suffix not in EXTENSIONS:
         raise WorkspaceError("Unsupported document extension.")
@@ -806,7 +874,7 @@ def _scan_originals(location: Path):
             issue(path, str(exc))
             return []
 
-    for year in children(location / "06_bookkeeping"):
+    for year in children(_path(location, "06_bookkeeping")):
         if not re.fullmatch(r"\d{4}", year.name) or not 1900 <= int(year.name) <= 9999:
             continue
         for month in children(year):
@@ -818,7 +886,7 @@ def _scan_originals(location: Path):
             except (WorkspaceError, OSError) as exc:
                 issue(month, str(exc))
                 continue
-            for path in children(month / "originals"):
+            for path in children(_path(location, _logical(location, month) + "/originals")):
                 try:
                     if not stat.S_ISREG(path.lstat().st_mode):
                         issue(path, "Unexpected non-regular entry in originals; not followed.")
@@ -849,7 +917,7 @@ def verify_workspace(root: PathInput) -> Dict[str, Any]:
             if not isinstance(relative, str) or Path(relative).is_absolute():
                 raise WorkspaceError("Indexed path must be relative.")
             path = _inside(location, relative)
-            expected_parent = location / f"06_bookkeeping/{period[:4]}/{period[5:]}/originals"
+            expected_parent = _path(location, f"06_bookkeeping/{period[:4]}/{period[5:]}/originals")
             if path.parent != expected_parent or path.stem != digest or path.suffix not in EXTENSIONS:
                 raise WorkspaceError("Indexed original path does not match the document metadata.")
             canonical = path.relative_to(location).as_posix()
@@ -1015,7 +1083,7 @@ def reconcile(root: PathInput, bank: PathInput, ledger: PathInput, period: str) 
         _audit(location, "reconciliation_prepared", {"path": relative, "status": outcome,
                                                      "bank_sha256": report["sources"]["bank"]["sha256"],
                                                      "ledger_sha256": report["sources"]["ledger"]["sha256"]})
-    return {"status": outcome, "report": relative, "matched_groups": len(matches),
+    return {"status": outcome, "report": _physical(location, relative), "matched_groups": len(matches),
             "coverage": coverage, "review_notes": review_notes,
             "differences": len(differences), "unmatched_bank": len(unmatched_bank),
             "unmatched_ledger": len(unmatched_ledger), "unlinked_ledger_entries": len(unlinked)}
@@ -1088,19 +1156,31 @@ def workspace_status(root: PathInput) -> Dict[str, Any]:
                            "Review the actual data-processing route; use synthetic data meanwhile." if missing else
                            "Check the recorded assessment scope and current capabilities for this task.",
             "language": preferences["language"], "mode": preferences["mode"],
+            "folder_language": _layout(location)[0]["language"] if _layout(location) else None,
+            "folder_layout": "localized" if _layout(location) else "legacy",
             "fact_status_counts": counts, "documents": len(_documents(location)["documents"]),
             "list_item_counts": lists, "locked": locked}
 
 
 def start_workspace(root: PathInput, year: Optional[int] = None, language: str = "en",
-                    mode: str = "general") -> Dict[str, Any]:
+                    mode: str = "general", layout: str = "localized") -> Dict[str, Any]:
     location = _absolute(root)
     _check_chain(location)
     _private_boundary(location)
-    exists = (location / MARKER).exists()
+    exists = (_inside(location, MARKER)).exists()
     if not exists:
-        init_workspace(location, date.today().year if year is None else year, language, mode)
+        init_workspace(location, date.today().year if year is None else year, language, mode, layout)
     return {"action": "resumed" if exists else "created", **workspace_status(location)}
+
+
+def workspace_folders(root: PathInput) -> Dict[str, Any]:
+    location = _workspace(root)
+    layout = _layout(location)
+    words = _load(Path(__file__).resolve().parents[1] / 'assets/folder-layouts.json')['languages']['en']
+    return {'layout': 'localized' if layout else 'legacy',
+            'folder_language': layout[0]['language'] if layout else None,
+            'paths': {key: _physical(location, key) for key in words['paths']},
+            'guide': layout[1]['guide_name'] if layout else None}
 
 
 def diagnose_workspace(root: PathInput) -> Dict[str, Any]:
@@ -1130,9 +1210,9 @@ def create_demo(root: PathInput, year: int = 2026, language: str = "en") -> Dict
               "DEMO-E3,DEMO-2,500.00,EUR\nDEMO-E4,DEMO-3,-100.00,USD\n")
     with _locked(location):
         _check_audit(location)
-        marker = _load(location / MARKER)
+        marker = _load(_inside(location, MARKER))
         marker["purpose"] = "synthetic_demo"
-        _atomic_json(location / MARKER, marker, replace=True)
+        _atomic_json(_inside(location, MARKER), marker, replace=True)
         _write_exclusive(location / "03_banking/demo-bank.csv", bank.encode("utf-8"))
         _write_exclusive(location / "04_accounting/demo-ledger.csv", ledger.encode("utf-8"))
     for source in ("03_banking/demo-bank.csv", "04_accounting/demo-ledger.csv"):
@@ -1165,8 +1245,9 @@ def main(argv: Optional[List[str]] = None) -> int:
         command = commands.add_parser(name, help="Create/resume private work" if name == "start" else "Create a NEW synthetic practice workspace")
         command.add_argument("--root", required=True)
         command.add_argument("--year", type=int, default=date.today().year)
-        command.add_argument("--language", choices=("en", "ru"), default="en")
+        command.add_argument("--language", choices=("en", "ru", "de") if name == "start" else ("en", "ru"), default="en")
         if name == "start":
+            command.add_argument("--layout", choices=("localized", "legacy"), default="localized")
             command.add_argument("--mode", choices=sorted(MODES), default="general")
     runtime = commands.add_parser("runtime", help="Record assessed processing configuration with local evidence")
     runtime.add_argument("--root", required=True)
@@ -1180,15 +1261,16 @@ def main(argv: Optional[List[str]] = None) -> int:
     entry.add_argument("--expected-sha256", help="Required current entry hash for an update")
     init = commands.add_parser("init", help="Create an empty private workspace outside Git and skill folders")
     init.add_argument("--root", required=True)
+    init.add_argument("--layout", choices=("localized", "legacy"), default="localized")
     init.add_argument("--year", required=True, type=int)
     init.add_argument("--language", choices=("ru", "en", "de"), default="ru",
-                      help="Assistant language preference; de retained for legacy compatibility")
+                      help="Assistant language preference; German report templates are not yet complete")
     init.add_argument("--mode", choices=("general", "bookkeeping", "tax-consultant"), default="general",
                       help="Workflow preference only; does not change business facts or tax regime")
     configure = commands.add_parser("configure", help="Persist assistant language/workflow mode without changing business or tax facts")
     configure.add_argument("--root", required=True)
     configure.add_argument("--language", choices=("ru", "en", "de"),
-                           help="Assistant language preference; de retained for legacy compatibility")
+                           help="Assistant language preference; German report templates are not yet complete")
     configure.add_argument("--mode", choices=("general", "bookkeeping", "tax-consultant"))
     record = commands.add_parser("record", help="Record one evidence-backed fact; verified means checked evidence, not model confidence")
     record.add_argument("--root", required=True)
@@ -1197,7 +1279,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ingest.add_argument("--root", required=True)
     ingest.add_argument("--source", required=True, help="Local regular file; absolute path may be outside workspace")
     ingest.add_argument("--period", required=True)
-    for name in ("verify", "status", "doctor"):
+    for name in ("verify", "status", "doctor", "folders"):
         command = commands.add_parser(name)
         command.add_argument("--root", required=True)
     reconcile_parser = commands.add_parser("reconcile", help="Compare explicit IDs and Decimal amounts from two workspace CSVs")
@@ -1208,7 +1290,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     args = parser.parse_args(argv)
     try:
         if args.command == "start":
-            result = start_workspace(args.root, args.year, args.language, args.mode)
+            result = start_workspace(args.root, args.year, args.language, args.mode, args.layout)
         elif args.command == "demo":
             result = create_demo(args.root, args.year, args.language)
         elif args.command == "runtime":
@@ -1223,8 +1305,10 @@ def main(argv: Optional[List[str]] = None) -> int:
                                     _load(_inside(_workspace(args.root), args.input)), args.expected_sha256)
         elif args.command == "doctor":
             result = diagnose_workspace(args.root)
+        elif args.command == "folders":
+            result = workspace_folders(args.root)
         elif args.command == "init":
-            result = init_workspace(args.root, args.year, args.language, args.mode)
+            result = init_workspace(args.root, args.year, args.language, args.mode, args.layout)
         elif args.command == "configure":
             result = configure_workspace(args.root, args.language, args.mode)
         elif args.command == "record":

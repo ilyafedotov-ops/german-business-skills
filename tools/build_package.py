@@ -120,7 +120,7 @@ def snapshot(source: Path) -> Dict[str, bytes]:
     required = {
         "SKILL.md", "agents/openai.yaml", "scripts/workspace.py", "scripts/desk.py",
         "scripts/workflows.py", "scripts/payments.py", "assets/locales.json",
-        "scripts/windows.ps1", "assets/workspace-seed.json", "references/native-windows.md",
+        "scripts/windows.ps1", "assets/workspace-seed.json", "assets/folder-layouts.json", "references/native-windows.md",
         "assets/casework-messages.json", "assets/proposal.json", "assets/source-check.json",
         "assets/extracted-field.json",
         *("scripts/casefiles/" + name + ".py" for name in (

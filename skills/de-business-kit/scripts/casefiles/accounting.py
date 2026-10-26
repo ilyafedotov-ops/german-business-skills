@@ -42,7 +42,7 @@ def template(kind):
 def _load(root):
     path = ws._inside(root, STATE)
     ws._check_audit(root)
-    history_id = next((event["details"]["history_id"] for event in reversed(ws._load(root / ws.EVENTS))
+    history_id = next((event["details"]["history_id"] for event in reversed(ws._load(ws._inside(root, ws.EVENTS)))
                        if isinstance(event.get("details"), dict)
                        and isinstance(event["details"].get("history_id"), str)
                        and event["details"]["history_id"].startswith("accounting-")), None)
@@ -92,7 +92,7 @@ def _config(root, state, local=False):
     if local:
         if value["system"] != "local" or value["method"] != "EÜR":
             raise ws.WorkspaceError("Local cash records require an explicitly chosen local EÜR workflow; external books stay authoritative.")
-        fact = ws._load(root / ws.PROFILE)["facts"]["accounting_method"]
+        fact = ws._load(ws._inside(root, ws.PROFILE))["facts"]["accounting_method"]
         if fact["value"] not in {None, "unresolved", "EÜR"} or fact["status"] == "needs_review":
             raise ws.WorkspaceError("Accounting method conflicts with the shared profile; resolve it before posting.")
     return value
@@ -241,7 +241,7 @@ def export_report(root, period):
     root = ws._workspace(root)
     report = period_report(root, period)
     relative = "07_exports/" + period + "/cash-report-" + uuid.uuid4().hex + ".json"
-    language = ws._load(root / ws.MARKER).get("language", "en")
+    language = ws._load(ws._inside(root, ws.MARKER)).get("language", "en")
     russian = language == "ru"
     title = "Отчёт о движении денег" if russian else "Cash movement report"
     boundary = ("Это движения по записанным операциям, не налогооблагаемая прибыль и не готовая декларация. "
@@ -275,9 +275,9 @@ def export_report(root, period):
                     writer.writerow({key: entry[key] for key in writer.fieldnames})
             target = relative[:-5] + "-" + hashlib.sha256(account.encode("utf-8")).hexdigest()[:16] + ".csv"
             ws._write_exclusive(ws._inside(root, target), stream.getvalue().encode("utf-8"))
-            ledger_files[account] = target
+            ledger_files[account] = ws._physical(root, target)
         ws._audit(root, "cash_report_prepared", {"path": relative, "period": period})
-    return {"path": relative, "markdown_path": markdown, "ledger_files": ledger_files,
+    return {"path": ws._physical(root, relative), "markdown_path": ws._physical(root, markdown), "ledger_files": ledger_files,
             "readiness": "needs_review", "tax_return_status": "not_calculated"}
 
 
@@ -293,7 +293,7 @@ def _snapshot(root, path, year):
     target = ws._inside(root, relative)
     ws._mkdir(target.parent)
     ws._write_exclusive(target, data)
-    return {"path": relative, "sha256": source["sha256"], "source": source}
+    return {"path": ws._physical(root, relative), "sha256": source["sha256"], "source": source}
 
 
 def _check_snapshots(root, record):

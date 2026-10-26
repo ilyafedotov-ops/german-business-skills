@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "languages": {
+    "en": {
+      "paths": {
+        "00_admin/inbox": "01 Inbox",
+        "00_admin": ".business-kit/admin",
+        "01_profile": ".business-kit/profile",
+        "02_registration": "05 Business/Registration",
+        "03_banking": "03 Accounts/Bank",
+        "04_accounting": "03 Accounts/Records",
+        "05_tax": "04 Taxes",
+        "06_bookkeeping": "02 Documents",
+        "07_exports": "03 Accounts/Reports",
+        "08_correspondence": "05 Business/Correspondence",
+        "09_audit": ".business-kit/audit"
+      },
+      "parts": {
+        "originals": "Originals",
+        "derived": "Processed",
+        "proposals": "Proposals"
+      },
+      "guide_name": "START-HERE.md",
+      "guide": "# Your business workspace\n\nAdd unsorted documents to the inbox. The assistant previews them before importing. Keep received originals unchanged. Months are created when needed.\n\n- [01 Inbox](<01 Inbox/>)\n- [02 Documents](<02 Documents/>)\n- [03 Accounts](<03 Accounts/>)\n- [04 Taxes](<04 Taxes/>)\n- [05 Business](<05 Business/>)\n\nOriginals · Processed · Proposals\n\nDocuments reviewed, accounting entries recorded and tax returns submitted are separate states. Folder dates are storage periods, not tax decisions.\n\nInternal records are in .business-kit. Include them and .workspace-layout.json in backups. Do not rename managed folders manually. Changing the conversation language does not rename folders.\n"
+    },
+    "ru": {
+      "paths": {
+        "00_admin/inbox": "01 Входящие",
+        "00_admin": ".business-kit/admin",
+        "01_profile": ".business-kit/profile",
+        "02_registration": "05 Бизнес/Регистрация",
+        "03_banking": "03 Учёт/Банк",
+        "04_accounting": "03 Учёт/Записи",
+        "05_tax": "04 Налоги",
+        "06_bookkeeping": "02 Документы",
+        "07_exports": "03 Учёт/Отчёты",
+        "08_correspondence": "05 Бизнес/Переписка",
+        "09_audit": ".business-kit/audit"
+      },
+      "parts": {
+        "originals": "Оригиналы",
+        "derived": "Обработанные",
+        "proposals": "Предложения"
+      },
+      "guide_name": "НАЧНИТЕ-ЗДЕСЬ.md",
+      "guide": "# Рабочее пространство бизнеса\n\nПоложите неразобранные документы во входящие. Помощник сначала покажет список перед импортом. Полученные оригиналы сохраняются без изменений. Месяцы создаются по необходимости.\n\n- [01 Входящие](<01 Входящие/>)\n- [02 Документы](<02 Документы/>)\n- [03 Учёт](<03 Учёт/>)\n- [04 Налоги](<04 Налоги/>)\n- [05 Бизнес](<05 Бизнес/>)\n\nОригиналы · Обработанные · Предложения\n\nПроверенный документ, бухгалтерская запись и отправленная декларация — разные состояния. Месяц хранения не определяет налоговый период.\n\nТехнические записи находятся в .business-kit. Включайте эту папку и .workspace-layout.json в резервные копии. Не переименовывайте управляемые папки вручную. Язык общения можно менять без переименования папок.\n"
+    },
+    "de": {
+      "paths": {
+        "00_admin/inbox": "01 Eingang",
+        "00_admin": ".business-kit/admin",
+        "01_profile": ".business-kit/profile",
+        "02_registration": "05 Unternehmen/Anmeldung",
+        "03_banking": "03 Buchhaltung/Bank",
+        "04_accounting": "03 Buchhaltung/Buchungen",
+        "05_tax": "04 Steuern",
+        "06_bookkeeping": "02 Dokumente",
+        "07_exports": "03 Buchhaltung/Berichte",
+        "08_correspondence": "05 Unternehmen/Schriftverkehr",
+        "09_audit": ".business-kit/audit"
+      },
+      "parts": {
+        "originals": "Originale",
+        "derived": "Aufbereitet",
+        "proposals": "Vorschläge"
+      },
+      "guide_name": "HIER-STARTEN.md",
+      "guide": "# Ihr Unternehmensordner\n\nLegen Sie unsortierte Unterlagen im Eingang ab. Der Assistent zeigt vor dem Import eine Vorschau. Empfangene Originale bleiben unverändert. Monatsordner entstehen bei Bedarf.\n\n- [01 Eingang](<01 Eingang/>)\n- [02 Dokumente](<02 Dokumente/>)\n- [03 Buchhaltung](<03 Buchhaltung/>)\n- [04 Steuern](<04 Steuern/>)\n- [05 Unternehmen](<05 Unternehmen/>)\n\nOriginale · Aufbereitet · Vorschläge\n\nGeprüfte Dokumente, erfasste Buchungen und übermittelte Steuererklärungen sind getrennte Zustände. Ablagemonate bestimmen keine steuerliche Zuordnung.\n\nTechnische Daten liegen in .business-kit. Sichern Sie diesen Ordner und .workspace-layout.json mit. Verwaltete Ordner nicht manuell umbenennen. Ein Wechsel der Gesprächssprache benennt keine Ordner um.\n"
+    }
+  }
+}

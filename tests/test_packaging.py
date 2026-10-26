@@ -100,7 +100,7 @@ class PackagingTests(unittest.TestCase):
                     self.assertEqual(overview.returncode, 0, overview.stderr)
                     view = json.loads(overview.stdout)
                     self.assertTrue((private / view["html_path"]).is_file())
-                    snapshot = json.loads((private / "00_admin/overview.json").read_text(encoding="utf-8"))
+                    snapshot = json.loads((private / Path(view["html_path"]).with_suffix('.json')).read_text(encoding="utf-8"))
                     self.assertEqual(snapshot["capabilities"]["elster_submission"], "not_implemented")
                     source_folder = self.base / (host + "-" + language + "-existing")
                     source_folder.mkdir()
@@ -116,7 +116,12 @@ class PackagingTests(unittest.TestCase):
                     self.assertEqual(seed.returncode, 0, seed.stderr)
                     request = json.loads(seed.stdout)
                     request.update(record_id="packaged-synthetic", period="2026-10")
-                    (private / "00_admin/inbox/request.json").write_text(json.dumps(request), encoding="utf-8")
+                    folders = subprocess.run(
+                        [sys.executable, "-B", str(skill / "scripts/workspace.py"), "folders", "--root", str(private)],
+                        cwd=self.base, capture_output=True, text=True, encoding="utf-8")
+                    self.assertEqual(folders.returncode, 0, folders.stderr)
+                    inbox = json.loads(folders.stdout)["paths"]["00_admin/inbox"]
+                    (private / inbox / "request.json").write_text(json.dumps(request), encoding="utf-8")
                     prepared = subprocess.run(
                         [sys.executable, "-B", str(skill / "scripts/workflows.py"), "prepare", "--root", str(private),
                          "--kind", "classification", "--input", "00_admin/inbox/request.json"],

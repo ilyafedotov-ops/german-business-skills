@@ -51,7 +51,7 @@ class NativeInteropTests(unittest.TestCase):
         return json.loads(result.stdout)
 
     def test_native_workspace_and_intake_are_readable_by_python_without_migration(self):
-        self.assertEqual(self.run_native('start', Year=2026, Language='ru')['status'], 'initialized')
+        self.assertEqual(self.run_native('start', Year=2026, Language='ru', Layout='legacy')['status'], 'initialized')
         source = self.base / 'invoice [1] ü.csv'
         source.write_bytes(b'amount,currency\n12.34,EUR\n')
         self.run_native('ingest', Source=source, Period='2026-10')
@@ -78,3 +78,27 @@ class NativeInteropTests(unittest.TestCase):
         self.assertEqual(result['status'], 'needs_review')
         self.assertEqual(result['unindexed_originals'], 1)
         self.assertEqual(original.read_bytes(), b'unindexed')
+
+    def test_localized_layouts_share_paths_and_integrity_in_both_runtimes(self):
+        for language, inbox, archive in [('ru', '01 Входящие', '02 Документы'), ('de', '01 Eingang', '02 Dokumente')]:
+            with self.subTest(language=language):
+                self.root = self.base / language
+                self.run_native('start', Language=language, Year=2026)
+                self.assertTrue((self.root / inbox).is_dir())
+                self.assertTrue((self.root / archive).is_dir())
+                source = self.root / inbox / 'example.csv'
+                source.write_bytes(b'amount,currency\n12.34,EUR\n')
+                self.run_native('ingest', Source=source, Period='2026-10')
+                self.assertEqual(ws.verify_workspace(self.root)['status'], 'ok')
+                self.assertEqual(ws.ingest_document(self.root, source, '2026-10')['status'], 'existing_content')
+                ws.configure_workspace(self.root, language='en')
+                self.assertEqual(self.run_native('start', Language='de')['language'], 'en')
+                self.assertEqual(self.run_native('verify')['status'], 'ok')
+                orphan = ws._path(self.root, '06_bookkeeping/2026/10/originals/orphan.csv')
+                orphan.write_bytes(b'preserve me')
+                self.assertEqual(self.run_native('verify')['unindexed_originals'], 1)
+                self.assertEqual(ws.verify_workspace(self.root)['unindexed_originals'], 1)
+        self.root = self.base / 'python-first'
+        ws.start_workspace(self.root, 2026, 'de')
+        self.assertEqual(self.run_native('start')['status'], 'resumed')
+        self.assertEqual(self.run_native('verify')['status'], 'ok')

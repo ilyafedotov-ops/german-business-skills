@@ -8,6 +8,9 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "skills/de-business-kit/scripts"
+sys.path.insert(0, str(SCRIPTS))
+import workspace as ws
+
 FIXTURES = ROOT / "tests/fixtures/month"
 
 
@@ -25,11 +28,11 @@ def run(root, language="en"):
     received = command("desk.py", "receive", "--root", root, "--source",
                        FIXTURES / "invoice.synthetic.xml", FIXTURES / "authority.synthetic.pdf", FIXTURES / "bank.synthetic.csv",
                        "--period", "2026-10", "--received-on", "2026-10-25")
-    registry = json.loads((root / "00_admin/documents.json").read_text())
+    registry = json.loads(ws._inside(root, "00_admin/documents.json").read_text())
     ids = {row["original_name"]: row["document_id"] for row in registry["documents"]}
     def save_input(name, value):
         relative = "00_admin/inbox/" + name
-        (root / relative).write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8")
+        ws._inside(root, relative).write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8")
         return relative
     for name, kind in (("invoice.synthetic.xml", "invoice"), ("authority.synthetic.pdf", "authority_letter"), ("bank.synthetic.csv", "bank_statement")):
         current = command("desk.py", "catalog", "--root", root, "--document-id", ids[name])
@@ -46,12 +49,12 @@ def run(root, language="en"):
     preview = command("desk.py", "bank-preview", "--root", root, "--document-id", ids["bank.synthetic.csv"],
                       "--mapping", save_input("bank-map.json", mapping), "--period", "2026-10")
     proof = "08_correspondence/synthetic-mapping-review.md"
-    (root / proof).write_text("Synthetic test routine checked the declared columns, decimal commas, signs and three source IDs. This is not a real user or tax approval.\n", encoding="utf-8")
+    ws._inside(root, proof).write_text("Synthetic test routine checked the declared columns, decimal commas, signs and three source IDs. This is not a real user or tax approval.\n", encoding="utf-8")
     imported = command("desk.py", "bank-approve", "--root", root, "--preview", preview["path"], "--expected-sha256", preview["sha256"],
                        "--reviewer", "synthetic test routine", "--evidence", proof)
     rows = list(csv.DictReader(io.StringIO((root / imported["csv_path"]).read_text())))
     ledger = "04_accounting/synthetic-ledger.csv"
-    (root / ledger).write_text("entry_id,transaction_id,amount,currency\n" + "\n".join(
+    ws._inside(root, ledger).write_text("entry_id,transaction_id,amount,currency\n" + "\n".join(
         f"synthetic-{i},{row['transaction_id']},{row['amount']},{row['currency']}" for i, row in enumerate(rows[:2], 1)) + "\n", encoding="utf-8")
     reconciled = command("workspace.py", "reconcile", "--root", root, "--bank", imported["csv_path"], "--ledger", ledger, "--period", "2026-10")
     task = {"schema_version": 1, "id": "synthetic-letter-review", "title": "Clarify the authority request and its stated date",

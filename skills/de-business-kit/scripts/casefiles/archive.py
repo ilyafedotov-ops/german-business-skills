@@ -202,7 +202,7 @@ def build(root, period, as_of=None):
                     "open_items": sorted(problems, key=lambda row: (row["code"], row["ref"])), "files": [entries[key] for key in sorted(entries)],
                     "scope": "Preserved selected originals and supplied evidence. File integrity is distinct from accounting completeness and tax review."}
         relative = f"07_exports/{period}/archive-{uuid.uuid4().hex}"
-        target = root / relative
+        target = ws._path(root, relative)
         ws._mkdir(target)
         for name, payload in sorted(payloads.items()):
             path = ws._inside(target, name)
@@ -227,4 +227,4 @@ def build(root, period, as_of=None):
         if verify(zip_path)["status"] != "verified":
             raise ws.WorkspaceError("ZIP verification failed; do not send this artifact.")
         ws._audit(root, "archive_built", {"path": relative, "zip_path": relative + ".zip", "period": period, "readiness": manifest["readiness"]})
-    return {"path": relative, "zip_path": relative + ".zip", "integrity": "verified", "readiness": manifest["readiness"], "open_items": len(problems)}
+    return {"path": ws._physical(root, relative), "zip_path": ws._physical(root, relative + ".zip"), "integrity": "verified", "readiness": manifest["readiness"], "open_items": len(problems)}

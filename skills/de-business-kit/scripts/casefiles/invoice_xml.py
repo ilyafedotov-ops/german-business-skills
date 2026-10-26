@@ -131,4 +131,4 @@ def inspect(root, document_id):
         ws._atomic_json(ws._inside(root, relative), report)
         state["inspections"][identifier] = {"inspection_id": identifier, "document_id": document_id,
             "syntax": report["syntax"], "report": st.evidence(root, relative), "source": report["source"]}
-    return {"inspection_id": identifier, "path": relative, "syntax": report["syntax"], "status": "needs_review"}
+    return {"inspection_id": identifier, "path": ws._physical(root, relative), "syntax": report["syntax"], "status": "needs_review"}

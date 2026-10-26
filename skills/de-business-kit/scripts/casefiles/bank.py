@@ -138,7 +138,7 @@ def preview(root, document_id, mapping, period):
         ws._mkdir(path.parent)
         ws._atomic_json(path, report)
         ws._audit(root, "bank_mapping_previewed", {"path": relative, "document_id": document_id})
-    return {"path": relative, "sha256": st.evidence(root, relative)["sha256"], "rows": len(rows), "issues": issues}
+    return {"path": ws._physical(root, relative), "sha256": st.evidence(root, relative)["sha256"], "rows": len(rows), "issues": issues}
 
 
 def approve(root, preview_path, expected, reviewer, evidence_file):
@@ -190,4 +190,4 @@ def approve(root, preview_path, expected, reviewer, evidence_file):
                  "normalized": st.evidence(root, relative), "reviewer": reviewer, "review_evidence": proof,
                  "row_count": len(rows), "issues": issues}
         state["bank_imports"][identity] = saved
-    return {"import_id": identity, "csv_path": relative, "status": "mapping_review_recorded", "issues": issues}
+    return {"import_id": identity, "csv_path": ws._physical(root, relative), "status": "mapping_review_recorded", "issues": issues}

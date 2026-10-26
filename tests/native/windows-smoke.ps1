@@ -21,12 +21,12 @@ try {
     [IO.File]::WriteAllText((Join-Path $source '.hidden.csv'), 'hidden')
     [IO.File]::WriteAllText((Join-Path $source 'export.zip'), 'not-a-zip')
     $original = (Get-FileHash -LiteralPath $invoice -Algorithm SHA256).Hash
-    $start = & $kit -Action start -Root $root -Year 2026 -Language ru | ConvertFrom-Json
+    $start = & $kit -Action start -Layout legacy -Root $root -Year 2026 -Language ru | ConvertFrom-Json
     Assert ($start.status -eq 'initialized') 'Start failed'
     Assert (@(Get-ChildItem -LiteralPath (Join-Path $root '06_bookkeeping')).Count -eq 0) 'Empty months should not be created before intake'
     $profile = Join-Path $root '01_profile/business.json'
     $before = (Get-FileHash -LiteralPath $profile).Hash
-    $resume = & $kit -Action start -Root $root -Language en | ConvertFrom-Json
+    $resume = & $kit -Action start -Layout legacy -Root $root -Language en | ConvertFrom-Json
     Assert ($resume.status -eq 'resumed' -and $resume.language -eq 'ru') 'Resume changed preferences'
     Assert ((Get-FileHash -LiteralPath $profile).Hash -eq $before) 'Resume changed facts'
     $preview = & $kit -Action scan -Root $root -Source $source | ConvertFrom-Json
@@ -53,7 +53,7 @@ try {
     $verify = & $kit -Action verify -Root $root | ConvertFrom-Json
     Assert ($verify.status -eq 'ok' -and $verify.indexed_documents -eq 1) 'Integrity check failed'
     Assert ((Get-FileHash -LiteralPath $invoice).Hash -eq $original) 'Source changed'
-    Reject { & $kit -Action start -Root $source }
+    Reject { & $kit -Action start -Layout legacy -Root $source }
     Reject { & $kit -Action scan -Root $root -Source $base }
     Reject { & $kit -Action ingest -Root $root -Source (Join-Path $source 'certificate.pfx') -Period '2026-10' }
     [IO.File]::WriteAllText((Join-Path $root '.workspace.lock'), 'other writer')
@@ -76,7 +76,7 @@ try {
     Assert (Test-Path -LiteralPath (Join-Path $homeDir '.agents/skills/de-business-kit/scripts/windows.ps1')) 'Detached native utility missing'
     Reject { & $kit -Action install -Root $homeDir -Target both }
     $corruptRoot = Join-Path $base 'Corrupt audit'
-    & $kit -Action start -Root $corruptRoot | Out-Null
+    & $kit -Action start -Layout legacy -Root $corruptRoot | Out-Null
     $auditPath = Join-Path $corruptRoot '09_audit/events.json'
     foreach ($malformed in @('[null]', '[],"extra":true', '[],"value":[]')) {
         [IO.File]::WriteAllText($auditPath, $malformed)
@@ -89,7 +89,27 @@ try {
     Reject { & $kit -Action install -Root $secondHome -Target both }
     Assert (-not (Test-Path -LiteralPath (Join-Path $secondHome '.agents'))) 'Second-target conflict wrote first target'
     $detached = Join-Path $homeDir '.agents/skills/de-business-kit/scripts/windows.ps1'
-    & $detached -Action start -Root (Join-Path $base 'detached') -Year 2026 | Out-Null
+    & $detached -Action start -Layout legacy -Root (Join-Path $base 'detached') -Year 2026 | Out-Null
+    foreach ($language in @('en','ru','de')) {
+        $localized = Join-Path $base ('localized-' + $language)
+        & $detached -Action start -Root $localized -Language $language -Year 2026 | Out-Null
+        Assert (-not (Test-Path -LiteralPath (Join-Path $localized '00_admin'))) 'Localized start exposed legacy folders'
+        $layout = Get-Content -LiteralPath (Join-Path $localized '.workspace-layout.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+        Assert ($layout.language -eq $language) 'Folder language was not saved'
+        & $detached -Action ingest -Root $localized -Source $invoice -Period '2026-10' | Out-Null
+        $verified = & $detached -Action verify -Root $localized | ConvertFrom-Json
+        Assert ($verified.status -eq 'ok') 'Localized original integrity failed'
+        $resumed = & $detached -Action start -Root $localized -Language en | ConvertFrom-Json
+        Assert ($resumed.language -eq $language) 'Resume changed localized preferences'
+        $folders = & $detached -Action folders -Root $localized | ConvertFrom-Json
+        Assert ($folders.folder_language -eq $language -and $folders.paths.'06_bookkeeping' -ne '06_bookkeeping') 'Folder discovery did not return physical names'
+        Reject { & $detached -Action scan -Root $root -Source $localized }
+        $orphan = Join-Path $localized ($folders.paths.'06_bookkeeping' + '/2026/10')
+        $originalDir = @(Get-ChildItem -LiteralPath $orphan -Directory)[0].FullName
+        [IO.File]::WriteAllText((Join-Path $originalDir 'orphan.csv'), 'preserve orphan')
+        $unindexed = & $detached -Action verify -Root $localized | ConvertFrom-Json
+        Assert ($unindexed.unindexed_originals -eq 1) 'Localized orphan was missed'
+    }
     'Native smoke passed: start/resume, preview, preservation, duplicates, tamper, locks, install and detached resources.'
 } finally {
     # Only this test's randomly named synthetic directory is removed.

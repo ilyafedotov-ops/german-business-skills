@@ -240,7 +240,7 @@ def render(report, language):
 
 
 def save(root, report, language=None):
-    language = language or ws._load(root / ws.MARKER).get("language", "en")
+    language = language or ws._load(ws._inside(root, ws.MARKER)).get("language", "en")
     if language == "de":
         language = "en"
     if language not in {"en", "ru"}:
@@ -258,7 +258,7 @@ def save(root, report, language=None):
         ws._atomic_json(path, report)
         ws._write_exclusive(ws._inside(root, relative + ".md"), markdown.encode("utf-8"))
         ws._audit(root, "preparation_saved", {"path": relative + ".json", "kind": report["kind"], "status": report["status"]})
-    return {"status": report["status"], "path": relative + ".json", "markdown_path": relative + ".md"}
+    return {"status": report["status"], "path": ws._physical(root, relative + ".json"), "markdown_path": ws._physical(root, relative + ".md")}
 
 
 def prepare(root, kind, input_path, language=None):

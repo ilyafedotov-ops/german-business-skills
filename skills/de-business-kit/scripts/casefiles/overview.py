@@ -1,6 +1,8 @@
 """A local, read-only HTML/Markdown view generated from canonical records."""
 from datetime import date
 import html
+import os
+from urllib.parse import quote
 from pathlib import Path
 import uuid
 import re
@@ -23,7 +25,7 @@ a:focus-visible,summary:focus-visible{outline:3px solid #a65619;outline-offset:4
 
 
 def language_for(root, language):
-    chosen = language or ws._load(root / ws.MARKER).get("language", "en")
+    chosen = language or ws._load(ws._inside(root, ws.MARKER)).get("language", "en")
     if chosen == "de":
         chosen = "en"
     if chosen not in {"en", "ru"}:
@@ -41,7 +43,7 @@ def generate(root, period, as_of=None, language=None):
     events = []
     try:
         ws._check_audit(root)
-        events = ws._load(root / ws.EVENTS)
+        events = ws._load(ws._inside(root, ws.EVENTS))
         result = summary.collect(root, period, as_of)
     except (OSError, ws.WorkspaceError, KeyError, TypeError, ValueError) as exc:
         errors.append(str(exc))
@@ -78,7 +80,7 @@ def generate(root, period, as_of=None, language=None):
         if (event.get("action") == "archive_built" and details.get("period") == period and isinstance(candidate, str)
                 and re.fullmatch(r"07_exports/\d{4}-\d{2}/archive-[0-9a-f]{32}\.zip", candidate)):
             if ws._inside(root, candidate).is_file():
-                export_link = '<p><a href="../' + candidate + '">' + e(words["open_bundle"]) + '</a></p>'
+                export_link = '<p><a href="' + quote(os.path.relpath(ws._inside(root, candidate), ws._path(root, '00_admin')).replace(os.sep, '/')) + '">' + e(words["open_bundle"]) + '</a></p>'
             break
     sections.append(f'<section id="accounting-tax"><h2>{e(words["export"])}</h2><p>{e(words["stages"])}</p><ul><li>{e(words["ledger_gap"])}</li><li>{e(words["elster_gap"])}</li></ul><h3>{e(words["archive_heading"])}</h3><p>{e(words["export_text"])}</p><p>{e(words["prepare_export"])}</p>{export_link}</section>')
     document = MARK + f'<!doctype html><html lang="{language}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; base-uri \'none\'; form-action \'none\'"><title>{e(words["title"])}</title><style>{CSS}</style></head><body><header><span class="eyebrow">German Business Kit</span><h1>{e(words["title"])}</h1><p class="muted">{e(words["subtitle"])}</p><p>{e(words["period"])}: <strong>{period}</strong> · {e(words["as_of"])}: {as_of}</p></header><nav aria-label="{e(words["overview"])}">' + ''.join(f'<a href="#{identifier}">{e(words[key])}</a>' for identifier, key in navigation) + '</nav><main>' + ''.join(sections) + '<footer>' + e(words["boundary"]) + '<br>' + e(words["snapshot"]) + '</footer></main></body></html>\n'
@@ -103,7 +105,8 @@ def generate(root, period, as_of=None, language=None):
             ws._write_exclusive(temporary, payload.encode("utf-8"))
             temporary.replace(path)
         ws._atomic_json(ws._inside(root, "00_admin/overview.json"), result, replace=True)
-        start = ws._inside(root, "START-HERE.md")
+        layout = ws._layout(root)
+        start = ws._inside(root, layout[1]['guide_name'] if layout else "START-HERE.md")
         if not start.exists():
-            ws._write_exclusive(start, ("# " + words["title"] + "\n\n[" + words["overview"] + "](00_admin/overview.html) · [Markdown](00_admin/overview.md)\n\n" + words["snapshot"] + "\n").encode("utf-8"))
-    return {"html_path": "00_admin/overview.html", "markdown_path": "00_admin/overview.md", "counts": counts, "health": result["health"], "errors": errors}
+            ws._write_exclusive(start, ("# " + words["title"] + "\n\n[" + words["overview"] + "](" + quote(ws._physical(root, "00_admin/overview.html")) + ") · [Markdown](" + quote(ws._physical(root, "00_admin/overview.md")) + ")\n\n" + words["snapshot"] + "\n").encode("utf-8"))
+    return {"html_path": ws._physical(root, "00_admin/overview.html"), "markdown_path": ws._physical(root, "00_admin/overview.md"), "counts": counts, "health": result["health"], "errors": errors}

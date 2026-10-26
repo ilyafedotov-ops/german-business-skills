@@ -28,7 +28,7 @@ def scan(root, source, max_entries=1000, max_depth=10):
     directory(source)
     if source == root or source in root.parents or root in source.parents:
         raise ws.WorkspaceError("Keep the existing source folder and destination workspace separate, without ancestor overlap.")
-    if (source / ws.MARKER).exists():
+    if ws._workspace_present(source):
         raise ws.WorkspaceError("This source is an existing workspace; resume or review an explicit migration instead of importing it.")
     if type(max_entries) is not int or not 1 <= max_entries <= 10000 or type(max_depth) is not int or not 0 <= max_depth <= 32:
         raise ws.WorkspaceError("Use 1-10000 inventory entries and depth 0-32.")
@@ -58,7 +58,7 @@ def scan(root, source, max_entries=1000, max_depth=10):
                         elif path.suffix.lower() in KEY_SUFFIXES:
                             row["reason"] = "credential_or_key"
                         elif stat.S_ISDIR(info.st_mode):
-                            if (path / ws.MARKER).exists():
+                            if ws._workspace_present(path):
                                 row["reason"] = "existing_workspace"
                             elif depth >= max_depth:
                                 row["reason"] = "depth_limit"
@@ -97,5 +97,5 @@ def scan(root, source, max_entries=1000, max_depth=10):
         ws._check_audit(root)
         ws._write_exclusive(ws._inside(root, relative), payload)
         ws._audit(root, "folder_previewed", {"path": relative, "counts": counts, "traversal_complete": not warnings})
-    return {"status": "preview", "path": relative, "sha256": hashlib.sha256(payload).hexdigest(),
+    return {"status": "preview", "path": ws._physical(root, relative), "sha256": hashlib.sha256(payload).hexdigest(),
             "counts": counts, "traversal_complete": not warnings, "warnings": sorted(warnings)}

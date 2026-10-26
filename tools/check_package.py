@@ -48,7 +48,7 @@ def main():
         "skills/de-business-kit/references/payments.md", "skills/de-business-kit/references/classification.md",
         "docs/service-selection.md", "docs/service-selection.ru.md",
         "docs/windows.md", "docs/windows.ru.md",
-        "skills/de-business-kit/scripts/windows.ps1", "skills/de-business-kit/assets/workspace-seed.json",
+        "skills/de-business-kit/scripts/windows.ps1", "skills/de-business-kit/assets/workspace-seed.json", "skills/de-business-kit/assets/folder-layouts.json",
         "skills/de-business-kit/references/native-windows.md",
         "skills/de-business-kit/references/insurance.md", "skills/de-business-kit/references/service-research-sources.md",
         "docs/workflows.md", "docs/workflows.ru.md", "docs/existing-data.md", "docs/existing-data.ru.md",

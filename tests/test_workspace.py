@@ -95,7 +95,7 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual(json.loads(output.getvalue())["mode"], "tax-consultant")
         status = workspace.workspace_status(target)
         self.assertEqual((status["language"], status["mode"]), ("en", "tax-consultant"))
-        marker = json.loads((target / workspace.MARKER).read_text(encoding="utf-8"))
+        marker = json.loads(workspace._inside(target, workspace.MARKER).read_text(encoding="utf-8"))
         self.assertEqual(marker["schema_version"], 1)
         self.assertEqual(marker["mode"], "tax-consultant")
 

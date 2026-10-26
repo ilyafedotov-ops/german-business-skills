@@ -15,6 +15,20 @@ import workspace as ws
 
 
 class FolderIntakeTests(CaseFixture):
+    def test_localized_or_interrupted_workspaces_are_not_reimported_as_sources(self):
+        source = self.base / 'source-collection'
+        source.mkdir()
+        existing = source / 'other-workspace'
+        ws.start_workspace(existing, 2026, 'ru')
+        with self.assertRaises(ws.WorkspaceError):
+            folders.scan(self.root, existing)
+        report = self.report(source)
+        self.assertEqual(report['entries'][0]['reason'], 'existing_workspace')
+        self.assertFalse(any(row['status'] == 'candidate' for row in report['entries']))
+        (existing / ws.LAYOUT).unlink()
+        with self.assertRaises(ws.WorkspaceError):
+            folders.scan(self.root, existing)
+
     def source_folder(self):
         folder = self.base / "existing"
         folder.mkdir()

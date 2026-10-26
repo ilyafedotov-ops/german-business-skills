@@ -10,7 +10,7 @@ from . import storage as st
 
 
 def reconciliation_reports(root, period):
-    directory = root / "07_exports" / period
+    directory = ws._path(root, "07_exports/" + period)
     ws._check_chain(directory)
     if not directory.exists():
         return []
