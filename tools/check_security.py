@@ -22,11 +22,21 @@ def check(directory):
         if not runs:
             raise ValueError('No analysis runs.')
         for run in runs:
-            driver = run['tool']['driver']
-            rules = {rule['id']: rule for rule in driver.get('rules', [])}
+            # CodeQL puts query metadata in tool.extensions, not driver.rules.
+            # Never default an unresolved finding to severity zero.
+            tool = run['tool']
+            rules = {}
+            for component in [tool['driver'], *tool.get('extensions', [])]:
+                for rule in component.get('rules', []):
+                    if rule['id'] in rules and rules[rule['id']] != rule:
+                        raise ValueError('Ambiguous rule metadata.')
+                    rules[rule['id']] = rule
             for result in run['results']:
                 count += 1
-                rule = rules.get(result.get('ruleId'), {})
+                identifier = result.get('ruleId', result.get('rule', {}).get('id'))
+                if identifier not in rules:
+                    raise ValueError(f'Unresolved rule metadata: {identifier}')
+                rule = rules[identifier]
                 severity = float(rule.get('properties', {}).get('security-severity', 0))
                 if not math.isfinite(severity) or not 0 <= severity <= 10:
                     raise ValueError('Invalid security severity.')

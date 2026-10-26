@@ -160,3 +160,8 @@ and release/package tests for packaging changes. Verify downloaded release asset
 and their expected repository/workflow/tag/commit attestations before claiming a
 signed release. Checksums, annotated Git tags and CODEOWNERS alone are not signing
 or enforced branch protection.
+
+Security acceptance must inspect the exact PR/tag ref, not only default-branch
+alerts. Test SARIF policy changes against actual hosted output: CodeQL query rules
+can live in `tool.extensions`. Unknown severity metadata must fail closed. A
+successful scan/upload or signature does not by itself mean no findings exist.

@@ -2,7 +2,7 @@
 
 [English](project-status.md) | [Русский](project-status.ru.md) | [Documentation](index.md)
 
-Reviewed against the local source on **2026-10-26**, version **0.6.0-preview.1**.
+Reviewed against the local source on **2026-10-26**, version **0.6.0-preview.2**.
 This page describes implemented capabilities, not a published release, successful
 host installation or a certified accounting process. Exact runs and their limits
 are recorded in [validation](validation.md); older entries there are historical.

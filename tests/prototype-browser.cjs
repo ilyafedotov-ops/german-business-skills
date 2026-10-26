@@ -40,6 +40,15 @@ async function capture(page, options) {
   try {
     await page.goto(url);
     await visible(page, 'Fictional data');
+    // URL fragments cannot select inherited Object methods as renderers.
+    for (const route of ['__proto__', 'constructor', 'toString', 'hasOwnProperty', 'unknown-route']) {
+      const invalid = await context.newPage();
+      await invalid.goto(`${url}#${route}`);
+      assert.equal(await invalid.locator('h1').count(), 1, `Missing fallback for ${route}`);
+      assert.equal(await invalid.locator('h1').innerText(), 'A place for your business to make sense.');
+      await invalid.close();
+    }
+    assert.deepEqual(issues, []);
     await capture(page, { path: path.join(output, `${browserName}-home-desktop.png`), fullPage: true });
     await page.getByRole('link', { name: 'Documents', exact: true }).click();
     await visible(page, 'Your next step starts with a document.');

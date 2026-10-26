@@ -302,3 +302,24 @@ The Windows CI rerun is required before release acceptance.
 All five published assets were downloaded into a fresh directory. Their hashes and bytes matched the local build. GitHub CLI 2.103.2 verified the immutable release and every asset with both `release verify-asset` and `attestation verify`, constrained to the expected repository, signer workflow, tag, source commit and hosted runner. The API reports `immutable:true`. The historical v0.3/v0.4/v0.5 releases also passed release-signature verification; they remain source-only snapshots without new build provenance. v0.5 notes disclose the Windows rollback issue fixed in v0.6.
 
 This verifies distribution integrity and automated utility/browser behavior. It does not establish desktop host installation, live ELSTER/account integration, tax correctness or personal Git commit signing.
+
+## Correction for preview.2 — 2026-10-26
+
+PR #1 exposed a high-severity prototype route-dispatch finding that preview.1's
+SARIF gate incorrectly treated as non-blocking. The saved hosted SARIF has query
+metadata in `tool.extensions`, while the old gate read only `tool.driver.rules`.
+A default-branch alert query also did not describe the PR/tag; future acceptance
+must use the exact ref. Preview.1's signed byte-integrity evidence remains valid,
+but its gate success must not be interpreted as a clean scan. Its packaged skills
+exclude the affected prototype.
+
+The corrected parser reads extension rules and rejects unknown metadata; it blocks
+the actual saved report at severity 7.5. New extension/unknown-rule tests failed
+before the fix and pass after it. The prototype now uses a static route Map. A
+Chromium regression failed on `#__proto__` before the fix. Chromium and WebKit now
+pass malicious/unknown fragments and all existing journeys at 1440/390/320px, with
+no unexpected console errors or network requests. Five known WebKit screenshot
+stylesheet diagnostics remain separately identified, with CSP unchanged. The
+local suite ran 218 tests: 213 passed, five native-runtime checks skipped. Package
+validation, actionlint and independent review passed. Fresh PR/tag checks remain
+required before merging/publishing preview.2.

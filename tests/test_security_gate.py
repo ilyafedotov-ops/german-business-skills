@@ -36,3 +36,14 @@ class SecurityGateTests(unittest.TestCase):
         self.check({'runs': [{'tool': {'driver': {'rules': [
             {'id': 'synthetic', 'properties': {'security-severity': '4.0'}}]}},
             'results': [{'ruleId': 'synthetic', 'level': 'warning'}]}]}, 0)
+
+    def test_codeql_extension_rule_severity_blocks_release(self):
+        self.check({'runs': [{'tool': {'driver': {'rules': []}, 'extensions': [
+            {'name': 'codeql/javascript-queries', 'rules': [
+                {'id': 'synthetic', 'properties': {'security-severity': '7.5'}}]}]},
+            'results': [{'ruleId': 'synthetic', 'rule': {'id': 'synthetic', 'index': 0,
+                         'toolComponent': {'index': 0}}, 'level': 'warning'}]}]}, 2)
+
+    def test_unknown_rule_metadata_cannot_silently_pass(self):
+        self.check({'runs': [{'tool': {'driver': {'rules': []}},
+                             'results': [{'ruleId': 'missing', 'level': 'warning'}]}]}, 2)

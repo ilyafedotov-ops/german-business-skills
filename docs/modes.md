@@ -5,7 +5,7 @@
 
 The user-facing tax mode is **Tax questions and preparation**. Its existing machine ID `tax-consultant` is retained for compatibility; it does not describe licensed professional status.
 
-Version **0.6.0-preview.1** provides one portable skill with an explicit focus for each task. Self-managed bookkeeping/accounting and tax reporting are the primary workflow. Bookkeeping and tax analysis use the same private profile, evidence index and decision history; they do not create separate versions of the business. Accountant consultation and exports are optional branches for a specific need.
+Version **0.6.0-preview.2** provides one portable skill with an explicit focus for each task. Self-managed bookkeeping/accounting and tax reporting are the primary workflow. Bookkeeping and tax analysis use the same private profile, evidence index and decision history; they do not create separate versions of the business. Accountant consultation and exports are optional branches for a specific need.
 
 ## Select a mode and language
 

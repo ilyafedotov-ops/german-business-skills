@@ -87,14 +87,14 @@
   }
   function render() {
     route = location.hash.slice(1) || 'home';
-    const screens = { home, onboard: onboarding, documents, review: invoice, month, payment, taxes, accounts, settings };
-    if (!screens[route]) route = 'home';
+    const screens = new Map(Object.entries({ home, onboard: onboarding, documents, review: invoice, month, payment, taxes, accounts, settings }));
+    if (!screens.has(route)) route = 'home';
     if (!['home', 'settings'].includes(route)) { state.resume = route; save(); }
     document.querySelectorAll('[data-nav]').forEach(a => {
       const active = a.dataset.nav === ({ review: 'documents', onboard: 'documents', payment: 'month' }[route] || route);
       if (active) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
-    main.innerHTML = screens[route]();
+    main.innerHTML = screens.get(route)();
     main.focus({ preventScroll: true });
     window.scrollTo(0, 0);
     document.title = `${main.querySelector('h1')?.textContent || 'Business workspace'} · Interactive demo`;

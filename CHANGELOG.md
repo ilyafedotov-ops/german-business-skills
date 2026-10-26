@@ -6,6 +6,19 @@ Versions follow Semantic Versioning. All releases below are previews, not a
 certification of accounting correctness or desktop compatibility. Historical
 milestones are first published on 2026-10-26; their original commits are retained.
 
+## 0.6.0-preview.2
+
+- Fix the release security gate to read CodeQL rule severity from SARIF extension
+  metadata and reject unresolved rules. The saved report from preview.1 now fails
+  correctly at severity 7.5; the earlier gate's success was not a clean scan.
+- Fix synthetic prototype routing so URL fragments cannot invoke inherited object
+  methods. Add browser regressions for malicious and unknown fragments.
+- Run branch-push CI on main and PR CI on feature changes, avoiding duplicate
+  branch/PR runs. Tagged releases still run the full independent gates.
+- Supersedes preview.1. Its downloaded skill ZIPs exclude the affected prototype,
+  but its source and security-gate implementation should not be used as the current
+  baseline. Existing immutable tags and assets remain unchanged.
+
 ## 0.6.0-preview.1
 
 - Fix Windows import rollback by capturing final timestamps after the write handle closes, while preserving modified/replaced files.

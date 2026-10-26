@@ -40,18 +40,18 @@ named Codex or Claude ZIP and `SHA256SUMS` into a new folder. On Windows, native
 PowerShell can compute the hash without Python:
 
 ```powershell
-Get-FileHash .\de-business-kit-0.6.0-preview.1-codex.zip -Algorithm SHA256
+Get-FileHash .\de-business-kit-0.6.0-preview.2-codex.zip -Algorithm SHA256
 ```
 
-On macOS use `shasum -a 256 de-business-kit-0.6.0-preview.1-codex.zip`. Compare with
+On macOS use `shasum -a 256 de-business-kit-0.6.0-preview.2-codex.zip`. Compare with
 the matching line of `SHA256SUMS`. A checksum from the same untrusted source is
 not authentication. With a current optional GitHub CLI, verify the downloaded archive
 (2.103.2 verified these releases; 2.80 failed to read their attestation bundles):
 
 ```sh
-gh release verify v0.6.0-preview.1 -R ilyafedotov-ops/german-business-skills
-gh release verify-asset v0.6.0-preview.1 de-business-kit-0.6.0-preview.1-codex.zip -R ilyafedotov-ops/german-business-skills
-gh attestation verify de-business-kit-0.6.0-preview.1-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.6.0-preview.1 --deny-self-hosted-runners
+gh release verify v0.6.0-preview.2 -R ilyafedotov-ops/german-business-skills
+gh release verify-asset v0.6.0-preview.2 de-business-kit-0.6.0-preview.2-codex.zip -R ilyafedotov-ops/german-business-skills
+gh attestation verify de-business-kit-0.6.0-preview.2-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.6.0-preview.2 --deny-self-hosted-runners
 ```
 
 For stricter pinning add `--source-digest` with the expected full Git commit from
@@ -84,7 +84,7 @@ Python installation or automatic update is required for Windows users.
 Local rehearsal after creating the exact tag:
 
 ```sh
-python3 -B tools/release.py prepare --tag v0.6.0-preview.1 --output /absolute/new/release-assets
+python3 -B tools/release.py prepare --tag v0.6.0-preview.2 --output /absolute/new/release-assets
 python3 -B tools/release.py verify --directory /absolute/new/release-assets
 ```
 
@@ -92,8 +92,9 @@ CI uses pinned action commits, read-only default permissions, no persisted Git
 credentials, time limits and separate publication permissions. Dependabot proposes
 action/npm updates; npm audit and dependency review reject high-severity dependency
 issues. CodeQL analyzes Python, JavaScript and Actions. Fresh SARIF results block release
-for security severity >= 7 (high/critical) or error-level findings; missing analysis
-evidence also fails. Lower-severity findings still require review. CODEOWNERS
+for security severity >= 7 (high/critical) or error-level findings. Rule metadata
+is resolved from driver and extension components; missing analysis or unknown
+rule metadata fails. Inspect alerts for the exact PR/tag ref. Lower-severity findings still require review. CODEOWNERS
 records ownership; it does not by itself enforce branch review rules. Scheduled
 scans and Dependabot configuration become active from the default branch after
 the changes are merged there.

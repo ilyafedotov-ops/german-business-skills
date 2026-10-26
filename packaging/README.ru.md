@@ -1,4 +1,4 @@
-# German Business Kit — локальная предварительная версия 0.6.0-preview.1
+# German Business Kit — локальная предварительная версия 0.6.0-preview.2
 
 **Начните здесь:** `skills/de-business-kit/guides/start.ru.md` · `skills/de-business-kit/guides/user-guide.ru.md`. Эти файлы входят в распакованный пакет; исходный репозиторий не нужен.
 
