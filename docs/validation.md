@@ -51,3 +51,13 @@ Changes start from `9f37d8106b64e961aadf181158b79704e1e2dea7`. User help now has
 - Hosted checks inspected for the **prior** source: [PR #12](https://github.com/ilyafedotov-ops/german-business-skills/pull/12) at `325a04e` and [PR #13](https://github.com/ilyafedotov-ops/german-business-skills/pull/13) at `9f37d81` each show **17 successful checks**. These do not validate the documentation-cleanup commit.
 
 The earlier full-suite/runtime evidence is reused only for unchanged behavior. No new browser journey, user study, live provider action, native desktop acceptance or release verification was performed for this documentation change.
+
+## 0.9.0-preview.1 release preparation — 2026-10-26
+
+Release preparation `ed74f64` versions the beginner onboarding, assisted-service workflows and documentation consolidation as `0.9.0-preview.1`. `VERSION`, both manifests, EN/RU changelogs and current download instructions agree. Independent release review found that packaged documentation links followed moving `main`; they now pin `v0.9.0-preview.1`, and the reviewer confirmed the fix. Earlier published tags/assets are unchanged; workspace schemas and accounting runtime behavior are unchanged.
+
+- `python3 -B -m unittest discover -s tests -v`: **277 tests, 272 passed and 5 native Windows/interoperability skips**, 126.846 s on macOS 27.0.1 arm64. Includes release, packaging and security-policy tests. Log: `/private/tmp/gbk-090-full-tests.log`. Final documentation-only link pins were subsequently checked in the built packages and link checks.
+- `npm test`: **8 passed**; `npm audit --audit-level=high`: **0 vulnerabilities**. Logs: `/private/tmp/gbk-090-npm-tests.log` and `/private/tmp/gbk-090-npm-audit.log`.
+- `python3 -B tools/check_package.py`, all **883** local Markdown links/anchors, `python3 -B tools/release.py check` and `git diff --check`: passed. Both host packages built into `/private/tmp/gbk-090-preflight-package-20261026` without installation or publication.
+
+These are prepublication checks. The exact release PR/tag must still pass its platform/security gates, and the immutable release plus all eight downloaded assets require exact repository/workflow/tag/commit verification. Prior PR evidence does not replace those gates. Real provider operations, ordinary-user desktop acceptance and complete browser artifact retrieval remain open.
