@@ -34,5 +34,5 @@ mandatory endpoint of self-managed reporting.
 For durable results, use the EN/RU launch plan, customer case, annual readiness,
 change plan and connection-check worksheets linked from their workflow references.
 They are authoring aids using existing evidence/tasks, not official forms or new
-state registers. User-facing examples are in the [English task guide](../guides/tasks.en.md)
-and [Russian task guide](../guides/tasks.ru.md).
+state registers. User-facing examples are in the [English task guide](../guides/user-guide.en.md#first-task)
+and [Russian task guide](../guides/user-guide.ru.md#первая-задача).

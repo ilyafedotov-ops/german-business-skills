@@ -2,7 +2,7 @@
 
 **Первая установка:** откройте `skills/de-business-kit/guides/install.ru.md` внутри этой папки плагина. Руководство объясняет приложение с ИИ, вход в аккаунт, установку семи скиллов в проект и первую вымышленную задачу. [Версия онлайн](https://github.com/ilyafedotov-ops/german-business-skills/blob/main/skills/de-business-kit/guides/install.ru.md).
 
-**Начните здесь:** `skills/de-business-kit/guides/start.ru.md` · `skills/de-business-kit/guides/user-guide.ru.md`. Эти файлы входят в распакованный пакет; исходный репозиторий не нужен.
+**Начните здесь:** `skills/de-business-kit/guides/user-guide.ru.md`. Эти файлы входят в распакованный пакет; исходный репозиторий не нужен.
 
 Пользователи Windows могут начать без Python через штатные инструменты (см. `skills/de-business-kit/references/native-windows.md`). Нативный путь использует общую рабочую папку и покрывает установку, запуск/продолжение, предпросмотр, приём, целостность, реальный обзор и полное копирование/восстановление; расширенная проверяемая автоматизация пока относится к необязательному Python-движку.
 

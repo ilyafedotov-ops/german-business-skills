@@ -1,14 +1,12 @@
 # German Business Kit architecture
 
-Windows users can start without Python using [native Windows tools](windows.md). The native entry point shares the existing workspace and covers installation, start/resume, preview, intake, integrity, real overview and full backup/restore; advanced validated automation remains an optional Python-engine capability.
-
 [English](architecture.md) · [Русский](architecture.ru.md)
 
-Project version: **0.8.0-preview.1**. Implementation reviewed **2026-10-26**; external-source checks retain their recorded dates. [Current scope](project-status.md).
+Implementation scope and remaining work: [current status](project-status.md).
 
-Read the [domain ontology](ontology.md) for entities, relationships and state meanings. The **local casework extension** is part of the source implementation; it is not evidence of a published release or completed desktop integration.
+Read the [domain ontology](ontology.md) for entities, relationships and state meanings.
 
-The [accounting workflow](accounting.md) adds an explicitly selected authoritative system when accounting work needs it, limited local cash journal and filing evidence lifecycle through the existing `desk.py` entry point. `casefiles/accounting.py` stores additive state in `04_accounting/register.json`; it reuses workspace locks, evidence fingerprints and history, and checks register state against its latest audit checkpoint. Local cash reports include source-entry/configuration fingerprints and per-account reconciliation CSVs. Filing versions freeze payload/source files, separate review/authorization from uncertain attempts and manually observed receipts/responses, and block stale local-report preflight. No provider/ERiC transport or complete statutory tax calculator is added.
+The [accounting workflow](../skills/de-business-kit/references/accounting-workflow.md) adds an explicitly selected authoritative system when accounting work needs it, limited local cash journal and filing evidence lifecycle through the existing `desk.py` entry point. `casefiles/accounting.py` stores additive state in `04_accounting/register.json`; it reuses workspace locks, evidence fingerprints and history, and checks register state against its latest audit checkpoint. Local cash reports include source-entry/configuration fingerprints and per-account reconciliation CSVs. Filing versions freeze payload/source files, separate review/authorization from uncertain attempts and manually observed receipts/responses, and block stale local-report preflight. No provider/ERiC transport or complete statutory tax calculator is added.
 
 ## Assisted external-service execution
 
@@ -44,7 +42,7 @@ Local synthetic browser trials do not establish real ELSTER/Lexware acceptance.
 
 ## Intended result
 
-An entrepreneur brings a task at any stage: prepare to start, register an activity, choose a service, fill in a form, answer a question, manage daily work or prepare reporting. Changes and closure have journey instructions; real execution needs separate acceptance. The [lifecycle map](lifecycle.md) defines coverage and priorities. The router or a directly selected domain skill loads relevant modules and available tools; shared facts and decisions support continuation. Local utilities, the GUI and integrations serve these outcomes. Self-managed accounting and filing use the chosen system; a proprietary complete ledger and ELSTER connector are not prerequisites for every route. Consultation and exports remain optional.
+An entrepreneur brings a task at any stage: prepare to start, register an activity, choose a service, fill in a form, answer a question, manage daily work or prepare reporting. Changes and closure have journey instructions; real execution needs separate acceptance. The [lifecycle map](../skills/de-business-kit/references/lifecycle.md) defines coverage and priorities. The router or a directly selected domain skill loads relevant modules and available tools; shared facts and decisions support continuation. Local utilities, the GUI and integrations serve these outcomes. Self-managed accounting and filing use the chosen system; a proprietary complete ledger and ELSTER connector are not prerequisites for every route. Consultation and exports remain optional.
 
 The supported scope is a natural person operating in Germany: Freiberufler, Einzelunternehmen/Gewerbe and multiple activities of the same person. Corporations, partnerships, payroll, complex international structures and cash-register systems are outside the promised automation scope. The skill can collect facts and prepare a specific specialist handoff for those cases.
 
@@ -73,11 +71,11 @@ The overview and GUI home project active lifecycle tasks from the existing `task
 
 ## Languages and modes
 
-The two named working modes are `bookkeeping` and `tax-consultant`; `general` covers startup, organization and routing. Bookkeeping currently prepares evidence, proposals, reconciliation and monthly status for the user’s own review. Tax questions and preparation (`tax-consultant`) produces sourced explanations, comparisons, estimates and proposed decisions. A tax issue encountered during bookkeeping can use the consultation module without abandoning the other work or changing the saved default. See the [mode guide](modes.md) for usage rather than a second implementation of those workflows here.
+The two named working modes are `bookkeeping` and `tax-consultant`; `general` covers startup, organization and routing. Bookkeeping currently prepares evidence, proposals, reconciliation and monthly status for the user’s own review. Tax questions and preparation (`tax-consultant`) produces sourced explanations, comparisons, estimates and proposed decisions. A tax issue encountered during bookkeeping can use the consultation module without abandoning the other work or changing the saved default. See the [mode guide](../skills/de-business-kit/references/language-and-modes.md) for usage rather than a second implementation of those workflows here.
 
 `00_admin/workspace.json` stores the default `language` and `mode`. The `configure` command persists an explicit preference change with history and an audit event; `status` exposes the current values. An explicit one-task request takes priority in the conversation. A request to translate one report does not replace the saved language or rewrite historical records.
 
-User-facing conversations and Markdown reports support **English and Russian**. Agent instructions, JSON keys, enum values, logical path IDs and record IDs remain stable; physical folder names support EN/RU/DE. Exact German terms and form labels are preserved and explained in the chosen language. A translation is a linked rendering of the same evidence and decision, not new verification. German folders and a German start guide are supported; the complete report/template set remains EN/RU. Folder language is pinned at creation and differs from conversation/report language. See [folder mapping](folder-structure.md).
+User-facing conversations and Markdown reports support **English and Russian**. Agent instructions, JSON keys, enum values, logical path IDs and record IDs remain stable; physical folder names support EN/RU/DE. Exact German terms and form labels are preserved and explained in the chosen language. A translation is a linked rendering of the same evidence and decision, not new verification. German folders and a German start guide are supported; the complete report/template set remains EN/RU. Folder language is pinned at creation and differs from conversation/report language. See [folder mapping](../skills/de-business-kit/references/workspace.md).
 
 The workspace format remains **schema version 1**. A v0.1 workspace without `mode` is read as `general`; it does not need to be recreated. Changing a language or mode never changes profile facts, `vat_current_regime`, bookkeeping method or authority filings. The same profile and evidence history serve both languages and all modes.
 
@@ -99,34 +97,13 @@ Tax mode explains applicable rules, applies them to stated facts and prepares re
 
 Hashes, history and procedures support record organization; compliance of the complete retention and correction process requires separate assessment. The project does not declare an ordinary folder automatically compliant or automatically unlawful. See the [BMF E-Rechnung FAQ](https://www.bundesfinanzministerium.de/Content/DE/FAQ/e-rechnung.html) and the official GoBD sources in the rules reference.
 
-## Current limits and future work
-
-The current preview includes guided setup, synthetic demo, runtime assessment records, typed profile values and validated register writes while preserving language/mode support. It contains no complete accounting ledger, production bank, Lexware or ELSTER connector, automatic filings, complete personal-tax engine, integrated OCR/XML validator or scheduler. The existing reconciliation ledger CSV is an input, not a complete posting system; ELSTER worksheets are preparation, not submission. Browser instructions use only capabilities actually available in the host. No end-to-end desktop integration test is implied by local tests.
-
-| Future work | Evidence needed before claiming support |
-|---|---|
-| Complete accounting ledger | Defined posting/correction rules, period/account coverage, traceable approved entries and verified reports |
-| ELSTER submission integration | Supported forms/periods, concrete payload review, scoped user approval, duplicate prevention, submission evidence and separately recorded Finanzamt response |
-| Clean Codex / Claude Desktop checks on macOS and Windows | Recorded versions; installation, discovery, resumption and synthetic-document runs |
-| Lexware Office read-only adapter | Verified API version, minimum permissions, test environment and reconciled objects |
-| Draft writes and assisted forms | Concrete preview, scoped authorization, readback, timeout handling and duplicate prevention |
-| Additional accounting products and e-invoice validation | Verified supported formats, actual validators and shared behavioral cases |
-| Installed package acceptance | Local bundles already exist; actual desktop discovery, update behavior and account policy remain separate checks |
-| Additional jurisdictions or hosted services | Separate requirements, maintenance process and service-model review |
-
-## Maintenance and validation
-
-Record URLs, check dates, applicable periods and supported conclusions for material decisions. Recheck laws for the relevant period, forms before filling them and provider terms before a recommendation or contract. Release sources are starting points rather than permanent authority to apply old rules.
-
-Keep English/Russian template roles and user guides aligned while leaving machine identifiers stable. Distinguish code tests, behavioral skill trials and live integration tests. Reproduce defects with synthetic data and add a check that catches the actual failure. See [validation](validation.md) for the work actually performed.
-
 ## Guided setup and validated records
 
-Use the [beginner guide](quickstart.md) and [distribution guide](distribution.md). `start` resumes without changing preferences; `demo` uses a separate synthetic workspace; `doctor` checks local health. Processing assessment is a recorded, scoped review with configuration/evidence hashes, not legal certification. Profile values have field-specific validation. `entry` updates tasks/questions/decisions under the same lock with history, explicit transitions, evidence and an expected prior hash. Legacy malformed records are reported without silent migration. The baseline proposal/operation JSON files are instruction templates. The local extension below adds executable proposal validation; operations still have no external execution engine.
+Use the [beginner guide](../skills/de-business-kit/guides/install.en.md) and [distribution guide](distribution.md). `start` resumes without changing preferences; `demo` uses a separate synthetic workspace; `doctor` checks local health. Processing assessment is a recorded, scoped review with configuration/evidence hashes, not legal certification. Profile values have field-specific validation. `entry` updates tasks/questions/decisions under the same lock with history, explicit transitions, evidence and an expected prior hash. Legacy malformed records are reported without silent migration. The baseline proposal/operation JSON files are instruction templates. The local extension below adds executable proposal validation; operations still have no external execution engine.
 
 ## International preparation records
 
-The current preview includes `workflows.py` for international transactions, activity classification and ELSTER worksheets, and `payments.py` for normalized payment events and strict Stripe activity CSVs. Both reuse private-workspace storage protections and write new JSON/Markdown reports with source fingerprints. Runtime dependencies remain Python standard library. Source checks record the exact applicable period; their content still requires human/agent review. Workspace schema stays version 1; no migration or separate entrepreneur profile is needed. See [workflow guide](workflows.md).
+The current preview includes `workflows.py` for international transactions, activity classification and ELSTER worksheets, and `payments.py` for normalized payment events and strict Stripe activity CSVs. Both reuse private-workspace storage protections and write new JSON/Markdown reports with source fingerprints. Runtime dependencies remain Python standard library. Source checks record the exact applicable period; their content still requires human/agent review. Workspace schema stays version 1; no migration or separate entrepreneur profile is needed. See [workflow guide](../skills/de-business-kit/references/accounting-workflow.md).
 
 ## Component and deployment architecture
 
@@ -218,7 +195,7 @@ One portable seven-skill bundle and one shared profile avoid divergent state acr
 
 Automated checks are `python3 -B -m unittest discover -s tests -v` and `python3 -B tools/check_package.py`. Tests cover local contracts; package checks cover structure, translations, JSON and local links. The [validation record](validation.md) separates historical runs, behavioral trials and integration gaps. A passing test run does not establish tax correctness, production connector support or desktop usability. This architecture describes the current source, not a certification or a release declaration.
 
-The [core capability plan](core-capabilities.md) defines the unfinished ledger and ELSTER work and its acceptance evidence.
+The [core capability plan](project-status.md#accounting-acceptance) defines the unfinished ledger and ELSTER work and its acceptance evidence.
 
 ## Existing sources and folder inventory
 
@@ -234,7 +211,7 @@ The [core capability plan](core-capabilities.md) defines the unfinished ledger a
 
 ## Real GUI adapter and native delivery
 
-The 0.7 candidate adds `gui/server.py` and the EN/RU/DE browser interface, separately
+The local application uses `gui/server.py` and the EN/RU/DE browser interface, separately
 from the synthetic prototype. A session-protected loopback API delegates to the
 existing document, accounting and recovery writers. Workspace selection identities
 reject stale tabs, and separate GUI drafts use expected hashes and completed audit

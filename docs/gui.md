@@ -1,15 +1,8 @@
-# Real workspace interface — 0.8.0-preview.1
+# Interface development
 
 [English](gui.md) | [Русский](gui.ru.md) | [User instructions](../gui/README.md)
 
-The `gui/` application connects a browser interface to the real workspace writers.
-The separate `prototype/` remains a fictional demonstration. Version
-[0.8.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1)
-adds standalone Windows x64, macOS Apple Silicon and macOS Intel packages. Use a
-matching archive only after publication and verification; a local build or
-passing test is not a published platform release. [Download verification](releases.md)
-and [application instructions](../gui/README.md) explain how to start without
-installing Python.
+The `gui/` application connects a browser interface to the real workspace writers. The separate `prototype/` is a fictional demonstration. Windows x64, macOS Apple Silicon and macOS Intel builds bundle the runtime. [Current status](project-status.md) identifies the published release and newer source changes; follow [download verification](releases.md) and the [application instructions](../gui/README.md).
 
 ## Supported work
 
@@ -89,3 +82,23 @@ not a cross-compiler. Source: [official packaging documentation](https://pyinsta
 checked 2026-10-26. [GitHub runner architectures](https://docs.github.com/en/actions/reference/runners/github-hosted-runners)
 establish the CI labels, not desktop acceptance. Record actual results separately
 in [validation](validation.md).
+
+## Fictional prototype
+
+Open [prototype/index.html](../prototype/index.html) in a desktop browser, keeping its sibling CSS/JS files together. This separate English demo uses fictional records only; no installation, login or runtime is needed. Do not enter business data. Its screens are Home, Documents, This month, Taxes and letters, and Accounts and services.
+
+Try sample intake; review the invoice total from `119.00` to `119.80`; investigate the €12 example payment; then close/reopen the same file and continue. “Help me with this” prepares text to copy to an assistant, without sending. No demo operation opens real folders, connects services, posts entries or submits returns.
+
+State lives only in the current browser's local storage. A failed save or conflicting tab leaves edits visible but unsaved; copy them before leaving. Clearing data, private browsing, another browser or moving the file can prevent recovery. Reset affects only fictional data. This is not synchronization, encryption or backup.
+
+Developer checks use the existing Node/Playwright dependencies:
+
+```sh
+npm ci --ignore-scripts
+npx playwright install chromium webkit
+npm test
+npm run test:browser
+npm run test:browser -- --browser=webkit
+```
+
+Tests open the HTML file directly; synthetic screenshots go to ignored `output/prototype/`. No production dependency or network request is added. Historical [prototype evidence](history/validation-2026-10-26.md#prototype-validation) and [design research](research/gui-ux-recommendation.md) retain their dates. The real GUI above is implemented separately; ordinary-user usability acceptance remains open.

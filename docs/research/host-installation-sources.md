@@ -1,3 +1,5 @@
+> Dated research, not current implementation status. Original source-check dates are retained. See [current status](../project-status.md) for delivery and acceptance.
+
 # Host installation evidence — 2026-10-26
 
 Maintainer research for the beginner installation guides. Checked against the
@@ -40,7 +42,7 @@ scripts, automatically chosen when relevant or explicitly invoked. Recognition
 in a skill picker proves discovery, not correct business advice, working utility
 execution or a successful tax submission. The repository's catalog, not provider
 docs, establishes the seven members:
-[`skill-set.json`](../skills/de-business-kit/assets/skill-set.json).
+[`skill-set.json`](../../skills/de-business-kit/assets/skill-set.json).
 
 ## OpenAI: optional terminal and local plugin routes
 

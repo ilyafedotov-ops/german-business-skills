@@ -1,6 +1,8 @@
+> Historical record archived on 2026-10-26. Original dates, results and milestone wording are preserved; old “next steps” are not the current queue. See [current status](../project-status.md) and [validation summary](../validation.md).
+
 # Plan to restore the entrepreneur skill system
 
-[English](lifecycle.md) · [Русский](lifecycle.ru.md) · [Current status](project-status.md)
+[English](lifecycle-plan-2026-10-26.md) · [Русский](lifecycle-plan-2026-10-26.ru.md) · [Current status](../project-status.md)
 
 Plan preparation agreed on **2026-10-26** after clarifying the product purpose. This is a correction plan for the product, instructions and development order; the stages below are not declared implemented. The baseline comes from inspecting source modules, not a new verification of legal rules or external services.
 
@@ -173,7 +175,7 @@ Deliver each package as a separately reviewable change. Before implementation it
 - P6: a workflow verifies a specific connection, permissions, outcome and uncertain attempts. No proprietary production connector or scheduler was added: acceptance needs a chosen service and an authorized real operation.
 - P7: documentation and bundle descriptions align with seven skills. The GUI is retained; new screens and a published release are not claimed.
 
-See [validation](validation.md) for actual checks and fresh trials. Unperformed acceptance remains in the plan even where instructions have been written.
+See [validation](validation-2026-10-26.md) for actual checks and fresh trials. Unperformed acceptance remains in the plan even where instructions have been written.
 
 ## 5.2. Practical P1–P7 delivery (2026-10-26)
 
@@ -194,7 +196,7 @@ all real-world lifecycle operations are complete.
 All five new worksheet roles are declared for both languages in `locales.json`.
 They are readable authoring aids, not new canonical registers or official forms.
 No tax formulas, new production dependencies, autonomous services, payroll engine,
-GUI screens or live transports are introduced. See [validation](validation.md)
+GUI screens or live transports are introduced. See [validation](validation-2026-10-26.md)
 for observed trial results and defects corrected during acceptance.
 
 ## 5.3. Correction-document evidence cycle (2026-10-26)
@@ -206,31 +208,31 @@ keeps external books authoritative and an unresolved continuation task. It runs
 in EN/RU without adding a task register or calculating tax/refund amounts.
 This is local evidence handling. Issuance, correction posting, settlement and
 provider readback in an actual chosen system remain unverified; the broader P3/P6
-acceptance is still open. See [validation](validation.md).
+acceptance is still open. See [validation](validation-2026-10-26.md).
 
 ## 5.4. Supplied-export inspection (2026-10-26)
 
-P6 now includes a bounded export-coverage procedure and EN/RU operation-note fields. The Lexware route identifies document/PDF versus DATEV exports before applying period/status rules, keeps self-managed accounting authoritative and does not require adviser handoff. The actual selected service is still a per-user choice; this example does not set an onboarding default. No connector, ZIP importer, live account read or period closure is added. See [validation](validation.md) for the reproduced routing defect and fresh trial evidence.
+P6 now includes a bounded export-coverage procedure and EN/RU operation-note fields. The Lexware route identifies document/PDF versus DATEV exports before applying period/status rules, keeps self-managed accounting authoritative and does not require adviser handoff. The actual selected service is still a per-user choice; this example does not set an onboarding default. No connector, ZIP importer, live account read or period closure is added. See [validation](validation-2026-10-26.md) for the reproduced routing defect and fresh trial evidence.
 
 The first selected live P6 acceptance target is **Lexware Office document reading**: a user-designated synthetic test account, bounded period, one document and, where available, its original. This development test choice does not change per-user onboarding. Live acceptance remains open until actual access and observed results exist.
 
 ## 5.5. CLI discovery acceptance (2026-10-26)
 
-P7 now has actual project-scoped discovery evidence for Codex CLI 0.164.0 on macOS arm64: seven installed skills were enabled and rediscovered in two fresh host processes. Installed files and sibling resources matched the bundle. This does not establish automatic conversational routing, desktop UI, Claude or Windows discovery. Native installer timing remains unresolved despite passing focused and instrumented diagnostic runs; retain that gate. See [validation](validation.md).
+P7 now has actual project-scoped discovery evidence for Codex CLI 0.164.0 on macOS arm64: seven installed skills were enabled and rediscovered in two fresh host processes. Installed files and sibling resources matched the bundle. This does not establish automatic conversational routing, desktop UI, Claude or Windows discovery. Native installer timing remains unresolved despite passing focused and instrumented diagnostic runs; retain that gate. See [validation](validation-2026-10-26.md).
 
 ## 5.6. Task-first continuation in existing views (2026-10-26)
 
-P1/P7 now connects the existing task register to Python/native overview and GUI home: undated and other-month active tasks, dependencies, current evidence and a proposed next task. Empty undecided workspaces start with the intended business task. Existing errors, drafts and uncertain filings retain priority. The assistant-request dialog supports continuation without a new task store, automatic execution or accounting default. Local synthetic acceptance is recorded in [validation](validation.md); native Windows, published packages and ordinary-user acceptance remain separate.
+P1/P7 now connects the existing task register to Python/native overview and GUI home: undated and other-month active tasks, dependencies, current evidence and a proposed next task. Empty undecided workspaces start with the intended business task. Existing errors, drafts and uncertain filings retain priority. The assistant-request dialog supports continuation without a new task store, automatic execution or accounting default. Local synthetic acceptance is recorded in [validation](validation-2026-10-26.md); native Windows, published packages and ordinary-user acceptance remain separate.
 
 ## 5.7. Host discovery and focused consultation acceptance (2026-10-26)
 
 P7 now includes two fresh Claude Code 2.1.310 control-initialize processes on macOS, discovering all seven installed skills through an explicitly added project directory. Installed bytes and sibling links were verified. This does not prove automatic normal-mode discovery, model routing or Windows execution. The Windows 5.1 jobs already exist, but the latest hosted run is for an older ref; the current changes need a new authorized branch/PR run.
 
-P4 consultation guidance now keeps first answers focused and requests acquisition/delivery year/month and accounting method before concrete asset entries or amounts. A fresh smartphone-installment question retrieved official sources and asked those missing facts without creating accounts or records. GUI package instructions now start with the user's task; document intake and accounting setup are conditional. See [validation](validation.md) for the source checks, exact host route, passed local package smoke and incomplete desktop launch.
+P4 consultation guidance now keeps first answers focused and requests acquisition/delivery year/month and accounting method before concrete asset entries or amounts. A fresh smartphone-installment question retrieved official sources and asked those missing facts without creating accounts or records. GUI package instructions now start with the user's task; document intake and accounting setup are conditional. See [validation](validation-2026-10-26.md) for the source checks, exact host route, passed local package smoke and incomplete desktop launch.
 
 ## 5.8. Published platform acceptance (2026-10-26)
 
-P7 now has automated acceptance for the immutable 0.8.0-preview.1 release: Windows/macOS utilities, native Windows PowerShell 5.1, Chromium/WebKit and all three GUI packages passed on the tag source. All eight published assets were independently downloaded and verified against the expected repository/workflow/tag/commit. See [validation](validation.md) for exact refs and evidence limits. Ordinary-user first launch, additional AI-host discovery routes and real service operations remain open; this milestone does not complete the full P1–P7 plan.
+P7 now has automated acceptance for the immutable 0.8.0-preview.1 release: Windows/macOS utilities, native Windows PowerShell 5.1, Chromium/WebKit and all three GUI packages passed on the tag source. All eight published assets were independently downloaded and verified against the expected repository/workflow/tag/commit. See [validation](validation-2026-10-26.md) for exact refs and evidence limits. Ordinary-user first launch, additional AI-host discovery routes and real service operations remain open; this milestone does not complete the full P1–P7 plan.
 
 ## 6. Queue and drift control
 
@@ -242,8 +244,8 @@ No day estimates are assigned: P2–P6 depend on source research, tool access an
 
 ### P7 beginner setup and first conversation (2026-10-26)
 
-The [new illustrated installation guide](../skills/de-business-kit/guides/install.en.md) starts with choosing/installing the AI host and ends with a first task and later continuation. Fresh Codex EN/RU and constrained normal-mode Claude EN trials now exercise installed skill loading and conversation. A first-answer scope failure in Claude was corrected in shared onboarding and retested. Packaging includes the reviewed artwork; desktop first installation, ordinary-user testing and live provider operations remain open. See [validation](validation.md) for the exact evidence and limits.
+The [new illustrated installation guide](../../skills/de-business-kit/guides/install.en.md) starts with choosing/installing the AI host and ends with a first task and later continuation. Fresh Codex EN/RU and constrained normal-mode Claude EN trials now exercise installed skill loading and conversation. A first-answer scope failure in Claude was corrected in shared onboarding and retested. Packaging includes the reviewed artwork; desktop first installation, ordinary-user testing and live provider operations remain open. See [validation](validation-2026-10-26.md) for the exact evidence and limits.
 
 ### P2/P3/P6: assisted forms, drafts and service operations (2026-10-26)
 
-The services skill now discovers and prepares an operation-specific connector/browser/desktop/manual route. The responsible domain skill fills authorized draft fields and checks actual state while preserving user-controlled login and final confirmation. Shared instructions, EN/RU handoff notes and user guides cover ELSTER/municipal routing, Lexware draft/API limits and export side effects; local browser fixtures support reproducible trials. No bundled production adapter, live-service acceptance or new state schema is implied. See [validation](validation.md).
+The services skill now discovers and prepares an operation-specific connector/browser/desktop/manual route. The responsible domain skill fills authorized draft fields and checks actual state while preserving user-controlled login and final confirmation. Shared instructions, EN/RU handoff notes and user guides cover ELSTER/municipal routing, Lexware draft/API limits and export side effects; local browser fixtures support reproducible trials. No bundled production adapter, live-service acceptance or new state schema is implied. See [validation](validation-2026-10-26.md).

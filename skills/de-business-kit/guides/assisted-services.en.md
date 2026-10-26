@@ -111,4 +111,4 @@ or disable security protections for this fallback.
 Keep the saved draft/reference and next action so the next session can resume.
 This kit supplies workflows, not a built-in ELSTER/Lexware connector or a guarantee
 that every screen is supported. Only local Lexware examples have been tested; live acceptance remains
-unperformed. [Choose a task](tasks.en.md) · [Everyday help](user-guide.en.md).
+unperformed. [Choose a task](user-guide.en.md#first-task) · [Everyday help](user-guide.en.md).
