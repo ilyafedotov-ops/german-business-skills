@@ -33,7 +33,8 @@ class AccountingTests(unittest.TestCase):
         value.update(entry_id=identifier, date="2026-10-20", account="psp", transaction_id=identifier,
                      amount=amount, currency="EUR", reviewer="owner", evidence_file=self.proof,
                      note="Synthetic reviewed cash movement")
-        value["lines"] = [{"kind": kind, "amount": amount, "category": kind, "activity_id": "activity-1"}]
+        value["lines"] = [{"kind": kind, "amount": amount, "category": kind, "activity_id": "activity-1", "proposal_id": None,
+                           "vat": {"status": "none_stated", "net": None, "tax": None, "rate": None}}]
         value.update(changes)
         return value
 

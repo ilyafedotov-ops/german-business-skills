@@ -38,7 +38,9 @@ silently install Python. See [native Windows](native-windows.md).
    account and transaction-ID mapping before accepting normalized records. Check
    fees, transfers and missing receipts explicitly.
 4. **Record and reconcile.** Use the selected local journal's validated writer for
-   reviewed cash movements. Export its per-account CSV and reconcile explicit
+   reviewed cash movements. Record each line's VAT as stated on its evidence, or
+   `unresolved`, and link the approved proposal it settles when one exists. Export
+   its per-account CSV and reconcile explicit
    transaction links with the normalized bank data. Correct through preserved
    reversals/replacements. Reconcile again after relevant changes.
 5. **Read the report.** Produce the cash report and refreshed overview in the

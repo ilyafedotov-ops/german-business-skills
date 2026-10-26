@@ -35,32 +35,32 @@ the current preview's named packages for the attested distribution.
 ## Download and verify
 
 On the repository's [Releases page](https://github.com/ilyafedotov-ops/german-business-skills/releases),
-choose [version 0.9.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.9.0-preview.1) and confirm the **Immutable** marker. Availability requires completed
+choose [version 0.10.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.10.0-preview.1) and confirm the **Immutable** marker. Availability requires completed
 publication and verification; an absent platform archive is not ready for use.
 Download the matching GUI archive or optional Codex/Claude ZIP, plus `SHA256SUMS`,
 into a new folder. Application archives are named:
 
-- `de-business-kit-0.9.0-preview.1-gui-windows-x64.zip`
-- `de-business-kit-0.9.0-preview.1-gui-macos-arm64.tar.gz` (Apple Silicon)
-- `de-business-kit-0.9.0-preview.1-gui-macos-x86_64.tar.gz` (Intel)
+- `de-business-kit-0.10.0-preview.1-gui-windows-x64.zip`
+- `de-business-kit-0.10.0-preview.1-gui-macos-arm64.tar.gz` (Apple Silicon)
+- `de-business-kit-0.10.0-preview.1-gui-macos-x86_64.tar.gz` (Intel)
 
 The examples below verify the optional Codex ZIP; substitute the exact downloaded
 GUI filename to verify an application archive. On Windows, native
 PowerShell can compute the hash without Python:
 
 ```powershell
-Get-FileHash .\de-business-kit-0.9.0-preview.1-codex.zip -Algorithm SHA256
+Get-FileHash .\de-business-kit-0.10.0-preview.1-codex.zip -Algorithm SHA256
 ```
 
-On macOS use `shasum -a 256 de-business-kit-0.9.0-preview.1-codex.zip`. Compare with
+On macOS use `shasum -a 256 de-business-kit-0.10.0-preview.1-codex.zip`. Compare with
 the matching line of `SHA256SUMS`. A checksum from the same untrusted source is
 not authentication. With a current optional GitHub CLI, verify the downloaded archive
 (historical validation used 2.103.2; 2.80 could not read those attestation bundles):
 
 ```sh
-gh release verify v0.9.0-preview.1 -R ilyafedotov-ops/german-business-skills
-gh release verify-asset v0.9.0-preview.1 de-business-kit-0.9.0-preview.1-codex.zip -R ilyafedotov-ops/german-business-skills
-gh attestation verify de-business-kit-0.9.0-preview.1-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.9.0-preview.1 --deny-self-hosted-runners
+gh release verify v0.10.0-preview.1 -R ilyafedotov-ops/german-business-skills
+gh release verify-asset v0.10.0-preview.1 de-business-kit-0.10.0-preview.1-codex.zip -R ilyafedotov-ops/german-business-skills
+gh attestation verify de-business-kit-0.10.0-preview.1-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.10.0-preview.1 --deny-self-hosted-runners
 ```
 
 For stricter pinning add `--source-digest` with the expected full Git commit from
@@ -90,11 +90,16 @@ Python installation or automatic update is required for Windows users.
    a successful release. If a draft remains after failure, inspect it explicitly;
    the workflow never overwrites existing releases. A published mistake needs a
    new version, not a moved tag or replaced asset.
+5. Only after step 4 succeeds, set `ref` in the root `.claude-plugin/marketplace.json`
+   to the new tag and `sha` to its commit, run `python3 -B -m unittest tests.test_packaging -v`
+   and merge that change to the default branch. Until then the
+   [GitHub marketplace](distribution.md#github-marketplace-for-claude) keeps
+   installing the previous verified release; it never installs unreleased source.
 
 Local rehearsal after creating the exact tag:
 
 ```sh
-python3 -B tools/release.py prepare --tag v0.9.0-preview.1 --output /absolute/new/release-assets
+python3 -B tools/release.py prepare --tag v0.10.0-preview.1 --output /absolute/new/release-assets
 python3 -B tools/release.py verify --directory /absolute/new/release-assets
 ```
 
@@ -132,3 +137,69 @@ provenance does not provide Windows Authenticode or Apple notarization.
 Actual results and remaining gates are in [GUI guidance](gui.md) and
 [validation](validation.md). Confirm publication and verification on the exact
 version’s release page; source documentation alone does not establish either.
+
+## Desktop signing: prepared next step
+
+**Preparation checked 2026-10-26; signing is not implemented or validated.**
+Signing identities belong to the release maintainer. Business users receiving
+assistance through MCP, a browser or installed skills do not need a certificate,
+a developer account or a desktop signing setup. The following work concerns the
+optional desktop distribution.
+
+The current [builder](../tools/build_gui.py) invokes pinned PyInstaller 6.22.3
+with `--onedir`, without a signing identity or `--windowed`, adds the licence and
+readmes, then captures file hashes and library links in `GUI-MANIFEST.json`.
+It produces a `GermanBusinessKit` directory, not a macOS `.app` bundle.
+The [packager](../tools/package_gui.py) checks that manifest, creates Windows ZIP
+or macOS `.tar.gz`, verifies the actual archive contents, then writes its checksum.
+Consequently, signing after `build_gui.py` returns currently changes already
+hashed files and must fail packaging; adding a signing command after packaging
+would also invalidate release checksums. A reviewed implementation must separate
+assembly, signing and final manifest capture.
+
+1. **macOS identity and format.** Use the maintainer's authorized Developer ID
+   Application identity. PyInstaller's `--codesign-identity` signs the collected
+   binaries and enables hardened runtime; default ad-hoc signatures do not provide
+   that identity. Review only the entitlements the application needs and verify
+   the resulting signatures and secure timestamps. See [PyInstaller signing](https://pyinstaller.org/en/stable/feature-notes.html#macos-binary-code-signing)
+   and [Apple notarization requirements](https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution).
+   Select a real `.app` in a suitable distribution container, or a supported
+   installer/disk-image route for the existing directory. Apple accepts ZIP,
+   UDIF disk images and signed flat installer packages for submission; neither
+   the current `.tar.gz` nor a standalone executable can be assumed to support
+   stapling. ZIP tickets attach to supported contained items, followed by
+   repackaging. This is a packaging decision still to implement, not a rename
+   of the current archive. See [Apple's custom workflow](https://developer.apple.com/documentation/security/customizing-the-notarization-workflow).
+2. **Windows identity and verification.** Select an authorized maintainer signing
+   identity and its key custody mechanism. Define the owned executable signing
+   inventory and check bundled third-party signatures separately. The planned
+   SignTool step uses SHA-256 file digests and RFC 3161 timestamping
+   (`/fd SHA256`, `/tr` with the selected service, `/td SHA256`); validate results
+   with `signtool verify /pa /all /v /tw` and reject failures or timestamp warnings.
+   Certificate/provider selection and timestamp service remain maintainer decisions.
+   See [Microsoft SignTool](https://learn.microsoft.com/en-us/windows/win32/seccrypto/signtool).
+3. **Final bytes and CI custody.** Finish signing before manifest capture. For
+   macOS, submit the chosen supported payload with `notarytool`, inspect its
+   acceptance and log, staple where supported, then capture the final distributable
+   inventory and package it. Keep the manifest outside any sealed `.app` resources
+   so writing it does not invalidate the signature. Adapt archive verification to
+   the selected format and prove that signatures and tickets survive extraction.
+   Only then calculate outer checksums and attest the final assets. This sequence
+   is the proposed integration design; today's scripts do not perform it.
+   Keep ordinary PR build/test jobs without signing credentials. A protected signing stage
+   should consume the reviewed exact-ref artifacts, use tightly scoped credentials
+   and publish no private key, credential or secret-bearing log. The existing
+   privileged publication job must continue to execute no project code or product
+   binary. Certificate provisioning, CI secret changes, signing-service requests,
+   notarization uploads and publication require their applicable explicit
+   authorization; this document performs none of them.
+4. **Acceptance evidence.** Require the expected publisher/Team ID, platform
+   signature verification, macOS accepted notarization and ticket validation,
+   unchanged post-signing manifest verification, and fresh downloaded-artifact
+   launch trials on Windows, Apple Silicon and Intel macOS. Include a fresh Mac
+   and offline launch where the chosen container supports stapling; retain actual
+   OS dialogs and outcomes without promising that signing removes every warning.
+   Apple recommends testing the distributed package on a separate Mac, including
+   the ticket's availability offline: [distribution testing](https://developer.apple.com/documentation/xcode/packaging-mac-software-for-distribution).
+   Record only observed results in [validation](validation.md); the desktop
+   acceptance gaps in [GUI guidance](gui.md) remain open until those trials pass.

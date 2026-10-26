@@ -6,7 +6,15 @@ Implementation scope and remaining work: [current status](project-status.md).
 
 Read the [domain ontology](ontology.md) for entities, relationships and state meanings.
 
-The [accounting workflow](../skills/de-business-kit/references/accounting-workflow.md) adds an explicitly selected authoritative system when accounting work needs it, limited local cash journal and filing evidence lifecycle through the existing `desk.py` entry point. `casefiles/accounting.py` stores additive state in `04_accounting/register.json`; it reuses workspace locks, evidence fingerprints and history, and checks register state against its latest audit checkpoint. Local cash reports include source-entry/configuration fingerprints and per-account reconciliation CSVs. Filing versions freeze payload/source files, separate review/authorization from uncertain attempts and manually observed receipts/responses, and block stale local-report preflight. No provider/ERiC transport or complete statutory tax calculator is added.
+The [accounting workflow](../skills/de-business-kit/references/accounting-workflow.md) adds an explicitly selected authoritative system when accounting work needs it, limited local cash journal and filing evidence lifecycle through the existing `desk.py` entry point. `casefiles/accounting.py` stores additive state in `04_accounting/register.json`; it reuses workspace locks, evidence fingerprints and history, and checks register state against its latest audit checkpoint. Cash lines record VAT as stated on their evidence and can link the current approved proposal they settle; the writer fingerprints each link, and reports and filing preflight stop when a linked proposal changes. Local cash reports include source-entry/configuration fingerprints, stated-VAT groups and per-account reconciliation CSVs. Filing versions freeze payload/source files, separate review/authorization from uncertain attempts and manually observed receipts/responses, and block stale local-report preflight. No provider/ERiC transport or complete statutory tax calculator is added.
+
+
+The primary interaction is the host assistant plus the existing private workspace.
+The shared execution contract owns prerequisite checks and reuse/persistence of
+confirmed facts for all seven skills. The tax-estimates reference adds researched,
+bounded calculations and explicit independent-check evidence; the consultation
+template records them without a new register or automated approval transition.
+The GUI remains an optional adapter to the same writers and records.
 
 ## Assisted external-service execution
 
@@ -40,6 +48,9 @@ use a supported UI route; no capability is inferred from an installed skill.
 Confirmed manual submission needs the same evidence discipline as tool execution.
 Local synthetic browser trials do not establish real ELSTER/Lexware acceptance.
 
+
+Invoice payment allocation is a derived projection, not a persisted paid flag: approved proposal amounts are compared with linked cash lines through the report end date, across periods. Reversals cancel their originals; corrected allocations retain history. Different currencies and ambiguous directions have no inferred balance. Reports include a settlement-basis fingerprint checked again by filing preflight. The GUI reuses filing checks only within one locked snapshot; mutations still recheck evidence. Native and Python unlock preserve exact lock bytes in audit history.
+
 ## Intended result
 
 An entrepreneur brings a task at any stage: prepare to start, register an activity, choose a service, fill in a form, answer a question, manage daily work or prepare reporting. Changes and closure have journey instructions; real execution needs separate acceptance. The [lifecycle map](../skills/de-business-kit/references/lifecycle.md) defines coverage and priorities. The router or a directly selected domain skill loads relevant modules and available tools; shared facts and decisions support continuation. Local utilities, the GUI and integrations serve these outcomes. Self-managed accounting and filing use the chosen system; a proprietary complete ledger and ELSTER connector are not prerequisites for every route. Consultation and exports remain optional.
@@ -47,6 +58,18 @@ An entrepreneur brings a task at any stage: prepare to start, register an activi
 The supported scope is a natural person operating in Germany: Freiberufler, Einzelunternehmen/Gewerbe and multiple activities of the same person. Corporations, partnerships, payroll, complex international structures and cash-register systems are outside the promised automation scope. The skill can collect facts and prepare a specific specialist handoff for those cases.
 
 Export coverage is a readable projection of supplied evidence: the selected route, date basis, inspected pages/originals and missing scope. It reuses operation notes and source maps; it adds no provider registry or automatic export engine.
+
+## Readable files and workspace folders
+
+The physical EN/RU/DE folder map remains unchanged: five visible areas with
+internal records in `.business-kit`. The workspace reference owns
+[task-based destinations](../skills/de-business-kit/references/workspace.md#route-readable-results-by-task)
+for launch plans, customer cases, service comparisons, changes and saved answers.
+New insurance/other-service reports use visible correspondence cases; existing
+hidden reports retain their location. Case folders are created only when needed,
+link canonical evidence/tasks and never establish workflow state. This is an
+agent authoring convention, not a migration or automatic organizer. Localized
+start guides explain folder roles; an update does not overwrite an existing guide.
 
 ## Seven entry points, shared state
 
@@ -151,11 +174,11 @@ These components describe code present in this source snapshot. `SKILL.md` route
 | [summary.py](../skills/de-business-kit/scripts/casefiles/summary.py) | Read-only projection of documents, open reviews, deadlines and reconciliation evidence | In-memory snapshot consumed by overview/archive |
 | [overview.py](../skills/de-business-kit/scripts/casefiles/overview.py) | English/Russian static HTML, Markdown and JSON generation | `00_admin/overview.*`, initial `START-HERE.md` |
 | [archive.py](../skills/de-business-kit/scripts/casefiles/archive.py) | Select linked records/evidence, build a manifest, verify directory and ZIP | Unique `07_exports/YYYY-MM/archive-*` artifacts |
-| [accounting.py](../skills/de-business-kit/scripts/casefiles/accounting.py) | Accounting choice, reviewed cash movements and filing-evidence lifecycle/preflight | `04_accounting/register.json`, frozen files and history |
+| [accounting.py](../skills/de-business-kit/scripts/casefiles/accounting.py) | Accounting choice, reviewed cash movements with stated line VAT and proposal links, filing-evidence lifecycle/preflight | `04_accounting/register.json`, frozen files and history |
 | [windows-overview.ps1](../skills/de-business-kit/scripts/windows-overview.ps1) | Native saved-state and local-evidence inspection under the workspace lock | Separate `00_admin/native-overview.*` projections |
 | [recovery.py](../skills/de-business-kit/scripts/recovery.py) / [recovery.ps1](../skills/de-business-kit/scripts/recovery.ps1) | Full portable backup/verify/restore, safe paths and coordinated copying | External manifest plus complete workspace tree; fresh restored location |
 
-The casework register has schema version 1 while proposals have schema version 2. These versions are independent of workspace schema version 1. Unsupported casework schemas and old proposal contracts require explicit handling; no silent migration is supplied.
+The casework register has schema version 1 while proposals have schema version 2. The accounting register stays version 1 while new cash entries have version 2; entries recorded before line VAT have no entry version, remain readable and are reported as lacking VAT. These versions are independent of workspace schema version 1. Unsupported casework schemas and old proposal contracts require explicit handling; no silent migration is supplied.
 
 ## Main execution paths
 
@@ -173,7 +196,7 @@ The casework register has schema version 1 while proposals have schema version 2
 
 Canonical state is the profile, registers, original index and preserved evidence. The overview is a generated projection; reports and archives are snapshots of selected inputs. The design is a file-backed record system with history, not an event-sourced database: current state is not rebuilt by replaying `events.json`.
 
-Writers share `.workspace.lock`. Updates to editable register/casework records use expected hashes where their commands require them, rejecting stale or missing versions. JSON replacement is atomic per file. Casework writes save a history snapshot, replace the register and append an audit event; derived artifacts can also be written during an operation. These writes are not one crash-atomic transaction. Locks coordinate participating scripts, not arbitrary filesystem editors.
+Writers share `.workspace.lock` and wait up to five seconds for a cooperating writer. The lock records process, computer and time; `doctor` classifies a remaining lock as active, stale or unverifiable, and `unlock` removes only a lock whose writer has ended (or an unverifiable one after explicit confirmation), preserving it in history. Updates to editable register/casework records use expected hashes where their commands require them, rejecting stale or missing versions. JSON replacement is atomic per file. Casework writes save a history snapshot, replace the register and append an audit event; derived artifacts can also be written during an operation. These writes are not one crash-atomic transaction. Locks coordinate participating scripts, not arbitrary filesystem editors.
 
 Recovery starts by inspecting failed-command outputs, current register hashes, originals and history. Preserve unexplained files. Both overview generators hold the workspace lock while reading and writing their projections and refuse to overwrite unmarked user files. Their separate output writes are not a crash-atomic transaction and the view can become stale after generation. The selected-record archive is distinct from full recovery. `recovery.py` and `recovery.ps1` preserve the complete workspace in a shared directory/manifest format, exclude only the active root lock, and verify copied bytes and paths. They restore only into a new private directory, hold its lock through copy verification, and use the same captured verified manifest for identity and content. Existing files, linked/unsafe paths, collisions or modified members stop the operation; partial output is preserved for inspection. Hashes do not authenticate the backup or establish tax correctness. See [recovery](../skills/de-business-kit/references/recovery.md).
 

@@ -17,9 +17,9 @@ For maintainers and contributors. Users can go directly to [installation](../ski
 
 The installed assistant uses the self-contained [skill entry point](../skills/de-business-kit/SKILL.md) and on-demand [workflow references](../skills/de-business-kit/references/lifecycle.md). They are operational instructions, not a second user manual.
 
-## History and research
+## Research
 
-The [original correction plan](history/lifecycle-plan-2026-10-26.md) and [validation chronology through 2026-10-26](history/validation-2026-10-26.md) preserve past milestones, failures and follow-ups. They are not current task lists. [Host-installation sources](research/host-installation-sources.md), [GUI research](research/gui-ux-primary-sources.md) and the [design recommendation](research/gui-ux-recommendation.md) retain their original check dates; recheck external claims for the current task.
+[Host-installation sources](research/host-installation-sources.md), [GUI research](research/gui-ux-primary-sources.md) and the [design recommendation](research/gui-ux-recommendation.md) retain their original check dates; recheck external claims for the current task.
 
 ## Keep this structure small
 

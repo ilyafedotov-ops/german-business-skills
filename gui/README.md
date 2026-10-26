@@ -2,6 +2,11 @@
 
 [English](README.md) | [Русский](README.ru.md)
 
+**Optional companion.** The usual journey is the skill in Claude or Codex with
+your private business folder. Use this application only if you want its local
+record forms; you do not need it to ask questions or continue saved work. The
+application uses the same workspace records and does not call an AI assistant.
+
 This application opens a real private workspace. It is separate from the fictional
 prototype. Keep the whole extracted application folder together. Start
 `GermanBusinessKit.exe` on Windows or `GermanBusinessKit` on macOS. Your normal

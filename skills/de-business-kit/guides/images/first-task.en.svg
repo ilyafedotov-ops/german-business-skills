@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="862" viewBox="0 0 760 862" role="img" aria-labelledby="title desc" xml:lang="en">
+<title id="title">A request becomes a useful result</title>
+<desc id="desc">Fictional example • Preparing a customer proposal You ask: Use de-business-kit. Prepare a proposal from these notes. Ask for anything missing. The assistant checks what is needed: The service and price are already in your notes. What delivery date did you agree with the client? You get a readable draft: Review the proposal. Missing details stay visible. A saved draft does not mean it was sent. Next chat: continue from your folder: Use de-business-kit. Read my saved progress. The date is confirmed. Update the proposal. Illustrated example, not a recorded conversation.</desc>
+<rect width="760" height="862" rx="24" fill="#f7f5ef"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#173e4b">
+<text x="32" y="47" font-size="19" font-weight="700" fill="#173e4b">GERMAN BUSINESS KIT</text>
+<text x="32" y="92" font-size="34" font-weight="700" fill="#173e4b">A request becomes a useful result</text>
+<text x="32" y="128" font-size="24" font-weight="400" fill="#173e4b">Fictional example • Preparing a customer proposal</text>
+<rect x="32" y="158" width="696" height="134" rx="16" fill="#ddece8"/>
+<circle cx="66" cy="194" r="18" fill="#173e4b"/>
+<text x="60" y="201" font-size="22" font-weight="700" fill="#ffffff">1</text>
+<text x="100" y="201" font-size="28" font-weight="700" fill="#173e4b">You ask</text>
+<text x="100" y="236" font-size="25" font-weight="400" fill="#173e4b">Use de-business-kit. Prepare a proposal</text>
+<text x="100" y="268" font-size="25" font-weight="400" fill="#173e4b">from these notes. Ask for anything missing.</text>
+<path d="M66 298 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="316" width="696" height="134" rx="16" fill="#f6ddcd"/>
+<circle cx="66" cy="352" r="18" fill="#173e4b"/>
+<text x="60" y="359" font-size="22" font-weight="700" fill="#ffffff">2</text>
+<text x="100" y="359" font-size="28" font-weight="700" fill="#173e4b">The assistant checks what is needed</text>
+<text x="100" y="394" font-size="25" font-weight="400" fill="#173e4b">The service and price are already in your notes.</text>
+<text x="100" y="426" font-size="25" font-weight="400" fill="#173e4b">What delivery date did you agree with the client?</text>
+<path d="M66 456 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="474" width="696" height="134" rx="16" fill="#e1e8ef"/>
+<circle cx="66" cy="510" r="18" fill="#173e4b"/>
+<text x="60" y="517" font-size="22" font-weight="700" fill="#ffffff">3</text>
+<text x="100" y="517" font-size="28" font-weight="700" fill="#173e4b">You get a readable draft</text>
+<text x="100" y="552" font-size="25" font-weight="400" fill="#173e4b">Review the proposal. Missing details stay visible.</text>
+<text x="100" y="584" font-size="25" font-weight="400" fill="#173e4b">A saved draft does not mean it was sent.</text>
+<path d="M66 614 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="632" width="696" height="134" rx="16" fill="#ddece8"/>
+<circle cx="66" cy="668" r="18" fill="#173e4b"/>
+<text x="60" y="675" font-size="22" font-weight="700" fill="#ffffff">4</text>
+<text x="100" y="675" font-size="28" font-weight="700" fill="#173e4b">Next chat: continue from your folder</text>
+<text x="100" y="710" font-size="25" font-weight="400" fill="#173e4b">Use de-business-kit. Read my saved progress.</text>
+<text x="100" y="742" font-size="25" font-weight="400" fill="#173e4b">The date is confirmed. Update the proposal.</text>
+<text x="32" y="817" font-size="22" font-weight="400" fill="#173e4b">Illustrated example, not a recorded conversation.</text>
+</g></svg>

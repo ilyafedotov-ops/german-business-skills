@@ -253,6 +253,11 @@ ws.save_entry(root, 'tasks', dict(cancelled, status='cancelled'), previous['sha2
     await page.getByLabel('Movement kind').selectOption('income');
     await page.getByLabel('Category').fill('Synthetic service');
     await page.getByLabel('Activity reference').fill('activity-1');
+    assert.equal(await page.getByLabel('Reviewed invoice (optional)').inputValue(),'','A cash line is not linked to an invoice by default');
+    await page.getByLabel('VAT on the document').selectOption('stated');
+    await page.getByLabel('Net amount (document)').fill('100,67');
+    await page.getByLabel('VAT amount (document)').fill('19.13');
+    await page.getByLabel('VAT rate % (document)').fill('19');
     await page.getByLabel('Reviewer').fill('Synthetic owner');
     await page.getByLabel('Evidence file').selectOption({ index: 1 });
     await page.getByLabel('Entry note').fill('Observed synthetic payment.');
@@ -292,8 +297,10 @@ ws.save_entry(root, 'tasks', dict(cancelled, status='cancelled'), previous['sha2
     await page.getByRole('link', { name: 'This month', exact: true }).click();
     await click(page, 'Resume entry draft');
     assert.equal(await page.getByLabel('Total cash movement').inputValue(), '119.80');
+    assert.equal(await page.getByLabel('Net amount (document)').inputValue(), '100,67', 'Saved draft keeps the stated VAT');
     await click(page, 'Record cash entry');
     await page.getByRole('dialog').getByText('119.80 EUR', { exact: false }).waitFor();
+    await page.getByRole('dialog').getByText('Stated: net and VAT shown: 100.67 + 19.13 (19 %)', { exact: true }).waitFor();
     await click(page, 'Confirm and save');
     await page.locator('main').getByText('synthetic-tx', { exact: true }).waitFor();
     await page.getByText('Saved to your workspace.', { exact: true }).waitFor();
@@ -471,6 +478,68 @@ ws.save_entry(root, 'tasks', dict(cancelled, status='cancelled'), previous['sha2
     await page.getByRole('link', { name: 'Skip to content', exact: true }).focus();
     await page.keyboard.press('Enter');
     assert.equal(await page.locator('main').evaluate(el => el === document.activeElement), true);
+    // A lock left by a program that ended can be checked and removed without an assistant.
+    const ended=spawn(process.execPath,['-e','']);
+    await new Promise(resolve=>ended.on('exit',resolve));
+    const lockFile=path.join(root,'.workspace.lock');
+    await fs.writeFile(lockFile,JSON.stringify({pid:ended.pid,created_at:'2026-10-26T18:00:00+00:00',host:os.hostname()}));
+    await click(page,'Refresh records');
+    await page.getByRole('heading',{name:'Some records could not be checked. Inspect the problem before continuing.'}).waitFor();
+    await click(page,'Check workspace lock');
+    await page.getByText('The program that locked this workspace has ended on this computer.',{exact:false}).waitFor();
+    await capture(page,{path:path.join(output,`${browserName}-left-over-lock.png`),fullPage:true});
+    await click(page,'Remove left-over lock');
+    await page.getByRole('dialog').getByText('Locked since',{exact:true}).waitFor();
+    await click(page,'Confirm and save');
+    await page.getByText('Left-over lock removed and recorded in the history.',{exact:true}).waitFor();
+    await page.getByRole('heading',{name:'Your business, one clear next step.'}).waitFor();
+    await assert.rejects(fs.access(lockFile),'Removed lock must not remain');
+
+    // Settlement projection uses real writers and never claims authoritative payment.
+    const settlementRoot=path.join(temp,'settlements');
+    execFileSync(python,['-B','-c',`
+import sys, shutil
+sys.path.insert(0, 'tests')
+from test_cash_vat import ProposalLinkTests, ac
+f = ProposalLinkTests(); f.setUp()
+try:
+    f.proposal('proposal-1')
+    ac.post(f.root, f.entry('first-payment', '60', f.line('60', status='none_stated', proposal='proposal-1')))
+    shutil.copytree(f.root, sys.argv[1])
+finally:
+    f.doCleanups()
+`,settlementRoot],{cwd:process.cwd()});
+    await selectWorkspace(settlementRoot);
+    await page.getByRole('link',{name:'This month',exact:true}).click();
+    await page.locator('[data-settlements] summary').getByText('SYN-1',{exact:false}).waitFor();
+    assert.match(await page.locator('[data-settlements]').innerText(),/Partly allocated/);
+    await page.locator('[data-settlements] summary').press('Enter');
+    await page.locator('[data-settlements]').getByText('59.00 EUR',{exact:true}).waitFor();
+    const settlementContext=await publicApi('context');
+    const postAllocation=async(id,amount,currency)=>publicApi('entry-post',{
+      workspace_id:settlementContext.workspace.id,request_id:require('node:crypto').randomUUID(),
+      value:{schema_version:2,entry_id:id,date:'2026-10-21',account:'bank',transaction_id:id,amount,currency,
+        reviewer:'Synthetic owner',evidence_file:'08_correspondence/review.md',note:'Synthetic allocation',replaces:null,
+        lines:[{kind:'income',amount,category:'Synthetic income',activity_id:'consulting',proposal_id:'proposal-1',
+          vat:{status:'none_stated',net:null,tax:null,rate:null}}]}});
+    await postAllocation('balance-payment','59','EUR');
+    await page.reload();
+    await page.locator('[data-settlements]').getByText('SYN-1 · Amounts match',{exact:true}).waitFor();
+    await postAllocation('foreign-payment','10','USD');
+    await page.reload();
+    await page.locator('[data-settlements]').getByText('SYN-1 · Needs review',{exact:true}).waitFor();
+    for(const lang of ['en','ru','de']) {
+      await page.locator('#language').selectOption(lang);
+      await page.locator('[data-settlements] summary').click();
+      assert.match(await page.locator('[data-settlements]').innerText(),/10 USD/);
+      for(const width of [1440,390]) {
+        await page.setViewportSize({width,height:1000});
+        assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`${lang}/settlements overflow at ${width}`);
+        await capture(page,{path:path.join(output,`${browserName}-${lang}-settlements-${width}.png`),fullPage:true});
+      }
+    }
+    await page.locator('#language').selectOption('en');
+    await selectWorkspace(root);
 
     for (const lang of ['en','ru','de']) {
       await page.locator('#language').selectOption(lang);

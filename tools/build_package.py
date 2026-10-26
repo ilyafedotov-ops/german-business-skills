@@ -124,10 +124,17 @@ def snapshot(source: Path) -> Dict[str, bytes]:
                     f"skills/{NAME}/guides/images/entrepreneur-journey.png",
                     f"skills/{NAME}/guides/images/setup-map.en.svg",
                     f"skills/{NAME}/guides/images/setup-map.ru.svg",
+                    f"skills/{NAME}/guides/images/how-it-works.en.svg",
+                    f"skills/{NAME}/guides/images/how-it-works.ru.svg",
+                    f"skills/{NAME}/guides/images/assisted-install.en.svg",
+                    f"skills/{NAME}/guides/images/assisted-install.ru.svg",
+                    f"skills/{NAME}/guides/images/first-task.en.svg",
+                    f"skills/{NAME}/guides/images/first-task.ru.svg",
+                    f"skills/{NAME}/guides/images/claude-marketplace.jpg",
                 }
                 if name.startswith(".") or (entry.suffix not in {".md", ".json", ".yaml", ".py"}
                         and not reviewed_guide_image
-                        and entry.relative_to(skill).as_posix() not in {"scripts/windows.ps1", "scripts/windows-overview.ps1", "scripts/recovery.ps1", "assets/readable-document.html"}):
+                        and entry.relative_to(skill).as_posix() not in {"scripts/windows.ps1", "scripts/windows-overview.ps1", "scripts/windows-locks.ps1", "scripts/recovery.ps1", "assets/readable-document.html"}):
                     raise BuildError(f"Unreviewed skill resource type: {entry}")
                 files[entry.relative_to(source).as_posix()] = read_file(entry)
     prefix = f"skills/{NAME}/"
@@ -136,7 +143,7 @@ def snapshot(source: Path) -> Dict[str, bytes]:
         "references/document-authoring.md", "references/readable-output.md", "references/document-delivery-sources.md",
         "assets/readable-document.html", "assets/de/recipient-letter.md",
         "scripts/workflows.py", "scripts/payments.py", "assets/locales.json",
-        "scripts/windows.ps1", "scripts/windows-overview.ps1", "scripts/recovery.ps1", "scripts/recovery.py", "references/recovery.md", "assets/workspace-seed.json", "assets/folder-layouts.json", "references/native-windows.md",
+        "scripts/windows.ps1", "scripts/windows-overview.ps1", "scripts/windows-locks.ps1", "scripts/recovery.ps1", "scripts/recovery.py", "references/recovery.md", "assets/workspace-seed.json", "assets/folder-layouts.json", "references/native-windows.md",
         "assets/casework-messages.json", "assets/proposal.json", "assets/source-check.json",
         "assets/extracted-field.json",
         *("scripts/casefiles/" + name + ".py" for name in (

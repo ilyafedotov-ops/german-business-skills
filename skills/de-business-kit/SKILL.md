@@ -3,7 +3,7 @@ name: de-business-kit
 description: >-
   Start or resume German sole-trader assistance, identify the next task and select
   a focused business skill using shared context. Use for general onboarding,
-  mixed requests or continuing work; русский: начать, продолжить, следующий шаг.
+  mixed requests, usage guidance or continuing work; русский: начать, как пользоваться, продолжить, следующий шаг.
   Specific formation, daily operations, accounting, tax, services and change tasks
   can use their dedicated skills directly.
 ---
@@ -31,11 +31,16 @@ question. English/Russian are supported; keep official German form labels.
 Use the clear intent without forcing a menu. A specific skill can be used directly;
 this router is not a prerequisite or a separate agent. For a mixed task, choose
 one primary outcome, load only the relevant related instructions and retain
-unresolved questions across the handoff. Do not ask for facts already confirmed.
+unresolved questions across the handoff. Do not ask for facts already confirmed. Apply the shared prerequisite and
+remembered-fact process to every task: clarify material ambiguity, reuse relevant
+saved context, ask targeted follow-ups and preserve confirmed information for
+continuation.
 
 ## Start and continue
 
-Use [guided onboarding](references/onboarding.md) when setup is actually requested.
+Use [guided onboarding](references/onboarding.md) for requested setup or usage help.
+For “how do I use this?”, explain invocation and offer a few relevant copyable
+requests with expected results; use the existing installation guide for setup.
 For existing records use [existing-data intake](references/existing-data.md).
 For continuation read only the relevant tasks, questions and evidence in the
 chosen workspace; report completed work, open dependencies and the next action

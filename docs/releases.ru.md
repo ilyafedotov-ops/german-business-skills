@@ -34,31 +34,31 @@ minor, совместимые исправления — patch, несовмес
 ## Скачать и проверить
 
 На [странице выпусков](https://github.com/ilyafedotov-ops/german-business-skills/releases)
-выберите [версию 0.9.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.9.0-preview.1) и найдите отметку **Immutable**. Доступность требует завершённой
+выберите [версию 0.10.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.10.0-preview.1) и найдите отметку **Immutable**. Доступность требует завершённой
 публикации и проверки; отсутствующий платформенный архив ещё не готов к использованию.
 Скачайте подходящий архив GUI или необязательный ZIP Codex/Claude и `SHA256SUMS`
 в новую папку. Имена архивов приложения:
 
-- `de-business-kit-0.9.0-preview.1-gui-windows-x64.zip`
-- `de-business-kit-0.9.0-preview.1-gui-macos-arm64.tar.gz` (Apple Silicon)
-- `de-business-kit-0.9.0-preview.1-gui-macos-x86_64.tar.gz` (Intel)
+- `de-business-kit-0.10.0-preview.1-gui-windows-x64.zip`
+- `de-business-kit-0.10.0-preview.1-gui-macos-arm64.tar.gz` (Apple Silicon)
+- `de-business-kit-0.10.0-preview.1-gui-macos-x86_64.tar.gz` (Intel)
 
 Примеры ниже проверяют необязательный ZIP Codex; подставьте точное имя скачанного
 архива GUI для проверки приложения. Windows проверяет хеш без Python:
 
 ```powershell
-Get-FileHash .\de-business-kit-0.9.0-preview.1-codex.zip -Algorithm SHA256
+Get-FileHash .\de-business-kit-0.10.0-preview.1-codex.zip -Algorithm SHA256
 ```
 
-В macOS: `shasum -a 256 de-business-kit-0.9.0-preview.1-codex.zip`. Сравните результат
+В macOS: `shasum -a 256 de-business-kit-0.10.0-preview.1-codex.zip`. Сравните результат
 с нужной строкой `SHA256SUMS`. Хеш из того же недоверенного источника не подтверждает
 автора. При наличии актуального необязательного GitHub CLI проверьте происхождение
 архива (исторические проверки использовали 2.103.2; 2.80 не смог прочитать те аттестации):
 
 ```sh
-gh release verify v0.9.0-preview.1 -R ilyafedotov-ops/german-business-skills
-gh release verify-asset v0.9.0-preview.1 de-business-kit-0.9.0-preview.1-codex.zip -R ilyafedotov-ops/german-business-skills
-gh attestation verify de-business-kit-0.9.0-preview.1-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.9.0-preview.1 --deny-self-hosted-runners
+gh release verify v0.10.0-preview.1 -R ilyafedotov-ops/german-business-skills
+gh release verify-asset v0.10.0-preview.1 de-business-kit-0.10.0-preview.1-codex.zip -R ilyafedotov-ops/german-business-skills
+gh attestation verify de-business-kit-0.10.0-preview.1-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.10.0-preview.1 --deny-self-hosted-runners
 ```
 
 Для строгой фиксации добавьте `--source-digest` с полным ожидаемым коммитом тега.
@@ -86,11 +86,17 @@ gh attestation verify de-business-kit-0.9.0-preview.1-codex.zip --repo ilyafedot
    `gh attestation verify`. Отправленный тег или локальная сборка ещё не выпуск.
    Оставшийся после ошибки черновик надо проверить отдельно: процесс не заменяет
    существующие выпуски. Ошибка опубликованной версии требует новой версии.
+5. Только после успешного шага 4 указать в корневом `.claude-plugin/marketplace.json`
+   новый тег в `ref` и его коммит в `sha`, запустить
+   `python3 -B -m unittest tests.test_packaging -v` и влить это изменение в ветку
+   по умолчанию. До этого [маркетплейс на GitHub](distribution.ru.md#маркетплейс-на-github-для-claude)
+   продолжает устанавливать предыдущий проверенный выпуск; неопубликованный код он
+   не устанавливает никогда.
 
 Локальная репетиция после создания точного тега:
 
 ```sh
-python3 -B tools/release.py prepare --tag v0.9.0-preview.1 --output /absolute/new/release-assets
+python3 -B tools/release.py prepare --tag v0.10.0-preview.1 --output /absolute/new/release-assets
 python3 -B tools/release.py verify --directory /absolute/new/release-assets
 ```
 
@@ -129,3 +135,72 @@ security severity >= 7 или уровне error. Метаданные чита�
 Фактические результаты и оставшиеся этапы — в [руководстве GUI](gui.ru.md)
 и [журнале проверок](validation.ru.md). Подтвердите публикацию и проверку на странице
 точной версии; документация исходников сама по себе их не подтверждает.
+
+## Подпись настольного приложения: подготовленный следующий этап
+
+**Подготовка проверена 26.10.2026; подпись не реализована и не проверена.**
+Сертификат подписи относится к сопровождающему выпуска. Предпринимателю,
+получающему помощь через MCP, браузер или установленные skills, не нужны
+сертификат, аккаунт разработчика или настройка подписи приложения. Ниже описана
+работа над необязательным настольным дистрибутивом.
+
+Текущий [сборщик](../tools/build_gui.py) запускает закреплённый PyInstaller 6.22.3
+с `--onedir`, без удостоверения подписи и `--windowed`, добавляет лицензию и readme,
+затем записывает хеши файлов и ссылки библиотек в `GUI-MANIFEST.json`.
+Результат — каталог `GermanBusinessKit`, а не пакет macOS `.app`.
+[Упаковщик](../tools/package_gui.py) сверяет манифест, создаёт ZIP для Windows
+или `.tar.gz` для macOS, проверяет фактическое содержимое архива и записывает
+контрольную сумму. Поэтому подпись после возврата из `build_gui.py` сейчас изменит
+уже захешированные файлы и должна остановить упаковку; подпись после упаковки
+также нарушит контрольные суммы выпуска. Реализация после ревью должна разделить
+сборку, подпись и фиксацию окончательного манифеста.
+
+1. **Удостоверение и формат macOS.** Использовать разрешённое удостоверение
+   Developer ID Application сопровождающего. Параметр PyInstaller
+   `--codesign-identity` подписывает собранные бинарные файлы и включает hardened
+   runtime; стандартная ad-hoc подпись не подтверждает это удостоверение.
+   Проверить только необходимые приложению entitlements, итоговые подписи и
+   защищённые метки времени. См. [подпись PyInstaller](https://pyinstaller.org/en/stable/feature-notes.html#macos-binary-code-signing)
+   и [требования Apple](https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution).
+   Выбрать настоящий `.app` в подходящем контейнере либо поддерживаемый
+   установщик/образ диска для существующего каталога. Apple принимает ZIP,
+   образы UDIF и подписанные плоские установочные пакеты; нельзя предполагать,
+   что текущий `.tar.gz` или отдельный исполняемый файл поддерживает stapling.
+   Для ZIP билет прикрепляется к поддерживаемым объектам внутри, затем архив
+   создаётся заново. Это ещё не реализованное решение об упаковке, а не
+   переименование архива. См. [собственный процесс Apple](https://developer.apple.com/documentation/security/customizing-the-notarization-workflow).
+2. **Удостоверение и проверка Windows.** Выбрать разрешённое удостоверение
+   сопровождающего и способ хранения ключа. Определить перечень собственных
+   исполняемых файлов для подписи, отдельно проверить подписи сторонних библиотек.
+   Планируемый шаг SignTool использует SHA-256 и метки времени RFC 3161
+   (`/fd SHA256`, `/tr` с выбранным сервисом, `/td SHA256`); результат проверяется
+   через `signtool verify /pa /all /v /tw`. Ошибки и предупреждения об отсутствии
+   метки времени должны останавливать выпуск. Сертификат, поставщик и сервис
+   меток времени остаются решениями сопровождающего. См. [Microsoft SignTool](https://learn.microsoft.com/en-us/windows/win32/seccrypto/signtool).
+3. **Окончательные байты и защита CI.** Завершить подпись до фиксации манифеста.
+   Для macOS отправить выбранный поддерживаемый пакет через `notarytool`, проверить
+   принятие и журнал, прикрепить билет там, где это поддерживается, затем записать
+   окончательный перечень файлов и упаковать дистрибутив. Хранить манифест вне
+   защищённых подписью ресурсов `.app`, чтобы его запись не нарушила подпись.
+   Адаптировать проверку архива к выбранному формату и доказать сохранность подписей
+   и билетов после распаковки. Только затем считать внешние контрольные суммы и
+   аттестовать итоговые файлы. Это предложенный порядок интеграции; текущие скрипты
+   его не выполняют. Обычные задания сборки и тестов PR не должны получать учётные данные
+   подписи. Защищённый этап подписи должен принимать проверенные артефакты точного
+   ref, использовать минимальные права и не публиковать ключи, учётные данные или
+   журналы с секретами. Существующее привилегированное задание публикации по-прежнему
+   не должно выполнять код проекта или бинарные файлы продукта. Получение
+   сертификата, изменение секретов CI, обращения к сервису подписи, загрузка для
+   нотариального заверения и публикация требуют соответствующего явного разрешения;
+   этот документ ничего из перечисленного не выполняет.
+4. **Подтверждение готовности.** Нужны ожидаемый издатель/Team ID, проверка
+   платформенной подписи, принятое нотариальное заверение и проверка билета macOS,
+   неизменность манифеста после подписи и новые пробы запуска скачанных артефактов
+   на Windows, Apple Silicon и Intel macOS. Включить чистый Mac и запуск без сети,
+   если выбранный контейнер поддерживает stapling; сохранить фактические диалоги
+   ОС и результаты, не обещая исчезновения всех предупреждений после подписи.
+   Apple рекомендует проверять распространяемый пакет на другом Mac, в том числе
+   доступность билета без сети: [проверка дистрибутива](https://developer.apple.com/documentation/xcode/packaging-mac-software-for-distribution).
+   Записывать только наблюдавшиеся результаты в [журнал проверок](validation.ru.md);
+   ограничения настольной приёмки в [руководстве GUI](gui.ru.md) остаются открытыми
+   до успешного завершения этих проб.

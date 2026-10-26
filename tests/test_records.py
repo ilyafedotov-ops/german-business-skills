@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 SCRIPT = Path(__file__).resolve().parents[1] / "skills/de-business-kit/scripts/workspace.py"
 SPEC = importlib.util.spec_from_file_location("records_workspace", SCRIPT)
@@ -74,6 +75,7 @@ class RegisterTests(unittest.TestCase):
         self.assertEqual(summary["status"], "approved")
         self.assertNotIn("title", summary)
 
+    @patch.object(workspace, "LOCK_WAIT_SECONDS", 0)  # Refusal, not the wait, is under test.
     def test_active_lock_and_unknown_record_fields_do_not_write(self):
         with self.assertRaises(workspace.WorkspaceError):
             workspace.save_entry(self.root, "tasks", self.task(automatic_submission=True))

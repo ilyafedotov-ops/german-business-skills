@@ -6,7 +6,7 @@ Historical research: the proposals and source-check dates below describe that in
 
 Research date: **2026-10-25**. Baseline inspected: **`c4c00ab`**. This is a maintainer design brief, not an implemented interface, a usability-test result or a change to the accounting contract. Concurrent uncommitted accounting work is outside this assessment. See the [primary UX sources](gui-ux-primary-sources.md) for source findings and their authority.
 
-Implementation follow-up: the [synthetic clickable prototype](../gui.md#fictional-prototype) now exercises the four proposed journeys. Its [verification record](../history/validation-2026-10-26.md#prototype-validation) is separate from this research baseline; production integration and participant testing remain open.
+Implementation follow-up: the [synthetic clickable prototype](../gui.md#fictional-prototype) now exercises the four proposed journeys. The [validation summary](../validation.md) records implementation evidence separately from this research baseline; ordinary-user usability acceptance remains open.
 
 ## Recommendation
 

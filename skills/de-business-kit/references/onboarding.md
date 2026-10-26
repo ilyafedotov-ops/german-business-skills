@@ -10,6 +10,60 @@ If the user already has email, cloud/accounting records or a nonempty folder, fo
 
 Only when the requested task needs accounting records, establish where the user wants to keep their accounts: an existing exact software product or local records. Do not choose a default or infer the accounting method from that decision. Follow [accounting workflow](accounting-workflow.md) to save the evidenced choice with `desk.py accounting-configure` and inspect it with `accounting-status` on resume. The user can defer this choice while intake/research continue. Existing external books remain authoritative; a local EÜR cash journal is limited preparation, not complete statutory accounting. Once records exist, changing the authoritative system requires a separately reviewed migration.
 
+## Explain installation and how to use the kit
+
+For “install this repository and show me how to use it,” read the matching
+[English](../guides/install.en.md#ask-your-assistant-to-help-install) or
+[Russian](../guides/install.ru.md#попросите-ассистента-помочь-с-установкой) guide.
+Inspect the actual host and existing installation before choosing a route. Use
+available authorized installation tools; guide any user-held app click. Preserve
+existing files and install the complete bundle. Never claim host discovery from
+a download or copy alone; verify availability in a fresh session. Do not install
+runtimes, weaken protections or create a business workspace just for installation.
+If this reference is only being read from a downloaded repository, that is not
+proof the host has installed the skill. Identify the specific remaining step.
+
+At first use or before real documents, briefly explain that this is AI assistance,
+not professional tax advice, and that local files can be processed by a remote
+provider. Link the [user-facing notice](../guides/user-guide.en.md#ai-limits-and-your-data)
+(or Russian equivalent). Follow [privacy](privacy.md) before model access to real
+personal/confidential content; preserve an already explained unchanged route and
+continue simple questions without a blanket acceptance gate.
+
+During setup or model-selection help, briefly explain the shared
+[model and reasoning recommendation](shared-context.md#model-and-reasoning-recommendation).
+Guide the user's actual model/effort controls when available; preserve their
+choice and do not make a model upgrade a prerequisite for trying the kit.
+
+When the intended task needs website/app interaction, use the
+[interaction-tool recommendation](assisted-services.md#recommend-interaction-tools-only-when-useful):
+check enabled connections, tools and relevant helper skills, then guide only the
+missing supported access. Do not make browser/computer control part of every
+installation or require it for a simple first question.
+
+For “how do I use this?” or post-install help, give a short practical introduction:
+
+- Explain how to invoke the installed skill in the actual host using the
+  [user guide](../guides/user-guide.en.md#call-a-skill) (or its Russian counterpart).
+  `de-business-kit` can route the task; learning all specialist names is optional.
+- Reuse the person's stated lifecycle stage. Offer about three relevant copyable
+  requests, each naming a skill and the result it helps prepare. If their situation
+  is unknown, use a small spread of question, document and continuation examples;
+  ask one useful question rather than starting a full intake.
+- For filling a file, inspect its actual format, fields and available editing tools;
+  preserve the original, identify missing facts and provide a readable draft or
+  precise remaining step. A prompt example does not establish editing capability.
+- For integrations, inspect available host connections and operation-specific access
+  under [connections](connections.md); explain supported setup or a selected-file
+  route. Installation never establishes bank/email/ELSTER access or authorizes
+  unrelated external changes. Do not request secrets in chat.
+- Explain that a simple question can start immediately. For ongoing work, reuse or
+  choose one private business folder and show a request for saving/resuming there.
+  Invite one small useful task; do not impose a GUI, accounting choice or demo.
+
+Only explain the pieces relevant to the request. A user who already gave a concrete
+business task should get that help, not an unsolicited product tour.
+
 ## One small first step
 
 When a new user asks only where to begin, one small step or a fictional first try,
@@ -55,7 +109,7 @@ If web access is unavailable, identify which consequential rule remains unverifi
 
 - On the native route run `verify` and inspect the existing records/lock without claiming a complete diagnostic assessment. With the optional Python engine run `doctor --root <workspace>` for local integrity, setup issues and lock visibility. It does not probe the app's browser or cloud permissions. Report the actual outcome in the active language; technical JSON is for the agent.
 - For an existing or nonempty folder: reopen it, choose a new folder, or inspect its marker. Never clear it to make initialization succeed.
-- For a lock: check the process/operation with the user or actual host tools. Do not remove another writer's lock. Only after establishing that no writer remains should an authorized recovery preserve and remove the stale lock.
+- For a lock: run `doctor` and read `lock.assessment`. Never remove an `active` lock; let that operation finish or have the user close it. A `stale` lock's process has ended on this computer: `unlock --expected-sha256` removes it with preserved history. For `unverifiable`, first confirm with the user that no other app, assistant or computer uses the workspace, then add `--confirmed-no-writer`. Never delete the lock file by hand.
 - For altered originals or evidence: preserve both versions, identify what changed, restore from a trusted backup when appropriate, or create a linked correction. Do not update hashes merely to make a warning disappear.
 - For malformed legacy records: keep the existing file and history, explain affected fields, and prepare a reviewed conversion to the documented format. `status` never silently migrates them. Profile corrections use `record`; register conversion needs a separately reviewed local edit because there was no old register schema.
 - For updates: install/review a fresh skill package separately, close active writers, verify a synthetic example, and reopen the same private workspace. Do not initialize business data again. Avoid duplicate standalone and plugin installations.

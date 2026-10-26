@@ -4,6 +4,9 @@
 
 This conceptual ontology maps implemented domain concepts and relationships to JSON/Python contracts; it is not an RDF/OWL schema or a new storage format. [Current status](project-status.md) owns delivery scope and remaining work.
 
+
+Invoice payment allocation is a derived projection, not a persisted paid flag: approved proposal amounts are compared with linked cash lines through the report end date, across periods. Reversals cancel their originals; corrected allocations retain history. Different currencies and ambiguous directions have no inferred balance. Reports include a settlement-basis fingerprint checked again by filing preflight. The GUI reuses filing checks only within one locked snapshot; mutations still recheck evidence. Native and Python unlock preserve exact lock bytes in audit history.
+
 ## Assisted-service context
 
 An access route (connector, browser, desktop UI or guided manual) is a property
@@ -21,9 +24,9 @@ or parallel accounting ledger is introduced.
 
 ## Domain and identity
 
-The [accounting workflow](../skills/de-business-kit/guides/user-guide.en.md#accounts-and-payments) adds three related concepts: an **accounting configuration** chosen when accounting work requires it (`local` or `external`, never defaulted), immutable **cash entries** with split lines and linked reversals/replacements, and **filing versions** binding a frozen report to its source evidence, review/authorization events and separately observed receipt/responses. Their additive register is `04_accounting/register.json`. Cash entries are recorded local cash movements, not merely proposals; filing records track evidence; neither establishes complete tax calculation or a live transport. Existing external software remains authoritative when selected.
+The [accounting workflow](../skills/de-business-kit/guides/user-guide.en.md#accounts-and-payments) adds three related concepts: an **accounting configuration** chosen when accounting work requires it (`local` or `external`, never defaulted), immutable **cash entries** with split lines, line VAT as stated, optional links to the approved proposals they settle and linked reversals/replacements, and **filing versions** binding a frozen report to its source evidence, review/authorization events and separately observed receipt/responses. Their additive register is `04_accounting/register.json`. Cash entries are recorded local cash movements, not merely proposals; filing records track evidence; neither establishes complete tax calculation or a live transport. Existing external software remains authoritative when selected.
 
-The domain is one entrepreneur and their activities throughout the business lifecycle. [Stages and tasks](history/lifecycle-plan-2026-10-26.md) organize assistance journeys; they are not a new persisted enum or state machine. Current records cover facts, documents, proposals, reconciliation, limited cash entries, filing evidence and recovery. One private workspace preserves shared context across activities, periods, languages and modes. Its UUID is not an official taxpayer identifier. Separate workspaces for different people are a workflow boundary, not a central identity registry.
+The domain is one entrepreneur and their activities throughout the business lifecycle. [Stages and tasks](project-status.md) organize assistance journeys; they are not a new persisted enum or state machine. Current records cover facts, documents, proposals, reconciliation, limited cash entries, filing evidence and recovery. One private workspace preserves shared context across activities, periods, languages and modes. Its UUID is not an official taxpayer identifier. Separate workspaces for different people are a workflow boundary, not a central identity registry.
 
 All seven skills use these entities through the shared contract. Selecting a skill or passing a task is not a new persisted entrepreneur state, tax decision or external-action authorization. Workspace schemas and existing identifiers remain unchanged. A launch/customer/annual/change/access worksheet is an authored view over evidence; it is not another canonical task register.
 
@@ -53,7 +56,7 @@ Legal form, activity classification, VAT regime and accounting method are separa
 | Provider observation | Evidence of an externally observed provider record and status | Casework `observations`; linked to a proposal, provider and evidence file |
 | Operation | A proposed external action, its payload, authorization and result evidence | `assets/operation.json` template; no executable operation engine |
 | Accounting configuration | Explicit authoritative system and accounting method | `04_accounting/register.json` → `configuration`; evidence and fingerprint |
-| Cash entry | Reviewed cash movement with splits, preserved correction/reversal links | `register.json` → `entries`; not a complete statutory ledger |
+| Cash entry | Reviewed cash movement with splits, line VAT as stated, optional links to approved proposals and preserved correction/reversal links | `register.json` → `entries`; stated VAT is evidence, not a VAT return; not a complete statutory ledger |
 | Filing version | Frozen payload/sources and review, authorization, receipt and response evidence | `register.json` → `filings`; state independent of real transmission |
 | Full workspace backup | Complete portable recovery copy, distinct from a selected archive | External directory with `manifest.json` and `files/`; only root lock excluded |
 | Overview | A regenerable view of current records and open work | `00_admin/overview.*` or separate `native-overview.*`; projections, not canonical business state |
@@ -65,6 +68,13 @@ Casework collections live in `00_admin/casework.json`. That register is additive
 A supplied-export coverage note describes a snapshot, its selection/date basis and inspected versus missing evidence. It is a readable operation/source-map artifact, not a new canonical entity. A row in an export does not establish that its original document is present, paid, posted or observed in the live service.
 
 Task `readiness` (`ready`, `blocked`, `needs_review`), `pending_dependencies` and `next_task_id` are derived view fields, not new task states or approvals. Active tasks span the whole workspace; completed/cancelled tasks remain canonical but are omitted from the active list. A ready dependency requires completed work with current preserved evidence through its ancestry.
+
+
+Task prerequisites reuse profile facts, questions and decisions with their existing
+provenance/effective dates. An unknown or hypothetical input is not a durable
+confirmed fact. Case-specific calculations and independent-check evidence belong
+in the existing consultation/worksheet; their human-readable verification labels
+are not new persisted enums, a tax-correctness guarantee or filing authorization.
 
 ## Relationships
 

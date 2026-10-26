@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="704" viewBox="0 0 760 704" role="img" aria-labelledby="title desc" xml:lang="en">
+<title id="title">From installation to your first task</title>
+<desc id="desc">Start with the copyable request in this guide. Ask your assistant to install: Paste the repository link and install request. The assistant checks the route for your app. Follow the steps for your app: Claude: add the marketplace and plugin. Codex: copy the complete kit into your project. Check in a new task or chat: All seven skills should be available. Use de-business-kit. Show me one small task. Installation walkthrough, not an app screenshot.</desc>
+<rect width="760" height="704" rx="24" fill="#f7f5ef"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#173e4b">
+<text x="32" y="47" font-size="19" font-weight="700" fill="#173e4b">GERMAN BUSINESS KIT</text>
+<text x="32" y="92" font-size="34" font-weight="700" fill="#173e4b">From installation to your first task</text>
+<text x="32" y="128" font-size="24" font-weight="400" fill="#173e4b">Start with the copyable request in this guide.</text>
+<rect x="32" y="158" width="696" height="134" rx="16" fill="#ddece8"/>
+<circle cx="66" cy="194" r="18" fill="#173e4b"/>
+<text x="60" y="201" font-size="22" font-weight="700" fill="#ffffff">1</text>
+<text x="100" y="201" font-size="28" font-weight="700" fill="#173e4b">Ask your assistant to install</text>
+<text x="100" y="236" font-size="25" font-weight="400" fill="#173e4b">Paste the repository link and install request.</text>
+<text x="100" y="268" font-size="25" font-weight="400" fill="#173e4b">The assistant checks the route for your app.</text>
+<path d="M66 298 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="316" width="696" height="134" rx="16" fill="#f6ddcd"/>
+<circle cx="66" cy="352" r="18" fill="#173e4b"/>
+<text x="60" y="359" font-size="22" font-weight="700" fill="#ffffff">2</text>
+<text x="100" y="359" font-size="28" font-weight="700" fill="#173e4b">Follow the steps for your app</text>
+<text x="100" y="394" font-size="25" font-weight="400" fill="#173e4b">Claude: add the marketplace and plugin.</text>
+<text x="100" y="426" font-size="25" font-weight="400" fill="#173e4b">Codex: copy the complete kit into your project.</text>
+<path d="M66 456 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="474" width="696" height="134" rx="16" fill="#e1e8ef"/>
+<circle cx="66" cy="510" r="18" fill="#173e4b"/>
+<text x="60" y="517" font-size="22" font-weight="700" fill="#ffffff">3</text>
+<text x="100" y="517" font-size="28" font-weight="700" fill="#173e4b">Check in a new task or chat</text>
+<text x="100" y="552" font-size="25" font-weight="400" fill="#173e4b">All seven skills should be available.</text>
+<text x="100" y="584" font-size="25" font-weight="400" fill="#173e4b">Use de-business-kit. Show me one small task.</text>
+<text x="32" y="659" font-size="22" font-weight="400" fill="#173e4b">Installation walkthrough, not an app screenshot.</text>
+</g></svg>

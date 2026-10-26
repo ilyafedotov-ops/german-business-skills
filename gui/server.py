@@ -31,9 +31,9 @@ ASSETS = BASE / 'gui'
 MAX_REQUEST = 18 * 1024 * 1024
 MAX_UPLOAD = 12 * 1024 * 1024
 DRAFT_PATH = '00_admin/gui-drafts.json'
-READ_OPS = {'context', 'status', 'file', 'verify-backup', 'select-folder'}
+READ_OPS = {'context', 'status', 'file', 'verify-backup', 'select-folder', 'lock-status'}
 MUTATIONS = {'open', 'receive', 'document-save', 'configuration', 'entry-post', 'entry-reverse',
-             'filing-create', 'filing-action', 'report', 'overview', 'backup', 'restore', 'draft-save'}
+             'filing-create', 'filing-action', 'report', 'overview', 'backup', 'restore', 'draft-save', 'unlock'}
 FILE_TYPES = ws.EXTENSIONS | {'.md', '.txt', '.json', '.html'}
 
 
@@ -122,6 +122,12 @@ class Application:
         if self.root is None:
             raise ws.WorkspaceError('Open a private workspace first.')
         root = ws._workspace(self.root)
+        if op == 'lock-status':
+            return {'lock': ws.lock_status(root)}
+        if op == 'unlock':
+            if type(args.get('confirmed_no_writer')) is not bool:
+                raise ws.WorkspaceError('State explicitly whether another app or computer could be using this workspace.')
+            return ws.unlock_workspace(root, args['expected_sha256'], args['confirmed_no_writer'])
         if op == 'status':
             return self.snapshot(args.get('period', date.today().strftime('%Y-%m')))
         if op == 'receive':
@@ -237,15 +243,18 @@ class Application:
                         'path': indexed[record['document_id']]['path'],
                         'original_name': indexed[record['document_id']]['original_name']} for record in catalog]
             view = summary.collect(self.root, period, date.today().isoformat())
-            view['accounting'], view['filings'] = accounting.overview_state(self.root, period)
+            filing_checks = {identifier: accounting._check_filing(self.root, identifier, state)
+                             for identifier in state['filings']}
+            view['accounting'], view['filings'] = accounting.overview_state(self.root, period, state, filing_checks)
             view['open_questions'] = [q for q in view['questions'] if q['status'] in {'open', 'deferred'}]
             filings = [{'record': record, 'sha256': storage.digest(record),
-                        'check': accounting._check_filing(self.root, record['filing_id'], state)} for record in state['filings'].values()]
+                        'check': filing_checks[record['filing_id']]} for record in state['filings'].values()]
             drafts, checksum = self._drafts()
             return {'workspace': {'root': str(self.root), 'name': self.root.name, 'id': self.workspace_id}, 'period': period,
                     'documents': records, 'accounting': {'configuration': state['configuration'],
                     'configuration_sha256': storage.digest(state['configuration']) if state['configuration'] else None,
-                    'entries': list(state['entries'].values()), 'filings': filings}, 'overview': view,
+                    'entries': list(state['entries'].values()), 'filings': filings,
+                    'proposals': accounting.linkable(self.root)}, 'overview': view,
                     'files': self.files(), 'drafts': drafts, 'drafts_sha256': checksum,
                     'forms': wf.catalog()['forms'], 'capabilities': {'local_writes': True, 'transmission': False,
                     'tax_calculation': False, 'report_languages': ['en', 'ru']}}

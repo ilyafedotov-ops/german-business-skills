@@ -1,7 +1,7 @@
 ---
 name: de-business-tax
 description: >-
-  Answer German sole-trader tax questions, research applicable rules, guide estimates with official/provider tools, prepare returns and Finanzamt replies. Русский: налоги, декларация, ELSTER, письмо Finanzamt. No embedded tax formulas or claimed automatic transmission; initial registration belongs to de-business-start.
+  Answer German sole-trader tax questions, research applicable rules, calculate sourced estimates with prerequisite and independent checks, prepare returns and Finanzamt replies. Русский: налоги, декларация, ELSTER, письмо Finanzamt. No embedded tax formulas or claimed automatic transmission; initial registration belongs to de-business-start.
 ---
 
 # Business Tax
@@ -21,8 +21,10 @@ browser/computer tools for preparation and readback; honor a user-held final
 confirmation instead of either refusing all assistance or submitting silently.
 
 - Separate known facts, user assumptions, current evidence and unanswered issues.
-  Use [source-led estimates](../de-business-kit/references/tax-estimates.md);
-  never invent formulas, rates, thresholds, official field mappings or results.
+  Use [source-led calculations and independent checks](../de-business-kit/references/tax-estimates.md);
+  Establish sufficient inputs before calculation. Use a verified official/provider
+  tool or a bounded calculation derived from inspected applicable rules; never
+  invent formulas, rates, thresholds, official field mappings or results.
 - For cross-border facts read [international](../de-business-kit/references/international.md).
   Do not infer tax treatment merely from a bank location, currency or filename.
 - For monthly or annual returns use [annual workflow](../de-business-kit/references/annual-workflow.md),

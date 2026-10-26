@@ -30,7 +30,8 @@ API links or advice to hire a professional. Keep the chosen accounting system.
    “available here” and “tested for this operation” distinct in the operation note.
 4. Choose an existing suitable connector for supported operations. If it is absent
    or insufficient, use an available supported browser, then permitted native UI
-   control for an installed application. A user-selected UI route takes priority.
+   control for an installed application, subject to provider restrictions and data
+   suitability below. A user-selected supported UI route takes priority.
    A connector that can list invoices may still need browser help to edit a draft.
    Use file import/export or guided manual steps for the remaining unsupported part.
 5. Explain the selected route in ordinary language: “I can fill the saved draft;
@@ -44,6 +45,42 @@ are configuration changes: prepare the exact need, permissions and supported set
 path first; use existing authorization or ask for the missing decision. Do not
 install or purchase them merely to discover whether an easier UI route works.
 Keep credential creation/entry in the official UI or supported secret store.
+
+## Recommend interaction tools only when useful
+
+Recommend enabling/selecting a supported browser or computer-use tool and its
+relevant installed helper skill when the requested result actually needs UI
+interaction and no suitable enabled connection already covers it. Public-source
+research can use web search/page reads; local files and simple questions do not
+need screen control. Read the helper's instructions when available. A helper
+skill supplies guidance, not tools, authentication or permission; do not infer
+that it must be installed if a suitable tool already works.
+
+For missing access, explain the needed capability, task scope, data exposure and
+current official host setup from the [English guide](../guides/assisted-services.en.md#when-to-enable-browser-or-computer-tools)
+or [Russian guide](../guides/assisted-services.ru.md#когда-включать-браузер-или-управление-компьютером).
+Check the actual OS, account/plan, app version and tool inventory before naming
+controls. Use existing specific authorization; new extensions, plugin settings or
+OS grants require the applicable user decision. Do not silently install/enable,
+request blanket desktop access or claim that naming a skill activates it. Do not
+require a developer runtime, security bypass or a paid upgrade just to continue.
+
+Check suitability as well as availability. Current Claude guidance discourages
+browser actions involving financial accounts, medical information or others'
+personal data, and native grants to banking/healthcare/government apps. Recheck
+current provider restrictions for the actual route; do not route a blocked browser
+action through native control or recommend access to an unsuitable sensitive app.
+For such operations continue with an appropriate supported connector, minimized
+selected files or guided manual entry. An unavailable safe route does not prevent
+factual preparation; it does prevent claiming UI execution.
+
+After setup, verify the smallest authorized read-only operation, preferably on a
+public or synthetic page. Check needed upload/download/edit capabilities separately;
+page reading does not establish all of them. Report observed availability and
+remaining gaps. Reuse working permissions, keep the user's selected product, and
+honor a reserved login/final action. Enabling interaction never grants a wider
+business-action authorization. If declined/unavailable, complete the useful
+worksheet/export/manual alternative without repeating the activation request.
 
 ## Decide who does each action
 
@@ -94,12 +131,13 @@ can continue while that scope or login remains unresolved.
    a previous server archive, marks a document sent or transfers data to another
    party. Do not add those effects to an authorized download silently. If the UI
    cannot separate them, stop that operation and explain the smallest alternative.
-7. For calculated fields, obtain the applicable rule and an appropriate official
-   or selected-software calculation under [source-led estimates](tax-estimates.md).
-   Preserve inputs, period, assumptions and observed result. Do not invent tax
-   formulas, field mappings or a calculator to make a form appear complete.
-   Spreadsheet/formula assistance uses verified source definitions and the chosen
-   tool; unsupported calculation stays an explicit gap.
+7. For calculated fields, use an appropriate official/provider calculation or a
+   researched, bounded local calculation under [source-led calculations](tax-estimates.md).
+   Establish sufficient inputs, applicable rules, actual execution and independent
+   check evidence. Preserve period, assumptions and observed results; an unverified
+   component is not filing-ready. Verify the actual form/year mapping and coverage
+   separately. Do not invent formulas or field mappings to make a form appear complete.
+   Spreadsheet assistance follows the same checks; unsupported steps remain explicit.
 8. Run available non-submitting validation/preview and inspect warnings. Read back
    material fields, totals supplied by the chosen tool, recipient, period, tax
    elections and included files. Preserve source originals and earlier versions.

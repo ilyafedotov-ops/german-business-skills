@@ -9,7 +9,7 @@
   let route = 'home', editor = null, dirty = false, busy = false, preview = null, pendingConfirm = null;
   let selectedFiles = [], importOutcome = null, reportOutcome = null, recoveryOutcome = null, snapshotUnavailable = false;
   const requests = new Map();
-  const mutationOps = new Set(['open','receive','document-save','configuration','entry-post','entry-reverse','filing-create','filing-action','report','overview','backup','restore','draft-save']);
+  const mutationOps = new Set(['open','receive','document-save','configuration','entry-post','entry-reverse','filing-create','filing-action','report','overview','backup','restore','unlock','draft-save']);
   const routes = new Set(['home','documents','month','taxes','accounts','settings']);
   const icons = {home:'M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9',documents:'M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h7',month:'M4 5h16v16H4zM8 3v4M16 3v4M4 10h16M8 14h3M14 14h2',taxes:'M4 5h16v14H4zM4 6l8 6 8-6',accounts:'M3 7h17l-4-4M21 17H4l4 4'};
   let token = '';
@@ -41,6 +41,16 @@
   const intro = (title,text) => `<div class="intro"><h1>${label(title)}</h1><p>${label(text)}</p></div>`;
   const action = (key, name, cls='') => `<button type="button" data-action="${name}" class="${cls}">${label(key)}</button>`;
   const badge = state => `<span class="badge${['needs_review','submission_unconfirmed','unresolved'].includes(state)?' warning':''}">${esc(t(state==='reviewed'?'reviewedState':state))}</span>`;
+  let lockInfo=null;
+  function lockFacts(lock) {
+    const since=lock.created_at?new Date(lock.created_at):null;
+    return summary([['lockProcess',lock.pid??'—'],['lockStarted',!since?'—':Number.isNaN(since.getTime())?lock.created_at:since.toLocaleString(language)],['lockComputer',lock.host??'—']]);
+  }
+  function lockPanel() {
+    const lock=lockInfo?.lock, removable=Boolean(lock)&&['stale','unverifiable'].includes(lock.assessment);
+    const body=!lockInfo?`<p class="hint">${label('lockHint')}</p>`:!lock?`<p>${label('lockNone')}</p>`:`<p>${label('lock-'+lock.assessment)}</p>${lockFacts(lock)}${lock.assessment==='unverifiable'?`<div class="field"><label><input type="checkbox" id="lock-confirm"> ${label('lockConfirm')}</label></div>`:''}`;
+    return `<section class="panel"><h2>${label('lockTitle')}</h2>${body}<div class="actions">${action('lockCheck','check-lock')}${removable?action('lockRemove','remove-lock'):''}</div></section>`;
+  }
   function showError(message) {
     $('error').textContent = `${t('error')} ${message}`;
     $('error').hidden = false;
@@ -88,7 +98,7 @@
     let next;
     try { next=await api('status',{period,language}); }
     catch(error) { snapshotUnavailable=true; render(); throw error; }
-    snapshotUnavailable=false; snapshot=next;
+    snapshotUnavailable=false; snapshot=next; lockInfo=null;
     if (!keepDrafts || !dirty) { drafts=structuredClone(next.drafts || {}); draftHash=next.drafts_sha256 ?? null; }
     render();
   }
@@ -147,7 +157,7 @@
   function render() {
     chrome();
     if (!snapshot?.workspace) { $('main').innerHTML=welcome(); setBusy(busy); return; }
-    if (snapshotUnavailable && route!=='settings') { $('main').innerHTML=intro('issueUnknown','error')+`<div class="actions">${action('refresh','refresh','primary')}${action('settings','settings')}</div>`; setBusy(busy); return; }
+    if (snapshotUnavailable && route!=='settings') { $('main').innerHTML=intro('issueUnknown','error')+`<div class="actions">${action('refresh','refresh','primary')}${action('settings','settings')}</div>`+lockPanel(); setBusy(busy); return; }
     let content;
     if (editor?.kind==='document') content=documentEditor();
     else if (editor?.kind==='entry') content=entryEditor();
@@ -181,7 +191,7 @@
   function issues() {
     const overview=snapshot?.overview||{};
     const errors=[...(overview.errors||[]),...(snapshot.errors||[])];
-    const rows=[...(overview.open_items||[]),...(overview.open_questions||overview.questions||[]).filter(item=>['open','deferred'].includes(item.status)),...(snapshot.accounting?.filings||[]).flatMap(item=>(item.check?.issues||[]).map(issue=>({...issue,ref:item.record.filing_id})))];
+    const rows=[...(overview.open_items||[]),...(overview.accounting?.issues||[]),...(overview.open_questions||overview.questions||[]).filter(item=>['open','deferred'].includes(item.status)),...(snapshot.accounting?.filings||[]).flatMap(item=>(item.check?.issues||[]).map(issue=>({...issue,ref:item.record.filing_id})))];
     return (errors.length?`<div class="warning"><strong>${label('issueUnknown')}</strong><ul>${errors.map(error=>`<li>${esc(typeof error==='string'?error:JSON.stringify(error))}</li>`).join('')}</ul></div>`:'')+(rows.length?'<ul>'+rows.map(row=>`<li>${esc(row.title||row.detail||window.GUI_I18N[language]['issue-'+row.code]||t('issueUnknown'))}${row.ref?` <span class="muted">${esc(snapshot.documents?.find(item=>item.record.document_id===row.ref)?.record.title||(row.ref===period?period:row.ref))}</span>`:''}</li>`).join('')+'</ul>':`<p class="muted">${label('noIssues')}</p>`);
   }
   function activeTasks() {
@@ -222,18 +232,32 @@
     return `<div class="heading-row"><h1>${label('reviewDetails')}</h1>${action('back','back')}</div><p class="hint">${label('reviewBoundary')}</p><div class="review-layout"><aside class="review-source"><h2>${label('original')}</h2><p>${esc(item.original_name)}</p><p class="path">${esc(item.path)}</p>${action('viewOriginal','preview-original')}<div id="original-preview"><p class="hint">${label('previewHint')}</p></div></aside><form id="work-form" data-form="document" class="panel">${field('title','readableTitle',record.title)}${select('type','documentType',['unknown','invoice','credit_note','bank_statement','contract','authority_letter','registration_receipt','receipt','other'].map(value=>[value,t(value)]),record.type)}${select('review_status','reviewStatus',['new','needs_review','reviewed','excluded'].map(value=>[value,t(value)]),record.review_status)}${field('reviewer','reviewer',record.reviewer||'','text','',false)}${textarea('review_note','reviewNote',record.review_note||'',false)}<div class="actions"><button type="submit" class="primary">${label('documentSave')}</button>${action('saveDraft','save-draft')}${action('discard','discard-draft')}</div></form></div>`;
   }
   function filteredEntries() { return (snapshot.accounting?.entries||[]).filter(item=>item.date?.startsWith(period)); }
+  function settlements() {
+    const rows=snapshot.overview?.accounting?.settlements||[];
+    if(!rows.length) return '';
+    return `<section class="section" data-settlements><h2>${label('settlementsTitle')}</h2><p class="hint">${label('settlementsHint')}</p>${rows.map(row=>`<details><summary>${esc(row.invoice_number||row.proposal_id)} · ${esc(t('settlement-'+row.status))}</summary>${summary([['settlementInvoice',`${row.gross??'—'} ${row.currency||''}`],['settlementAllocated',`${row.allocated} ${row.currency||''}`],['settlementRemaining',row.remaining===null?'—':`${row.remaining} ${row.currency||''}`]])}${row.issues.length?`<ul>${row.issues.map(code=>`<li>${esc(t('issue-settlement_'+code))}</li>`).join('')}</ul>`:''}${row.payments.length?`<ul>${row.payments.map(payment=>`<li>${esc(payment.date)} · ${esc(payment.entry_id)} · ${esc(payment.amount)} ${esc(payment.currency)}</li>`).join('')}</ul>`:''}</details>`).join('')}</section>`;
+  }
   function monthPage() {
     const all=snapshot.accounting?.entries||[], reversed=new Set(all.filter(item=>item.reverses).map(item=>item.reverses));
     const entries=filteredEntries();
     const rows=entries.map(item=>`<tr><td>${esc(item.date)}<div class="path">${esc(item.transaction_id)}</div></td><td>${esc(item.amount)} ${esc(item.currency)}</td><td>${esc(item.lines?.map(line=>line.category).join(', '))}</td><td>${item.reverses?badge('reversed'):reversed.has(item.entry_id)?`${badge('reversed')}<button data-action="correct-entry" data-id="${esc(item.entry_id)}">${label('replacement')}</button>`:`<button data-action="reverse-entry" data-id="${esc(item.entry_id)}">${label('reverse')}</button>`}</td></tr>`).join('');
-    return intro('monthTitle','monthText')+`<p class="hint">${label('immutable')}</p><div class="actions">${action(drafts.entry?'resumeEntry':'addEntry','new-entry','primary')}${action('report','report')}</div><section class="section">${entries.length?`<div class="table-wrap"><table><thead><tr><th>${label('entryDate')}</th><th>${label('amount')}</th><th>${label('category')}</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`:`<p class="empty">${label('noEntries')}</p>`}</section>${reportOutcome?`<section class="panel"><h2>${label('reportResult')}</h2>${formatResult(reportOutcome)}</section>`:''}<section class="section"><h2>${label('attention')}</h2>${issues()}</section>`;
+    return intro('monthTitle','monthText')+`<p class="hint">${label('immutable')}</p><div class="actions">${action(drafts.entry?'resumeEntry':'addEntry','new-entry','primary')}${action('report','report')}</div><section class="section">${entries.length?`<div class="table-wrap"><table><thead><tr><th>${label('entryDate')}</th><th>${label('amount')}</th><th>${label('category')}</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`:`<p class="empty">${label('noEntries')}</p>`}</section>${settlements()}${reportOutcome?`<section class="panel"><h2>${label('reportResult')}</h2>${formatResult(reportOutcome)}</section>`:''}<section class="section"><h2>${label('attention')}</h2>${issues()}</section>`;
   }
-  function entryDefaults() { return {entry_id:'entry-'+uuid(),date:'',account:'',transaction_id:'',amount:'',currency:'EUR',reviewer:'',evidence_file:'',note:'',replaces:'',line_count:'1','kind-0':'unresolved','amount-0':'','category-0':'','activity_id-0':''}; }
+  function entryDefaults() { return {entry_id:'entry-'+uuid(),date:'',account:'',transaction_id:'',amount:'',currency:'EUR',reviewer:'',evidence_file:'',note:'',replaces:'',line_count:'1','kind-0':'unresolved','amount-0':'','category-0':'','activity_id-0':'','proposal_id-0':'','vat_status-0':'unresolved','net-0':'','tax-0':'','rate-0':''}; }
+  const LINE_KEYS=['kind','amount','category','activity_id','proposal_id','vat_status','net','tax','rate'];
+  function proposalSelect(name,current) {
+    const choices=(snapshot.accounting?.proposals||[]).map(item=>[item.proposal_id,[item.invoice_number||item.proposal_id,[item.gross,item.currency].filter(Boolean).join(' '),item.activity_id].filter(Boolean).join(' · ')]);
+    return `<div class="field"><label for="${esc(name)}">${label('linkedProposal')}</label><select id="${esc(name)}" name="${esc(name)}">${option('',t('noProposal'),current)}${choices.map(item=>option(item[0],item[1],current)).join('')}</select></div>`;
+  }
+  function lineVat(value,index) {
+    const optional=text=>String(text??'').trim()?money(text):null;
+    return {status:value['vat_status-'+index]||'unresolved',net:optional(value['net-'+index]),tax:optional(value['tax-'+index]),rate:optional(value['rate-'+index])};
+  }
   function entryEditor() {
     const value=drafts.entry||entryDefaults(); drafts.entry=value;
     let lines='';
-    for (let index=0;index<Number(value.line_count||1);index++) lines+=`<div class="line-row"><div class="grid">${select('kind-'+index,'kind',['unresolved','income','expense','transfer'].map(kind=>[kind,t(kind)]),value['kind-'+index])}${field('amount-'+index,'lineAmount',value['amount-'+index]||'')}${field('category-'+index,'category',value['category-'+index]||'')}${field('activity_id-'+index,'activity',value['activity_id-'+index]||'')}</div>${index?`<button type="button" data-action="remove-line" data-index="${index}">${label('remove')}</button>`:''}</div>`;
-    return `<div class="heading-row"><h1>${label('entryTitle')}</h1>${action('back','back')}</div><p class="hint">${label('entryHint')}</p><form id="work-form" data-form="entry" class="panel"><input type="hidden" name="entry_id" value="${esc(value.entry_id)}"><input type="hidden" name="replaces" value="${esc(value.replaces)}"><input type="hidden" name="line_count" value="${esc(value.line_count||1)}">${value.replaces?`<p>${label('replaces')}: ${esc(value.replaces)}</p>`:''}<div class="grid">${field('date','entryDate',value.date,'date')}${field('account','account',value.account)}${field('transaction_id','transaction',value.transaction_id)}${field('amount','amount',value.amount,'text','moneyHint')}${field('currency','currency',value.currency)}${field('reviewer','reviewer',value.reviewer)}</div><section class="form-section"><h2>${label('lines')}</h2>${lines}${action('addLine','add-line')}</section><section class="form-section">${evidence('evidence_file','evidence',value.evidence_file)}${textarea('note','note',value.note)}</section><div class="actions"><button type="submit" class="primary">${label('recordEntry')}</button>${action('saveDraft','save-draft')}${action('discard','discard-draft')}</div></form>`;
+    for (let index=0;index<Number(value.line_count||1);index++) lines+=`<div class="line-row"><div class="grid">${select('kind-'+index,'kind',['unresolved','income','expense','transfer'].map(kind=>[kind,t(kind)]),value['kind-'+index])}${field('amount-'+index,'lineAmount',value['amount-'+index]||'')}${field('category-'+index,'category',value['category-'+index]||'')}${field('activity_id-'+index,'activity',value['activity_id-'+index]||'')}</div><div class="grid">${proposalSelect('proposal_id-'+index,value['proposal_id-'+index]||'')}${select('vat_status-'+index,'vatStatus',['unresolved','stated','none_stated'].map(status=>[status,t('vat-'+status)]),value['vat_status-'+index]||'unresolved')}${field('net-'+index,'vatNet',value['net-'+index]||'','text','',false)}${field('tax-'+index,'vatTax',value['tax-'+index]||'','text','',false)}${field('rate-'+index,'vatRate',value['rate-'+index]||'','text','',false)}</div>${index?`<button type="button" data-action="remove-line" data-index="${index}">${label('remove')}</button>`:''}</div>`;
+    return `<div class="heading-row"><h1>${label('entryTitle')}</h1>${action('back','back')}</div><p class="hint">${label('entryHint')}</p><form id="work-form" data-form="entry" class="panel"><input type="hidden" name="entry_id" value="${esc(value.entry_id)}"><input type="hidden" name="replaces" value="${esc(value.replaces)}"><input type="hidden" name="line_count" value="${esc(value.line_count||1)}">${value.replaces?`<p>${label('replaces')}: ${esc(value.replaces)}</p>`:''}<div class="grid">${field('date','entryDate',value.date,'date')}${field('account','account',value.account)}${field('transaction_id','transaction',value.transaction_id)}${field('amount','amount',value.amount,'text','moneyHint')}${field('currency','currency',value.currency)}${field('reviewer','reviewer',value.reviewer)}</div><section class="form-section"><h2>${label('lines')}</h2><p class="hint">${label('vatHint')}</p>${lines}${action('addLine','add-line')}</section><section class="form-section">${evidence('evidence_file','evidence',value.evidence_file)}${textarea('note','note',value.note)}</section><div class="actions"><button type="submit" class="primary">${label('recordEntry')}</button>${action('saveDraft','save-draft')}${action('discard','discard-draft')}</div></form>`;
   }
   function reversalEditor() {
     const value=drafts[draftKey('reversal')]||{};
@@ -268,7 +292,7 @@
     return `<section class="form-section"><h2>${label('filingHistory')}</h2><div class="table-wrap filing-history" tabindex="0" role="region" aria-label="${label('filingHistory')}"><table><thead><tr><th>${label('recordedAt')}</th><th>${label('filingAction')}</th><th>${label('actionNote')}</th><th>${label('evidence')}</th></tr></thead><tbody>${events.map(event=>`<tr><td>${esc(event.recorded_at)}<div class="path">${esc(event.actor)}</div></td><td>${esc(t(event.action==='receipt'?'receipt-action':event.action))}${event.external_id?`<div>${esc(event.external_id)}</div>`:''}${event.response_kind?`<div>${esc(t(event.response_kind))}</div>`:''}${event.due_date?`<div>${label('dueDate')}: ${esc(event.due_date)}</div>`:''}</td><td>${esc(event.note)}</td><td>${event.evidence?.path?`<button type="button" data-action="download-file" data-path="${esc(event.evidence.path)}">${label('download')}</button>`:''}</td></tr>`).join('')}</tbody></table></div></section>`;
   }
   function settingsPage() {
-    return intro('settingsTitle','settingsText')+`<section class="panel"><form id="backup-form"><h2>${label('backup')}</h2>${field('backup-destination','destination','','text','backupHint')}<div class="actions">${action('browse','browse-backup')}<button type="submit" class="primary">${label('backup')}</button></div></form></section><section class="panel"><form id="restore-form"><h2>${label('verifyBackup')}</h2>${field('backup-path','backupPath')}${field('restore-destination','restoreDestination','','text','restoreHint',false)}<div class="actions">${action('browse','browse-restore')}<button type="button" data-action="verify-backup">${label('verifyBackup')}</button><button type="submit">${label('restore')}</button></div></form></section>${recoveryOutcome?`<section class="panel"><p>${label('complete')}</p>${formatResult(recoveryOutcome)}</section>`:''}<section class="section"><h2>${label('switch')}</h2>${action('switch','switch-workspace')}<details><summary>${label('diagnostics')}</summary><p class="path">${esc(snapshot.workspace.root)}</p><p>${label('footer')}</p></details></section>`;
+    return intro('settingsTitle','settingsText')+`<section class="panel"><form id="backup-form"><h2>${label('backup')}</h2>${field('backup-destination','destination','','text','backupHint')}<div class="actions">${action('browse','browse-backup')}<button type="submit" class="primary">${label('backup')}</button></div></form></section><section class="panel"><form id="restore-form"><h2>${label('verifyBackup')}</h2>${field('backup-path','backupPath')}${field('restore-destination','restoreDestination','','text','restoreHint',false)}<div class="actions">${action('browse','browse-restore')}<button type="button" data-action="verify-backup">${label('verifyBackup')}</button><button type="submit">${label('restore')}</button></div></form></section>${recoveryOutcome?`<section class="panel"><p>${label('complete')}</p>${formatResult(recoveryOutcome)}</section>`:''}<section class="section"><h2>${label('switch')}</h2>${action('switch','switch-workspace')}<details><summary>${label('diagnostics')}</summary><p class="path">${esc(snapshot.workspace.root)}</p><p>${label('footer')}</p></details></section>`+lockPanel();
   }
   function formatResult(result) {
     const paths=[];
@@ -337,9 +361,10 @@
       confirm(t('confirmTitle'),summary([['accountingSystem',t(config.system)],['product',config.product||'—'],['method',config.method],['accountRef',config.account_reference],['evidence',config.evidence_file]]),()=>perform(()=>completed('configuration',{value:config,expected_sha256:drafts.configuration.__expected_sha256},'configuration')));return;
     }
     if(kind==='entry') {
-      const record={entry_id:value.entry_id,date:value.date,account:value.account,transaction_id:value.transaction_id,amount:money(value.amount),currency:value.currency,lines:[],reviewer:value.reviewer,evidence_file:value.evidence_file,note:value.note,replaces:value.replaces||null};
-      for(let index=0;index<Number(value.line_count);index++)record.lines.push({kind:value['kind-'+index],amount:money(value['amount-'+index]),category:value['category-'+index],activity_id:value['activity_id-'+index]});
-      confirm(t('confirmTitle'),summary([['entryDate',record.date],['transaction',record.transaction_id],['amount',record.amount+' '+record.currency],['evidence',record.evidence_file],['reviewer',record.reviewer],['note',record.note]])+`<p class="hint">${label('immutable')}</p>`,()=>perform(()=>completed('entry-post',{value:record},'entry')));return;
+      const record={schema_version:2,entry_id:value.entry_id,date:value.date,account:value.account,transaction_id:value.transaction_id,amount:money(value.amount),currency:value.currency,lines:[],reviewer:value.reviewer,evidence_file:value.evidence_file,note:value.note,replaces:value.replaces||null};
+      for(let index=0;index<Number(value.line_count);index++)record.lines.push({kind:value['kind-'+index],amount:money(value['amount-'+index]),category:value['category-'+index],activity_id:value['activity_id-'+index],proposal_id:value['proposal_id-'+index]||null,vat:lineVat(value,index)});
+      const vatSummary=record.lines.map(line=>t('vat-'+line.vat.status)+(line.vat.net!==null||line.vat.tax!==null?`: ${line.vat.net??'—'} + ${line.vat.tax??'—'}${line.vat.rate!==null?` (${line.vat.rate} %)`:''}`:'')).join('; ');
+      confirm(t('confirmTitle'),summary([['entryDate',record.date],['transaction',record.transaction_id],['amount',record.amount+' '+record.currency],['vatStatus',vatSummary],['evidence',record.evidence_file],['reviewer',record.reviewer],['note',record.note]])+`<p class="hint">${label('immutable')}</p>`,()=>perform(()=>completed('entry-post',{value:record},'entry')));return;
     }
     if(kind==='reversal') {const entry_id=editor.id;confirm(t('reverseTitle'),summary([['entryId',entry_id],['reversalReason',value.note],['evidence',value.evidence_file]]),()=>perform(()=>completed('entry-reverse',{entry_id,reversal_id:drafts[draftKey('reversal')]?.reversal_id||'reversal-'+uuid(),...value},'reversal')));return;}
     if(kind==='filing') {
@@ -355,7 +380,7 @@
   });
   async function openWorkspace(create) {
     const path=$('workspace-path').value, year=Number($('year').value), folderLanguage=$('folder-language').value;
-    const opened=await api('open',{path,create,language:folderLanguage,year});snapshot={workspace:opened};dirty=false;drafts={};editor=null;route='home';history.replaceState(null,'','#home');await refresh(false);notice(t('saved'));
+    const opened=await api('open',{path,create,language:folderLanguage,year});snapshot={workspace:opened};lockInfo=null;dirty=false;drafts={};editor=null;route='home';history.replaceState(null,'','#home');await refresh(false);notice(t('saved'));
   }
   async function importFiles() {
     if(!selectedFiles.length)throw new Error(t('noSelection'));
@@ -372,6 +397,8 @@
     const name=button.dataset.action;
     switch(name) {
       case 'refresh':perform(()=>refresh());break;
+      case 'check-lock':perform(async()=>{lockInfo=await api('lock-status');render();});break;
+      case 'remove-lock':{const lock=lockInfo?.lock,confirmed=$('lock-confirm')?.checked===true;if(!lock)break;if(lock.assessment==='unverifiable'&&!confirmed){showError(t('lockConfirmNeeded'));break;}confirm(t('lockRemove'),lockFacts(lock)+`<p class="hint">${label('lockKept')}</p>`,()=>perform(async()=>{await api('unlock',{expected_sha256:lock.sha256,confirmed_no_writer:confirmed});lockInfo=null;await refresh();notice(t('lockRemoved'));}));break;}
       case 'documents':case 'accounts':case 'month':case 'settings':leave(()=>navigate(name));break;
       case 'review-next':{const item=snapshot.documents.find(item=>!['reviewed','excluded'].includes(item.record.review_status));if(item){route='documents';editor={kind:'document',id:item.record.document_id};render();}break;}
       case 'review-document':editor={kind:'document',id:button.dataset.id};preview=null;render();break;
@@ -383,7 +410,7 @@
       case 'reverse-entry':editor={kind:'reversal',id:button.dataset.id};drafts[draftKey('reversal')] ||= {actor:'',evidence_file:'',note:'',reversal_id:'reversal-'+uuid()};render();break;
       case 'correct-entry':{const entry=snapshot.accounting.entries.find(item=>item.entry_id===button.dataset.id);drafts.entry={...entryDefaults(),date:entry.date,account:entry.account,transaction_id:entry.transaction_id,currency:entry.currency,replaces:entry.entry_id};editor={kind:'entry'};render();break;}
       case 'add-line':captureForm();drafts.entry.line_count=String(Number(drafts.entry.line_count||1)+1);render();setDirty();break;
-      case 'remove-line':{captureForm();const value=drafts.entry,count=Number(value.line_count),index=Number(button.dataset.index);for(let next=index;next<count-1;next++)for(const key of ['kind','amount','category','activity_id'])value[key+'-'+next]=value[key+'-'+(next+1)];value.line_count=String(count-1);render();setDirty();break;}
+      case 'remove-line':{captureForm();const value=drafts.entry,count=Number(value.line_count),index=Number(button.dataset.index);for(let next=index;next<count-1;next++)for(const key of LINE_KEYS)value[key+'-'+next]=value[key+'-'+(next+1)];for(const key of LINE_KEYS)delete value[key+'-'+(count-1)];value.line_count=String(count-1);render();setDirty();break;}
       case 'new-filing':editor={kind:'filing'};render();break;
       case 'inspect-filing':editor={kind:'filingAction',id:button.dataset.id};render();break;
       case 'correct-filing':{const item=snapshot.accounting.filings.find(item=>item.record.filing_id===editor.id);drafts.filing={filing_id:'filing-'+uuid(),form:item.record.form,form_version:item.record.form_version,period:item.record.period,recipient:item.record.recipient,payload_file:'',source_files:item.record.source_files,unresolved_items:'',supersedes:item.record.filing_id};editor={kind:'filing'};render();setDirty();break;}

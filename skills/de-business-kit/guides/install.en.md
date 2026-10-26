@@ -1,89 +1,119 @@
-# Your first start, step by step
+# Install German Business Kit
 
 **English** · [Русский](install.ru.md)
 
-This guide takes you from choosing an AI app to getting your first useful answer. You can start without programming, terminal commands, Python or accounting software. You need a Windows PC or Mac, internet access and an account with access to one of the apps below. Use fictional details for your first try.
+This guide takes you from installing the kit to your first useful answer in about five minutes. You do not need programming, a terminal, Python or accounting software. Use fictional details for your first try.
 
-![An entrepreneur turning an idea into documents and next steps](images/entrepreneur-journey.png)
+> **AI assistance, not professional tax advice.** German Business Kit is self-help
+> software, not a Steuerberater or a professional tax-advisory service. AI can
+> make mistakes, including in calculations and deadlines. Content read by Codex
+> or Claude can be processed by OpenAI or Anthropic; a local folder does not mean
+> local-only AI. [Read the risks and data-processing guidance](user-guide.en.md#ai-limits-and-your-data) before sharing real documents.
 
-*Illustration, not an application screenshot.*
+![Ask to install, follow the steps for your app, then verify seven skills in a new chat](images/assisted-install.en.svg)
 
-## 1. Choose one app
+[Install in Claude](#install-in-claude) · [First task](#try-your-first-task) · [Private folder](#keep-your-work-in-a-private-folder) · [Updates](#updates) · [Codex](#install-in-codex) · [Help](#if-you-get-stuck)
 
-**Codex** and **Claude Code** are AI assistants that can work with files on your computer and use specialist instructions. A **skill** is a set of instructions and supporting materials for the assistant. **German Business Kit** supplies seven connected skills for starting and running a business in Germany.
+## Ask your assistant to help install
 
-You need **one** supported app. Choose the one you already have access to; if you have neither, check account access before subscribing.
+In Codex or Claude, paste:
 
-| Choose | Where to begin | What to open after sign-in |
-| --- | --- | --- |
-| OpenAI / Codex | [Official desktop download and setup](https://learn.chatgpt.com/docs/app) | The **Codex** experience in the desktop app. Current documentation calls the app **ChatGPT desktop**; some releases/download pages still say **Codex**. |
-| Anthropic / Claude Code | [Official Claude desktop download and setup](https://code.claude.com/docs/en/desktop-quickstart) | **Code** in the Claude desktop sidebar, then the **Local** environment. |
+> Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills and show me how to use it. Follow the repository's installation instructions for my app, check that the complete kit is available, and help me try one small example.
 
-Codex access and limits depend on your account and workspace policy. Claude Code desktop currently requires Pro, Max, Team or Enterprise. Ordinary chat access alone does not establish Code access. The skills do not include an AI subscription or service accounts. Provider instructions were checked on **2026-10-26**; follow the official download page for current compatibility and access requirements.
+The assistant should inspect the repository instructions and your actual app/tools,
+then use the supported installation route below. Where a folder choice or plugin
+installation click is yours to make, it should explain that next step. It should
+preserve existing installations and your business files, install the complete
+seven-skill set together, and distinguish files copied from skills discovered in
+a fresh session. The request does not require a separate records app or a new
+business workspace. If the assistant cannot access the repository or installation
+controls, use the steps below; it should tell you exactly what remains.
 
-**Done when:** you have chosen one app and confirmed that your account can use its local Codex/Code experience.
+After installation, start a new task/chat and ask:
 
-## 2. Install and sign in
+> Use de-business-kit. Show me how to use this for my situation. Give me three requests I can copy and help me choose one small first task.
 
-1. Open the official setup link for your chosen app from the table above.
-2. Select the download for **Windows** or **macOS** on that page. If asked which Mac you have, use Apple menu → **About This Mac** to check Apple Silicon or Intel.
-3. Open the downloaded installer and follow the provider's instructions. On macOS, move the app to **Applications** if the installer asks; on Windows, complete its installation prompts.
-4. Launch the app from **Applications** on Mac or **Start** on Windows.
-5. Sign in through the app's official account screen. Complete browser sign-in if it opens, then return to the app.
-6. Open **Codex**, or **Code → Local** in Claude. You do not need a terminal version of the app for this route.
+Before installation, your existing assistant reads this guide; the kit cannot
+install itself before its instructions are available. Once available, its general
+skill can explain relevant tasks, invocation and saved-folder continuation.
 
-If your computer or organization blocks installation, use its approved installation process. Do not disable security settings. Enter passwords and verification codes in the sign-in screens, never in a chat.
+## What you need
 
-**Done when:** you can start a local Codex/Code conversation. If you only see ordinary Chat or Cowork, check the app/account requirements before continuing.
+- A Windows PC or Mac with internet access.
+- The **Claude desktop app** with a paid plan: Pro, Max, Team or Enterprise. The free plan does not include Cowork or plugins.
+- Using **Codex** (OpenAI) instead? Go to [Install in Codex](#install-in-codex).
 
-## 3. Create and open an assistant project
+**Cowork** is the part of the Claude app that works on tasks with files in a folder you choose. A **plugin** adds ready-made instructions to Claude. German Business Kit is one plugin with seven connected skills: a general helper plus specialists for starting, daily work, accounting, tax, services and changes.
 
-1. In **File Explorer** (Windows) or **Finder** (Mac), create a folder called **Business Assistant** in a private location on your computer. For this trial it contains only the skill installation, not real invoices or personal records.
-2. In Codex, open/select that local folder as your project and start **New chat**. The folder control's label varies by app version; confirm the selected project is **Business Assistant**.
-3. In Claude **Code → Local**, use the project folder control → **Open folder…**, then select **Business Assistant**.
-4. If asked to trust/access the folder, confirm only the folder you just created.
+## Choose a model
 
-**Done when:** the conversation is attached to **Business Assistant**, on this computer. Typing a folder name in ordinary chat does not by itself give the assistant access to it.
+Our recommended starting point for substantive business work is a capable
+reasoning model with **High** effort:
 
-![Three steps: open an assistant project, add all seven skills, ask one question](images/setup-map.en.svg)
+| App | Recommended choice, when available |
+| --- | --- |
+| Claude Desktop / Cowork | **Claude Opus 5.5**; choose **High** effort if the current mode exposes an effort control. |
+| Codex | **GPT-6 Astra** with **High** reasoning effort. |
 
-*Diagram of the process; button positions and app screens are not depicted.*
+In Claude, open the model menu beside **Send**, then **Effort → High**.
+In Codex, use the model/reasoning control below the composer; newer layouts may
+show **Power → Advanced**. Select both **Astra** and **High**: Chat's generic
+GPT-6 High option can use a different model. Labels and access can vary.
 
-## 4. Download German Business Kit
+The kit does not select or switch the model, and a prompt alone does not change
+the setting. If these names
+or controls are missing, use a capable reasoning model offered by your account;
+ask the assistant to explain the options actually visible in your app. You do
+not need to change provider or buy an upgrade to try a simple first task.
 
-1. Open the project's [0.9.0-preview.1 release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.9.0-preview.1).
-2. Expand **Assets** if the files are hidden. Choose exactly one skill archive:
-   - Codex: **`de-business-kit-0.9.0-preview.1-codex.zip`**.
-   - Claude Code: **`de-business-kit-0.9.0-preview.1-claude.zip`**.
-3. Download **`SHA256SUMS`** from that same release into the same download folder. This file lists checksums used to detect a damaged or changed download.
-4. Keep both files together. The `-gui-` archives are a separate optional records application; **Source code** archives are for another installation route.
+Prefer the recommended setup for research, ambiguous questions, forms, several
+documents, accounting, tax estimates and checks before external actions. A faster
+or lighter model can handle simple explanations, rewriting and formatting.
+High effort can take longer and consume more usage allowance or metered budget;
+check your plan's limits and charges. This is a project recommendation, not a
+benchmark result or guarantee of tax accuracy. Every model still needs the
+required facts, current sources and independent calculation checks.
 
-The next step asks the assistant to verify the selected archive before using its contents. A matching checksum checks file integrity; release/provenance verification checks origin. They are different checks. The [full verification procedure](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/docs/releases.md#download-and-verify) is available for the assistant or a technical helper.
+Model names, controls and access vary by app, plan and workspace. Provider
+sources checked **26 October 2026**: [Claude model/effort controls](https://support.claude.com/en/articles/8664678-change-the-model-effort-and-thinking-settings),
+[Codex model controls](https://learn.chatgpt.com/docs/models),
+[GPT-6 availability](https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt)
+and [Astra reasoning levels](https://developers.openai.com/api/docs/models/gpt-6-astra).
+API support alone does not establish the controls available in your desktop app.
 
-**Done when:** you have the correct ZIP and `SHA256SUMS` from the named release. Use the named assets only after the release is published; an absent archive is not ready to install.
+## Install in Claude
 
-## 5. Ask the assistant to install the seven skills
+If you do not have the app yet, download it from the [official Claude download page](https://claude.com/download), install it and sign in. If your computer or organization blocks the installation, use its approved route; do not disable security settings.
 
-In your **Business Assistant** conversation, provide access to just the downloaded ZIP and `SHA256SUMS`: use the app's file-access control or give their full local paths and approve the specific access request. A chat attachment alone may not grant local file access. On Windows, right-click a file → **Copy as path**; on Mac, select it in Finder, hold **Option**, then use **Copy … as Pathname** from the Edit menu.
+![Install in three steps: open Plugins, add the marketplace, install German Business Kit](images/setup-map.en.svg)
 
-Copy this message, adding the two paths and your chosen app:
+*Diagram of the steps; app screens are not depicted.*
 
-> I am setting up German Business Kit in this local Business Assistant project, using [Codex / Claude Code]. My downloaded ZIP is at [full ZIP path] and SHA256SUMS is at [full checksum-file path]. Check the ZIP against the matching checksum before using its contents. Verify release provenance for repository ilyafedotov-ops/german-business-skills and tag v0.9.0-preview.1 using https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/docs/releases.md#download-and-verify if the required verification tools are already available; state exactly what was and was not verified. Stop if a check fails. Extract into a new folder. Inspect the package, then install all seven complete skill folders into this project's .agents/skills for Codex, or .claude/skills for Claude Code. Use the existing supported installer where available, or copy complete folders with native file tools. Preserve existing files; stop if a destination already exists. Do not install runtimes, alter security settings, or change global app configuration. Tell me the seven installed names, the destination and how to start a fresh session.
+### 1. Open Plugins
 
-The app may ask to read these files or write the skill directories. Review that the requested paths match your download and **Business Assistant** project. If it cannot access files, use the [manual fallback](#manual-fallback). If provenance tools are unavailable, checksum success must not be described as signature verification; use the linked verification procedure with a helper if you need that assurance before proceeding.
+In the Claude desktop app, switch to **Cowork** if your version shows a separate selector. Some versions combine Chat and Cowork. Open **Customize** in the sidebar, then select **Plugins**.
 
-**Done when:** the assistant reports all seven installed names and the correct project-local destination. Extracting the ZIP, registering a marketplace or getting a friendly “ready” response alone does not prove installation.
+### 2. Add the German Business Kit marketplace
 
-## 6. Start a fresh conversation and check discovery
+Select **Add → Add marketplace**. If offered, choose **Add from a repository**. Enter this address (or its full GitHub URL), select the matching repository or **Use …**, then choose **Sync**:
 
-1. Start a **new conversation in the same Business Assistant project**. If the new skills are absent, fully close and reopen the app, then reopen that project.
-2. In Codex, open **Skills** in the sidebar if available, or use the skill selector provided by your version. You can explicitly ask it to use **`de-business-kit`**. In the Codex CLI/IDE, `/skills` or `$` opens skill selection; desktop controls may differ.
-3. In Claude Code, type **`/`** (or **+ → Slash commands**) and look for **`de-business-kit`**. Select **`/de-business-kit`** for this standalone installation. Plugin installations use a different, namespaced command.
-4. Ask: **“Check which German Business Kit skills are actually available in this project. List their names and flag anything missing.”**
+```text
+ilyafedotov-ops/german-business-skills
+```
 
-You should find:
+This is the project's page on GitHub; you do not need a GitHub account. On some app versions the button is simply **Add marketplace**.
 
-| Skill name | Helps with |
+![Claude desktop Add marketplace dialog with the public project URL selected and Sync available](images/claude-marketplace.jpg)
+
+*Actual Claude Desktop 3.6556.2 on macOS, captured 26 October 2026 before pressing Sync. This shows where to enter the address; it does not show a completed installation. [Open the full-size screenshot](images/claude-marketplace.jpg). Labels may differ in your version.*
+
+### 3. Install German Business Kit
+
+Find **German Business Kit** in the plugin list (look under **Discover** if it is not shown at once) and select **Install**. Some versions say **Add**.
+
+**Done when:** **Customize → Plugins** lists German Business Kit and its **Skills** tab shows these seven skills:
+
+| Skill | Helps with |
 | --- | --- |
 | `de-business-kit` | Starting, continuing, choosing the next task |
 | `de-business-start` | Preparing and opening an activity |
@@ -93,47 +123,95 @@ You should find:
 | `de-business-services` | Banking, insurance, software and service access |
 | `de-business-changes` | Changes, hiring, pausing and closing |
 
-If the host cannot confirm discovery, ask it to inspect the installation paths and report that limitation. Reading names from a folder is useful diagnosis, but not proof that the host has enabled them. Avoid enabling the same bundle as both a standalone skill and a plugin.
+The plugin is saved to your Claude account, so it also works in Claude chat and in Claude Code when you sign in with the same account. The seven skills share one business context; you never set them up separately.
 
-**Done when:** the host exposes the installed skills and can load `de-business-kit` in this new session. Seven skills share one business context; you do not need seven chats or seven setups.
+Anthropic reviews plugins listed in its own directory, not plugins added by address. This address installs the exact published release of this open-source project, currently 0.9.0-preview.1.
 
-## 7. Try one small task
+## Try your first task
 
-Send this fictional example:
+Plugins load when a task starts, so start a **new task** in Cowork. Send this fictional example:
 
 > Use de-business-kit. I am just trying the assistant with a fictional example: I want to start working as a translator in Germany. I do not know where to begin. Help me choose one small first step.
 
-A useful result is one understandable action, with questions only where facts are needed. You should not have to pick accounting software, create a full business workspace or upload private documents to ask this question. The first answer is not proof of a completed registration or tax check.
+Before sending, type **/** or open **+** and select **de-business-kit** from **German Business Kit**. Claude can also select skills automatically. In Codex, name the installed skill with **“Use de-business-kit”** or **`$de-business-kit`**. [More invocation examples](user-guide.en.md#call-a-skill).
 
-You can continue in English or Russian. To try your own task, describe what you want: understand a letter, prepare a form, organize documents, compare services, or plan a change. The assistant should check current official sources for legal/tax conclusions and say what remains unknown.
+A useful result is one understandable action, with questions only where facts are needed. You should not have to pick accounting software, create a business folder or upload private documents for this question. The answer is not proof of a completed registration or tax check.
 
-**Done when:** you understand the result and know the next action. If the answer is too technical, say: **“Explain this in plain language and give me only the next step.”**
+**Done when:** you understand the answer and know the next step. If it is too technical, say: **“Explain this in plain language and give me only the next step.”**
 
-## 8. Save work when you need it
+You can continue in English or Russian. To try your own task, describe the result you want: understand a letter, prepare a form, organize documents, compare services or plan a change. See [more example requests](user-guide.en.md#first-task).
 
-For an ongoing task, ask:
+## Optional browser and computer access
 
-> Help me choose a separate private business folder and save a readable result and next action there. If I already have a workspace, continue it. Explain what content will be sent to the AI service before using real personal documents.
+Enable or select a browser/computer-use capability only when the task needs
+interaction with a supported website or app. If your host exposes a helper skill,
+select it alongside the business skill; it does not replace the actual tool or
+permission. You do not need this to try the first conversation. The assistant
+should check existing access before asking you to install or enable anything.
+[App-specific setup, a practice request and service restrictions](assisted-services.en.md#when-to-enable-browser-or-computer-tools).
 
-**Business Assistant** holds skills; a separate folder such as **My business** holds your records. Do not put business records inside a skill folder or source repository. Initialize a new business workspace only when needed and in a new empty destination; do not reinitialize existing records. A cloud-synced Documents/Desktop folder may not be the private local location you intended.
+## Keep your work in a private folder
 
-At your next visit, open the same assistant project and say: **“Continue from my saved result in [business folder]. Show the next action.”** Grant access to that separate folder when needed. Existing accounting software remains authoritative if you choose it; a question does not force that decision.
+A simple question needs no folder. For ongoing work such as receipts, letters or a saved plan, create a separate private folder, for example **My business**, and give Cowork access to it when you start the task. Then ask:
 
-**Next:** [choose your first task and continue everyday work](user-guide.en.md#first-task).
+> Use de-business-kit. Use my selected business folder. Save a readable result, confirmed facts, open questions and the next action there. Before using real personal documents, explain what content will be sent to the AI service.
 
-## Manual fallback
+- Claude processes the content of the files it reads. Decide what to share before you use real documents.
+- A cloud-synced Documents or Desktop folder may be less private than you expect.
+- If you already use accounting software, it stays your main record. A question does not force that choice.
 
-Use this after verifying the archive as described above, if the assistant cannot copy files. No terminal commands are needed for copying; a file manager copy does not validate the package or provide the installer's conflict checks.
+Next time, start a new task with the same folder and say: **“Use de-business-kit. Read the saved facts and progress in my business folder, then show the next action.”**
+
+## Updates
+
+Open **Customize → Plugins**, select the German Business Kit marketplace and choose **Check for updates**, or turn on **Sync automatically**. The marketplace offers only published releases, never unfinished work. Updating the plugin does not change your business folder.
+
+## Install in Codex
+
+In the Codex desktop app, plugins come from OpenAI's directory or your workspace, so for this kit Codex copies the skills into a project folder for you.
+
+### 1. Open a project
+
+1. Install the app from the [official OpenAI download and setup page](https://learn.chatgpt.com/docs/app) and sign in. Current documentation calls it **ChatGPT desktop**; some versions say **Codex**. Codex access depends on your account and workspace policy.
+2. In File Explorer (Windows) or Finder (Mac), create a folder called **Business Assistant** in a private location. It holds only the skills, not your records.
+3. In Codex, open that folder as your project and start a **New chat**. Check that the selected project is **Business Assistant**. If asked to trust a folder, confirm only this one.
+
+### 2. Download the kit
+
+Open the [0.10.0-preview.1 release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.10.0-preview.1), expand **Assets** if needed, and download two files into the same folder:
+
+- **`de-business-kit-0.10.0-preview.1-codex.zip`**
+- **`SHA256SUMS`**, the checksum list that detects a damaged or changed download
+
+The `-gui-` archives are a separate optional application; you do not need them.
+
+### 3. Ask Codex to install the skills
+
+Give Codex access to the two files with its file-access control, or copy their full paths: on Windows right-click a file → **Copy as path**; on Mac select it in Finder, hold **Option** and choose **Edit → Copy … as Pathname**. Then send:
+
+> I am setting up German Business Kit in this local Business Assistant project in Codex. My ZIP is at [full ZIP path] and SHA256SUMS is at [full checksum-file path]. Check the ZIP against its checksum and stop if it does not match. Extract it into a new folder, then copy all seven complete skill folders into this project's .agents/skills. Use native file tools, preserve existing files and stop if a destination already exists. Do not install runtimes, change security settings or change global app configuration. Tell me the seven installed names and how to start a fresh session.
+
+Review that any file-access request names your download and the **Business Assistant** project. A matching checksum shows the file is undamaged; checking who published it is a separate step described in [download verification](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.10.0-preview.1/docs/releases.md#download-and-verify).
+
+### 4. Start a fresh chat
+
+Start a **new chat in the same project**; if the skills are missing, close and reopen the app. Open **Skills** in the sidebar, or ask: **“Check which German Business Kit skills are available in this project.”**
+
+**Done when:** Codex shows the seven skills from the [table above](#3-install-german-business-kit). Then [try your first task](#try-your-first-task), starting your message with **“Use de-business-kit”** or **`$de-business-kit`**. For ongoing work, grant access to your separate private business folder while keeping this project selected, so its installed skills remain available.
+
+### Manual fallback
+
+Use this only if Codex cannot copy the files after the checksum check.
 
 1. Extract the ZIP into a new folder: Windows → right-click → **Extract All…**; Mac → double-click the ZIP.
-2. Open `codex/plugins/de-business-kit/skills` or `claude/plugins/de-business-kit/skills` inside the extracted contents. A file manager may add an outer folder with the ZIP's name.
-3. In **Business Assistant**, create **`.agents/skills`** for Codex or **`.claude/skills`** for Claude Code. These are two nested folders. On Windows, enable **View → Show → Hidden items** if needed. On Mac, press **Command+Shift+.** to show hidden items; if Finder refuses to create a dot-prefixed folder, ask the assistant or a helper to create this exact destination. Do not substitute a folder without its leading dot.
-4. Copy **all seven `de-business-*` folders together** into that destination, including their contents. If any target folder already exists, stop; do not merge or overwrite it. Use the update instructions linked below.
-5. Confirm the structure below, then return to step 6. Do not copy just `SKILL.md`, only `de-business-kit`, or an extra enclosing `skills` folder.
+2. Open `codex/plugins/de-business-kit/skills` inside the extracted contents. Your file manager may add an outer folder with the ZIP's name.
+3. In **Business Assistant**, create the folder `.agents`, and inside it `skills`. On Windows, turn on **View → Show → Hidden items**; on Mac, press **Command+Shift+.** to show hidden items. If Finder refuses a name starting with a dot, ask Codex to create exactly this folder. Do not leave out the leading dot.
+4. Copy **all seven `de-business-*` folders together**, with their contents, into `.agents/skills`. If a folder with the same name already exists, stop; do not merge or overwrite it.
+5. Check the structure below, then continue with [step 4](#4-start-a-fresh-chat).
 
 ```text
 Business Assistant/
-└── .agents/                  ← Codex; use .claude for Claude Code
+└── .agents/
     └── skills/
         ├── de-business-kit/
         │   ├── SKILL.md
@@ -149,20 +227,29 @@ Business Assistant/
         └── de-business-changes/SKILL.md
 ```
 
+## Other ways to install
+
+- **Claude Code in a terminal:** run `claude plugin marketplace add ilyafedotov-ops/german-business-skills`, then `claude plugin install de-business-kit@german-business-kit`. If you installed the plugin in the desktop app, Claude Code already receives it when signed in with the same Claude account (not an API key).
+- **Developers and technical helpers:** source builds, local marketplaces and archive verification are covered in the [distribution guide](https://github.com/ilyafedotov-ops/german-business-skills/blob/main/docs/distribution.md).
+- Install the kit only once per app. Having both the plugin and a manually copied set of the same skills causes duplicates.
+
 ## If you get stuck
 
 | What you see | Next action |
 | --- | --- |
-| No Codex/Code area | Check the official app, supported computer, account access and organization policy. Ordinary chat is a different surface. |
-| Downloaded files cannot be read | Provide exact paths and grant only the required local access. Do not paste passwords or security tokens. |
-| No skills after installation | Check the selected local project, leading-dot destination, all seven folders and fresh session. Avoid nested `skills/skills`. |
-| The app wants to install Python or change security policy | Stop that setup step and use native file copying or an approved helper; basic skill installation needs neither. |
-| Destination already exists | Preserve it. Follow [update instructions](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/docs/distribution.md), keeping any customizations and business records. |
-| No access to bank, email or Lexware | Installing skills does not connect services. Continue with a fictional example or selected local export; establish each connection separately. |
-| A command fails | Keep the message, app version, operating system and step number. Ask for help with that specific step; remove personal details before sharing publicly. |
+| No separate **Cowork** selector | Some versions combine Chat and Cowork. Look for **Customize → Plugins** and check access to your selected folder. |
+| No **Customize** | Check the app version, paid plan and organization policy. |
+| No **Add marketplace** option | On a Team or Enterprise plan, your organization may have turned off adding your own plugins. Ask your organization's Owner. |
+| The marketplace cannot be added | Check the address `ilyafedotov-ops/german-business-skills` and your internet connection, then try again. |
+| Installed, but Claude does not use it | Start a new task. Check that the plugin is turned on in **Customize → Plugins**, or type **/** and select **de-business-kit**. |
+| Skills appear twice | An older manual copy may also be installed. Keep one installation; never delete your business folder. |
+| The assistant wants to install Python or change security settings | Stop that step. Installing and using the kit needs neither. |
+| No access to bank, email or Lexware | Installing the kit does not connect services. Continue with a fictional example or an exported file, and connect each service separately. |
+| Codex: no skills after installation | Check the selected project, the hidden `.agents/skills` folder, all seven folders and a fresh chat. Avoid a nested `skills/skills`. |
+| Something else fails | Note the message, app version, operating system and step number. Remove personal details before asking for help publicly. |
 
-## Evidence and further help
+**Next:** [choose your first task and continue everyday work](user-guide.en.md#first-task).
 
-This desktop route follows [OpenAI app instructions](https://learn.chatgpt.com/docs/app), [OpenAI local skills](https://learn.chatgpt.com/docs/build-skills), [Claude desktop quickstart](https://code.claude.com/docs/en/desktop-quickstart) and [Claude skill locations](https://code.claude.com/docs/en/skills#choose-where-skills-load), checked **2026-10-26**. Installation instructions are not a claim that every app version or nontechnical-user journey has passed. See the [actual validation record](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/docs/validation.md).
+## Sources and checks
 
-For optional terminal/plugin routes, see [advanced installation](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/docs/distribution.md). The [local records application](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/gui/README.md) is an additional tool; it is not required to use the skills or ask a question.
+The Claude route follows Anthropic's [Cowork plugin guide](https://claude.com/docs/cowork/guide/plugins) and [plugins overview](https://claude.com/docs/plugins/overview), checked **2026-10-26**. On that date the same marketplace installed the exact 0.9.0-preview.1 release with all seven skills through Claude Code 2.1.310; installation inside the Cowork app itself has not been observed yet. The Codex route follows [OpenAI app instructions](https://learn.chatgpt.com/docs/app) and [OpenAI local skills](https://learn.chatgpt.com/docs/build-skills). Menu names can change between app versions. See the [validation record](https://github.com/ilyafedotov-ops/german-business-skills/blob/main/docs/validation.md).

@@ -6,9 +6,11 @@ Additional offline tools and record contracts are described in [preparation](pre
 
 Use Python 3.9+ and the bundled `scripts/workspace.py`. It makes no network calls. The assistant's own file-reading tools and remote model are separate data flows; apply `privacy.md` before reading real third-party records into context.
 
-Contents: [Create](#create-then-install-project-scoped-skills) · [State](#files-and-state) · [Language/mode](#language-and-working-mode) · [Facts](#profile-facts) · [Originals](#import-and-verify-documents) · [Reconcile](#reconcile-normalized-csvs) · [Templates](#templates-and-external-operations) · [Recovery](#exit-codes-and-recovery).
+Contents: [Create](#create-a-private-workspace) · [State](#files-and-state) · [Language/mode](#language-and-working-mode) · [Facts](#profile-facts) · [Originals](#import-and-verify-documents) · [Reconcile](#reconcile-normalized-csvs) · [Templates](#templates-and-external-operations) · [Recovery](#exit-codes-and-recovery).
 
-## Create, then install project-scoped skills
+<a id="create-then-install-project-scoped-skills"></a>
+
+## Create a private workspace
 
 Initialize a **new or empty private directory outside Git repositories and skill directories**. Do not initialize inside the public source checkout. Example from the source repository:
 
@@ -18,9 +20,9 @@ python3 skills/de-business-kit/scripts/workspace.py init --root /absolute/path/t
 
 Replace the path and year; do not use the example literally. On Windows, use the installed Python 3 launcher and an absolute path such as `C:/Users/NAME/Documents/Business-private`. Symlinked paths are rejected; select the actual physical directory. The script does not configure ACLs or encryption. Protect the private folder and backups using the user's normal OS controls.
 
-For **project-scoped installation**, initialize the private workspace first, then run the repository installer pointing to that existing workspace. Installing into an empty folder first would make it nonempty, so initialization would correctly refuse it. User-scoped installation can happen before initialization. Do not enable Git/worktree/cloud syncing for this private folder just to make a host's project UI work; select a local folder session or use the user-level skill.
+For the recommended **project-scoped installation**, keep the assistant project with installed skills separate from the private business workspace, as described in the [installation guide](../guides/install.en.md#install-in-codex). Open that project and grant access to the private workspace when needed. If an existing setup already co-locates project skills and business records, preserve it; do not reinitialize or move it. For that older co-located route only, initialization must precede installing skills because initialization rejects a nonempty directory. User-scoped installation can happen before workspace creation. Do not enable Git/worktree/cloud syncing for this private folder just to make a host's project UI work; select a local folder session or use the user-level skill.
 
-All relative input paths below are relative to `--root`, not the current shell directory. Use a single writer; a `.workspace.lock` prevents concurrent script mutations. After a crash, inspect whether the process is still running before removing a stale lock. Never remove another writer's active lock.
+All relative input paths below are relative to `--root`, not the current shell directory. Use a single writer; a `.workspace.lock` prevents concurrent script mutations, and writers wait up to five seconds for a cooperating writer to finish. If a lock remains, `doctor` reports `lock.assessment`: `active` (its process is running on this computer; never remove it), `stale` (the recorded process has ended on this computer) or `unverifiable` (another computer, an older lock without a recorded computer, or unreadable content). `unlock --expected-sha256 <lock.sha256>` removes a `stale` lock, or an `unverifiable` one with `--confirmed-no-writer` only after the user confirms that no other app, assistant or computer uses the workspace. It refuses an active or changed lock and preserves the removed lock in history and the audit log. Never delete the lock file by hand.
 
 ## Files and state
 
@@ -57,6 +59,7 @@ The task/question/decision files start as empty arrays. Use the validated `entry
 python3 <skill-directory>/scripts/workspace.py start --root <private-folder> --year 2026 --language en --mode general
 python3 <skill-directory>/scripts/workspace.py demo --root <new-private-demo-folder> --year 2026 --language ru
 python3 <skill-directory>/scripts/workspace.py doctor --root <private-folder>
+python3 <skill-directory>/scripts/workspace.py unlock --root <private-folder> --expected-sha256 <lock.sha256 from doctor>
 ```
 
 Use [onboarding](onboarding.md) to guide the user instead of making them type commands. `start` resumes an existing workspace without changing preferences or year; arguments select defaults only for a new workspace. `demo` requires a new/empty folder and creates synthetic CSVs, preserved originals, a real reconciliation and localized `START-HERE.md`. It never fills a real business profile. Inspect interrupted demonstrations with `start`/`doctor`; do not rerun initialization over them.
@@ -118,6 +121,45 @@ Inspection returns state, evidence health and the version hash without the title
 Preserve terminal entries and create linked corrections. For an approved decision, create and approve its replacement with `supersedes=<old-id>`, then change only the old state to `superseded` and add `superseded_by=<replacement-id>`. Its content and reviewer evidence remain unchanged. Dependency and supersession cycles are rejected.
 
 Evidence paths are relative private files; mutable administration files cannot serve as evidence. Hashes detect changes, not document truth. Changed evidence stays flagged, while inspection, unrelated work and linked corrections remain possible. Never rehash just to hide a discrepancy. Preserve legacy registers with incompatible shapes/broken links and prepare a reviewed conversion before using the writer.
+
+## Route readable results by task
+
+Keep the five existing visible areas. Do not add mandatory lifecycle-stage roots,
+create a workspace per request/year/activity, or change mappings to improve labels:
+existing localized descriptors pin the language, and mapping changes can reinterpret
+already stored paths. Ordinary questions stay in chat unless persistence is needed.
+
+Before writing, obtain the actual paths with `folders`/native `-Action folders`.
+Reuse the existing task/case and stored report location first. For a new readable
+result use the logical destination below, translated through that mapping:
+
+| Result | Logical destination |
+| --- | --- |
+| Launch plan, registration worksheet, change/hiring/pause/closure plan | `02_registration/<case>/` |
+| Customer proposal/contract/invoice draft, ordinary letter or saved general business answer | `08_correspondence/<case>/` |
+| Bank comparison or statement working files | `03_banking/` |
+| Accounting-system comparison or working agreement | `04_accounting/` |
+| Insurance/other-service comparison or readable connection assessment | `08_correspondence/<services>/<case>/` |
+| Tax research/estimate/form, Finanzamt reply or annual preparation | `05_tax/<year>/` (existing consultation/filing writers retain their own paths) |
+| Accounting reconciliation/report/export | `07_exports/<period>/` (use the generating writer's returned path) |
+| Original documents | Existing intake/catalog writers, normally `06_bookkeeping/<year>/<month>/originals/`; no manual relocation |
+
+`<case>` is a short, non-sensitive task identifier or title; create a subfolder only
+when useful. Use understandable dated/versioned filenames, preserve earlier
+reviewed/sent versions, and keep recipient files apart from private notes.
+`<services>` means a readable category name such as `Services`, `Услуги` or
+`Dienstleistungen` in the folder language, not a schema key or literal placeholder.
+Reuse an existing equivalent folder rather than duplicating it.
+For saved questions/research, use the subject's destination rather than a second
+knowledge archive. Mixed cases link their actual locations from the existing task
+and readable result; they do not copy originals or maintain parallel status lists.
+
+This convention routes agent-authored files; it does not add an automated folder
+organizer or move old reports. Existing `00_admin/services/` notes and source maps
+stay valid: reuse and link them; use a visible destination for new unrelated
+service cases. Keep canonical profile/tasks/decisions/source maps in their existing
+validated records and do not write those JSON files directly. Explain to users
+where the readable result was saved and how to resume from the same workspace.
 
 ## Language and working mode
 
@@ -244,3 +286,9 @@ The utilities refuse symlink paths, path traversal, existing content during init
 ## Document review desk
 
 Use [document workflow](document-workflow.md) for `desk.py` commands and additive casework schema 1. Proposal template schema 2 and source checks have validated writers; external-operation templates do not execute integrations. The complete accounting ledger and ELSTER submission remain core gaps.
+
+## Creation defaults and lock evidence
+
+New `init` and `start` workspaces default to English unless a language is explicitly selected. The low-level Python `init_workspace` API retains its legacy layout default for existing callers; CLI `init` and `start` default to localized folders. Resuming a workspace preserves its language and physical folders. Never rename existing folders to align defaults.
+
+Python unlock preserves the exact captured lock bytes as a `.lock` history file as well as readable metadata. Native diagnosis/recovery is described in [native Windows](native-windows.md#diagnose-and-recover-a-remaining-lock).

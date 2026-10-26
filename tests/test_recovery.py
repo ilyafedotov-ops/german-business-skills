@@ -58,6 +58,7 @@ class RecoveryTests(unittest.TestCase):
                     recovery.restore_workspace(target, restored)
                 self.assertFalse(restored.exists())
 
+    @mock.patch.object(ws, 'LOCK_WAIT_SECONDS', 0)  # Refusal, not the wait, is under test.
     def test_refuses_overwrite_nested_destination_and_active_workspace(self):
         for destination in (self.root, self.root / 'nested', self.base):
             with self.assertRaises(ws.WorkspaceError):
@@ -70,6 +71,7 @@ class RecoveryTests(unittest.TestCase):
         with self.assertRaises(ws.WorkspaceError):
             recovery.restore_workspace(self.backup, self.root)
 
+    @mock.patch.object(ws, 'LOCK_WAIT_SECONDS', 0)
     def test_restore_blocks_a_cooperative_writer_until_copy_verification_finishes(self):
         recovery.backup_workspace(self.root, self.backup)
         target = self.base / 'restore-locked'

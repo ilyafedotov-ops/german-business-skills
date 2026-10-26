@@ -3,6 +3,7 @@
 No provider/ELSTER transport, statutory form calculation or credential handling.
 """
 from contextlib import contextmanager
+import calendar
 from decimal import Decimal
 import copy
 import csv
@@ -13,20 +14,27 @@ import uuid
 
 import workspace as ws
 import workflows as wf
+from . import documents as docs
 from . import storage as st
 
 STATE = "04_accounting/register.json"
 STATES = {"draft", "reviewed", "authorized", "submission_unconfirmed", "submitted", "cancelled"}
 PREFLIGHT_ACTIONS = {"draft": "review", "reviewed": "authorize", "authorized": "begin"}
+ENTRY_VERSION = 2
+# Entries recorded before line VAT existed have no schema_version; they stay readable, never postable.
+LEGACY_LINE = {"kind", "amount", "category", "activity_id"}
+VAT_STATUSES = {"stated", "none_stated", "unresolved"}
 
 
 def template(kind):
     templates = {
         "configuration": {"system": None, "product": None, "account_reference": None,
                           "method": "unresolved", "reviewer": None, "evidence_file": None},
-        "entry": {"entry_id": None, "date": None, "account": None, "transaction_id": None,
-                  "amount": None, "currency": None, "lines": [], "reviewer": None,
-                  "evidence_file": None, "note": None, "replaces": None},
+        "entry": {"schema_version": ENTRY_VERSION, "entry_id": None, "date": None, "account": None,
+                  "transaction_id": None, "amount": None, "currency": None,
+                  "lines": [{"kind": None, "amount": None, "category": None, "activity_id": None, "proposal_id": None,
+                             "vat": {"status": "unresolved", "net": None, "tax": None, "rate": None}}],
+                  "reviewer": None, "evidence_file": None, "note": None, "replaces": None},
         "filing": {"filing_id": None, "form": None, "form_version": None, "period": None,
                    "recipient": None, "payload_file": None, "source_files": [],
                    "unresolved_items": [], "supersedes": None},
@@ -119,8 +127,40 @@ def configure(root, value, expected=None):
     return {"accounting_system": value["system"], "sha256": st.digest(saved)}
 
 
-def _entry(value):
-    wf.exact(value, template("entry"), "cash entry")
+def _fields(entry):
+    """Writer input of a saved entry, in the version it was recorded with."""
+    keys = set(template("entry"))
+    if "schema_version" not in entry:
+        keys.discard("schema_version")
+    return {key: entry[key] for key in keys}
+
+
+def _vat(vat, amount):
+    """Amounts as stated on the evidence; never derives VAT or decides its treatment."""
+    wf.exact(vat, {"status", "net", "tax", "rate"}, "line VAT")
+    if vat["status"] not in VAT_STATUSES:
+        raise ws.WorkspaceError("Line VAT status must be stated, none_stated or unresolved.")
+    if vat["status"] != "stated":
+        if any(vat[key] is not None for key in ("net", "tax", "rate")):
+            raise ws.WorkspaceError("Only stated VAT records net, VAT and rate; keep the others null.")
+        return
+    net, tax = (ws._amount(wf.text(vat[key], "stated " + key)) for key in ("net", "tax"))
+    if ws._add(net, tax) != amount:
+        raise ws.WorkspaceError("Stated net plus VAT must equal the line amount.")
+    if any(part and (part < 0) != (amount < 0) for part in (net, tax)):
+        raise ws.WorkspaceError("Stated net and VAT must keep the sign of the line amount.")
+    if vat["rate"] is not None and not 0 <= ws._amount(wf.text(vat["rate"], "stated rate")) <= 100:
+        raise ws.WorkspaceError("A stated VAT rate is a percentage between 0 and 100.")
+
+
+def _entry(value, legacy=False):
+    keys = set(template("entry"))
+    if legacy:
+        keys.discard("schema_version")
+    elif (not isinstance(value, dict) or type(value.get("schema_version")) is not int
+          or value["schema_version"] != ENTRY_VERSION):
+        raise ws.WorkspaceError("Cash entries need schema_version 2 with line VAT status; start from accounting-template --kind entry.")
+    wf.exact(value, keys, "cash entry")
     for key in ("entry_id", "account", "transaction_id"):
         st.identifier(value[key])
     for key in ("reviewer", "note"):
@@ -132,16 +172,69 @@ def _entry(value):
         raise ws.WorkspaceError("Cash records need classified or explicitly unresolved lines.")
     total = Decimal(0)
     for line in value["lines"]:
-        wf.exact(line, {"kind", "amount", "category", "activity_id"}, "cash line")
+        wf.exact(line, LEGACY_LINE if legacy else LEGACY_LINE | {"proposal_id", "vat"}, "cash line")
         if line["kind"] not in {"income", "expense", "transfer", "unresolved"}:
             raise ws.WorkspaceError("Unsupported movement kind.")
         wf.text(line["category"], "reviewed category")
         wf.text(line["activity_id"], "activity reference")
-        total = ws._add(total, ws._amount(line["amount"]))
+        line_amount = ws._amount(wf.text(line["amount"], "line amount"))
+        total = ws._add(total, line_amount)
+        if not legacy:
+            if line["proposal_id"] is not None:
+                st.identifier(line["proposal_id"])
+            _vat(line["vat"], line_amount)
     if total != amount:
         raise ws.WorkspaceError("Entry line amounts must equal the observed cash movement.")
     if value["replaces"] is not None:
         st.identifier(value["replaces"])
+
+
+def _current(proposals):
+    """Approved proposals not replaced by an approved correction."""
+    replaced = {row["supersedes"] for row in proposals.values()
+                if row["review"]["status"] == "approved" and row["supersedes"]}
+    return {identifier: row for identifier, row in proposals.items()
+            if row["review"]["status"] == "approved" and identifier not in replaced}
+
+
+def linkable(root):
+    """Current approved proposals a cash line may settle; caller holds the workspace lock."""
+    def value(row, key):
+        return row["fields"].get(key, {}).get("value")
+    return [{"proposal_id": identifier, "document_id": row["document_id"], "activity_id": row["activity_id"],
+             "period": row["period"], "invoice_number": value(row, "invoice_number"),
+             "gross": value(row, "gross"), "currency": value(row, "currency")}
+            for identifier, row in sorted(_current(st.load(root)["proposals"]).items())]
+
+
+def _links(root, lines):
+    """Fingerprint the current approved proposals that cash lines settle."""
+    linked = [line for line in lines if line["proposal_id"] is not None]
+    if not linked:
+        return {}
+    current = _current(st.load(root)["proposals"])
+    result = {}
+    for line in linked:
+        identifier = line["proposal_id"]
+        proposal = current.get(identifier)
+        if proposal is None:
+            raise ws.WorkspaceError("Link cash lines only to a current approved proposal; drafts, rejected and replaced proposals are not posted.")
+        if proposal["activity_id"] != line["activity_id"]:
+            raise ws.WorkspaceError("A linked cash line must keep the activity of its reviewed proposal.")
+        if docs.original(root, proposal["document_id"])["sha256"] != proposal["original_sha256"]:
+            raise ws.WorkspaceError("The reviewed original of a linked proposal changed; prepare a new review.")
+        result[identifier] = st.digest(proposal)
+    return result
+
+
+def _check_links(root, entries):
+    linked = [item for entry in entries for item in entry.get("linked_proposals", {}).items()]
+    if not linked:
+        return
+    proposals = st.load(root)["proposals"]
+    if any(identifier not in proposals or st.digest(proposals[identifier]) != fingerprint
+           for identifier, fingerprint in linked):
+        raise ws.WorkspaceError("A linked proposal changed or is missing; inspect preserved casework history before reporting.")
 
 
 def post(root, value):
@@ -167,7 +260,8 @@ def post(root, value):
             if (entry["account"].casefold(), entry["transaction_id"]) == (value["account"].casefold(), value["transaction_id"]):
                 if not value["replaces"] or entry["entry_id"] not in reversed_ids and not entry["reverses"]:
                     raise ws.WorkspaceError("Duplicate account transaction; inspect and reverse before correcting.")
-        saved = {**value, "reverses": None, "recorded_at": ws._now(), "evidence": st.evidence(root, value["evidence_file"])}
+        saved = {**value, "reverses": None, "recorded_at": ws._now(), "evidence": st.evidence(root, value["evidence_file"]),
+                 "linked_proposals": _links(root, value["lines"])}
         state["entries"][identifier] = saved
     return {"entry_id": identifier, "status": "recorded", "sha256": st.digest(saved)}
 
@@ -191,6 +285,10 @@ def reverse(root, entry_id, reversal_id, evidence_file, actor, note):
         saved["amount"] = format(ws._amount(original["amount"]).copy_negate(), "f")
         for line in saved["lines"]:
             line["amount"] = format(ws._amount(line["amount"]).copy_negate(), "f")
+            vat = line.get("vat")  # Entries recorded before line VAT have none.
+            if vat and vat["status"] == "stated":
+                for key in ("net", "tax"):
+                    vat[key] = format(ws._amount(vat[key]).copy_negate(), "f")
         state["entries"][reversal_id] = saved
     return {"entry_id": reversal_id, "reverses": entry_id, "sha256": st.digest(saved)}
 
@@ -201,6 +299,79 @@ def _in_period(day, period):
     if "Q" in period:
         return day[:4] == period[:4] and (int(day[5:7]) - 1) // 3 + 1 == int(period[-1])
     return day[:7] == period
+
+
+def _period_end(period):
+    year = int(period[:4])
+    month = 12 if len(period) == 4 else int(period[-1]) * 3 if "Q" in period else int(period[5:7])
+    return f"{year:04d}-{month:02d}-{calendar.monthrange(year, month)[1]:02d}"
+
+
+def _settlement_basis(root, period, state):
+    """Current reviewed evidence, with payments dated through the period end."""
+    cutoff = _period_end(period)
+    entries = [entry for entry in state["entries"].values() if entry["date"] <= cutoff
+               and any(line.get("proposal_id") for line in entry["lines"])]
+    proposals = st.load(root)["proposals"]
+    reversed_ids = {entry["reverses"] for entry in entries if entry["reverses"]}
+    linked = {line["proposal_id"] for entry in entries if not entry["reverses"] and entry["entry_id"] not in reversed_ids
+              for line in entry["lines"] if line.get("proposal_id")}
+    current = _current(proposals)
+    selected = {key: row for key, row in proposals.items()
+                if key in linked or key in current and row["period"] <= cutoff[:7]}
+    _check_links(root, entries)
+    for entry in entries:
+        _entry(_fields(entry), legacy="schema_version" not in entry)
+        st.check_evidence(root, entry["evidence"])
+    for proposal in selected.values():
+        if docs.original(root, proposal["document_id"])["sha256"] != proposal["original_sha256"]:
+            raise ws.WorkspaceError("A settlement proposal original changed; inspect evidence before reporting.")
+    return {"through": cutoff, "entries": entries, "proposals": selected,
+            "current": sorted(set(selected) & set(current))}
+
+
+def _settlements(basis):
+    reversed_ids = {entry["reverses"] for entry in basis["entries"] if entry["reverses"]}
+    active = [entry for entry in basis["entries"] if not entry["reverses"] and entry["entry_id"] not in reversed_ids]
+    rows = []
+    for identifier, proposal in sorted(basis["proposals"].items()):
+        fields = proposal["fields"]
+        value = lambda key: fields.get(key, {}).get("value")
+        gross, currency = value("gross"), value("currency")
+        issues, payments, kinds = [], [], set()
+        allocated = Decimal(0)
+        if identifier not in basis["current"]:
+            issues.append("proposal_superseded")
+        target = ws._amount(gross) if gross is not None else None
+        if target is None or target < 0 or currency is None:
+            issues.append("invoice_amount_unresolved")
+        for entry in active:
+            for index, line in enumerate(entry["lines"]):
+                if line.get("proposal_id") != identifier:
+                    continue
+                payments.append({"entry_id": entry["entry_id"], "line": index + 1, "date": entry["date"],
+                                 "amount": line["amount"], "currency": entry["currency"], "kind": line["kind"]})
+                if entry["currency"] != currency:
+                    issues.append("currency_mismatch")
+                    continue
+                if line["kind"] not in {"income", "expense"}:
+                    issues.append("movement_unresolved")
+                    continue
+                kinds.add(line["kind"])
+                amount = ws._amount(line["amount"])
+                allocated = ws._add(allocated, amount if line["kind"] == "income" else amount.copy_negate())
+        if len(kinds) > 1:
+            issues.append("mixed_payment_directions")
+        if allocated < 0:
+            issues.append("refund_exceeds_payments")
+        remaining = None if issues else ws._add(target, allocated.copy_negate())
+        status = ("needs_review" if issues else "overpaid" if remaining < 0 else "balanced" if remaining == 0
+                  else "unpaid" if allocated == 0 else "partial")
+        rows.append({"proposal_id": identifier, "invoice_number": value("invoice_number"), "currency": currency,
+                     "gross": gross, "allocated": format(allocated, "f"),
+                     "remaining": None if remaining is None else format(remaining, "f"), "status": status,
+                     "issues": sorted(set(issues)), "payments": payments})
+    return rows
 
 
 def period_report(root, period):
@@ -214,11 +385,13 @@ def period_report(root, period):
 def _period_report(root, period, state):
     config = _config(root, state, local=True)
     selected = [entry for entry in state["entries"].values() if _in_period(entry["date"], period)]
-    totals, categories = {}, {}
-    unresolved = False
+    totals, categories, vat = {}, {}, {}
+    unresolved = vat_unresolved = vat_not_recorded = False
     for entry in selected:
-        _entry({key: entry[key] for key in template("entry")})
+        legacy = "schema_version" not in entry
+        _entry(_fields(entry), legacy=legacy)
         st.check_evidence(root, entry["evidence"])
+        vat_not_recorded |= legacy
         row = totals.setdefault(entry["currency"], dict.fromkeys(("income", "expense", "transfer", "unresolved"), Decimal(0)))
         for line in entry["lines"]:
             amount = ws._amount(line["amount"])
@@ -226,6 +399,16 @@ def _period_report(root, period, state):
             key = (entry["currency"], line["kind"], line["category"], line["activity_id"])
             categories[key] = ws._add(categories.get(key, Decimal(0)), amount)
             unresolved |= line["kind"] == "unresolved"
+            if legacy:
+                continue
+            vat_unresolved |= line["vat"]["status"] == "unresolved"
+            if line["vat"]["status"] == "stated":
+                rate = line["vat"]["rate"]
+                # Group equal stated rates ("19", "19.00"); the entry keeps the text as stated.
+                group = (entry["currency"], line["kind"], None if rate is None else format(ws._amount(rate).normalize(), "f"))
+                net, tax = vat.get(group, (Decimal(0), Decimal(0)))
+                vat[group] = (ws._add(net, ws._amount(line["vat"]["net"])), ws._add(tax, ws._amount(line["vat"]["tax"])))
+    _check_links(root, selected)
     for row in totals.values():
         row["operating_cash_net"] = ws._add(row["income"], row["expense"])
     issues = ["coverage_not_confirmed", "statutory_adjustments_not_calculated", "tax_form_mapping_not_verified"]
@@ -233,11 +416,23 @@ def _period_report(root, period, state):
         issues.append("no_entries")
     if unresolved:
         issues.append("unclassified_movements")
-    return {"schema_version": 1, "kind": "cash_movement_report", "period": period,
+    if vat_unresolved:
+        issues.append("vat_unresolved")
+    if vat_not_recorded:
+        issues.append("vat_not_recorded")
+    basis = _settlement_basis(root, period, state)
+    settlements = _settlements(basis)
+    for status in ("overpaid", "needs_review", "partial", "unpaid"):
+        if any(row["status"] == status for row in settlements):
+            issues.append("settlement_" + status)
+    return {"schema_version": 2, "kind": "cash_movement_report", "period": period,
             "accounting_system": config["system"], "entries_sha256": st.digest(selected),
             "configuration_sha256": st.digest(config), "entries": selected,
             "totals": {currency: {key: format(value, "f") for key, value in row.items()} for currency, row in sorted(totals.items())},
             "categories": [{"currency": key[0], "kind": key[1], "category": key[2], "activity_id": key[3], "amount": format(value, "f")} for key, value in sorted(categories.items())],
+            "vat": [{"currency": key[0], "kind": key[1], "rate": key[2], "net": format(value[0], "f"), "tax": format(value[1], "f")}
+                    for key, value in sorted(vat.items(), key=lambda item: (item[0][0], item[0][1], item[0][2] or ""))],
+            "settlements": settlements, "settlement_through": basis["through"], "settlement_basis_sha256": st.digest(basis),
             "readiness": "needs_review", "tax_return_status": "not_calculated", "open_items": issues}
 
 
@@ -260,8 +455,43 @@ def export_report(root, period):
         lines.extend(["## " + currency, ""])
         lines.extend("- " + labels[key] + ": " + value for key, value in totals.items())
         lines.append("")
+        stated = [row for row in report["vat"] if row["currency"] == currency]
+        if stated:
+            lines.extend(["## " + ("НДС по документам" if russian else "VAT as stated on documents") + " (" + currency + ")", "",
+                          "Суммы, указанные в документах; не декларация по НДС и не решение о налоговом режиме."
+                          if russian else "Amounts as stated on the evidence; not a VAT return or a treatment decision.", ""])
+            for row in stated:
+                rate = row["rate"] + " %" if row["rate"] is not None else ("ставка не указана" if russian else "rate not stated")
+                lines.append("- " + labels[row["kind"]] + " · " + rate + (": нетто " if russian else ": net ") + row["net"]
+                             + (", НДС " if russian else ", VAT ") + row["tax"])
+            lines.append("")
+    if "vat_unresolved" in report["open_items"]:
+        lines.extend(["НДС по некоторым строкам ещё не определён; они входят в денежные итоги, но не в суммы НДС по документам." if russian
+                      else "VAT is not yet determined for some lines; they are in the cash totals but not in any stated VAT figures.", ""])
+    if "vat_not_recorded" in report["open_items"]:
+        lines.extend(["Некоторые записи сделаны до учёта НДС; чтобы указать НДС, сторнируйте их и создайте связанную замену." if russian
+                      else "Some entries were recorded before VAT capture; reverse them and post a linked replacement to record VAT.", ""])
     if not report["entries"]:
         lines.append("Операции за период отсутствуют." if russian else "No entries supplied for this period.")
+    if report["settlements"]:
+        lines.extend(["", "## " + ("Распределение платежей по счетам" if russian else "Invoice payment allocation"), "",
+                      ("Платежи по дату " if russian else "Payments through ") + report["settlement_through"],
+                      "Сверка записанных сумм; не подтверждение оплаты во внешней системе. Валюты не конвертируются."
+                      if russian else "Reconciles recorded amounts; does not confirm payment in an external system. No currency conversion.", ""])
+        statuses = {"balanced": "Суммы совпадают", "partial": "Частичная оплата", "unpaid": "Нет распределённых платежей",
+                    "overpaid": "Переплата", "needs_review": "Нужна проверка"} if russian else {
+                        "balanced": "Amounts match", "partial": "Partly allocated", "unpaid": "No payments allocated",
+                        "overpaid": "Overallocated", "needs_review": "Needs review"}
+        for row in report["settlements"]:
+            lines.append("- " + (row["invoice_number"] or row["proposal_id"]) + " (" + (row["currency"] or "—") + "): "
+                         + statuses[row["status"]])
+            lines.extend(["  " + label + ": " + (row[key] or "—") for key, label in (
+                              ("gross", "По счёту" if russian else "Invoice"),
+                              ("allocated", "Распределено в валюте счёта" if russian else "Allocated in invoice currency"),
+                              ("remaining", "Остаток" if russian else "Remaining"))])
+            if row["issues"]:
+                messages = st.template("casework-messages.json")["ru" if russian else "en"]["codes"]
+                lines.extend("  - " + messages.get("settlement_" + issue, issue) for issue in row["issues"])
     markdown = relative[:-5] + ".md"
     ledger_files = {}
     with ws._locked(root):
@@ -319,6 +549,12 @@ def _local_report_evidence(root, source, payload, state):
     if (report.get("entries_sha256") != st.digest(entries)
             or report.get("configuration_sha256") != st.digest(state["configuration"])):
         raise ws.WorkspaceError("Source cash report is stale; regenerate it and prepare a newly reviewed filing version.")
+    _check_links(root, entries)
+    if "settlement_basis_sha256" in report:
+        basis = _settlement_basis(root, report["period"], state)
+        if report["settlement_basis_sha256"] != st.digest(basis):
+            raise ws.WorkspaceError("Source settlement report is stale; regenerate it and prepare a newly reviewed filing version.")
+        entries = list({entry["entry_id"]: entry for entry in [*entries, *basis["entries"]]}.values())
     return [entry["evidence"] for entry in entries]
 
 
@@ -522,21 +758,22 @@ def status(root):
                 "transmission": "not_implemented", "tax_form_calculations": "not_implemented"}
 
 
-def overview_state(root, period):
+def overview_state(root, period, state=None, filing_checks=None):
     """Projection for overview; caller holds the workspace lock across all reads."""
-    state = _load(root)
+    state = _load(root) if state is None else state
     config = state["configuration"]
     result = {"accounting_system": config["system"] if config else "undecided",
               "product": config["product"] if config else None,
               "method": config["method"] if config else "unresolved",
-              "period_entry_count": None, "totals": {}, "issues": [],
+              "period_entry_count": None, "totals": {}, "issues": [], "settlements": [],
               "coverage": "not_confirmed", "tax_return_status": "not_calculated"}
     if config:
         try:
             _config(root, state)
             if config["system"] == "local":
                 report = _period_report(root, period, state)
-                result.update(period_entry_count=len(report["entries"]), totals=report["totals"],
+                result.update(period_entry_count=len(report["entries"]), totals=report["totals"], settlements=report["settlements"],
+                              settlement_through=report["settlement_through"],
                               issues=[{"code": code} for code in report["open_items"]])
         except (OSError, ws.WorkspaceError) as exc:
             result["issues"].append({"code": "accounting_evidence", "detail": str(exc)})
@@ -546,7 +783,7 @@ def overview_state(root, period):
         if (_in_period(period + "-01", record["period"])
                 or record["state"] == "submission_unconfirmed"
                 or any(event.get("due_date") for event in record["responses"])):
-            check = _check_filing(root, identifier, state)
+            check = copy.deepcopy(filing_checks[identifier]) if filing_checks is not None else _check_filing(root, identifier, state)
             check["responses"] = [{"kind": event["response_kind"], "due_date": event["due_date"],
                                     "evidence_path": event["evidence"]["path"]}
                                    for event in record["responses"]]

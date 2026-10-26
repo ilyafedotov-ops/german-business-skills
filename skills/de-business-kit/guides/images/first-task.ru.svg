@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="862" viewBox="0 0 760 862" role="img" aria-labelledby="title desc" xml:lang="ru">
+<title id="title">От запроса к полезному результату</title>
+<desc id="desc">Вымышленный пример • Предложение для клиента Вы просите: Используй de-business-kit. Подготовь предложение по заметкам. Спроси недостающее. Ассистент проверяет исходные данные: Услуга и цена уже есть в ваших заметках. Какой срок вы согласовали с клиентом? Вы получаете понятный черновик: Проверьте его. Пробелы явно отмечены. Сохранённый черновик ещё не отправлен. Новый чат: продолжите из своей папки: Используй de-business-kit. Прочитай прогресс. Срок подтверждён. Обнови предложение. Иллюстрация примера, а не запись реального диалога.</desc>
+<rect width="760" height="862" rx="24" fill="#f7f5ef"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#173e4b">
+<text x="32" y="47" font-size="19" font-weight="700" fill="#173e4b">GERMAN BUSINESS KIT</text>
+<text x="32" y="92" font-size="34" font-weight="700" fill="#173e4b">От запроса к полезному результату</text>
+<text x="32" y="128" font-size="24" font-weight="400" fill="#173e4b">Вымышленный пример • Предложение для клиента</text>
+<rect x="32" y="158" width="696" height="134" rx="16" fill="#ddece8"/>
+<circle cx="66" cy="194" r="18" fill="#173e4b"/>
+<text x="60" y="201" font-size="22" font-weight="700" fill="#ffffff">1</text>
+<text x="100" y="201" font-size="28" font-weight="700" fill="#173e4b">Вы просите</text>
+<text x="100" y="236" font-size="25" font-weight="400" fill="#173e4b">Используй de-business-kit. Подготовь</text>
+<text x="100" y="268" font-size="25" font-weight="400" fill="#173e4b">предложение по заметкам. Спроси недостающее.</text>
+<path d="M66 298 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="316" width="696" height="134" rx="16" fill="#f6ddcd"/>
+<circle cx="66" cy="352" r="18" fill="#173e4b"/>
+<text x="60" y="359" font-size="22" font-weight="700" fill="#ffffff">2</text>
+<text x="100" y="359" font-size="28" font-weight="700" fill="#173e4b">Ассистент проверяет исходные данные</text>
+<text x="100" y="394" font-size="25" font-weight="400" fill="#173e4b">Услуга и цена уже есть в ваших заметках.</text>
+<text x="100" y="426" font-size="25" font-weight="400" fill="#173e4b">Какой срок вы согласовали с клиентом?</text>
+<path d="M66 456 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="474" width="696" height="134" rx="16" fill="#e1e8ef"/>
+<circle cx="66" cy="510" r="18" fill="#173e4b"/>
+<text x="60" y="517" font-size="22" font-weight="700" fill="#ffffff">3</text>
+<text x="100" y="517" font-size="28" font-weight="700" fill="#173e4b">Вы получаете понятный черновик</text>
+<text x="100" y="552" font-size="25" font-weight="400" fill="#173e4b">Проверьте его. Пробелы явно отмечены.</text>
+<text x="100" y="584" font-size="25" font-weight="400" fill="#173e4b">Сохранённый черновик ещё не отправлен.</text>
+<path d="M66 614 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="632" width="696" height="134" rx="16" fill="#ddece8"/>
+<circle cx="66" cy="668" r="18" fill="#173e4b"/>
+<text x="60" y="675" font-size="22" font-weight="700" fill="#ffffff">4</text>
+<text x="100" y="675" font-size="28" font-weight="700" fill="#173e4b">Новый чат: продолжите из своей папки</text>
+<text x="100" y="710" font-size="25" font-weight="400" fill="#173e4b">Используй de-business-kit. Прочитай прогресс.</text>
+<text x="100" y="742" font-size="25" font-weight="400" fill="#173e4b">Срок подтверждён. Обнови предложение.</text>
+<text x="32" y="817" font-size="22" font-weight="400" fill="#173e4b">Иллюстрация примера, а не запись реального диалога.</text>
+</g></svg>

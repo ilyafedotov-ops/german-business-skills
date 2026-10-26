@@ -120,3 +120,5 @@ try {
     # Only this test's randomly named synthetic directory is removed.
     Remove-Item -LiteralPath $base -Recurse -Force
 }
+
+& (Join-Path $PSScriptRoot 'lock-smoke.ps1')

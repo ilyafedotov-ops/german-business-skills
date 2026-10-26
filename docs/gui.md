@@ -11,12 +11,16 @@ The `gui/` application connects a browser interface to the real workspace writer
 - Import selected PDFs, XML, images and CSVs; see per-file results and review
   catalog details alongside a safe text/image preview or original download.
 - Choose local or external authoritative accounting explicitly. Post reviewed
-  cash entries with split lines and evidence; reverse/correct without rewriting history.
+  cash entries with split lines, line VAT as stated, optional links to approved proposals and
+  evidence; reverse/correct without rewriting history.
 - Create frozen filing versions, inspect preflight blockers, review/authorize,
   record a manual attempt, record an observed receipt, and retain authority responses.
   Cancel/replace only when the existing state machine permits it.
 - Save incomplete forms as separate workspace drafts and resume them after restart.
 - Produce period reports/overview and create/verify/restore full backups.
+- Check a workspace lock after a program closed unexpectedly. A lock whose process
+  has ended on this computer can be removed and recorded in history; a running
+  owner's lock is kept, and an unverifiable one needs explicit confirmation.
 
 The interface does not add a tax engine, OCR engine, live bank/software connector,
 ELSTER transport or background reminder service. Existing accounting programs
@@ -83,6 +87,12 @@ checked 2026-10-26. [GitHub runner architectures](https://docs.github.com/en/act
 establish the CI labels, not desktop acceptance. Record actual results separately
 in [validation](validation.md).
 
+## Snapshot profiling
+
+Run `python3 -B tools/profile_gui.py --filings 12 --samples 3` for a disposable synthetic snapshot profile. Use `--filings 60` for a larger fixture. It reports timings and evidence-check call counts without loading a real workspace. Snapshot construction now loads accounting state once and reuses filing preflight results within that same workspace lock. No cache survives the snapshot, and writes still run the canonical preflight.
+
+The month page expands each invoice's recorded allocations, outstanding amount and currency/correction warnings. It uses the existing disclosure and summary controls in EN/RU/DE. “Amounts match” is a local arithmetic result, not an external paid status.
+
 ## Fictional prototype
 
 Open [prototype/index.html](../prototype/index.html) in a desktop browser, keeping its sibling CSS/JS files together. This separate English demo uses fictional records only; no installation, login or runtime is needed. Do not enter business data. Its screens are Home, Documents, This month, Taxes and letters, and Accounts and services.
@@ -101,4 +111,4 @@ npm run test:browser
 npm run test:browser -- --browser=webkit
 ```
 
-Tests open the HTML file directly; synthetic screenshots go to ignored `output/prototype/`. No production dependency or network request is added. Historical [prototype evidence](history/validation-2026-10-26.md#prototype-validation) and [design research](research/gui-ux-recommendation.md) retain their dates. The real GUI above is implemented separately; ordinary-user usability acceptance remains open.
+Tests open the HTML file directly; synthetic screenshots go to ignored `output/prototype/`. No production dependency or network request is added. See the [validation summary](validation.md) for evidence limits and the dated [design research](research/gui-ux-recommendation.md). The real GUI above is implemented separately; ordinary-user usability acceptance remains open.
