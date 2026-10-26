@@ -27,8 +27,9 @@ accounting choice merely to reopen a formation plan or letter.
 
 If the writer is unavailable (including unsupported native-only operations),
 preserve a readable continuation note without editing the registers directly.
-State which task update was not saved. Existing overview described in the [monthly workflow](monthly-workflow.md) remains a
-projection of canonical records and cannot discover promises hidden only in prose.
+State which task update was not saved. The overview and GUI home show existing active tasks across months, including undated work. Readiness checks saved evidence and the full dependency ancestry; cancelled dependencies remain unsatisfied. Changed evidence blocks affected work, while unrelated ready tasks may continue. Invalid records require inspection before selecting a next task. These views remain projections of canonical records and cannot discover promises hidden only in prose. GUI continuation prepares an assistant request, not an automatic execution. Native overview conservatively rejects hardlinked task evidence; preserve an independent copy through the supported writer when appropriate.
+
+A saved hash or task-history record does not preserve the former evidence bytes. Before claiming an earlier file version is available, locate it and verify its hash. If the evidence was overwritten and no matching original or backup is available, state that the former content is unavailable; never reconstruct it from the hash or silently accept the changed file. Correct an inaccurate continuation note in a new version, retaining the prior note and its task evidence.
 
 ## Without a workspace
 

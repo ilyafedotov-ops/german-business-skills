@@ -37,6 +37,8 @@ The skill cannot create browser tools, API access or permissions. Availability d
 
 The lifecycle worksheets and continuation notes reuse existing tasks, decisions and evidence. They add no state schema or autonomous workflow runner; the assistant prepares and verifies each result through available tools.
 
+The overview and GUI home project active lifecycle tasks from the existing `tasks.json` register across months, including undated work. Readiness checks the task evidence and its full dependency ancestry; cancelled dependencies do not satisfy work. Stale evidence blocks the affected chain while unrelated tasks may continue. Invalid records suppress task suggestions. The projection cannot complete a task, grant authorization or create a reminder.
+
 ## Languages and modes
 
 The two named working modes are `bookkeeping` and `tax-consultant`; `general` covers startup, organization and routing. Bookkeeping currently prepares evidence, proposals, reconciliation and monthly status for the user’s own review. Tax questions and preparation (`tax-consultant`) produces sourced explanations, comparisons, estimates and proposed decisions. A tax issue encountered during bookkeeping can use the consultation module without abandoning the other work or changing the saved default. See the [mode guide](modes.md) for usage rather than a second implementation of those workflows here.

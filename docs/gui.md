@@ -13,6 +13,7 @@ installing Python.
 
 ## Supported work
 
+- See active business tasks across months, including tasks without dates, dependencies and evidence status. Continue through the existing assistant-request dialog; this does not call an AI service or update tasks. Empty workspaces start with the intended business task.
 - Open/create a private workspace and use English, Russian or German navigation.
 - Import selected PDFs, XML, images and CSVs; see per-file results and review
   catalog details alongside a safe text/image preview or original download.

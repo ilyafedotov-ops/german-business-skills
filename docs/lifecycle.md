@@ -218,6 +218,10 @@ The first selected live P6 acceptance target is **Lexware Office document readin
 
 P7 now has actual project-scoped discovery evidence for Codex CLI 0.164.0 on macOS arm64: seven installed skills were enabled and rediscovered in two fresh host processes. Installed files and sibling resources matched the bundle. This does not establish automatic conversational routing, desktop UI, Claude or Windows discovery. Native installer timing remains unresolved despite passing focused and instrumented diagnostic runs; retain that gate. See [validation](validation.md).
 
+## 5.6. Task-first continuation in existing views (2026-10-26)
+
+P1/P7 now connects the existing task register to Python/native overview and GUI home: undated and other-month active tasks, dependencies, current evidence and a proposed next task. Empty undecided workspaces start with the intended business task. Existing errors, drafts and uncertain filings retain priority. The assistant-request dialog supports continuation without a new task store, automatic execution or accounting default. Local synthetic acceptance is recorded in [validation](validation.md); native Windows, published packages and ordinary-user acceptance remain separate.
+
 ## 6. Queue and drift control
 
 **After the local P1–P7 materials and synthetic preparation trials, the next queue is actual document-cycle execution, a chosen service operation and supported-host acceptance.** P6 accompanies specific needs; P7 follows accepted journeys. Security maintenance and fixes to existing capabilities continue as necessary.

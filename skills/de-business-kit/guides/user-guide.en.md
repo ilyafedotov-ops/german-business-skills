@@ -136,6 +136,8 @@ The real workspace overview now shows your accounting choice, period entries, op
 
 Ask: “Create and verify a complete backup at this protected location”, or “Restore this backup into a new folder and check it.” [Full backup and restore](../references/recovery.md) includes originals, records, evidence and history, and is available through native Windows tools without installing Python. An existing folder is never overwritten. Keep both the backup and original until you have checked the restored workspace.
 
+The overview also shows active business tasks without dates and tasks from other months. It shows unresolved dependencies and changed or missing evidence; an independent task can still continue. Completed and cancelled tasks stay in history. Ask the assistant to inspect the saved task before continuing. In the GUI, the continuation button prepares a request to copy to your assistant; it does not start an AI session or complete work automatically.
+
 The native Windows overview reads saved records and checks local evidence hashes; it does not run the full filing preflight. Advanced protected accounting/filing writes still need a supported existing execution environment. It does not silently install Python. [Monthly workflow and exact limits](../references/monthly-workflow.md).
 
 ## Invoice corrections and partial payments

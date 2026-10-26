@@ -49,6 +49,8 @@ Casework collections live in `00_admin/casework.json`. That register is additive
 
 A supplied-export coverage note describes a snapshot, its selection/date basis and inspected versus missing evidence. It is a readable operation/source-map artifact, not a new canonical entity. A row in an export does not establish that its original document is present, paid, posted or observed in the live service.
 
+Task `readiness` (`ready`, `blocked`, `needs_review`), `pending_dependencies` and `next_task_id` are derived view fields, not new task states or approvals. Active tasks span the whole workspace; completed/cancelled tasks remain canonical but are omitted from the active list. A ready dependency requires completed work with current preserved evidence through its ancestry.
+
 ## Relationships
 
 ```mermaid

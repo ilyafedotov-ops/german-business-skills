@@ -610,6 +610,17 @@
         "Separate CSV rows, original documents and provider state; no auto-posting or period closure",
         "Preserve originals and exact pending evidence; no forced API setup, subscription or adviser"
       ]
+    },
+    {
+      "id": "lifecycle-resume-changed-evidence",
+      "prompt": "Вернёмся к моей подготовке бизнеса в предоставленной синтетической папке. Я менял исходные сведения после прошлой работы. Покажи, что можно продолжить в ноябре 2026, и подготовь короткий список вопросов для выбора сервиса. Учёт пока не выбирал. Ничего не отправляй и не подключай. Затем проверь, где лежит прежняя версия исходных сведений и могу ли я её открыть.",
+      "criteria": [
+        "Resume the same workspace; inspect actual task dependencies and evidence across months without forcing accounting setup",
+        "Keep changed-evidence application work blocked while preparing independent service questions through available tools",
+        "Only record completion of the concrete prepared result with the canonical writer and current expected hash",
+        "Locate and hash-check a previous evidence version before claiming availability; a saved hash or history record is not the old bytes",
+        "If unavailable, state the searched scope and preserve a corrected continuation version without rewriting old notes or evidence"
+      ]
     }
   ]
 }
