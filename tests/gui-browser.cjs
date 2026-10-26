@@ -6,6 +6,7 @@ const path = require('node:path');
 const { spawn, execFileSync } = require('node:child_process');
 const readline = require('node:readline');
 const playwright = require('playwright');
+const { stopChild } = require('./gui-lifecycle.cjs');
 const browserName = process.argv.find(a => a.startsWith('--browser='))?.split('=')[1] || 'chromium';
 const output = path.resolve('output/gui');
 const python = process.env.GUI_PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
@@ -49,11 +50,25 @@ function start(root) {
   await fixture(root);
   await fs.mkdir(output,{recursive:true});
   const server = start(root);
-  let browser;
+  let browser, page, failure;
+  const pendingRequests = new Map(), apiResults = [];
   try {
     const { url, token } = await server.ready;
     browser = await playwright[browserName].launch();
     const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, locale: 'en-GB', timezoneId: 'Europe/Berlin' });
+    context.on('request', request => {
+      if (request.url() === url+'api' && request.method() === 'POST') {
+        pendingRequests.set(request, { op: request.postDataJSON()?.op, started: Date.now() });
+      }
+    });
+    context.on('response', async response => {
+      const request = response.request(), pending = pendingRequests.get(request);
+      if (!pending) return;
+      const value = await response.json().catch(() => ({}));
+      pendingRequests.delete(request);
+      apiResults.push({ op: pending.op, elapsedMs: Date.now()-pending.started, status: response.status(), ok: value.ok, error: value.error });
+      if (apiResults.length > 12) apiResults.shift();
+    });
     const issues = [];
     context.on('page', p => {
       p.on('pageerror', err => issues.push(String(err)));
@@ -61,7 +76,7 @@ function start(root) {
       p.on('request', req => { if (!req.url().startsWith(url) && !req.url().startsWith('blob:') && !req.url().startsWith('data:')) issues.push(`External request: ${req.url()}`); });
       p.on('console', message => { if(browserName==='webkit'&&capturing.has(p)&&message.text()==="Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy."){screenshotDiagnostics++;return;} if (message.type() === 'error' && !/^Failed to load resource: the server responded with a status of (400|409)/.test(message.text())) issues.push(message.text()); });
     });
-    const page = await context.newPage();
+    page = await context.newPage();
     await page.goto(`${url}#token=${token}`);
     await page.getByRole('heading', { name: 'Your business, one clear next step.' }).waitFor();
     await page.getByLabel('Working month').fill('2026-10');
@@ -340,9 +355,29 @@ function start(root) {
     assert.deepEqual(issues, []);
     console.log(`GUI ${browserName}: real import/review/configuration/draft/post/reversal/filing lifecycle/recovery/stale-tab journeys and 54 localized route-width checks passed; ${screenshotDiagnostics} screenshot-only WebKit CSP diagnostics.`);
     await context.close();
+  } catch (error) {
+    failure = error;
+    // Synthetic fixtures only; never log session tokens or request bodies.
+    console.error('GUI failure state:', await page?.evaluate(() => ({
+      busy: document.querySelector('main')?.getAttribute('aria-busy'),
+      error: document.querySelector('#error')?.textContent,
+      errorHidden: document.querySelector('#error')?.hidden,
+      notice: document.querySelector('#notice')?.textContent,
+      noticeHidden: document.querySelector('#notice')?.hidden,
+    })).catch(() => null));
+    console.error('Recent GUI operations:', apiResults);
+    console.error('Pending GUI operations:', [...pendingRequests.values()].map(item => ({ op:item.op, elapsedMs:Date.now()-item.started })));
+    throw error;
   } finally {
-    if (browser) await browser.close();
-    server.child.kill();
-    await fs.rm(temp, { recursive: true, force: true });
+    const cleanupErrors = [];
+    try { if (browser) await browser.close(); } catch (error) { cleanupErrors.push(error); }
+    try {
+      await stopChild(server.child);
+      await fs.rm(temp, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+    } catch (error) { cleanupErrors.push(error); }
+    if (cleanupErrors.length) {
+      if (failure) console.error('Additional GUI cleanup errors:', ...cleanupErrors);
+      else throw new AggregateError(cleanupErrors, 'GUI cleanup failed');
+    }
   }
 })().catch(error => { console.error(error); process.exitCode = 1; });
