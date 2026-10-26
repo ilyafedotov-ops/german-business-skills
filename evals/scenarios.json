@@ -464,6 +464,61 @@
         "Use local cash records and manual ELSTER, exact-version user review and actual receipt evidence; no compulsory accountant handoff",
         "Give a simple next action without commands, forced setup or claims of actions not performed"
       ]
+    },
+    {
+      "id": "direct-start-without-setup",
+      "prompt": "Используй de-business-start. Синтетический пример: хочу начать услуги графического дизайна в Германии, пока нет регистрации, папки и выбранной бухгалтерской программы. Есть только идея и один потенциальный клиент. Помоги подготовить первый полезный шаг, ничего не устанавливай и не отправляй.",
+      "criteria": [
+        "Use formation and launch guidance directly without requiring router/GUI/workspace/accounting setup",
+        "Separate idea, forecast and actual commencement; ask only decisive facts",
+        "Prepare useful plan and source-check needs without inventing classification or registration"
+      ]
+    },
+    {
+      "id": "direct-operations-draft",
+      "prompt": "Use de-business-operations. Synthetic facts: Example Studio offered to design three icons for Example Client for a quoted EUR 300 total. No work has started, no payment terms or tax treatment have been agreed. Create a readable English proposal draft in a new temporary directory outside Git and explain what remains to agree. Do not send it or issue an invoice.",
+      "criteria": [
+        "Create actual readable draft distinguishing quote from issued invoice",
+        "Do not invent VAT, payment terms, delivered work or signatures",
+        "Keep unresolved terms clear and do not require accounting setup"
+      ]
+    },
+    {
+      "id": "direct-accounting-external",
+      "prompt": "Use de-business-accounting. Synthetic scenario: my records are already authoritative in sevdesk. I have not supplied an export or connected the service. Help me continue October 2026; do not create another ledger or claim you accessed the account.",
+      "criteria": [
+        "Preserve external authority without shadow postings",
+        "Inspect actual available route and ask for bounded missing evidence",
+        "Distinguish preparation from verified posting and tax calculations"
+      ]
+    },
+    {
+      "id": "direct-tax-no-tool",
+      "prompt": "Use de-business-tax. Synthetic case: I have cash revenue but no established taxable income and no calculation tool result. Tell me how to prepare an annual estimate; do not invent a tax amount or require me to install the GUI.",
+      "criteria": [
+        "Identify applicable year/facts and suitable official/provider tool",
+        "No embedded formula, fabricated amount or revenue-as-taxable-income",
+        "Provide useful input/evidence plan without setup gate"
+      ]
+    },
+    {
+      "id": "direct-services-access",
+      "prompt": "Используй de-business-services. Синтетический случай: у меня уже есть бухгалтерская программа, но я не знаю, доступна ли интеграция. Помоги проверить способ доступа для чтения одного экспорта. Не подключай новые платные сервисы и ничего не меняй во внешнем аккаунте.",
+      "criteria": [
+        "Inspect actual host capabilities and exact product before promising connection",
+        "Keep credential handling in official flow",
+        "Do not treat plugin listing or API guidance as working integration"
+      ]
+    },
+    {
+      "id": "direct-changes-partial-closure",
+      "prompt": "Используй de-business-changes. Полностью синтетический случай: я прекращаю один из двух видов деятельности, второй продолжается. По первому есть неоплаченный счёт и открытый вопрос Finanzamt, общий банковский счёт используется обоими. Подготовь читаемый план по-русски во временной папке вне Git. Пока ничего не отправляй, не закрывай аккаунты и не удаляй документы.",
+      "criteria": [
+        "Differentiate activity cessation from whole entrepreneur closure",
+        "Preserve shared account, originals and unresolved reporting/payment matters",
+        "Create actual dependency plan; research appropriate case-specific route before legal claims",
+        "No cancellation/submission/deletion or invented final tax outcome"
+      ]
     }
   ]
 }

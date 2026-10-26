@@ -6,6 +6,93 @@ Current capabilities are summarized in [project status](project-status.md). Date
 
 Checked **2026-10-26**. Tests use synthetic temporary data, never live business records or accounts.
 
+## Seven-skill bundle and lifecycle instructions (2026-10-26)
+
+Local implementation of the agreed split: optional router plus start, operations,
+accounting, tax, services and changes skills. Shared contracts/resources remain in
+`de-business-kit`; the explicit catalog drives complete-set installation and
+packaging. No user workspace schema migration or external account action occurred.
+The lifecycle plan records instruction implementation separately from external,
+platform and user acceptance.
+
+- Host observed: macOS **27.0.1 arm64**, Python **3.14.6**, PowerShell **7.5.4**.
+  `python3 -B -m unittest discover -s tests -v`: **251 tests, 246 passed,
+  5 native-runtime checks skipped**, 51.435 seconds in the final run. This includes
+  complete-set installation, detached packages, missing dependencies, identity and
+  metadata, unsafe sibling links, collision preflight and symlink-before-read cases.
+- Red/green evidence: new installer and packaging cases failed with the old
+  single-skill implementation; native smoke failed on a missing sibling; identity
+  and catalog-ancestor regressions failed before their fixes. Independent review
+  found native JSON integer compatibility, a conflicting welcome instruction and
+  Python entry/metadata validation. Fixes were independently rechecked; no remaining
+  actionable findings in that review scope.
+- `python3 -B tools/check_package.py`, `python3 -B tools/release.py check`, local
+  Markdown file/anchor checks and `git diff --check`: passed. Skill Creator's
+  `quick_validate.py` passed for all seven entries using existing `/usr/bin/python3`
+  with PyYAML; no new dependency was installed. UI metadata was generated with the
+  provided generator and explicit names.
+- `TMPDIR=/private/tmp pwsh -NoProfile -File tests/native/windows-smoke.ps1`:
+  passed, including all seven skills in both targets and detached resources.
+  This is macOS PowerShell evidence, **not Windows PowerShell 5.1 acceptance**.
+  Initial deep per-user macOS temporary-root bundle trials hit a 90-second timeout
+  while copying. A short canonical `/private/tmp` diagnostic completed within the
+  15-second observation interval; the test harness now uses that root on macOS
+  with the same production guards. Deep-path performance is not certified.
+- `python3 -B tools/build_package.py --output <new absolute temporary directory>`
+  built both complete marketplace archives. Claude Code **2.1.310** `plugin validate`
+  passed for the marketplace and plugin. The plugin-directory check still warned
+  about the absent public-listing icon and suggested a marketplace install line.
+  These were nonblocking; no public listing, installation or host discovery trial
+  was performed. Existing published assets were not modified.
+
+Fresh behavioral evidence (Codex subagent sessions, configured `gpt-6.1-sol` / high;
+application build not exposed; evaluation criteria withheld):
+
+- `direct-operations-draft`: direct operations entry produced actual English HTML,
+  Markdown and separate private review for a synthetic three-icon EUR 300 quote.
+  Unagreed VAT/payment terms stayed unresolved; no invoice or sending was claimed.
+  Chromium desktop/390px inspection passed without overflow or console warnings;
+  root inspected the written content and narrow screenshot. PDF was not tested.
+- `direct-changes-partial-closure`: direct changes entry produced a Russian action
+  plan outside Git, preserving the continuing activity, shared bank account,
+  unpaid invoice, open tax question and originals. The trial checked public primary
+  sources and marked missing municipality/date/classification facts. Root inspected
+  the saved plan. No registration, cancellation, payment or deletion occurred.
+- One separate fresh routing session covered five isolated synthetic first responses:
+  formation without setup, external sevdesk accounting without access, annual tax
+  inputs without taxable income, read-only service access and mixed-task continuation.
+  It selected the relevant owners, did not borrow facts across cases and did not
+  require GUI/workspace setup. It inspected available tool metadata and retrieved
+  the official BMF calculator input page; no calculation or account access occurred.
+  This verifies instruction selection/first response, not automatic host discovery.
+
+A dated twelve-source lifecycle map was added. It is case-dependent research,
+not legal certification. Live registration/reporting, provider mutations,
+scheduled reminder delivery, complete annual acceptance, native Windows and
+nontechnical-user acceptance remain unperformed. No GUI code was changed or new
+GUI acceptance claimed. No commit, push, host installation or publication occurred.
+
+## Lifecycle correction plan and positioning (2026-10-26)
+
+- Added the EN/RU lifecycle correction plan with P0–P7 changes, dependencies,
+  user outcomes and acceptance criteria; aligned product entry documents and
+  added a self-contained portable module map. This is planning/instruction work,
+  not implementation of the planned journeys or a new legal-source check.
+- `python3 -B tools/check_package.py` passed. A temporary local Markdown checker
+  verified changed documents' file targets and heading anchors; no errors.
+  `git diff --check` passed. EN/RU plan sections and acceptance meanings were inspected.
+- Fresh read-only Codex subagent trial, configured `gpt-6.1-sol` / high,
+  used the `elster-no-browser` scenario prompt without evaluation criteria.
+  It read the installed-source skill and relevant references, proposed a worksheet
+  and manual ELSTER entry, asked only initial facts, and required neither a GUI
+  nor a workspace to begin. It explicitly stated that sources had not yet been
+  checked and no portal filling/submission occurred. Outcome: routing criteria
+  passed for this Russian response. Host application build was not exposed.
+- No live source research, legal/form validation, external access, runtime suite,
+  browser/native acceptance or full EN/RU lifecycle trial was performed in this
+  documentation change. P1–P7 acceptance remains future work; prior evidence
+  retains its original scope. No commit, push or publication was performed here.
+
 ## Real GUI candidate 0.7.0-preview.1 (2026-10-26)
 
 Local candidate only; no tag, push or release publication was performed for this
