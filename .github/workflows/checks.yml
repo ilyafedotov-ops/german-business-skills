@@ -25,15 +25,23 @@ jobs:
         with:
           node-version: '22'
           cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
       - run: npm ci --ignore-scripts
       - run: npx playwright install ${{ matrix.browser }}
       - run: npm test
       - run: npm run test:browser -- --browser=${{ matrix.browser }}
+      - run: npm run test:documents -- --browser=${{ matrix.browser }}
+      - run: npm run test:overview -- --browser=${{ matrix.browser }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: prototype-${{ matrix.os }}-${{ matrix.browser }}
-          path: output/prototype/
+          path: |
+            output/prototype/
+            output/document-template/
+            output/overview/
 
   native-utilities:
     name: ${{ matrix.os }} / Python ${{ matrix.python }}
@@ -75,3 +83,5 @@ jobs:
           $PSVersionTable.PSVersion.ToString()
           if ($PSVersionTable.PSVersion.Major -ne 5) { throw 'Expected Windows PowerShell 5.1' }
           & .\tests\native\windows-smoke.ps1
+          & .\tests\native\overview-smoke.ps1
+          & .\tests\native\recovery-smoke.ps1

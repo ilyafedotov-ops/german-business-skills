@@ -17,7 +17,9 @@ const escape = value => value.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;',
     ru:['Октябрь 2026 — отчёт по записям','ЧЕРНОВИК — не отправлен','Результат','Позиция','Сумма','Источник','Не выяснено: отсутствует чек.','Синтетический пример · версия 01'],
     de:['Oktober 2026 — Unterlagenübersicht','ENTWURF — nicht versandt','Ergebnis','Position','Betrag','Quelle','Offen: Beleg fehlt.','Synthetisches Beispiel · Version 01']
   };
-  for (const engine of [chromium,webkit]) {
+  const selected = process.argv.find(arg => arg.startsWith('--browser='))?.split('=')[1];
+  if (selected && !['chromium','webkit'].includes(selected)) throw new Error('Unsupported browser: ' + selected);
+  for (const engine of [chromium,webkit].filter(engine => !selected || engine.name() === selected)) {
     const browser = await engine.launch({headless:true});
     try {
       for (const [lang,t] of Object.entries(labels)) {

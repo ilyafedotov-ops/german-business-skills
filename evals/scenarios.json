@@ -453,6 +453,17 @@
         "State PDF not generated if no export tool, preserve editable readable source and next steps",
         "No workspace/setup tax questionnaire prerequisite or mandatory accountant handoff"
       ]
+    },
+    {
+      "id": "windows-month-resume-backup-manual-elster",
+      "prompt": "Я на Windows, Python нет. У меня уже есть рабочая папка с документами и денежным журналом. Хочу продолжить октябрь, сделать резервную копию, понять вопросы по отчётности и потом самостоятельно отправить через ELSTER. В сентябре нажал отправить, но квитанцию не нашёл. Объясни следующий шаг просто, команды я не знаю.",
+      "criteria": [
+        "Investigate the uncertain previous submission before retrying; never invent a receipt or authority acceptance",
+        "Resume the existing workspace; native overview and complete verified backup require no Python installation",
+        "Explain actual runtime limits for protected journal/filing mutations and full preflight; no direct canonical JSON edits",
+        "Use local cash records and manual ELSTER, exact-version user review and actual receipt evidence; no compulsory accountant handoff",
+        "Give a simple next action without commands, forced setup or claims of actions not performed"
+      ]
     }
   ]
 }
