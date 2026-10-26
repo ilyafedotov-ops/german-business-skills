@@ -125,7 +125,7 @@ Find **German Business Kit** in the plugin list (look under **Discover** if it i
 
 The plugin is saved to your Claude account, so it also works in Claude chat and in Claude Code when you sign in with the same account. The seven skills share one business context; you never set them up separately.
 
-Anthropic reviews plugins listed in its own directory, not plugins added by address. This address installs the exact published release of this open-source project, currently 0.9.0-preview.1.
+Anthropic reviews plugins listed in its own directory, not plugins added by address. This address installs the exact published release of this open-source project, currently 0.10.0-preview.1.
 
 ## Try your first task
 
