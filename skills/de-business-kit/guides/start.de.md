@@ -1,6 +1,6 @@
 # Hier starten
 
-**Deutsch** · [Русский](start.ru.md) · [English](start.en.md)
+**Deutsch** · [Русский](user-guide.ru.md#первая-задача) · [English](user-guide.en.md#first-task)
 
 German Business Kit ist ein System von Skills für Selbstständige in Deutschland: Gründungsvorbereitung, Formulare, Fragen, Dienstleistungen, laufende Arbeit und Berichte. Anleitungen zur Vorbereitung decken auch Änderungen, die erste Einstellung, eine Pause und die Beendigung einer Tätigkeit ab; die tatsächliche Ausführung wird separat geprüft. Beschreiben Sie das gewünschte Ergebnis in normalen Worten. Eine einfache Frage erfordert weder die lokale Anwendung noch einen neuen Arbeitsordner. Eine vollständige Buchhaltungssoftware und ELSTER-Übermittlung sind nicht enthalten.
 
@@ -17,7 +17,7 @@ Wählen Sie eine Anfrage:
 
 ## Ordner und erster Erfolg
 
-Wählen Sie für laufende Arbeit einen privaten Ordner außerhalb des Projekts, der Skill-Installation und aller Git-Repositories. Neue deutsche Arbeitsbereiche haben **Eingang, Dokumente, Buchhaltung, Steuern, Unternehmen** sowie `HIER-STARTEN.md`. Bestehende Bereiche bleiben unverändert. Ein Wechsel der Gesprächssprache benennt keine Ordner um.
+Wählen Sie für laufende Arbeit einen privaten Ordner außerhalb des Projekts, der Skill-Installation und aller Git-Repositories. Neue deutsche Arbeitsbereiche haben **Eingang, Dokumente, Buchhaltung, Steuern, Unternehmen** sowie `HIER-STARTEN.md`. Bestehende Bereiche bleiben unverändert. Ein Wechsel der Gesprächssprache benennt keine Ordner um. Bewahren Sie auch versteckte interne Dateien und `.workspace-layout.json` in einer vollständigen Sicherung auf; ein ausgewähltes Dokumentenarchiv ist keine vollständige Sicherung. Benennen Sie verwaltete Ordner und gespeicherte Originale nicht manuell um.
 
 Beginnen Sie mit einer kleinen Aufgabe. Klären Sie vor echten personenbezogenen Daten den tatsächlichen Verarbeitungsweg; lokale Dateien bedeuten kein lokales KI-Modell. Zugangsdaten und Bestätigungscodes gehören nur in die offizielle Anmeldung. Ihre vorhandene Buchhaltungssoftware bleibt maßgeblich, wenn Sie sie weiterverwenden. Die Wahl kann beim Ordnen der Unterlagen zunächst offenbleiben.
 

@@ -2,7 +2,7 @@
 
 **First-time installation:** open `skills/de-business-kit/guides/install.en.md` inside this plugin folder. It explains the AI app, account sign-in, project-local installation, all seven skills and your first fictional task. [Online guide](https://github.com/ilyafedotov-ops/german-business-skills/blob/main/skills/de-business-kit/guides/install.en.md).
 
-**Start here:** `skills/de-business-kit/guides/start.en.md` · `skills/de-business-kit/guides/user-guide.en.md`. These files ship inside the extracted package; the source checkout is not needed.
+**Start here:** `skills/de-business-kit/guides/user-guide.en.md`. These files ship inside the extracted package; the source checkout is not needed.
 
 Windows users can start without Python using native Windows tools (see `skills/de-business-kit/references/native-windows.md`). The native entry point shares the existing workspace and covers installation, start/resume, preview, intake, integrity, real overview and full backup/restore; advanced validated automation remains an optional Python-engine capability.
 

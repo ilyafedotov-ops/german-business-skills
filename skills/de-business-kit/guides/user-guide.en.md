@@ -1,13 +1,10 @@
 # User guide
 
-**English** · [Русский](user-guide.ru.md)
+**English** · [Русский](user-guide.ru.md) · [Deutsch: kurzer Einstieg](start.de.md)
 
-Choose a concrete outcome in the [task guide](tasks.en.md).
+New here? Follow [installation from the beginning](install.en.md). Already installed? Choose a task below; no technical commands are needed.
 
-New here? Follow the [short start guide](start.en.md). Read this manual by task; you do not need to learn technical commands.
-
-[Lifecycle tasks](#launch-annual-preparation-and-business-changes) · [Service exports](#inspect-a-service-export) · [Invoice corrections](#invoice-corrections-and-partial-payments) · [Documents](#documents) · [Accounts and payments](#accounts-and-payments) · [Taxes and letters](#taxes-and-letters) · [Reports](#reports) · [Continue](#continue) · [States](#states) · [Help](#help) · [Backups](#backups)
-
+[First task](#first-task) · [Documents](#documents) · [Accounts](#accounts-and-payments) · [Taxes and letters](#taxes-and-letters) · [Reports](#reports) · [Services](#banking-insurance-and-other-services) · [Continue](#continue) · [Help](#help) · [Backups](#backups)
 
 You can directly select `de-business-start`, `de-business-operations`, `de-business-accounting`, `de-business-tax`, `de-business-services` or `de-business-changes`. The general `de-business-kit` helps select the next action. See the [map and shared resources](../references/lifecycle.md). Install the complete bundle; keep one profile.
 
@@ -16,6 +13,25 @@ You can directly select `de-business-start`, `de-business-operations`, `de-busin
 German Business Kit is a set of instructions and tools for Codex and Claude Code. It helps you handle business tasks and records independently throughout your activity in Germany. The app, file access, AI subscription and service connections are provided separately. The skill alone does not grant access to email or banking.
 
 This manual describes existing document, payment, reporting and recovery tasks within the wider entrepreneur skill system. Formation, questions and service selection also have dedicated modules; change and closure guidance is available. See the [portable lifecycle map](../references/lifecycle.md). A complete accounting/tax engine and ELSTER transmission integration are not implemented. Existing accounting software remains authoritative. Professional consultation is optional for a specific issue.
+
+## First task
+
+Open Codex or Claude Code in the project where the complete seven-skill bundle is installed. Choose one request; replace only facts you know.
+
+| You want to… | What to say |
+| --- | --- |
+| Try it | “Show one small fictional example. Explain the result and the next step.” |
+| Start an activity | “Help me prepare the next step for my planned activity … Account for my other activities.” |
+| Organize existing records | “First show what is accessible in this folder, email or accounting product. Help select relevant files; keep the source unchanged.” |
+| Prepare a proposal or invoice | “Use these agreed terms. Show missing facts and the recipient draft; preserve numbering in my existing software.” |
+| Reply to a letter | “Explain this letter and prepare a reply. Keep my private review separate.” |
+| Prepare the month or year | “Show what is missing in my chosen system and prepare inputs for the applicable form/calculation tool.” |
+| Change, hire, pause or close | “Plan this change and what must remain open, considering my other activities.” |
+| Resume | “Continue in the existing workspace. Show what is done, what needs attention and the next action.” |
+
+Start with one question, plan, letter or small selected document batch. For ongoing work, choose a private permanent folder outside the downloaded project, installed skills and Git repositories. A simple question needs no workspace or accounting choice; a practice folder is not durable business storage. Before real personal data, establish where selected content will be processed: local files do not imply a local AI model. Enter passwords, certificates and codes only through official authentication.
+
+A useful result answers the question or gives a readable draft/plan, identifies missing facts and names the next action. Ask: “Show what you saved and link the file. Save a short continuation note.” The [optional local application](#check-your-own-environment) helps with selected record operations; skills also work without it. A draft is not issued, sent, paid or registered until the respective outcome is evidenced.
 
 ## Ask for a result
 
@@ -27,7 +43,7 @@ The assistant should reuse known facts, ask only what matters and retain uncerta
 
 ## Launch, annual preparation and business changes
 
-Start with the outcome in the [task guide](tasks.en.md). For example: “Prepare a launch plan for this activity,” “Show what is missing before annual reporting,” or “Plan closing one activity while keeping my other work running.”
+Start with the outcome in the [task guide](#first-task). For example: “Prepare a launch plan for this activity,” “Show what is missing before annual reporting,” or “Plan closing one activity while keeping my other work running.”
 
 The relevant skill reuses your profile and prepares a readable plan or worksheet with known facts, dependencies, sources and open decisions. Formation, customer work, annual readiness, service access and changes have dedicated worksheets. First-hire preparation covers the required questions and next steps; payroll calculations and registrations need their actual tools and evidence. A saved plan does not establish a completed registration, hire or closure.
 
@@ -43,7 +59,7 @@ The relevant skill reuses your profile and prepares a readable plan or worksheet
 
 Originals may have hash-based filenames; the source filename is retained in the index. Ask the assistant to find a document by name, period, contents or linked payment. Do not manually rename stored originals or managed folders.
 
-Older workspaces may use different English technical names. This is not an error or a reason to create another workspace. Profile, history and other internal records live in the technical area; you do not need to edit them, but they belong in backups.
+New folder names can be English, Russian or German; choose them when creating the workspace. Conversation language can change without renaming folders. Older workspaces may use different English technical names. This is not an error or a reason to create another workspace. Profile, history and other internal records live in the technical area; you do not need to edit them, but they belong in backups.
 
 ## Documents
 
@@ -97,6 +113,10 @@ A German recipient document can have a separate English or Russian explanation f
 
 The result includes sources and check dates, reasons for the comparison and decision-relevant questions. A recommendation does not establish supplier approval, a contract or a working connection.
 
+For banks, compare eligibility, currencies, payments, fees, funds protection and the integration you need. For insurance, distinguish statutory/client requirements from optional cover; inspect actual exclusions, limits, deductibles and policy wording. For software and other services, include portability, access, recovery, data handling and exit costs. Show first-year and normal renewal costs separately; unknown fees are not zero. Keeping an existing service or buying nothing may be the best choice. Public “from” prices, personal quotes and accepted policies are different evidence.
+
+Refresh older comparisons before switching or renewing. State market coverage and relevant commercial relationships. Research does not authorize applications, sharing personal data for quotes, purchases or cancellation. The skills do not establish a licensed adviser role; [source and scope notes](../references/service-research-sources.md) guide the relevant checks.
+
 ## Continue
 
 At the end ask to save the result, open questions and next step. Return to the same folder:
@@ -105,7 +125,9 @@ At the end ask to save the result, open questions and next step. Return to the s
 
 The overview also shows active business tasks without dates and tasks from other months. It shows unresolved dependencies and changed or missing evidence; an independent task can still continue. Completed and cancelled tasks stay in history. Ask the assistant to inspect the saved task before continuing. In the GUI, the continuation button prepares a request to copy to your assistant; it does not start an AI session or complete work automatically.
 
-Change language naturally: “Respond in German from now on; do not rename my folders.” New folder names support EN/RU/DE; complete report templates currently cover English and Russian. Switching tasks does not change your tax regime. A dated task is not an automatic notification.
+Change language naturally: “Respond in German from now on; do not rename my folders.” New folder names support EN/RU/DE; complete report templates currently cover English and Russian. Switching tasks does not change your tax regime. A dated task is not an automatic notification. Older settings may name `general`, `bookkeeping` or `tax-consultant` modes; you do not need to choose one to ask a question. These settings grant no tools, permissions or licensed status.
+
+When new evidence arrives, compare it with the saved result and preserve the previous version. If a protected writer is unavailable, the assistant can save a readable note but must name the register update that did not happen.
 
 ## States
 
@@ -141,8 +163,13 @@ Skill updates and business data are separate. The installer refuses to overwrite
 
 ## Check your own environment
 
-Capabilities depend on the app version, permissions and tools. Basic Windows operations use native PowerShell without mandatory Python; some advanced validated operations still need an available additional engine. macOS does not guarantee Python either. Try a small fictional example in your environment before relying on an entire process. The project's demo interface uses fictional records and is not connected accounting software.
+Capabilities depend on the assistant version, permissions and tools. Ask for a small fictional trial in your environment before relying on an entire process.
 
+- **Skills in your assistant:** conversations, research and readable preparation use the tools actually available; no mandatory Python installation.
+- **Optional Windows/macOS application:** the separate release archive bundles its runtime for supported record operations. Follow its included README, keep the extracted folder together and leave the launcher running while using the browser interface. No automatic AI conversation starts inside it.
+- **Standalone Windows PowerShell:** installation, intake, integrity, overview and full backup/restore work without Python. Protected journal/filing writes and full filing preflight require another supported engine; the native overview is narrower. Do not change execution policy to bypass an organizational block.
+
+macOS does not guarantee Python either. An unavailable tool should leave the specific unfinished step and an allowed manual route. The separate interactive demonstration contains fictional records only. [Native Windows details](../references/native-windows.md).
 
 ## One month with your own cash journal and manual ELSTER
 

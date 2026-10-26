@@ -1,43 +1,26 @@
-# Help and documentation
+# Technical documentation
 
-[English](index.md) | [Русский](index.ru.md)
+[English](index.md) · [Русский](index.ru.md) · [User documentation](../README.md#start-here)
 
-**Need help filling a portal draft or exporting from your software?** [Assisted service guide](../skills/de-business-kit/guides/assisted-services.en.md).
+For maintainers and contributors. Users can go directly to [installation](../skills/de-business-kit/guides/install.en.md), [everyday tasks](../skills/de-business-kit/guides/user-guide.en.md) or [assisted forms and service access](../skills/de-business-kit/guides/assisted-services.en.md).
 
-**Installing your first AI app?** [Illustrated setup from zero](../skills/de-business-kit/guides/install.en.md) · [Short checklist](quickstart.md).
-
-**First visit:** [Start here](../skills/de-business-kit/guides/start.en.md). **Already working:** [User guide](../skills/de-business-kit/guides/user-guide.en.md).
-
-[Current project status](project-status.md) separates implemented capabilities, runtime limits and remaining work.
-
-[Full correction plan and lifecycle](lifecycle.md): target skill structure, coverage, P0–P7 packages and acceptance criteria.
-
-## Find your task
-
-| Task | Guide |
+| Need | Read |
 | --- | --- |
-| Ask a tax question or inspect a service export | [Tax questions](../skills/de-business-kit/guides/user-guide.en.md#taxes-and-letters), [supplied exports](../skills/de-business-kit/guides/user-guide.en.md#inspect-a-service-export) |
-| Follow an invoice correction or resume a saved task | [Invoice corrections](../skills/de-business-kit/guides/user-guide.en.md#invoice-corrections-and-partial-payments), [continuation](../skills/de-business-kit/guides/user-guide.en.md#continue) |
-| Start, reply, prepare the year, hire/change/close or resume | [Choose your task](../skills/de-business-kit/guides/tasks.en.md) |
-| Use the real GUI release candidate | [GUI capabilities and delivery](gui.md), [GUI user instructions](../gui/README.md) |
-| Set up the app or update the skill | [Getting started](quickstart.md), [Windows without Python](windows.md), [installation and updates](distribution.md) |
-| Organize existing records | [Email, services and folders](existing-data.md), [document workflow](document-workflow.md) |
-| Find files and choose folder language | [Folder structure](folder-structure.md) |
-| Manage your accounts and continue a month | [Accounting choice and records](accounting.md), [working modes](modes.md) |
-| Investigate international transactions or a form | [Payments, classification and ELSTER](workflows.md) |
-| Get a readable report or letter | [Documents and reports](documents.md) |
-| Compare banks, insurance or services | [Service selection](service-selection.md) |
-| Resolve a problem or recover work | [Help and backups](../skills/de-business-kit/guides/user-guide.en.md#help) |
-| Explore the separate fictional demonstration | [Prototype with fictional data](prototype.md) |
-| Follow one month through manual ELSTER | [Monthly workflow](../skills/de-business-kit/references/monthly-workflow.md), [accounting](accounting.md) |
-| Back up or restore the whole workspace | [Full backup and recovery](../skills/de-business-kit/references/recovery.md) |
+| What works and what remains | [Current status and P1–P7 roadmap](project-status.md) |
+| Components, execution and trust boundaries | [Architecture](architecture.md) |
+| Records, relationships and state transitions | [Ontology](ontology.md) |
+| Local GUI, packaging and separate fictional prototype | [Interface development](gui.md) |
+| Build/install a complete skill bundle | [Distribution](distribution.md) |
+| Publish or verify an immutable release | [Release process](releases.md) |
+| Evidence, test commands and acceptance gaps | [Validation](validation.md) |
+| Make a change | [Contributing](../CONTRIBUTING.md), [repository rules](../AGENTS.md), [security](../SECURITY.md) |
 
-## Validation and development
+The installed assistant uses the self-contained [skill entry point](../skills/de-business-kit/SKILL.md) and on-demand [workflow references](../skills/de-business-kit/references/lifecycle.md). They are operational instructions, not a second user manual.
 
-[What was actually tested](validation.md) · [Unfinished capabilities](core-capabilities.md) · [Architecture](architecture.md) · [Data model and states](ontology.md) · [Behavioral scenarios](../evals/scenarios.json) · [Contributing](../CONTRIBUTING.md)
+## History and research
 
-The start guide and manual ship with the skill. User documents belong in a separate private workspace; repository examples use fictional data only.
+The [original correction plan](history/lifecycle-plan-2026-10-26.md) and [validation chronology through 2026-10-26](history/validation-2026-10-26.md) preserve past milestones, failures and follow-ups. They are not current task lists. [Host-installation sources](research/host-installation-sources.md), [GUI research](research/gui-ux-primary-sources.md) and the [design recommendation](research/gui-ux-recommendation.md) retain their original check dates; recheck external claims for the current task.
 
-[Versions, signatures and release verification](releases.md)
+## Keep this structure small
 
-[Changes and release history](../CHANGELOG.md) distinguish current source from published packages.
+User instructions live in the portable guides; technical explanations live here. Current implementation and remaining work belong in `project-status.md`; actual test evidence belongs in `validation.md`. Update an existing owner and link to it instead of adding another status, quick-start or topic summary. Historical evidence keeps its original dates and limits.

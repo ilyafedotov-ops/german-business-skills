@@ -10,11 +10,11 @@ explicit user instructions and applicable higher-priority instructions. Read
 
 The product is a system of skills supporting the lifecycle of a German sole
 trader: preparation, formation, setup, daily work, reporting, changes and closure.
-Use the [lifecycle coverage and roadmap](docs/lifecycle.md) to choose work by user
+Use the [current scope and roadmap](docs/project-status.md) to choose work by user
 outcome. Self-managed accounting and tax reporting are an important part of that
 lifecycle; professional consultation and exports are optional branches. Preserve
 that outcome without requiring a proprietary ledger, GUI or transport for every
-route. Check implementation and [accounting capability limits](docs/core-capabilities.md)
+route. Check implementation and [accounting acceptance criteria](docs/project-status.md#accounting-acceptance)
 before claiming support; a plan, template or passing utility test is not an
 implemented integration.
 
@@ -29,7 +29,7 @@ protected journal/filing writers or full filing preflight.
 | Working on | Start here |
 | --- | --- |
 | Product instructions and task routing | [Canonical skill](skills/de-business-kit/SKILL.md), [references](skills/de-business-kit/references/) |
-| User onboarding and help | [Start guide](skills/de-business-kit/guides/start.en.md), [user guide](skills/de-business-kit/guides/user-guide.en.md), [documentation index](docs/index.md) |
+| User onboarding and help | [Installation](skills/de-business-kit/guides/install.en.md), [user guide](skills/de-business-kit/guides/user-guide.en.md), [documentation index](docs/index.md) |
 | Records, state and workflow contracts | [Architecture](docs/architecture.md), [ontology](docs/ontology.md), [accounting workflow](skills/de-business-kit/references/accounting-workflow.md) |
 | Workspace and native Windows operations | [workspace.py](skills/de-business-kit/scripts/workspace.py), [windows.ps1](skills/de-business-kit/scripts/windows.ps1), [native Windows reference](skills/de-business-kit/references/native-windows.md) |
 | Catalog, review, banking and filing evidence | [desk.py](skills/de-business-kit/scripts/desk.py), [casefiles modules](skills/de-business-kit/scripts/casefiles/) |
@@ -39,7 +39,7 @@ protected journal/filing writers or full filing preflight.
 | Templates, languages and folder names | [assets](skills/de-business-kit/assets/), [locale manifest](skills/de-business-kit/assets/locales.json), [folder mapping](skills/de-business-kit/assets/folder-layouts.json) |
 | Readable documents and recipient materials | [Document authoring](skills/de-business-kit/references/document-authoring.md), [readable-output rules](skills/de-business-kit/references/readable-output.md) |
 | Real local GUI and packaged runtime | [GUI](gui/), [scope/security](docs/gui.md), [build](tools/build_gui.py), [adapter tests](tests/test_gui_server.py); use canonical writers, workspace identity and draft version checks |
-| Interactive demonstration | [prototype](prototype/), [prototype scope](docs/prototype.md); fictional data, not a connected accounting application |
+| Interactive demonstration | [prototype](prototype/), [prototype scope](docs/gui.md#fictional-prototype); fictional data, not a connected accounting application |
 | Installation and packaging | [tools](tools/), [distribution](docs/distribution.md), [package readmes](packaging/) |
 | Verification and known gaps | [tests](tests/), [behavioral scenarios](evals/scenarios.json), [validation record](docs/validation.md), [CI](.github/workflows/) |
 
@@ -99,7 +99,7 @@ resolve after installation without the source checkout. Shared resources stay in
 
 `AGENTS.md` owns repository maintenance rules; `CLAUDE.md` only points here.
 `SKILL.md` owns portable product routing and must remain usable without root docs.
-Code and command schemas establish implemented behavior. Keep current status,
+User documentation lives in the portable `guides/`; `docs/index.md` is the technical index. `docs/project-status.md` owns current scope and remaining work; `docs/validation.md` summarizes actual checks, with dated chronology under `docs/history/`. Update an existing owner instead of adding duplicate status or topic pages. Code and command schemas establish implemented behavior. Keep current status,
 architecture/ontology, affected EN/RU guides and portable references aligned when
 a capability changes. Keep the entry point compact and load detailed references
 only when needed. Do not duplicate complete workflows across rule files.

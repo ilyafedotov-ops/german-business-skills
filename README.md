@@ -16,7 +16,13 @@ You do not need to code. The guide explains what Codex and Claude Code are, help
 
 ![Open an assistant project, add seven skills, ask one question](skills/de-business-kit/guides/images/setup-map.en.svg)
 
-Already installed? [Choose your first task](skills/de-business-kit/guides/start.en.md) or [continue existing work](skills/de-business-kit/guides/user-guide.en.md#continue). [Short setup checklist](docs/quickstart.md) · [All documentation](docs/index.md).
+## User documentation
+
+1. [Install from the beginning](skills/de-business-kit/guides/install.en.md) — choose Codex or Claude Code, add the bundle and get your first answer.
+2. [User guide](skills/de-business-kit/guides/user-guide.en.md) — choose a task, find files, continue work and restore a backup.
+3. [Forms and services](skills/de-business-kit/guides/assisted-services.en.md) — check access, fill a draft, retrieve an export and confirm the final action.
+
+The [optional Windows/macOS application](gui/README.md) has separate instructions included in its archive.
 
 ## What it helps with
 
@@ -42,30 +48,12 @@ You can ask a simple question before choosing accounting software or creating a 
 
 Before using real documents, establish what content the AI service and connected tools may receive. Keep private records in a separate business folder. Enter passwords, TANs and certificates only through official authentication screens.
 
-## Install
+## Download and technical documentation
 
-- **New user:** [full step-by-step guide](skills/de-business-kit/guides/install.en.md).
-- **Download:** [published 0.8.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1); choose the `-codex.zip` or `-claude.zip` skill bundle and `SHA256SUMS`.
-- **Updating or using plugins/terminal:** [advanced installation](docs/distribution.md) and [release verification](docs/releases.md). Preserve existing installations and business records.
-- **Optional records application:** [Windows/macOS application guide](gui/README.md); [standalone Windows tools](docs/windows.md).
+The [published 0.8.0-preview.1 preview](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1) contains `-codex.zip`, `-claude.zip` bundles and separate applications. Install all seven skills together: the router and six domain skills share resources and one profile. The installation guide explains archive selection and verification.
 
-Source version: **0.8.0-preview.1**. New guide edits in source do not change the already published archives. User guides and report templates support English/Russian; application navigation also supports German. Full German report coverage is unfinished.
+Newer guides and workflow instructions in source are not yet in that immutable archive. User guides and report templates cover EN/RU; German navigation does not imply full German reporting. [Current status and P1–P7 roadmap](docs/project-status.md) separate implementation from unfinished acceptance.
 
-## How the skills work together
-
-`de-business-kit` helps you start or continue. Six focused skills cover **start, operations, accounting, tax, services and changes**. Install them together; they share resources and one business context. You can invoke a focused skill directly without repeating setup.
-
-[Lifecycle and roadmap](docs/lifecycle.md) · [Architecture](docs/architecture.md) · [Ontology](docs/ontology.md) · [Accounting limits](docs/core-capabilities.md).
-
-## Validation and contributing
-
-The published 0.8.0-preview.1 release passed automated Windows/macOS, PowerShell 5.1, browser and package checks; its downloaded assets were verified. Ordinary-user desktop acceptance and real service operations remain separate. See [dated evidence and gaps](docs/validation.md); passing tests do not certify tax correctness.
-
-For contributors, start with [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md). The separate [interactive prototype](docs/prototype.md) uses fictional data.
-
-```sh
-python3 -B tools/check_package.py
-python3 -B -m unittest discover -s tests -v
-```
+For developers and maintainers: **[technical documentation](docs/index.md)** covers architecture, ontology, builds, releases and validation. Start with [CONTRIBUTING](CONTRIBUTING.md); repository rules are in [AGENTS.md](AGENTS.md). Actual tests, limits and history are in the [validation summary](docs/validation.md).
 
 [Changes](CHANGELOG.md) · [Security](SECURITY.md) · [MIT license](LICENSE). AI apps and services have their own terms. Workflow names do not confer licensed Steuerberater status.

@@ -119,7 +119,7 @@ For an ongoing task, ask:
 
 At your next visit, open the same assistant project and say: **“Continue from my saved result in [business folder]. Show the next action.”** Grant access to that separate folder when needed. Existing accounting software remains authoritative if you choose it; a question does not force that decision.
 
-**Next:** [first working task](start.en.md), [task menu](tasks.en.md), [everyday user guide](user-guide.en.md).
+**Next:** [choose your first task and continue everyday work](user-guide.en.md#first-task).
 
 ## Manual fallback
 

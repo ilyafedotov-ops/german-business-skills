@@ -2,7 +2,7 @@
 
 **New users:** follow the [desktop-first illustrated setup](../skills/de-business-kit/guides/install.en.md). It covers host installation and a project-local copy of all seven skills without requiring terminal commands. This page covers advanced source, plugin and update routes.
 
-The [local GUI application](gui.md) bundles its engine for document review, cash entries, filing evidence and recovery on Windows/macOS; users do not install Python. Download availability requires publication and verification of the matching platform archive. Optional [standalone Windows tools](windows.md) cover installation, start/resume, preview, intake, integrity, real overview and full backup/restore; their advanced protected writers still require an existing supported engine.
+The [local GUI application](gui.md) bundles its engine for document review, cash entries, filing evidence and recovery on Windows/macOS; users do not install Python. Download availability requires publication and verification of the matching platform archive. Optional [standalone Windows tools](../skills/de-business-kit/guides/user-guide.en.md#check-your-own-environment) cover installation, start/resume, preview, intake, integrity, real overview and full backup/restore; their advanced protected writers still require an existing supported engine.
 
 [English](distribution.md) | [Русский](distribution.ru.md)
 
@@ -28,7 +28,7 @@ build section and go to [host installation](#optional-host-installation-after-re
 In those examples replace `/absolute/path/to/new-review-bundle/codex` or
 `/absolute/path/to/new-review-bundle/claude` with that actual extracted directory.
 Ask the assistant to resolve the path and explain the installation before running
-it. The [start guide](../skills/de-business-kit/guides/start.en.md) covers your first
+it. The [start guide](../skills/de-business-kit/guides/user-guide.en.md#first-task) covers your first
 useful task. Published archives stay unchanged; source documentation edits appear
 in packages only after a new release.
 

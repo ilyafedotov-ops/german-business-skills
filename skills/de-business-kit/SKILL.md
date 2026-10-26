@@ -42,7 +42,7 @@ chosen workspace; report completed work, open dependencies and the next action
 across all activities, not just the accounting month.
 
 The [lifecycle map](references/lifecycle.md) lists resource ownership. For help,
-use the [Russian](guides/start.ru.md) or [English](guides/start.en.md) start guide.
+use the [Russian](guides/user-guide.ru.md#первая-задача) or [English](guides/user-guide.en.md#first-task) user guide.
 Preserve originals and work history; use [recovery](references/recovery.md) for
 backup/restore and validated shared writers for mutations. No second task register.
 

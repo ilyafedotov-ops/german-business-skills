@@ -44,8 +44,8 @@ as part of the application. Technical validation messages and source evidence ma
 remain English/German. Generated report templates are English/Russian; German
 navigation does not imply German tax calculations or a full German report set.
 
-This is a release candidate until the corresponding platform checks and release
-verification pass. Native Windows Authenticode signing and macOS notarization are
+Published archives and newer local builds must be distinguished; verify the
+exact version and platform package you obtained. Native Windows Authenticode signing and macOS notarization are
 not supplied. Follow your device's policy if execution is blocked; do not disable
 protections. Verify the exact published archive and its provenance before use.
 A locally built binary is not a published signed release.

@@ -1,6 +1,6 @@
 # Guided start, demonstration and recovery
 
-User-facing guides ship inside the skill: [Russian start](../guides/start.ru.md), [English start](../guides/start.en.md), [German start](../guides/start.de.md), [Russian manual](../guides/user-guide.ru.md), [English manual](../guides/user-guide.en.md). Offer the relevant section when helpful; keep commands and technical references behind the conversation. A simple question does not require a demo or full setup. Existing workspace guides are not overwritten by an update.
+User-facing help ships inside the skill: [Russian manual](../guides/user-guide.ru.md), [English manual](../guides/user-guide.en.md) and [German start](../guides/start.de.md). The manuals link to installation and task examples. Offer the relevant section when helpful; keep commands and technical references behind the conversation. A simple question does not require a demo or full setup. Existing workspace guides are not overwritten by an update.
 
 For substantial setup/source-intake work, provide a readable outcome and next step under [readable output](readable-output.md). Do not make the user choose a technical format; use an available readable document by default and explain capability gaps only when relevant.
 
