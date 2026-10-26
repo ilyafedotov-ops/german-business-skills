@@ -11,6 +11,11 @@ on direct entry. This skill ships with the complete German Business Kit bundle;
 shared resources remain in the sibling `de-business-kit` directory. Read only
 references relevant to the task. Use the user's language and saved context.
 
+For a request for only one small first step or a fictional first try, follow
+[one small first step](../de-business-kit/references/onboarding.md#one-small-first-step)
+before the full registration journey below. Expand the plan when the user asks
+for it or the actual situation requires it.
+
 Establish the intended activity, existing activities, actual/planned start,
 location and the requested result. Do not require an accounting choice or a
 workspace merely to explain the next step.

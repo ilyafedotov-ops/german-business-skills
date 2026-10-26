@@ -199,6 +199,39 @@ class PackagingTests(unittest.TestCase):
                     self.assertEqual(source.read_bytes(),
                                      (first / host / "plugins/de-business-kit/skills/de-business-kit" / relative).read_bytes())
 
+    def test_installation_guides_keep_local_images_after_source_removal(self):
+        import re
+        output = self.build()
+        shutil.rmtree(self.source)
+        for host in ("codex", "claude"):
+            extracted = self.base / (host + "-guide")
+            with zipfile.ZipFile(output / (host + ".zip")) as archive:
+                archive.extractall(extracted)
+            guides = extracted / host / "plugins/de-business-kit/skills/de-business-kit/guides"
+            for language in ("en", "ru"):
+                guide = (guides / ("install." + language + ".md")).read_text(encoding="utf-8")
+                images = re.findall(r"!\[[^\]]*\]\(([^)]+)\)", guide)
+                self.assertGreaterEqual(len(images), 2)
+                for image in images:
+                    local = (guides / image).resolve()
+                    self.assertTrue(local.is_relative_to(guides))
+                    self.assertEqual(local.read_bytes(),
+                                     (ROOT / "skills/de-business-kit/guides" / image).read_bytes())
+
+    def test_unreviewed_images_and_sibling_lookalikes_stop_packaging(self):
+        for relative in ("de-business-kit/guides/images/unreviewed.png",
+                         "de-business-kit/guides/images/unreviewed.svg",
+                         "de-business-tax/guides/images/setup-map.en.svg"):
+            with self.subTest(relative=relative):
+                extra = self.source / "skills" / relative
+                extra.parent.mkdir(parents=True, exist_ok=True)
+                extra.write_bytes(b"unreviewed resource")
+                try:
+                    output = self.build(success=False)
+                    self.assertFalse(output.exists())
+                finally:
+                    extra.unlink()
+
     def test_unreviewed_html_resource_still_stops_packaging(self):
         (self.source / "skills/de-business-kit/assets/unreviewed.html").write_text("<script>synthetic</script>")
         output = self.build(success=False)

@@ -120,7 +120,13 @@ def snapshot(source: Path) -> Dict[str, bytes]:
                     continue
                 if not stat.S_ISREG(info.st_mode):
                     raise BuildError(f"Symlink or special resource rejected: {entry}")
+                reviewed_guide_image = entry.relative_to(source).as_posix() in {
+                    f"skills/{NAME}/guides/images/entrepreneur-journey.png",
+                    f"skills/{NAME}/guides/images/setup-map.en.svg",
+                    f"skills/{NAME}/guides/images/setup-map.ru.svg",
+                }
                 if name.startswith(".") or (entry.suffix not in {".md", ".json", ".yaml", ".py"}
+                        and not reviewed_guide_image
                         and entry.relative_to(skill).as_posix() not in {"scripts/windows.ps1", "scripts/windows-overview.ps1", "scripts/recovery.ps1", "assets/readable-document.html"}):
                     raise BuildError(f"Unreviewed skill resource type: {entry}")
                 files[entry.relative_to(source).as_posix()] = read_file(entry)

@@ -1,5 +1,7 @@
 # Local plugin distribution — v0.8.0-preview.1
 
+**New users:** follow the [desktop-first illustrated setup](../skills/de-business-kit/guides/install.en.md). It covers host installation and a project-local copy of all seven skills without requiring terminal commands. This page covers advanced source, plugin and update routes.
+
 The [local GUI application](gui.md) bundles its engine for document review, cash entries, filing evidence and recovery on Windows/macOS; users do not install Python. Download availability requires publication and verification of the matching platform archive. Optional [standalone Windows tools](windows.md) cover installation, start/resume, preview, intake, integrity, real overview and full backup/restore; their advanced protected writers still require an existing supported engine.
 
 [English](distribution.md) | [Русский](distribution.ru.md)

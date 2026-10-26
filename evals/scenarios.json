@@ -632,6 +632,28 @@
         "Before concrete entries or amounts, request acquisition/delivery year and month, accounting method and other decisive facts in no more than three grouped questions",
         "Keep the initial answer focused, preserve chosen accounting authority, and do not create a workspace or claim a posting or tax calculation"
       ]
+    },
+    {
+      "id": "beginner-one-small-step-en",
+      "prompt": "Use de-business-kit. I am just trying the assistant with a fictional example: I want to start working as a translator in Germany. I do not know where to begin. Help me choose one small first step.",
+      "criteria": [
+        "Load the installed router and relevant start skill; respond in the user's language",
+        "Give one small concrete action, a brief example if useful and a clear completion point; avoid full intake/setup",
+        "Do not add unsolicited legal classification, deadlines, tax thresholds or account-opening steps from dated notes",
+        "Do not require accounting choice, create records or initialize a workspace for the simple first-step request",
+        "Keep the example fictional and expand to a full plan only when requested or materially needed"
+      ]
+    },
+    {
+      "id": "beginner-one-small-step-ru",
+      "prompt": "Используй de-business-kit. Я только пробую помощника на вымышленном примере: хочу начать работать переводчиком в Германии. Пока не знаю, с чего начать. Помоги выбрать один небольшой первый шаг.",
+      "criteria": [
+        "Load the installed router and relevant start skill; respond in the user's language",
+        "Give one small concrete action, a brief example if useful and a clear completion point; avoid full intake/setup",
+        "Do not add unsolicited legal classification, deadlines, tax thresholds or account-opening steps from dated notes",
+        "Do not require accounting choice, create records or initialize a workspace for the simple first-step request",
+        "Keep the example fictional and expand to a full plan only when requested or materially needed"
+      ]
     }
   ]
 }
