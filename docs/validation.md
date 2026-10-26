@@ -1,10 +1,64 @@
-# Validation status — v0.5.0 preview
+# Validation record
 
 [English](validation.md) | [Русский](validation.ru.md)
 
 Current capabilities are summarized in [project status](project-status.md). Dated entries below retain their original scope and results; they are not cumulative proof for later code.
 
 Checked **2026-10-26**. Tests use synthetic temporary data, never live business records or accounts.
+
+## Real GUI candidate 0.7.0-preview.1 (2026-10-26)
+
+Local candidate only; no tag, push or release publication was performed for this
+change. The previous 0.6 release results do not certify the new GUI.
+
+- Full Python suite: `python3 -B -m unittest discover -s tests -v` ran **233 tests**,
+  **228 passed and 5 native-runtime checks skipped** on this Mac.
+- `npm run test:gui` / `node tests/gui-browser.cjs --browser=webkit`: passed real
+  import/original preview/catalog review, accounting choice, saved draft/reload,
+  cash posting/reversal/linked correction, filing review/authorization/manual-attempt
+  record/synthetic receipt/authority response/linked replacement, and backup/restore.
+- Regression journeys passed for pending-save navigation, conflicting saved record
+  versions, corrupt-state recovery access and stale tabs after a workspace switch.
+  Six routes × three languages × three widths (1440/390/320) passed per browser,
+  plus entry/filing editor overflow and keyboard checks. No external requests or
+  business records in browser storage. WebKit produced nine known screenshot-only
+  CSP diagnostics during capture; no other observed console/page/network errors.
+- Built the macOS arm64 application, verified its archive manifest, extracted the
+  archive and ran `tests/gui-packaged-smoke.py --archive ...` with empty `PATH`:
+  localized workspace, UI assets, intake, cash posting, drafts and recovery passed.
+  This proves the tested bundle does not need an external Python runtime for those
+  operations; it is not Finder first-launch or another platform's acceptance.
+- `tools/check_package.py`, `tools/release.py check`, `git diff --check` and
+  actionlint v1.7.12 passed. Build dependencies are pinned with wheel hashes.
+- Independent review identified and verified fixes for cross-workspace stale
+  writes, incomplete draft checkpoints, pending-save navigation and archive member/
+  byte verification. Scoped visual review disposition: **ship** for the inherited
+  identity and inspected home, entry and filing surfaces; no new design system.
+
+Native Windows x64 and macOS Intel packaged checks are configured in CI but have
+not run for this local candidate. Hosted CodeQL, exact released-asset attestations,
+OS signing/notarization, real service/ELSTER interaction and nontechnical-user
+acceptance remain separate gates. No real filing was submitted.
+
+## README and project-description refresh (2026-10-26)
+
+Updated the EN/RU root readmes with an assisted five-step start, workflow diagram,
+plain-language requests, a fictional outcome and current localized folder examples.
+Aligned package/host descriptions and clarified how downloaded release packages
+reach host installation without a developer build. Removed the portable skill's
+stale duplicated release number. Kept historical validation entries unchanged.
+
+- `python3 -B tools/check_package.py`: passed local links, JSON and package coverage.
+- `python3 -B tools/release.py check`: passed version consistency (`0.6.0-preview.4`).
+- `python3 -B -m unittest discover -s tests -p test_packaging.py -v`: 9 passed,
+  including detached-package execution and byte reproducibility.
+- Ad hoc Markdown checks: 12 changed/incoming local anchors resolved; EN/RU
+  section, table, step and diagram structure matched. Both languages were reviewed.
+- `git diff --check`: passed. No new runtime behavior, desktop installation,
+  usability trial or live accounting/ELSTER acceptance is established by this edit.
+- Read back the published preview and successful [release run](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40288755911)
+  to replace outdated current-status claims. These are existing release results,
+  not a new CI run for the documentation changes.
 
 ## Documentation and repository rules audit (2026-10-26)
 

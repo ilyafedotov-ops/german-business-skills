@@ -193,3 +193,13 @@ The [core capability plan](core-capabilities.md) defines the unfinished ledger a
 ## Real view and prototype
 
 `casefiles/overview.py` collects accounting status and filing issues from the existing accounting checks under the shared lock, together with casework and open questions. Uncertain submissions and dated responses remain visible across months. `windows-overview.ps1` produces separate `native-overview.*` projections with local hash/history inspection; it does not implement full filing preflight. The English interactive `prototype/` still uses synthetic browser storage and does not mutate either workspace. [Runtime matrix](project-status.md).
+
+## Real GUI adapter and native delivery
+
+The 0.7 candidate adds `gui/server.py` and the EN/RU/DE browser interface, separately
+from the synthetic prototype. A session-protected loopback API delegates to the
+existing document, accounting and recovery writers. Workspace selection identities
+reject stale tabs, and separate GUI drafts use expected hashes and completed audit
+checkpoints. The browser is not another accounting database. Platform bundles embed
+the engine so end users do not install Python; standalone PowerShell remains its
+existing narrower route. See [GUI scope, trust boundaries and delivery](gui.md).

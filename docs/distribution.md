@@ -8,6 +8,23 @@ The maintained workflow lives only in `skills/de-business-kit`. Root `plugin.jso
 
 This preview supplies no MCP server, lifecycle hook, credential, automatic installer or updater. Installing a plugin does not grant Python execution, filesystem access, browser tools, subscriptions or access to banking, Lexware or ELSTER. Actual host tools, permissions and account policy control those capabilities.
 
+## Use a published package
+
+Users do not need to build the project. Download the named Codex or Claude ZIP from
+[release 0.6.0-preview.4](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.6.0-preview.4),
+follow [download verification](releases.md), and extract it into a new folder using
+Explorer or Finder. Published filenames include the version, for example
+`de-business-kit-0.6.0-preview.4-codex.zip`.
+
+Inside the extracted folder, `codex` or `claude` is the marketplace root. Skip the
+build section and go to [host installation](#optional-host-installation-after-review).
+In those examples replace `/absolute/path/to/new-review-bundle/codex` or
+`/absolute/path/to/new-review-bundle/claude` with that actual extracted directory.
+Ask the assistant to resolve the path and explain the installation before running
+it. The [start guide](../skills/de-business-kit/guides/start.en.md) covers your first
+useful task. Published archives stay unchanged; source documentation edits appear
+in packages only after a new release.
+
 ## Build and review without installing
 
 Maintainers build packages from a reviewed source checkout, with Python 3.9+ and no extra packages:

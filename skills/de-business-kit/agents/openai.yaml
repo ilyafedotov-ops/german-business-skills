@@ -1,4 +1,4 @@
 interface:
   display_name: "German Business Kit"
-  short_description: "German business setup, records and tax preparation"
+  short_description: "German self-accounting, documents and tax preparation"
   default_prompt: "Use $de-business-kit to guide me through setup or continue my German business work. Offer English or Russian, check the actual tools and private workspace, and explain the next useful step."

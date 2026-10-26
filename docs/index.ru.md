@@ -1,5 +1,7 @@
 # Помощь и документация
 
+[Настоящий GUI: возможности и поставка](gui.ru.md) · [Инструкция GUI](../gui/README.ru.md)
+
 [English](index.md) | [Русский](index.ru.md)
 
 **Первый раз:** [Начните здесь](../skills/de-business-kit/guides/start.ru.md). **Уже работаете:** [Руководство пользователя](../skills/de-business-kit/guides/user-guide.ru.md).

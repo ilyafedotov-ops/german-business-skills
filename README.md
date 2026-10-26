@@ -1,181 +1,144 @@
 # German Business Kit
 
-**English** · [Русский](README.ru.md)
+**English** · [Русский](README.ru.md) · [Deutsche Startanleitung](skills/de-business-kit/guides/start.de.md)
 
-**First use:** [Start here](skills/de-business-kit/guides/start.en.md) · **Daily work:** [User guide](skills/de-business-kit/guides/user-guide.en.md) · **All topics:** [Help](docs/index.md) · [Current capabilities and limits](docs/project-status.md)
+**Manage your own German business records and prepare your tax reporting with an AI assistant.** German Business Kit is a set of instructions and local tools for Codex and Claude Code. It helps Freiberufler and sole traders with a Gewerbe organize documents, review accounting work, understand tax questions and continue where they stopped.
 
-The welcome dialog now records whether you use **local records or existing accounting software**, without preselecting either. [Accounting workflow](docs/accounting.md) covers the local reviewed cash journal, period reports, and versioned filing/Finanzamt evidence tracking. Existing software remains authoritative when selected. These additions do not yet provide complete statutory EÜR/VAT calculations or an ELSTER transport.
+You work in ordinary language and keep your records in a separate private folder. The assistant explains what it found, saves readable results and shows the next action. You do not need to edit JSON or remember commands.
 
-You can also start from existing email, accounting services or a mixed folder. [Bring existing data](docs/existing-data.md).
+**GUI release candidate: 0.7.0-preview.1 (not yet published).** The new [real workspace interface](docs/gui.md) supports document import/review, cash-entry corrections, filing-evidence editing and backup/recovery with EN/RU/DE navigation. Packaged builds include their runtime; users do not install Python. Platform release checks and first-launch acceptance remain separate gates.
 
-Open-source assistance for starting and running a sole-trader business in Germany, including **Freiberufler** and **Einzelunternehmen/Gewerbe**. The primary workflow is managing your own bookkeeping/accounting and tax reporting. One portable skill for Codex and Claude Code provides a shared business profile, organized private files and three explicit working modes. Accountant consultation and exports are optional branches for a specific need.
+**Current published skill release: [0.6.0-preview.4](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.6.0-preview.4).** This is a preview, not a complete accounting application. It includes a limited cash journal and filing-evidence tracking; it has no complete tax calculation engine or direct ELSTER transmission. The interactive GUI is a separate demonstration with fictional data.
 
-**Version 0.6.0-preview.4 — preview.** User documentation, conversations and generated documents are supported in **English and Russian**. Official German form labels remain in German so users can find the corresponding fields. Internal agent references and machine-readable JSON keys remain in English; human-readable content follows the chosen language.
+[Start guide](skills/de-business-kit/guides/start.en.md) · [User guide](skills/de-business-kit/guides/user-guide.en.md) · [All topics](docs/index.md) · [Capabilities and limits](docs/project-status.md)
 
-The source and documentation are MIT-licensed. AI services, bank accounts and accounting products follow their own subscription terms.
+## Quick start
 
-Use the [documentation index](docs/index.md) and [document workflow](docs/document-workflow.md) for the daily process. See [international transactions, payments, classification and ELSTER workflows](docs/workflows.md) for plain-language prompts and the new evidence-linked preparation reports.
+You need an existing **Codex or Claude Code local session with permitted file access**, and a private location for your business records. Windows users can start with native PowerShell; installing Python, Git or WSL is not required for setup, document intake, overview or backup. Advanced accounting operations have additional runtime limits described below.
 
-## Start here
+1. **Get the kit.** Open the [current release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.6.0-preview.4). Download the named ZIP ending in `-codex.zip` or `-claude.zip`, plus `SHA256SUMS`. Use the [verification guide](docs/releases.md) before running downloaded scripts. These named packages include provenance verification; the separate GitHub “Source code” downloads are not the same packages.
+2. **Extract and connect it.** Extract into a new folder using Explorer or Finder. Open that folder in your assistant and paste the setup request below. The assistant inspects the package and helps install it for your actual app. Extracting a ZIP alone does not install a skill. [Installation details](#install).
+3. **Choose one task.** Organize existing records, prepare to start a business, continue existing work, or try a fictional example. Start with one document or a small batch; a simple question does not require full setup.
+4. **Choose your private folder and language.** Keep real records outside the downloaded kit and every Git repository. Resume an existing workspace instead of creating another. Choose English, Russian or German folder names. Say whether you already keep accounts in another program; that program remains authoritative when selected.
+5. **Open the result and save your next step.** Ask for a link to the readable result, anything unresolved, and a continuation point. Your first success is a preserved document, an understandable result and a clear next action—not a completed tax return.
 
-New to skills or terminal tools? Read the [beginner guide](docs/quickstart.md), select the installed **German Business Kit** in your app, and say: “Guide me through setup in English and show the synthetic demo before using real documents.” The assistant checks the actual tools and helps you choose a private folder. You do not need to edit JSON.
+**Copy this for setup:**
 
-Guided setup includes safe start/resume, a synthetic demonstration, local diagnostics, recorded processing assessments and validated profile/register updates. [Local plugin bundles](docs/distribution.md) package the same skill for Codex and Claude. They are preview distribution artifacts, not a published one-click listing or a bundled Python runtime. The v0.3 baseline passed native Windows/macOS CI; this v0.5 change has local validation only and desktop-app acceptance remains pending. See [validation](docs/validation.md).
+> I downloaded German Business Kit. Help me inspect and install it in this app. Explain which files will be installed and where. Use native tools on Windows; do not install Python or change security settings. Then help me choose one first task and a separate private folder. Offer a fictional example if I want to try it first.
 
-## Choose a working mode
+Already installed? Select **German Business Kit** from the skills available in your app and use one of the [example requests](#example-requests). Before real personal data is processed, establish which content may reach the AI service or connected tools. Enter passwords, TANs and ELSTER certificates only through the official authentication flow.
 
-| Mode | What it does | Main result |
+## How it works
+
+The assistant helps you move through this process. Some steps use local tools; others require your chosen accounting program, calculation tool or manual ELSTER session.
+
+```mermaid
+flowchart TD
+    A["Your files, email or existing accounting program"] --> B["Choose the relevant records together"]
+    B --> C["Private workspace: originals and readable results"]
+    C --> D["Review suggestions and resolve missing information"]
+    D --> E["Record in your chosen accounting system"]
+    E --> F["Prepare reports and check tax-form inputs"]
+    F --> G["You submit through manual ELSTER"]
+    G --> H["Save the actual receipt and Finanzamt response"]
+    C --> I["Resume later: open questions and next action"]
+```
+
+In words: **collect → review → record → prepare → submit → retain evidence**. Reviewing an invoice, recording an accounting entry and submitting a return are separate steps. The kit does not send a return simply because a report is ready.
+
+The first developed monthly route uses **local cash records plus manual ELSTER**. It still needs a verified calculation tool and actual filing evidence. If you already use Lexware, sevdesk, WISO or another system, tell the assistant before recording entries. Access is checked through the host's available plugins, APIs, browser or computer tools; the kit does not include production connectors. Professional consultation is optional when a particular issue needs it.
+
+## What you can do today
+
+| Your task | What the kit provides | Current boundary |
 | --- | --- | --- |
-| `general` | Collect initial facts, plan registration or an additional activity, compare banks/software, prepare forms and ELSTER worksheets | Business profile, registration plan and concrete next steps |
-| `bookkeeping` | Capture evidence, prepare accounting proposals, review exceptions, reconcile payments, prepare a monthly status report and records for your own review | Organized records, reconciliation and explicit remaining accounting work |
-| Tax questions and preparation (`tax-consultant`) | Analyse a tax question using actual business facts and current official sources, explain the conclusion, compare scenarios and calculate from explicit assumptions | Sourced analysis with conclusions, calculations, open questions and actions |
+| Organize a mixed folder | Preview, selected intake, preserved originals and integrity checks | Copying a file does not review or post it |
+| Review documents and payments | Catalog, proposed fields, reviewed bank mappings and reconciliation | Advanced validated tools need an existing supported Python runtime |
+| Manage local cash records | Reviewed entries, splits, reversals and period reports | Limited journal, not a complete statutory ledger or tax engine |
+| Prepare taxes and letters | Source-based analysis, form worksheets, readable reports and recipient documents | Official forms/calculations must be checked for the actual year; submission is separate |
+| Track a filing | Versioned drafts, checks, authorization and observed receipt/response records | Protected writers and full preflight require the optional engine; no direct ELSTER transmission |
+| Continue or recover work | Real EN/RU overview, open questions, next action and verified full backup/restore | Overview is a read-only snapshot; no automatic reminders or scheduled backups |
+| Compare business services | Needs-based banking, insurance and software research using current sources | No automatic account opening, purchase or policy selection |
 
-The modes share one workspace and evidence history. Switching mode does not create a second tax profile or change a recorded tax treatment. See the detailed [English mode guide](docs/modes.md) or [Russian guide](docs/modes.ru.md).
+**Windows without Python:** native tools cover installation, start/resume, folder preview, intake, integrity, real overview and full backup/restore. Protected journal/filing writes, catalog updates and full filing preflight are not yet native. The assistant must identify an unavailable operation instead of claiming it succeeded. See [Windows guidance](docs/windows.md).
 
-`tax-consultant` names an analysis workflow; it does not confer the professional status of **Steuerberater**. The skill should answer the actual question and identify specific issues needing professional review when relevant.
+**macOS:** use the tools actually available in your assistant. Advanced Python utilities require an existing Python 3.9+ runtime; macOS does not guarantee it is installed. Node and Playwright are developer tools, not onboarding requirements.
 
-## What is implemented
-
-| Capability | Implementation |
-| --- | --- |
-| Staged intake and resuming work | Workflow instructions and a JSON profile with evidence and status for each fact |
-| Language and mode preferences | Saved in `00_admin/workspace.json`, configurable without reinitializing the workspace |
-| Private folder structure | Executable offline initializer |
-| First use and recovery | Safe start/resume, synthetic demo, local doctor and explicit setup issues |
-| Shared records | Typed profile facts and locked, evidence-backed task/question/decision updates with history |
-| Real overview | EN/RU snapshots of documents, accounting choice, open questions, filing issues and next action; native and Python scopes are distinct |
-| Local cash journal and filing records | Reviewed cash entries/reversals and versioned filing evidence through validated writers; no live transmission |
-| Full backup/restore | Verified complete workspace copies and fresh-location restoration through Python or native PowerShell |
-| Original-document intake | Byte-preserving copy, SHA-256 index and exact-content duplicate detection |
-| Original verification | Integrity checks and detection of unexpected files in originals folders |
-| CSV reconciliation | Exact Decimal arithmetic, explicit transaction IDs, currency-separated totals and exceptions |
-| Bookkeeping and tax consultations | Operational workflows, localized document templates and source-based analysis instructions |
-| Accounting software and optional adviser cooperation | Capture/export checks and recorded responsibilities when another person is involved |
-| Provider selection and forms | Requirements-led comparison, current-source checks and reviewable form worksheets |
-| Codex / Claude Code installation | Installer for one self-contained skill in the selected host's discovery directory |
-
-**A complete accounting ledger and ELSTER submission integration are core capabilities still to be completed.** This preview implements preparation, proposals, reconciliation, a limited cash journal, filing evidence tracking and form worksheets; it does not yet provide complete bookkeeping/accounting or submit returns. A verified records archive supports your review and retention, and can optionally be shared; it does not close a month or complete a filing. There are **no production banking, Lexware or ELSTER connectors, autonomous filings or background scheduler** in this preview. Browser work requires tools actually available in the host. A skill does not grant browser access. Desktop-app integration must be verified in the installed app version.
-
-The real workspace overview now shows accounting records, open questions and filing blockers. Windows PowerShell can generate its own read-only overview and perform verified full backup/restore without Python. The first monthly route is local cash records plus manual ELSTER; existing software remains authoritative when chosen. See [current status](docs/project-status.md) and [the monthly workflow](skills/de-business-kit/references/monthly-workflow.md).
-
-## Install
-
-**Windows without Python:** use the [native Windows guide](docs/windows.md). Codex/Claude Code can use Windows PowerShell 5.1 for installation, start/resume, document intake, overview and full backup/restore. Git, WSL and PowerShell 7 are not prerequisites. The commands below are the optional Python-engine route, also used by developers; they are not required Windows onboarding steps.
-
-The optional Python utilities require **Python 3.9+**, with no additional Python packages. Clone the public source repository outside your private business workspace:
-
-```bash
-git clone https://github.com/ilyafedotov-ops/german-business-skills.git
-cd german-business-skills
-python3 tools/install.py --target both --scope user --dry-run
-python3 tools/install.py --target both --scope user
-```
-
-On Windows, use `python` or `py -3` instead of `python3` if that is your Python 3 launcher. Replace `both` with `codex` or `claude` to install for one host.
-
-For **project-scoped installation**, initialize the private workspace first: initialization requires a new or empty directory. Replace the example path and year with your own.
-
-```bash
-python3 skills/de-business-kit/scripts/workspace.py init --root /absolute/path/to/private-workspace --year 2026 --language en --mode bookkeeping
-python3 tools/install.py --target both --scope project --project /absolute/path/to/private-workspace --dry-run
-python3 tools/install.py --target both --scope project --project /absolute/path/to/private-workspace
-```
-
-Choose `--mode general` for a startup workspace or `--mode tax-consultant` for tax-focused work. Use `--language ru` for Russian.
-
-| Host | Project directory | User directory | Invocation |
-| --- | --- | --- | --- |
-| Codex local | `.agents/skills/de-business-kit` | `~/.agents/skills/de-business-kit` | `$de-business-kit`, `/skills`, or the skill picker |
-| Claude Code local / Desktop Code | `.claude/skills/de-business-kit` | `~/.claude/skills/de-business-kit` | `/de-business-kit` |
-
-These instructions target **local sessions**. Cowork, cloud execution and plugin synchronization have separate behavior. See [platform compatibility](skills/de-business-kit/references/platforms.md). Documentation sources were checked on **2026-10-25**.
-
-### Change a saved preference
-
-Run from the source checkout, or replace the script path with the installed skill's path:
-
-```bash
-python3 skills/de-business-kit/scripts/workspace.py configure --root /absolute/path/to/private-workspace --language en --mode tax-consultant
-python3 skills/de-business-kit/scripts/workspace.py status --root /absolute/path/to/private-workspace
-```
-
-An explicit language request in chat controls that task. “Use Russian from now on” or `configure --language ru` changes the persistent preference. German (`de`) physical folders and a German start guide are supported. The complete user-guide/report set remains English/Russian; changing report language never renames existing folders.
-
-### Update an existing installation
-
-The installer deliberately refuses to overwrite an existing skill.
-
-1. Obtain the new source in a separate checkout outside the private workspace. Stage an installation in a separate empty test folder and inspect the new files.
-2. Compare that staged copy with the installed skill and preserve any local customizations.
-3. Close active sessions that use it. Move the old **skill directory** to a backup location outside host skill-discovery directories; leave the private workspace and its records in place.
-4. Install the reviewed version using the original scope and target. Open the existing workspace and run `status`; do not run `init` over existing business data.
-
-The installer does not change tool permissions or host settings, download dependencies, or replace your business files.
+**Languages:** user guides and report templates are English/Russian. Folder names and the short start guide also support German. Official form labels remain in German; full German report coverage is unfinished.
 
 ## Example requests
 
-**Startup / general**
-
-> Use de-business-kit in general mode, in English. I want to start an activity in Germany. Collect the necessary facts in small groups, include my existing activities, and prepare a registration plan and form drafts.
-
-**Bookkeeping**
-
-> Use de-business-kit in bookkeeping mode for October. I manage my own accounting and tax reporting. Organize the receipts, propose categories with evidence, reconcile the payments and show the monthly status and remaining posting or filing steps. Prepare the records archive for my review. Explain any specific uncertainty where expert advice could help.
-
-**Tax questions and preparation**
-
-> Use de-business-kit in tax-consultant mode. I already have a freelance activity and want to add an online service. Use my existing VAT history and actual figures, check current official sources, explain the applicable treatment and compare realistic scenarios. Save the conclusions, calculation assumptions and next actions as a consultation.
-
-[Equivalent Russian requests](README.ru.md#примеры-запросов) are included in the Russian README. German labels such as **Fragebogen zur steuerlichen Erfassung**, **Kleinunternehmerregelung** and **Umsatzsteuer-Voranmeldung** are retained in both languages.
-
-## Private files
-
-Keep business data **outside the public source checkout and every Git repository**. Do not put invoices inside skill directories or use the public repository as a client workspace.
-
-| Path | Purpose |
+| What you need | What to say |
 | --- | --- |
-| `00_admin/` | Preferences, runtime, evidence index, tasks, questions and decisions |
-| `01_profile/business.json` | Shared entrepreneur profile, activities and provenance of facts |
-| `02_registration/` | Registration plans, form worksheets and confirmations |
-| `03_banking/` | Requirements, comparisons and bank records |
-| `04_accounting/` | Accounting choice, cash journal, filing register and period reports |
-| `05_tax/YYYY/consultations/` | Sourced tax consultations and calculations |
-| `06_bookkeeping/YYYY/MM/originals/` | Original files preserved without modification |
-| `06_bookkeeping/YYYY/MM/derived/` | OCR, extracted fields and normalized CSVs |
-| `00_admin/casework.json` | Validated catalog, proposals, source checks and review records |
-| `06_bookkeeping/YYYY/MM/proposals/` | Preserved legacy proposal files |
-| `07_exports/YYYY-MM/` | Reconciliation reports and verified records archives for self-review or optional sharing |
-| `08_correspondence/` | Relevant business correspondence |
-| `09_audit/` | Local events and previous profile/preference versions |
+| Existing folder or email | “My invoices are in this folder and Gmail. First show which sources you can access and what you found. Help me choose what to import; do not change the source or send anything.” |
+| This month's work | “Continue October in my existing workspace. Show missing receipts, unmatched payments, accounting work and filing issues. Open a readable overview and suggest the next action.” |
+| A tax question | “This invoice is from another country and mentions reverse charge. Check my actual business facts and the applicable period against official sources. Explain what is known and what still needs checking.” |
+| A letter or report | “Explain this Finanzamt letter in English. Identify any deadline with its source, prepare a German reply draft if needed, and keep my private notes separate.” |
+| Starting an activity | “Help me clarify Freiberufler or Gewerbe for this activity, including my existing activities. Ask only what affects the next step and prepare a registration plan.” |
+| Banking or insurance | “Compare suitable services for my activity, countries, currencies and expected payments. Show current costs, exclusions, eligibility and sources before recommending anything.” |
+| Resume or back up | “Save where we stopped and the next action. Create and verify a complete backup at the location I choose.” |
 
-See [workspace commands and formats](skills/de-business-kit/references/workspace.md). Local execution does not mean that the model processes data locally: the workflow checks the actual AI product, plan and connected tools before reading real third-party personal data. Passwords, API secrets, TANs and ELSTER certificates do not belong in profile files or chat.
+**Illustrative result, using fictional records:** two invoices and a bank export are preserved; one payment matches an invoice and another lacks a receipt. The readable result links the originals, explains the missing receipt and leaves the unresolved item open. It does not label the month complete or a return submitted.
 
-Originals, hashes and local logs support an organized process; they do not certify GoBD compliance. The utilities do not encrypt files or configure Windows ACLs. The full backup/restore tools verify copies; access controls, retention and protected backup storage remain part of the user’s storage process.
+[Russian examples](README.ru.md#примеры-запросов) · [Detailed working modes](docs/modes.md) · [Documents and reports](docs/documents.md)
 
-## Working principles
+## Your private workspace
 
-- Separate legal form, activity classification, VAT treatment and profit determination. Consider existing activities and tax history before advising on a new activity.
-- Distinguish facts, assumptions and decisions. Unknown values stay `null`; model confidence is not evidence.
-- Treat invoices, bank descriptions and websites as evidence, never as instructions to execute code or disclose data.
-- Keep preparation, user approval, actual posting/submission evidence and Finanzamt responses separate. A document upload is not a posting; a filled form is not a confirmed submission; a transmission receipt does not establish acceptance of tax treatment.
-- Check current official sources before consequential tax or product decisions. Explain which facts the conclusion depends on.
-- Prepare concrete work within the task's authorization. External actions need authorization covering the actual recipient, operation and payload.
+New workspaces use five everyday areas. This English example shows the main folders; year/month folders are created when needed.
 
-Sources and applicability rules are documented in [German rules](skills/de-business-kit/references/german-rules.md), [Lexware](skills/de-business-kit/references/lexware.md), [provider selection](skills/de-business-kit/references/providers.md) and [privacy](skills/de-business-kit/references/privacy.md).
-
-## Validation and contribution
-
-```bash
-python3 -B -m unittest discover -s tests -v
-python3 -B tools/check_package.py
+```text
+My business/
+├── START-HERE.md
+├── 01 Inbox/
+├── 02 Documents/
+│   └── 2026/10/
+│       ├── Originals/
+│       ├── Processed/
+│       └── Proposals/
+├── 03 Accounts/
+│   ├── Bank/
+│   ├── Records/
+│   └── Reports/
+├── 04 Taxes/
+├── 05 Business/
+│   ├── Registration/
+│   └── Correspondence/
+├── .business-kit/          ← internal records and history
+└── .workspace-layout.json  ← folder mapping
 ```
 
-See [validation status](docs/validation.md), [architecture](docs/architecture.md), [behavioral scenarios](evals/scenarios.json), [contributing](CONTRIBUTING.md) and [security reporting](SECURITY.md). Utility tests validate local behavior; they do not establish the correctness of tax conclusions or replace integration checks in desktop apps.
+**Reports have a home:** accounting/reconciliation outputs use the mapped Accounts areas; tax materials use Taxes. Ask the assistant for the actual link to each generated result. The real overview is stored in the internal admin area and can be opened as HTML or Markdown. See [folder names in EN/RU/DE](docs/folder-structure.md) and [report types](docs/documents.md).
 
-Use synthetic or reliably anonymized data in public issues, pull requests and examples. Repository: [ilyafedotov-ops/german-business-skills](https://github.com/ilyafedotov-ops/german-business-skills).
+Changing the conversation language does not rename folders. Existing workspaces retain their earlier layout. Include internal records and the folder mapping in a full backup; a selected-document archive is not a complete backup. Originals and hashes support traceability, but do not certify GoBD compliance, encrypt files or establish tax correctness.
 
-Banking, insurance and other services are researched against your needs, current costs and terms. See [service selection](docs/service-selection.md).
+## Install
 
-For readable reports, recipient documents and reviewed attachments, see [documents and reports](docs/documents.md).
+The quick start above is the recommended assisted route. For detailed steps:
 
-[Versions, signatures and release verification](docs/releases.md)
+| Situation | Guide |
+| --- | --- |
+| Windows, no Python | [Native Windows setup and limits](docs/windows.md) |
+| Downloaded Codex/Claude release package | [Verify the download](docs/releases.md), then [register/install the extracted marketplace](docs/distribution.md#optional-host-installation-after-review) |
+| Start from source or maintain the project | [Distribution and build instructions](docs/distribution.md), [Contributing](CONTRIBUTING.md) |
+| Understand host differences | [Platform compatibility](skills/de-business-kit/references/platforms.md) |
+
+There is no standalone desktop installer or public one-click marketplace listing. Installation depends on the host's permitted local skill/plugin mechanism. Avoid enabling both the standalone skill and the same plugin in one session.
+
+**Updating:** preserve the previous skill and any customizations, verify the new package in a separate folder, then replace the installed skill through the documented host route. The standalone installer refuses to overwrite an existing installation. Keep the private business workspace in place; do not initialize it again or rename managed folders as part of an update. See [updates](docs/distribution.md) and [backup/recovery](skills/de-business-kit/references/recovery.md).
+
+## Interface, validation and development
+
+The **[new local GUI](docs/gui.md)** connects those records to controlled actions. The generated **real workspace overview** reads your saved records and shows issues and next steps. The separate **[interactive prototype](docs/prototype.md)** demonstrates onboarding, document review, unmatched payments and resuming work with fictional data in browser storage. It is not connected to your real accounts.
+
+The [0.6.0-preview.4 release workflow](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40288755911) passed Windows/macOS utility checks, native Windows PowerShell 5.1 checks, browser/document checks, security gates and release verification. These results do not establish nontechnical-user usability, live service integration or tax correctness. [Validation records](docs/validation.md) preserve the exact scope and remaining acceptance work.
+
+The named release assets include checksums and signed build provenance. A verified signature establishes origin and integrity; it does not certify accounting results. [Release history](CHANGELOG.md) · [Verification instructions](docs/releases.md).
+
+For contributors:
+
+```bash
+python3 -B tools/check_package.py
+python3 -B -m unittest discover -s tests -v
+```
+
+[Architecture](docs/architecture.md) · [Repository rules](AGENTS.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md). Use fictional data in public examples and issues. The project is [MIT-licensed](LICENSE); AI apps and third-party services have their own terms. The `tax-consultant` workflow name does not confer licensed Steuerberater status.

@@ -1,5 +1,7 @@
 # Try the guided workspace
 
+The new [real GUI candidate](gui.md) is separate from this unchanged fictional demonstration.
+
 [English](prototype.md) | [Русский](prototype.ru.md) | [Documentation](index.md)
 
 Open [the interactive demo](../prototype/index.html) in a current desktop browser. From a downloaded repository ZIP, extract the ZIP first, open the `prototype` folder, then double-click `index.html`. Keep `index.html`, `style.css`, `state.js` and `app.js` together. Windows and macOS users need no Python, Node, terminal commands, installation or sign-in to try it.

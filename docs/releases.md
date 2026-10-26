@@ -102,3 +102,22 @@ the changes are merged there.
 Primary sources checked 2026-10-26: [GitHub attestations](https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations),
 [release integrity](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/verify-release-integrity),
 and [secure Actions use](https://docs.github.com/en/actions/reference/security/secure-use).
+
+## Native GUI archives from the 0.7 candidate
+
+The candidate adds separate Windows x64, macOS arm64 and macOS x86_64 applications.
+The `gui-package` CI matrix builds them with hash-locked build tools and exercises
+the extracted archive with no external Python on `PATH`. Each bundle includes
+`GUI-MANIFEST.json` covering regular files and native library links. The archive
+builder rejects special files and checks actual archived bytes against the manifest.
+Only then is its outer checksum produced. Portable plugin ZIPs stay independent.
+
+Publication waits for every platform build and smoke check. The privileged job
+checks the three downloaded native archives, adds them to `SHA256SUMS`, then signs
+and verifies all assets through the existing release workflow. It executes no
+project code or native binary. Native bundles are not claimed byte-reproducible;
+the existing build-twice check applies to the portable skill packages. GitHub
+provenance does not provide Windows Authenticode or Apple notarization.
+
+Current local candidate results and remaining gates are in [GUI guidance](gui.md)
+and [validation](validation.md). No GUI asset has been published by this source edit.
