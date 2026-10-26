@@ -6,12 +6,17 @@ Versions follow Semantic Versioning. All releases below are previews, not a
 certification of accounting correctness or desktop compatibility. Historical
 milestones are first published on 2026-10-26; their original commits are retained.
 
-## Unreleased
+## 0.9.0-preview.1
 
 - Add operation-specific connector/browser/desktop discovery and assisted draft/export workflows, with user-controlled login and final confirmation, EN/RU guides and synthetic browser trials.
 - Add EN/RU desktop-first installation guides from choosing an AI app through seven-skill discovery and a first task; simplify README and quick starts.
 - Package an original illustration and editable EN/RU setup diagrams through an exact-path allowlist, with detached-resource and rejection tests.
 - Keep explicit one-small-step requests focused before full registration planning; add bilingual scenarios and record fresh Codex/Claude trials and remaining acceptance gaps.
+
+- Consolidate user help into installation, one task manual and assisted-service guidance; separate technical documentation and the current P1–P7 roadmap from dated history. Remove 29 duplicate Markdown files while retaining original evidence.
+- Preserve uncertainty after export-generation/download failures and manual submission without a receipt; avoid invented required fields or formulas in assisted form preparation.
+
+All seven skills remain one bundle. Workspace schemas and runtime accounting behavior are unchanged. This preview has no live ELSTER transport, complete statutory tax calculator or production service connectors; Lexware remains on local examples. Browser artifact retrieval and ordinary-user desktop acceptance remain open. Publication and platform acceptance require the exact tag's checks and verified assets.
 
 ## 0.8.0-preview.1
 

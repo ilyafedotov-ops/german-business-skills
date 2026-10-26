@@ -50,9 +50,9 @@ Before using real documents, establish what content the AI service and connected
 
 ## Download and technical documentation
 
-The [published 0.8.0-preview.1 preview](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1) contains `-codex.zip`, `-claude.zip` bundles and separate applications. Install all seven skills together: the router and six domain skills share resources and one profile. The installation guide explains archive selection and verification.
+The [0.9.0-preview.1 release page](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.9.0-preview.1) provides `-codex.zip`, `-claude.zip` bundles and separate applications. Install all seven skills together: the router and six domain skills share resources and one profile. The installation guide explains archive selection and verification.
 
-Newer guides and workflow instructions in source are not yet in that immutable archive. User guides and report templates cover EN/RU; German navigation does not imply full German reporting. [Current status and P1–P7 roadmap](docs/project-status.md) separate implementation from unfinished acceptance.
+Use the named archives after publication and provenance verification; a source checkout is not a verified release. This version includes the installation guides, assisted-service workflows and consolidated documentation. User guides and report templates cover EN/RU; German navigation does not imply full German reporting. [Current status and P1–P7 roadmap](docs/project-status.md) separate implementation from unfinished acceptance.
 
 For developers and maintainers: **[technical documentation](docs/index.md)** covers architecture, ontology, builds, releases and validation. Start with [CONTRIBUTING](CONTRIBUTING.md); repository rules are in [AGENTS.md](AGENTS.md). Actual tests, limits and history are in the [validation summary](docs/validation.md).
 

@@ -6,7 +6,7 @@ Reviewed against source on **2026-10-26**. German Business Kit is a seven-skill 
 
 ## Source and published release
 
-`VERSION` is **0.8.0-preview.1**. The [immutable published release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1) comes from `04bcd80a008d48fcd4cdc635988440e17291c5a1`. Its eight assets passed the recorded platform/publication gates and downloaded-asset verification. Beginner installation guides, assisted-service refinements and this documentation cleanup are newer source changes; they do not replace those archives. See [dated validation](validation.md) for exact refs and limits. This repository distributes skills and local applications; it has no hosted production application.
+`VERSION` is **0.9.0-preview.1**, covering beginner installation, assisted-service refinements and documentation consolidation. The [release page](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.9.0-preview.1) is the destination for new archives after successful gates and publication. The latest downloaded-asset verification recorded here is still the immutable `0.8.0-preview.1` from `04bcd80a008d48fcd4cdc635988440e17291c5a1`; it does not validate the new tag. See [validation](validation.md) for exact results. Existing tags/assets are not replaced. This repository distributes skills and local applications; it has no hosted production application.
 
 ## Implemented scope
 
