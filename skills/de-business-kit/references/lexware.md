@@ -2,30 +2,101 @@
 
 ## Identify the product and available access
 
-Ask whether the product is **Lexware Office** in the browser or an installed product such as **Lexware buchhaltung / financial office**. Do not reuse Office API assumptions for desktop products. Record the exact product, edition, self-accounting workflow and currently available access in `04_accounting/workflow.md` and the runtime register.
+Identify **Lexware Office** in the browser versus an installed product such as
+**Lexware buchhaltung / financial office**. Reuse known facts; do not apply the
+Office API or export menus to desktop products. Keep the user's chosen system
+and self-managed accounting route. An adviser is an optional participant.
 
-**This package has no production Lexware connector.** These are preparation instructions and design constraints for a future adapter. Use supplied local utilities for evidence and reconciliation. Use [existing-data onboarding](existing-data.md) to choose available host plugins/API/browser tools or local exports. Provide reviewed self-entry steps; never claim that this package uploaded, posted or submitted anything.
+**This package has no production Lexware connector.** Use
+[existing-data onboarding](existing-data.md) to inspect available host tools or
+supplied files. A missing connector does not require an API subscription or a
+migration. See [connection verification](connections.md) for the shared operation
+note and supplied-export coverage procedure. Do not claim access, posting or
+submission from a saved configuration or a help page.
 
-## Diagnose missing documents correctly
+For a factual question, answer without requiring a workspace. For saved work,
+reuse the existing source map/task evidence. Paths below are **logical**: resolve
+them with `workspace.py folders` or native `-Action folders` before ordinary file
+access. Do not create parallel folders or rewrite canonical records directly.
 
-Distinguish document status from booking category:
+## First bounded document read
 
-| Lexware item | Meaning | Export consequence |
+For the selected Lexware Office acceptance route, start with a user-designated
+test account containing synthetic documents and a specified period. Use an
+already available suitable connector first; otherwise use an actual supported
+browser session. Do not configure API credentials or install an adapter merely
+to run this check. If only the login screen is available, let the user authenticate
+in the official flow; no secrets go into chat or notes.
+
+Verify the intended account before opening documents. Inspect the visible document
+list and selected date/status filters; then read one relevant document's ID, type,
+dates and status without editing it. Record the observed scope and retrieval time.
+If original download is available and within scope, preserve that original and
+compare its identity with the displayed record. A successful preview alone proves
+neither original retrieval nor all pages. Report list access, document read and
+original download separately. Stop at unavailable access or an operation with
+unapproved side effects; an export fallback remains a separate snapshot check.
+
+Save the result in the existing operation note, including partial/unknown scope
+and the next action. Use this small read as service acceptance only for the
+observed account/operation. It does not establish a production connector, continuing
+access, posting, complete-month coverage or readiness to file. Real business data
+requires the shared privacy assessment before model processing.
+
+## Identify the export before diagnosing missing documents
+
+Export findings were checked **2026-10-26**; the dated
+[primary-source findings](lexware-export-sources.md) record scope and uncertainties.
+First establish the exact export route, year, period and selected date basis.
+If the route is unknown, give conditional explanations and obtain the existing
+export/settings evidence before concluding why a document is absent.
+
+| Route | Inspect | Limit |
 | --- | --- | --- |
-| Status `Zu prüfen` or `Entwurf` | Not fully captured; no corresponding posting | Not exported |
-| Category `Zu prüfen` | Captured with an interim-account posting | Included in export |
+| Document/PDF download | Incoming/outgoing selection and **Rechnungsdatum or Zahldatum** filter | Not the same selection as DATEV; a PDF rendering does not establish original XML preservation |
+| DATEV posting/document export | **Belegdatum**, capture status/time, selected period and document links | A later payment posting need not include the original document again |
+| Existing supplied files | Observed headers, IDs, document originals, pages and filters | Snapshot only; absent files or unknown totals cannot establish live-account completeness |
 
-The documented interim accounts are **1590 (SKR03)** and **1370 (SKR04)**. Use this temporary category only within a treatment agreed with the tax adviser; it is not a universal correct expense category. Keep the unresolved question and required follow-up visible after export.
+For the **documented posting-based export**, distinguish status from category:
 
-For a missing receipt:
+| Lexware item | Meaning | Export consequence for that route |
+| --- | --- | --- |
+| Status `Zu prüfen` or `Entwurf` | Not fully captured; no corresponding posting | Excluded |
+| Category `Zu prüfen` | Captured with an interim-account posting | Category alone does not exclude it |
 
-1. Compare the document date with the selected export month. Lexware exports receipts by document date, independently of payment date.
-2. Check the actual status and whether required capture fields and category were saved.
-3. Check whether the document was captured after the export; inspect transfer logs and errors.
-4. Check relevant bank allocations and the agreed division of work. Unassigned transactions can make a posting export incomplete.
-5. Record the cause, evidence and next action in `06_bookkeeping/YYYY/MM/close.md` and the task register.
+Do not apply this table as a guarantee about the separate original/PDF download.
+Do not assign the interim category merely to include a document in an export.
+Keep the treatment unresolved until supported; consultation is optional rather
+than a required handoff for investigating coverage.
 
-Do not infer that the adviser cannot see an uncaptured document anywhere. The adviser cockpit also provides access to the client's live Lexware view; live access and transfer into the adviser's own software are different workflows. Establish which view or transfer is missing the document.
+For a missing receipt, compare its date with the **actual selected date basis**,
+then capture/status at export time, original availability and export diagnostics.
+A document entered later cannot be assumed present in an earlier snapshot. Keep
+user-reported values distinct from inspected files/provider state. Inspect bank
+allocations separately when relevant; they do not prove document completeness.
+If a user has an adviser, distinguish their live view from a transfer to their
+separate software; do not infer one from the other.
+
+## Preserve evidence without closing or changing the period
+
+For the documented PDF route, current help points to `Einstellungen > Export >
+Meine Lexware Office-Daten herunterladen > weitere Exporte > Belege`. Verify the
+actual account controls and edition; API eligibility does not establish manual
+export eligibility. Prefer an existing supplied export for inspection.
+
+Before initiating any new export, check its effect: manual DATEV export may lock
+records depending on the option/settings; audit export, DATEV Buchungsdatenservice
+and ADDISON transfer have documented locking effects. A request to inspect missing
+documents does not authorize these mutations. Match concrete authorization before
+locking/transferring; otherwise continue with available evidence. Re-exporting,
+changing a category or finalizing a draft is not a substitute for diagnosis.
+
+Preserve source XML or the original hybrid file as well as readable views.
+Generated DATEV XML metadata is not necessarily an original e-invoice. The local
+catalog does not unpack/import ZIPs: retain them at source or in a separately
+assessed private evidence location, and disclose uninspected contents. Use the
+shared export procedure for supported files; never silently discard unsupported
+originals or treat a CSV row as its attached document.
 
 ## Design constraints for a future API adapter
 
@@ -44,16 +115,24 @@ Check the user's current plan. The official feature page currently lists Public 
 
 Keep credentials in the runtime's credential mechanism, never in company JSON, proposals, public Git or audit text. A future adapter must restrict hosts and operations independently of document contents. Present concrete proposed mutations before using existing or newly granted authorization, then verify the resulting provider state.
 
-## Required outputs
+## Required result and continuation
 
-- `04_accounting/workflow.md`: product/edition, access, authoritative system, adviser responsibilities, export format and lock-on-export setting if known.
-- `06_bookkeeping/YYYY/MM/proposals`: reviewed category/tax proposals and unresolved cases, without fabricated provider IDs.
-- `06_bookkeeping/YYYY/MM/close.md`: receipt/export coverage and exceptions; distinguish local preparation from actual provider state.
-- `07_exports/YYYY-MM`: handoff package with an inclusion/exclusion manifest and transfer evidence only when a transfer actually occurred.
+Return a readable explanation or dated operation note: selected route/date basis,
+observed versus reported scope, original references, missing/unknown documents,
+possible cause with evidence, and one next action. Do not mark the month closed.
+For persisted work, use the existing logical `00_admin/source-map.md` and linked
+period evidence under `07_exports/YYYY-MM`; preserve previous versions. Update
+existing tasks only through validated writers and only when the task warrants it.
+No new provider registry, local shadow ledger or adviser package is required.
+An optional transfer package records inclusion/exclusion and actual transfer
+evidence only when that separate operation is requested and performed.
 
 ## Official sources
 
-Checked **2026-10-25**; product capabilities and plan conditions can change.
+The API/design pointers below retain their **2026-10-25** check date; reverify
+before implementation. Export-route findings were separately checked on
+**2026-10-26** in [the source note](lexware-export-sources.md). Product capabilities
+and plan conditions can change.
 
 - [Product distinction: Lexware Office versus Lexware buchhaltung](https://shop.lexware.de/buchhaltungssoftware-vergleich).
 - [Lexware Office Public API and plan eligibility](https://www.lexware.de/funktionen/public-api/).

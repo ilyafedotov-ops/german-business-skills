@@ -208,6 +208,12 @@ This is local evidence handling. Issuance, correction posting, settlement and
 provider readback in an actual chosen system remain unverified; the broader P3/P6
 acceptance is still open. See [validation](validation.md).
 
+## 5.4. Supplied-export inspection (2026-10-26)
+
+P6 now includes a bounded export-coverage procedure and EN/RU operation-note fields. The Lexware route identifies document/PDF versus DATEV exports before applying period/status rules, keeps self-managed accounting authoritative and does not require adviser handoff. The actual selected service is still a per-user choice; this example does not set an onboarding default. No connector, ZIP importer, live account read or period closure is added. See [validation](validation.md) for the reproduced routing defect and fresh trial evidence.
+
+The first selected live P6 acceptance target is **Lexware Office document reading**: a user-designated synthetic test account, bounded period, one document and, where available, its original. This development test choice does not change per-user onboarding. Live acceptance remains open until actual access and observed results exist.
+
 ## 6. Queue and drift control
 
 **After the local P1–P7 materials and synthetic preparation trials, the next queue is actual document-cycle execution, a chosen service operation and supported-host acceptance.** P6 accompanies specific needs; P7 follows accepted journeys. Security maintenance and fixes to existing capabilities continue as necessary.

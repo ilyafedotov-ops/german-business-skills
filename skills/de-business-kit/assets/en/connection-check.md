@@ -17,6 +17,19 @@ A documented route or file import does not prove a live connection. Never includ
 | --- | --- | --- | --- | --- |
 | [Not attempted / actual attempt] | [Actual response; redact secrets] | [Complete scope verified / partial / unknown] | [Observed / unavailable] | [Inspect / reauthenticate / prepare manual route] |
 
+## Supplied-export coverage (when relevant)
+
+- Target period and selection basis: [document/payment/other date; observed filters]
+- Export generated at / supplied at: [separate timestamps or unknown]
+- Expected scope: [provider evidence or user statement; unknown where unavailable]
+
+| Original file / source reference | Actually inspected scope | Missing or uninspected scope | ID/version/attachment discrepancy | Evidence and next step |
+| --- | --- | --- | --- | --- |
+| [Preserved original, not a replacement render] | [Objects, pages, dates and observed count; unknown if not established] | [Missing pages/originals, unsupported archive or unknown total] | [Repeated row / exact-byte copy / conflicting version / no discrepancy observed within this scope] | [Observation versus user statement; smallest next action] |
+
+A file count or CSV row does not prove complete records, payment, posting or a
+live connection. Keep unsupported originals; do not silently exclude them.
+
 ## Failure or manual continuation
 
 - Missing/expired access: [official user-controlled authentication or export required]

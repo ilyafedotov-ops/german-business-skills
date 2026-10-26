@@ -47,6 +47,8 @@ Legal form, activity classification, VAT regime and accounting method are separa
 
 Casework collections live in `00_admin/casework.json`. That register is additive and is created on a casework write; a baseline workspace need not already contain it. The `generic-records-archive` manifest describes a bounded snapshot, built with `desk.py archive` and checked with `verify-archive`, under `07_exports/YYYY-MM/archive-*`.
 
+A supplied-export coverage note describes a snapshot, its selection/date basis and inspected versus missing evidence. It is a readable operation/source-map artifact, not a new canonical entity. A row in an export does not establish that its original document is present, paid, posted or observed in the live service.
+
 ## Relationships
 
 ```mermaid

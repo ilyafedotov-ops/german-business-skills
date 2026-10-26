@@ -13,6 +13,8 @@ usability or a certified accounting process.
 
 The product is a **system of skills for the entrepreneur lifecycle**. The [full correction plan](lifecycle.md) defines structure, coverage, P0–P7 sequencing and acceptance. Guidance already covers formation, forms, questions, services, documents and reporting; daily-work, annual-preparation, change and closure instructions have been added, with real execution subject to separate acceptance. The table below primarily describes technical foundations, not the entire product scope. Self-managed accounting and filing remain important: local cash records with manual ELSTER are one route, and existing software stays authoritative when selected. Consultation and exports are optional.
 
+P6 export inspection now records the selected export route/date basis, supplied originals, inspected pages and missing scope in the existing operation note. Lexware Office guidance distinguishes document/PDF selection from DATEV posting exports and preserves self-managed accounting. This is an agent workflow for supplied evidence, not a live connector or automatic archive importer.
+
 | Capability | Current implementation | Boundary |
 | --- | --- | --- |
 | Lifecycle preparation | EN/RU launch, customer-case, annual-readiness, change and operation worksheets; correspondence, continuation and first-hire routes | Agent-led preparation; current-source research and actual host/service execution still need case-specific acceptance |

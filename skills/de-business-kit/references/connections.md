@@ -54,3 +54,42 @@ before normalizing a derivative. Map columns only from observed headers/document
 check identifiers, currency, date scope, duplicate records and omitted pages or
 attachments. Use existing intake/bank-mapping tools where the format is supported.
 An offline inspection proves only the supplied snapshot, not current account state.
+
+## Inspect a supplied accounting export
+
+Use this route when the task concerns missing documents or period coverage and
+no suitable live access is available. It does not select a new accounting system.
+Start from the user's stated product and preserve it as authoritative; an export
+is a dated snapshot. Do not require workspace setup for a factual explanation.
+
+1. Establish the target period and the export's actual selection: document date,
+   payment date or another documented basis; object types, statuses, accounts,
+   filters, generation time and pages. Keep user statements separate from observed
+   file contents. Unknown coverage is **unknown**, not zero or complete.
+2. Preserve every supplied original before processing. Inspect only the relevant
+   subset through suitable host tools. The catalog accepts PDF/XML/images/CSV;
+   it does not unpack or import ZIPs. Keep an unsupported archive at its source or
+   a separately assessed private evidence location. Record what was not inspected;
+   do not treat a list of archive filenames as verified contents or discard the ZIP
+   after extracting derivatives. See [existing data](existing-data.md).
+3. Use the coverage section of the operation note. Compare observed record IDs,
+   references and individual document files. Report repeated rows, exact-byte
+   copies, conflicting versions and missing attachments separately; do not merge
+   them just because an invoice number or amount matches. Counts describe only
+   the inspected selection. A CSV row is not proof that its original is supplied.
+4. Identify the smallest next action: obtain the missing page/original, inspect
+   the item's actual status/date, or prepare a reviewed correction. Re-exporting
+   does not repair an uncaptured record. Do not change a category, finalize, lock,
+   mark sent or post records merely to make an export look complete. Verify the
+   selected export route's side effects before recommending it.
+5. Save a dated readable result with original references and unresolved scope.
+   Reuse the source map/task evidence and preserve its earlier version. If a
+   workspace exists, resolve logical paths through the folder helper before writing;
+   do not create parallel English folders in a localized workspace. Use validated
+   writers for canonical records. If no workspace is needed, return the explanation
+   or a standalone private note without inventing register updates.
+
+Finish with what was supplied, actually inspected, missing and still unverified,
+plus one next action. Do not promote an export check into live-account readback,
+period closure, accounting correctness or filing readiness. A later export is new
+input: compare its scope and versions before using it to close the existing task.

@@ -16,6 +16,8 @@ An entrepreneur brings a task at any stage: prepare to start, register an activi
 
 The supported scope is a natural person operating in Germany: Freiberufler, Einzelunternehmen/Gewerbe and multiple activities of the same person. Corporations, partnerships, payroll, complex international structures and cash-register systems are outside the promised automation scope. The skill can collect facts and prepare a specific specialist handoff for those cases.
 
+Export coverage is a readable projection of supplied evidence: the selected route, date basis, inspected pages/originals and missing scope. It reuses operation notes and source maps; it adds no provider registry or automatic export engine.
+
 ## Seven entry points, shared state
 
 The bundle contains seven directly usable skills with one shared profile. `de-business-kit` starts/resumes mixed work; `de-business-start`, `de-business-operations`, `de-business-accounting`, `de-business-tax`, `de-business-services` and `de-business-changes` can be invoked directly. Shared contracts and utilities remain in `skills/de-business-kit`; installers and the builder use `assets/skill-set.json`. Load only relevant modules; a transition passes the task and evidence references without new profiles, shadow registers or automatic subagents. Install the complete set without migrating private data.

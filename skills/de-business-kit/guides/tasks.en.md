@@ -15,6 +15,7 @@ needed for your task through an appropriate private channel.
 | “Prepare my month/year in my existing accounting software.” | An evidence inventory, discrepancies, readiness report and inputs for the selected calculation/form tool | Actual tool output, review and submission evidence; local cash totals alone are insufficient |
 | “I want to hire, move, pause or close one activity.” | A before/after plan with dependencies, prepared materials and matters that must remain open | Each authority/service outcome and preserved access/history |
 | “Check whether we can retrieve these records from my service.” | A bounded access check through available tools, or inspection of a supplied export | Actual scope/readback; a documentation link is not a connection |
+| “Why are documents missing from this export?” | A check of the selected export route/date basis, supplied originals and missing scope | Actual file/provider evidence; a count or CSV row alone does not establish a complete month |
 | “Continue the work we saved.” | The latest result, changed evidence, unresolved question and next action | Saved task/evidence state; no new profile or repeated setup |
 
 For a simple question, expect a direct answer. For substantial work, expect a
