@@ -30,7 +30,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: '3.12'
       - name: Validate exact tag and build twice
@@ -40,7 +40,7 @@ jobs:
           python -B tools/release.py prepare --tag "$RELEASE_TAG" --output "$RUNNER_TEMP/release-assets"
           python -B tools/release.py prepare --tag "$RELEASE_TAG" --output "$RUNNER_TEMP/release-repeat"
           diff -r "$RUNNER_TEMP/release-assets" "$RUNNER_TEMP/release-repeat"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: release-assets
           path: ${{ runner.temp }}/release-assets/*
@@ -57,11 +57,11 @@ jobs:
       attestations: write
     steps:
       # No checkout or project-code execution in this privileged job.
-      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: release-assets
           path: release-assets
-      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           pattern: gui-release-*
           path: gui-assets

@@ -30,22 +30,23 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22'
           cache: npm
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: '3.12'
       - run: npm ci --ignore-scripts
       - run: npm audit --audit-level=high
       - run: npx playwright install ${{ matrix.browser }}
       - run: npm test
+      - run: npm run test:csp -- --browser=${{ matrix.browser }}
       - run: npm run test:browser -- --browser=${{ matrix.browser }}
       - run: npm run test:documents -- --browser=${{ matrix.browser }}
       - run: npm run test:overview -- --browser=${{ matrix.browser }}
       - run: npm run test:gui -- --browser=${{ matrix.browser }}
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: prototype-${{ matrix.os }}-${{ matrix.browser }}
@@ -79,7 +80,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: ${{ matrix.python }}
       - name: Test offline workspace, installer and extracted packages
@@ -118,7 +119,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: '3.12'
       - name: Install locked build tools (not user prerequisites)
@@ -132,9 +133,41 @@ jobs:
           archives=("$RUNNER_TEMP/gui-archives/"*.zip "$RUNNER_TEMP/gui-archives/"*.tar.gz)
           [[ ${#archives[@]} -eq 1 ]]
           python -B tests/gui-packaged-smoke.py --archive "${archives[0]}"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: gui-release-${{ matrix.os }}
           path: ${{ runner.temp }}/gui-archives/*
           if-no-files-found: error
           retention-days: 7
+
+  artifact-transfer:
+    name: Release artifact transfer
+    needs: gui-package
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Exercise the release-only download path on PRs with read-only permissions.
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: gui-release-*
+          path: gui-assets
+          merge-multiple: true
+          digest-mismatch: error
+      - name: Verify transferred platform archives and layout
+        shell: bash
+        working-directory: gui-assets
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          sums=(*.sha256)
+          [[ ${#sums[@]} -eq 3 ]] || exit 1
+          [[ $(find . -mindepth 1 -maxdepth 1 | wc -l) -eq 6 ]] || exit 1
+          for platform in windows-x64.zip macos-arm64.tar.gz macos-x86_64.tar.gz; do
+            files=(de-business-kit-*-gui-"$platform")
+            [[ ${#files[@]} -eq 1 ]] || exit 1
+            file=${files[0]}
+            # Each named payload must have its own matching checksum record.
+            [[ $(wc -l < "$file.sha256") -eq 1 ]] || exit 1
+            [[ $(cut -c 67- "$file.sha256") == "$file" ]] || exit 1
+            sha256sum --check --strict "$file.sha256"
+          done
