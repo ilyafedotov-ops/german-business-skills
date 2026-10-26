@@ -165,6 +165,7 @@ class WorkspaceTests(unittest.TestCase):
             workspace.init_workspace(target, 2026, mode="invalid")
         self.assertFalse(target.exists())
 
+    @patch.object(workspace, "LOCK_WAIT_SECONDS", 0)  # Refusal, not the wait, is under test.
     def test_configure_respects_lock_without_history_or_state_changes(self):
         marker_before = (self.root / workspace.MARKER).read_bytes()
         events_before = (self.root / workspace.EVENTS).read_bytes()
@@ -278,6 +279,7 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual((self.root / workspace.PROFILE).read_bytes(), before)
         self.assertEqual(list((self.root / "09_audit/history").iterdir()), [])
 
+    @patch.object(workspace, "LOCK_WAIT_SECONDS", 0)
     def test_lock_prevents_mutation_and_is_not_removed_by_rejected_writer(self):
         before = (self.root / workspace.PROFILE).read_bytes()
         lock = self.root / workspace.LOCK

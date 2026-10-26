@@ -9,7 +9,7 @@
   let route = 'home', editor = null, dirty = false, busy = false, preview = null, pendingConfirm = null;
   let selectedFiles = [], importOutcome = null, reportOutcome = null, recoveryOutcome = null, snapshotUnavailable = false;
   const requests = new Map();
-  const mutationOps = new Set(['open','receive','document-save','configuration','entry-post','entry-reverse','filing-create','filing-action','report','overview','backup','restore','draft-save']);
+  const mutationOps = new Set(['open','receive','document-save','configuration','entry-post','entry-reverse','filing-create','filing-action','report','overview','backup','restore','unlock','draft-save']);
   const routes = new Set(['home','documents','month','taxes','accounts','settings']);
   const icons = {home:'M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9',documents:'M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h7',month:'M4 5h16v16H4zM8 3v4M16 3v4M4 10h16M8 14h3M14 14h2',taxes:'M4 5h16v14H4zM4 6l8 6 8-6',accounts:'M3 7h17l-4-4M21 17H4l4 4'};
   let token = '';
@@ -41,6 +41,16 @@
   const intro = (title,text) => `<div class="intro"><h1>${label(title)}</h1><p>${label(text)}</p></div>`;
   const action = (key, name, cls='') => `<button type="button" data-action="${name}" class="${cls}">${label(key)}</button>`;
   const badge = state => `<span class="badge${['needs_review','submission_unconfirmed','unresolved'].includes(state)?' warning':''}">${esc(t(state==='reviewed'?'reviewedState':state))}</span>`;
+  let lockInfo=null;
+  function lockFacts(lock) {
+    const since=lock.created_at?new Date(lock.created_at):null;
+    return summary([['lockProcess',lock.pid??'—'],['lockStarted',!since?'—':Number.isNaN(since.getTime())?lock.created_at:since.toLocaleString(language)],['lockComputer',lock.host??'—']]);
+  }
+  function lockPanel() {
+    const lock=lockInfo?.lock, removable=Boolean(lock)&&['stale','unverifiable'].includes(lock.assessment);
+    const body=!lockInfo?`<p class="hint">${label('lockHint')}</p>`:!lock?`<p>${label('lockNone')}</p>`:`<p>${label('lock-'+lock.assessment)}</p>${lockFacts(lock)}${lock.assessment==='unverifiable'?`<div class="field"><label><input type="checkbox" id="lock-confirm"> ${label('lockConfirm')}</label></div>`:''}`;
+    return `<section class="panel"><h2>${label('lockTitle')}</h2>${body}<div class="actions">${action('lockCheck','check-lock')}${removable?action('lockRemove','remove-lock'):''}</div></section>`;
+  }
   function showError(message) {
     $('error').textContent = `${t('error')} ${message}`;
     $('error').hidden = false;
@@ -88,7 +98,7 @@
     let next;
     try { next=await api('status',{period,language}); }
     catch(error) { snapshotUnavailable=true; render(); throw error; }
-    snapshotUnavailable=false; snapshot=next;
+    snapshotUnavailable=false; snapshot=next; lockInfo=null;
     if (!keepDrafts || !dirty) { drafts=structuredClone(next.drafts || {}); draftHash=next.drafts_sha256 ?? null; }
     render();
   }
@@ -147,7 +157,7 @@
   function render() {
     chrome();
     if (!snapshot?.workspace) { $('main').innerHTML=welcome(); setBusy(busy); return; }
-    if (snapshotUnavailable && route!=='settings') { $('main').innerHTML=intro('issueUnknown','error')+`<div class="actions">${action('refresh','refresh','primary')}${action('settings','settings')}</div>`; setBusy(busy); return; }
+    if (snapshotUnavailable && route!=='settings') { $('main').innerHTML=intro('issueUnknown','error')+`<div class="actions">${action('refresh','refresh','primary')}${action('settings','settings')}</div>`+lockPanel(); setBusy(busy); return; }
     let content;
     if (editor?.kind==='document') content=documentEditor();
     else if (editor?.kind==='entry') content=entryEditor();
@@ -277,7 +287,7 @@
     return `<section class="form-section"><h2>${label('filingHistory')}</h2><div class="table-wrap filing-history" tabindex="0" role="region" aria-label="${label('filingHistory')}"><table><thead><tr><th>${label('recordedAt')}</th><th>${label('filingAction')}</th><th>${label('actionNote')}</th><th>${label('evidence')}</th></tr></thead><tbody>${events.map(event=>`<tr><td>${esc(event.recorded_at)}<div class="path">${esc(event.actor)}</div></td><td>${esc(t(event.action==='receipt'?'receipt-action':event.action))}${event.external_id?`<div>${esc(event.external_id)}</div>`:''}${event.response_kind?`<div>${esc(t(event.response_kind))}</div>`:''}${event.due_date?`<div>${label('dueDate')}: ${esc(event.due_date)}</div>`:''}</td><td>${esc(event.note)}</td><td>${event.evidence?.path?`<button type="button" data-action="download-file" data-path="${esc(event.evidence.path)}">${label('download')}</button>`:''}</td></tr>`).join('')}</tbody></table></div></section>`;
   }
   function settingsPage() {
-    return intro('settingsTitle','settingsText')+`<section class="panel"><form id="backup-form"><h2>${label('backup')}</h2>${field('backup-destination','destination','','text','backupHint')}<div class="actions">${action('browse','browse-backup')}<button type="submit" class="primary">${label('backup')}</button></div></form></section><section class="panel"><form id="restore-form"><h2>${label('verifyBackup')}</h2>${field('backup-path','backupPath')}${field('restore-destination','restoreDestination','','text','restoreHint',false)}<div class="actions">${action('browse','browse-restore')}<button type="button" data-action="verify-backup">${label('verifyBackup')}</button><button type="submit">${label('restore')}</button></div></form></section>${recoveryOutcome?`<section class="panel"><p>${label('complete')}</p>${formatResult(recoveryOutcome)}</section>`:''}<section class="section"><h2>${label('switch')}</h2>${action('switch','switch-workspace')}<details><summary>${label('diagnostics')}</summary><p class="path">${esc(snapshot.workspace.root)}</p><p>${label('footer')}</p></details></section>`;
+    return intro('settingsTitle','settingsText')+`<section class="panel"><form id="backup-form"><h2>${label('backup')}</h2>${field('backup-destination','destination','','text','backupHint')}<div class="actions">${action('browse','browse-backup')}<button type="submit" class="primary">${label('backup')}</button></div></form></section><section class="panel"><form id="restore-form"><h2>${label('verifyBackup')}</h2>${field('backup-path','backupPath')}${field('restore-destination','restoreDestination','','text','restoreHint',false)}<div class="actions">${action('browse','browse-restore')}<button type="button" data-action="verify-backup">${label('verifyBackup')}</button><button type="submit">${label('restore')}</button></div></form></section>${recoveryOutcome?`<section class="panel"><p>${label('complete')}</p>${formatResult(recoveryOutcome)}</section>`:''}<section class="section"><h2>${label('switch')}</h2>${action('switch','switch-workspace')}<details><summary>${label('diagnostics')}</summary><p class="path">${esc(snapshot.workspace.root)}</p><p>${label('footer')}</p></details></section>`+lockPanel();
   }
   function formatResult(result) {
     const paths=[];
@@ -365,7 +375,7 @@
   });
   async function openWorkspace(create) {
     const path=$('workspace-path').value, year=Number($('year').value), folderLanguage=$('folder-language').value;
-    const opened=await api('open',{path,create,language:folderLanguage,year});snapshot={workspace:opened};dirty=false;drafts={};editor=null;route='home';history.replaceState(null,'','#home');await refresh(false);notice(t('saved'));
+    const opened=await api('open',{path,create,language:folderLanguage,year});snapshot={workspace:opened};lockInfo=null;dirty=false;drafts={};editor=null;route='home';history.replaceState(null,'','#home');await refresh(false);notice(t('saved'));
   }
   async function importFiles() {
     if(!selectedFiles.length)throw new Error(t('noSelection'));
@@ -382,6 +392,8 @@
     const name=button.dataset.action;
     switch(name) {
       case 'refresh':perform(()=>refresh());break;
+      case 'check-lock':perform(async()=>{lockInfo=await api('lock-status');render();});break;
+      case 'remove-lock':{const lock=lockInfo?.lock,confirmed=$('lock-confirm')?.checked===true;if(!lock)break;if(lock.assessment==='unverifiable'&&!confirmed){showError(t('lockConfirmNeeded'));break;}confirm(t('lockRemove'),lockFacts(lock)+`<p class="hint">${label('lockKept')}</p>`,()=>perform(async()=>{await api('unlock',{expected_sha256:lock.sha256,confirmed_no_writer:confirmed});lockInfo=null;await refresh();notice(t('lockRemoved'));}));break;}
       case 'documents':case 'accounts':case 'month':case 'settings':leave(()=>navigate(name));break;
       case 'review-next':{const item=snapshot.documents.find(item=>!['reviewed','excluded'].includes(item.record.review_status));if(item){route='documents';editor={kind:'document',id:item.record.document_id};render();}break;}
       case 'review-document':editor={kind:'document',id:button.dataset.id};preview=null;render();break;

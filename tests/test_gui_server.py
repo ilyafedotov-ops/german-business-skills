@@ -84,6 +84,23 @@ class GuiTests(unittest.TestCase):
         entry = self.call('status', period='2026-10')['accounting']['entries'][0]
         self.assertEqual(list(entry['linked_proposals']), ['proposal-1'])
 
+    @patch.object(gui.ws, 'LOCK_WAIT_SECONDS', 0)
+    def test_left_over_lock_can_be_checked_and_removed_without_an_assistant(self):
+        import socket, subprocess
+        ended = subprocess.Popen([sys.executable, '-c', 'pass'])
+        ended.wait()
+        lock = self.app.root / gui.ws.LOCK
+        lock.write_text(json.dumps({'pid': ended.pid, 'created_at': '2026-10-26T18:00:00+00:00', 'host': socket.gethostname()}))
+        with self.assertRaisesRegex(gui.ws.WorkspaceError, 'locked'):
+            self.call('status', period='2026-10')
+        found = self.call('lock-status')['lock']
+        self.assertEqual((found['assessment'], found['pid']), ('stale', ended.pid))
+        with self.assertRaises(gui.ws.WorkspaceError):
+            self.call('unlock', expected_sha256=found['sha256'], confirmed_no_writer='yes')
+        self.assertEqual(self.call('unlock', expected_sha256=found['sha256'], confirmed_no_writer=False)['status'], 'removed')
+        self.assertIsNone(self.call('lock-status')['lock'])
+        self.assertIn('accounting', self.call('status', period='2026-10'))
+
     def test_real_import_review_post_and_reversal_preserve_original(self):
         proof = self.configure()
         state = self.call('status', period='2026-10')

@@ -20,7 +20,7 @@ Replace the path and year; do not use the example literally. On Windows, use the
 
 For **project-scoped installation**, initialize the private workspace first, then run the repository installer pointing to that existing workspace. Installing into an empty folder first would make it nonempty, so initialization would correctly refuse it. User-scoped installation can happen before initialization. Do not enable Git/worktree/cloud syncing for this private folder just to make a host's project UI work; select a local folder session or use the user-level skill.
 
-All relative input paths below are relative to `--root`, not the current shell directory. Use a single writer; a `.workspace.lock` prevents concurrent script mutations. After a crash, inspect whether the process is still running before removing a stale lock. Never remove another writer's active lock.
+All relative input paths below are relative to `--root`, not the current shell directory. Use a single writer; a `.workspace.lock` prevents concurrent script mutations, and writers wait up to five seconds for a cooperating writer to finish. If a lock remains, `doctor` reports `lock.assessment`: `active` (its process is running on this computer; never remove it), `stale` (the recorded process has ended on this computer) or `unverifiable` (another computer, an older lock without a recorded computer, or unreadable content). `unlock --expected-sha256 <lock.sha256>` removes a `stale` lock, or an `unverifiable` one with `--confirmed-no-writer` only after the user confirms that no other app, assistant or computer uses the workspace. It refuses an active or changed lock and preserves the removed lock in history and the audit log. Never delete the lock file by hand.
 
 ## Files and state
 
@@ -57,6 +57,7 @@ The task/question/decision files start as empty arrays. Use the validated `entry
 python3 <skill-directory>/scripts/workspace.py start --root <private-folder> --year 2026 --language en --mode general
 python3 <skill-directory>/scripts/workspace.py demo --root <new-private-demo-folder> --year 2026 --language ru
 python3 <skill-directory>/scripts/workspace.py doctor --root <private-folder>
+python3 <skill-directory>/scripts/workspace.py unlock --root <private-folder> --expected-sha256 <lock.sha256 from doctor>
 ```
 
 Use [onboarding](onboarding.md) to guide the user instead of making them type commands. `start` resumes an existing workspace without changing preferences or year; arguments select defaults only for a new workspace. `demo` requires a new/empty folder and creates synthetic CSVs, preserved originals, a real reconciliation and localized `START-HERE.md`. It never fills a real business profile. Inspect interrupted demonstrations with `start`/`doctor`; do not rerun initialization over them.

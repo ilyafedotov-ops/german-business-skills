@@ -478,6 +478,22 @@ ws.save_entry(root, 'tasks', dict(cancelled, status='cancelled'), previous['sha2
     await page.getByRole('link', { name: 'Skip to content', exact: true }).focus();
     await page.keyboard.press('Enter');
     assert.equal(await page.locator('main').evaluate(el => el === document.activeElement), true);
+    // A lock left by a program that ended can be checked and removed without an assistant.
+    const ended=spawn(process.execPath,['-e','']);
+    await new Promise(resolve=>ended.on('exit',resolve));
+    const lockFile=path.join(root,'.workspace.lock');
+    await fs.writeFile(lockFile,JSON.stringify({pid:ended.pid,created_at:'2026-10-26T18:00:00+00:00',host:os.hostname()}));
+    await click(page,'Refresh records');
+    await page.getByRole('heading',{name:'Some records could not be checked. Inspect the problem before continuing.'}).waitFor();
+    await click(page,'Check workspace lock');
+    await page.getByText('The program that locked this workspace has ended on this computer.',{exact:false}).waitFor();
+    await capture(page,{path:path.join(output,`${browserName}-left-over-lock.png`),fullPage:true});
+    await click(page,'Remove left-over lock');
+    await page.getByRole('dialog').getByText('Locked since',{exact:true}).waitFor();
+    await click(page,'Confirm and save');
+    await page.getByText('Left-over lock removed and recorded in the history.',{exact:true}).waitFor();
+    await page.getByRole('heading',{name:'Your business, one clear next step.'}).waitFor();
+    await assert.rejects(fs.access(lockFile),'Removed lock must not remain');
 
     for (const lang of ['en','ru','de']) {
       await page.locator('#language').selectOption(lang);

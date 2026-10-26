@@ -31,9 +31,9 @@ ASSETS = BASE / 'gui'
 MAX_REQUEST = 18 * 1024 * 1024
 MAX_UPLOAD = 12 * 1024 * 1024
 DRAFT_PATH = '00_admin/gui-drafts.json'
-READ_OPS = {'context', 'status', 'file', 'verify-backup', 'select-folder'}
+READ_OPS = {'context', 'status', 'file', 'verify-backup', 'select-folder', 'lock-status'}
 MUTATIONS = {'open', 'receive', 'document-save', 'configuration', 'entry-post', 'entry-reverse',
-             'filing-create', 'filing-action', 'report', 'overview', 'backup', 'restore', 'draft-save'}
+             'filing-create', 'filing-action', 'report', 'overview', 'backup', 'restore', 'draft-save', 'unlock'}
 FILE_TYPES = ws.EXTENSIONS | {'.md', '.txt', '.json', '.html'}
 
 
@@ -122,6 +122,12 @@ class Application:
         if self.root is None:
             raise ws.WorkspaceError('Open a private workspace first.')
         root = ws._workspace(self.root)
+        if op == 'lock-status':
+            return {'lock': ws.lock_status(root)}
+        if op == 'unlock':
+            if type(args.get('confirmed_no_writer')) is not bool:
+                raise ws.WorkspaceError('State explicitly whether another app or computer could be using this workspace.')
+            return ws.unlock_workspace(root, args['expected_sha256'], args['confirmed_no_writer'])
         if op == 'status':
             return self.snapshot(args.get('period', date.today().strftime('%Y-%m')))
         if op == 'receive':

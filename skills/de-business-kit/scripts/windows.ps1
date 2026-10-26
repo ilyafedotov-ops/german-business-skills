@@ -304,7 +304,8 @@ $lock = $null
 try {
     # Same lock as Python writers. Read-only operations refuse active writes too.
     $lock = [IO.File]::Open($lockPath, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
-    $lockBytes = BytesJson @{pid=$PID; created_at=(Now)}
+    # The host lets doctor tell an ended local writer from another computer's lock.
+    $lockBytes = BytesJson @{pid=$PID; created_at=(Now); host=[System.Net.Dns]::GetHostName()}
     $lock.Write($lockBytes,0,$lockBytes.Length); $lock.Flush($true)
     $result = $null
     if ($Action -eq 'start' -and -not (Test-Path -LiteralPath (WorkspacePath $markerName))) {

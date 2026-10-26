@@ -19,8 +19,10 @@ import json
 import os
 from pathlib import Path
 import re
+import socket
 import stat
 import sys
+import time
 from typing import Any, Dict, List, Optional, Union
 import uuid
 
@@ -38,6 +40,7 @@ EVENTS = "09_audit/events.json"
 MARKER = "00_admin/workspace.json"
 RUNTIME = "00_admin/runtime.json"
 LOCK = ".workspace.lock"
+LOCK_WAIT_SECONDS = 5.0  # Cooperating writers finish quickly; a longer lock needs inspection.
 LAYOUT = ".workspace-layout.json"
 FIELDS = (
     "legal_form", "activity_classification", "activities", "existing_activities",
@@ -272,14 +275,19 @@ def _atomic_json(path: Path, value: Any, replace: bool = False) -> None:
 def _locked(root: Path):
     _check_chain(root)
     path = root / LOCK
-    try:
-        descriptor = os.open(str(path), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-    except FileExistsError as exc:
-        raise WorkspaceError("Workspace is locked; inspect the active operation or stale lock before retrying.") from exc
+    deadline = time.monotonic() + LOCK_WAIT_SECONDS
+    while True:
+        try:
+            descriptor = os.open(str(path), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+            break
+        except FileExistsError as exc:
+            if time.monotonic() >= deadline:
+                raise WorkspaceError("Workspace is locked by another operation; check the lock (doctor, or Check workspace lock in the application) before retrying.") from exc
+            time.sleep(0.1)
     identity = os.fstat(descriptor)
     try:
         with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
-            json.dump({"pid": os.getpid(), "created_at": _now()}, stream)
+            json.dump({"pid": os.getpid(), "created_at": _now(), "host": socket.gethostname()}, stream)
             stream.flush()
             os.fsync(stream.fileno())
         yield
@@ -290,6 +298,81 @@ def _locked(root: Path):
                 path.unlink()
         except FileNotFoundError:
             pass
+
+
+def _process_running(pid: int) -> bool:
+    """Whether a process with this ID exists on this computer; never signals it."""
+    if os.name == "nt":
+        # os.kill would terminate a Windows process instead of probing it.
+        import ctypes
+        from ctypes import wintypes
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        kernel32.OpenProcess.restype = wintypes.HANDLE
+        kernel32.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+        kernel32.GetExitCodeProcess.argtypes = (wintypes.HANDLE, ctypes.POINTER(wintypes.DWORD))
+        kernel32.CloseHandle.argtypes = (wintypes.HANDLE,)
+        handle = kernel32.OpenProcess(0x1000, False, pid)  # PROCESS_QUERY_LIMITED_INFORMATION
+        if not handle:
+            return ctypes.get_last_error() == 5  # Access denied means the process exists.
+        try:
+            code = wintypes.DWORD()
+            return not kernel32.GetExitCodeProcess(handle, ctypes.byref(code)) or code.value == 259  # STILL_ACTIVE
+        finally:
+            kernel32.CloseHandle(handle)
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+def _lock_time(value: Any) -> Optional[datetime]:
+    # Python and .NET ("o", seven fractional digits, Z) timestamps; Python 3.9 parses neither form alone.
+    match = re.fullmatch(r"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d+))?(Z|[+-]\d{2}:\d{2})", value) if isinstance(value, str) else None
+    if not match:
+        return None
+    try:
+        return datetime.fromisoformat(match[1] + "." + (match[2] or "0")[:6].ljust(6, "0")
+                                      + ("+00:00" if match[3] == "Z" else match[3]))
+    except ValueError:
+        return None
+
+
+def _lock_status(location: Path) -> Optional[Dict[str, Any]]:
+    """Describe the lock without changing it: active, stale (owner ended here) or unverifiable."""
+    path = location / LOCK
+    if not path.exists() and not path.is_symlink():
+        return None
+    result = {"sha256": None, "pid": None, "created_at": None, "age_seconds": None, "host": None,
+              "owner_running": None, "assessment": "unverifiable"}
+    try:
+        data = _read_regular(path, 64 * 1024)
+    except PermissionError:
+        # A running native writer holds its lock open exclusively.
+        result.update(owner_running=True, assessment="active")
+        return result
+    except (OSError, WorkspaceError):
+        return result
+    result["sha256"] = hashlib.sha256(data).hexdigest()
+    try:
+        record = json.loads(data.decode("utf-8"))
+    except (UnicodeError, ValueError):
+        return result
+    if not isinstance(record, dict) or type(record.get("pid")) is not int or not 0 < record["pid"] < 2 ** 31:
+        return result
+    started = _lock_time(record.get("created_at"))
+    host = record.get("host") if isinstance(record.get("host"), str) and record.get("host") else None
+    result.update(pid=record["pid"], host=host, created_at=record["created_at"] if started else None,
+                  age_seconds=int((datetime.now(timezone.utc) - started).total_seconds()) if started else None)
+    if host is not None and host.casefold() != socket.gethostname().casefold():
+        return result  # Another computer's process IDs mean nothing here.
+    running = _process_running(record["pid"])
+    result["owner_running"] = running
+    # Without a recorded host, an ended local process may still be another computer's writer.
+    result["assessment"] = "active" if running else "stale" if host is not None else "unverifiable"
+    return result
 
 
 def _workspace(value: PathInput) -> Path:
@@ -1156,22 +1239,30 @@ def workspace_status(root: PathInput) -> Dict[str, Any]:
     except (WorkspaceError, OSError, TypeError, ValueError):
         issues.append("runtime_invalid")
         review_status = "invalid"
-    locked = (location / LOCK).exists()
+    lock = _lock_status(location)
+    locked = lock is not None
     if locked:
         issues.append("workspace_locked")
     result_status = "needs_attention" if issues else "setup_incomplete" if missing else "configured"
+    next_action = ("Review the listed issues without reinitializing." if issues else
+                   "Review the actual data-processing route; use synthetic data meanwhile." if missing else
+                   "Check the recorded assessment scope and current capabilities for this task.")
+    if lock:
+        next_action = {
+            "active": "Another operation is using this workspace; let it finish or close it, then retry. Keep its lock.",
+            "stale": "The lock's process has ended on this computer; run unlock with --expected-sha256 from lock.sha256 to remove it with preserved history.",
+            "unverifiable": "Confirm that no other app, assistant or computer uses this workspace; only then run unlock with --expected-sha256 and --confirmed-no-writer.",
+        }[lock["assessment"]]
     return {"status": result_status, "workspace_health": "needs_attention" if issues else "ok",
             "data_processing_review": review_status, "setup_missing": missing, "issues": issues,
             "invalid_profile_fields": sorted(invalid_fields), "synthetic_work_available": not issues,
             "verified_fact_evidence_issues": sorted(evidence_issues),
-            "next_action": "Review the listed issues without reinitializing." if issues else
-                           "Review the actual data-processing route; use synthetic data meanwhile." if missing else
-                           "Check the recorded assessment scope and current capabilities for this task.",
+            "next_action": next_action,
             "language": preferences["language"], "mode": preferences["mode"],
             "folder_language": _layout(location)[0]["language"] if _layout(location) else None,
             "folder_layout": "localized" if _layout(location) else "legacy",
             "fact_status_counts": counts, "documents": len(_documents(location)["documents"]),
-            "list_item_counts": lists, "locked": locked}
+            "list_item_counts": lists, "locked": locked, "lock": lock}
 
 
 def start_workspace(root: PathInput, year: Optional[int] = None, language: str = "en",
@@ -1206,6 +1297,52 @@ def diagnose_workspace(root: PathInput) -> Dict[str, Any]:
                   host_capabilities="not_probed", original_integrity=verification["status"],
                   note="Local diagnostics do not verify desktop discovery, cloud processing, permissions or legal compliance.")
     return result
+
+
+def lock_status(root: PathInput) -> Optional[Dict[str, Any]]:
+    """Read-only assessment of the workspace lock, or None when unlocked."""
+    return _lock_status(_workspace(root))
+
+
+def unlock_workspace(root: PathInput, expected_sha256: str, confirmed_no_writer: bool = False) -> Dict[str, Any]:
+    """Remove a lock whose writer has ended, preserving it in history; never an active lock."""
+    location = _workspace(root)
+    _check_audit(location)
+    lock = _lock_status(location)
+    if lock is None:
+        raise WorkspaceError("The workspace is not locked.")
+    if lock["sha256"] is None or lock["sha256"] != expected_sha256:
+        raise WorkspaceError("The lock changed or cannot be read; run doctor again and inspect it before removal.")
+    if lock["assessment"] == "active":
+        raise WorkspaceError("The lock owner is still running; let it finish or close it. The lock was kept.")
+    if lock["assessment"] == "unverifiable" and not confirmed_no_writer:
+        raise WorkspaceError("This lock cannot be checked from this computer; confirm that no other app or computer uses the workspace first.")
+    path = location / LOCK
+    data = _read_regular(path, 64 * 1024)
+    moved = location / (".stale-lock-" + uuid.uuid4().hex)
+    os.rename(str(path), str(moved))
+    if hashlib.sha256(_read_regular(moved, 64 * 1024)).hexdigest() != expected_sha256:
+        try:
+            os.link(str(moved), str(path))  # Restores only if no new lock took its place.
+            moved.unlink()
+        except OSError:
+            pass
+        raise WorkspaceError("The lock changed during removal; inspect the workspace before retrying.")
+    try:
+        previous = json.loads(data.decode("utf-8"))
+    except (UnicodeError, ValueError):
+        previous = data.decode("utf-8", "replace")
+    history_id = "lock-" + uuid.uuid4().hex
+    with _locked(location):
+        _check_audit(location)
+        _atomic_json(_inside(location, f"09_audit/history/{history_id}.json"),
+                     {"schema_version": VERSION, "action": "stale_lock_removed", "recorded_at": _now(),
+                      "lock_sha256": expected_sha256, "lock": previous, "assessment": lock["assessment"],
+                      "confirmed_no_writer": confirmed_no_writer})
+        _audit(location, "stale_lock_removed", {"history_id": history_id})
+        moved.unlink()
+    return {"status": "removed", "history_id": history_id, "assessment": lock["assessment"],
+            "previous_lock": {key: lock[key] for key in ("pid", "host", "created_at")}}
 
 
 def create_demo(root: PathInput, year: int = 2026, language: str = "en") -> Dict[str, Any]:
@@ -1294,6 +1431,11 @@ def main(argv: Optional[List[str]] = None) -> int:
     for name in ("verify", "status", "doctor", "folders"):
         command = commands.add_parser(name)
         command.add_argument("--root", required=True)
+    unlock = commands.add_parser("unlock", help="Remove a lock whose writer has ended (see doctor), preserving it in history")
+    unlock.add_argument("--root", required=True)
+    unlock.add_argument("--expected-sha256", required=True, help="lock.sha256 from doctor")
+    unlock.add_argument("--confirmed-no-writer", action="store_true",
+                        help="Only after checking no other app or computer uses the workspace")
     reconcile_parser = commands.add_parser("reconcile", help="Compare explicit IDs and Decimal amounts from two workspace CSVs")
     reconcile_parser.add_argument("--root", required=True)
     reconcile_parser.add_argument("--bank", required=True)
@@ -1319,6 +1461,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             result = diagnose_workspace(args.root)
         elif args.command == "folders":
             result = workspace_folders(args.root)
+        elif args.command == "unlock":
+            result = unlock_workspace(args.root, args.expected_sha256, args.confirmed_no_writer)
         elif args.command == "init":
             result = init_workspace(args.root, args.year, args.language, args.mode, args.layout)
         elif args.command == "configure":

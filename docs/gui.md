@@ -18,6 +18,9 @@ The `gui/` application connects a browser interface to the real workspace writer
   Cancel/replace only when the existing state machine permits it.
 - Save incomplete forms as separate workspace drafts and resume them after restart.
 - Produce period reports/overview and create/verify/restore full backups.
+- Check a workspace lock after a program closed unexpectedly. A lock whose process
+  has ended on this computer can be removed and recorded in history; a running
+  owner's lock is kept, and an unverifiable one needs explicit confirmation.
 
 The interface does not add a tax engine, OCR engine, live bank/software connector,
 ELSTER transport or background reminder service. Existing accounting programs

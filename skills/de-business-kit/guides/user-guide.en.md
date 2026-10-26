@@ -149,7 +149,7 @@ When new evidence arrives, compare it with the saved result and preserve the pre
 | Folder or file is inaccessible | Identify the selected location and request an access check. Do not grant whole-disk access unnecessarily. |
 | Python is mentioned | “Check native Windows and available tools. Continue preparation without installing Python; explain which automation is unavailable.” |
 | Setup is incomplete | “What exactly is unrecorded or unchecked? Continue available work with fictional/redacted data.” |
-| File changed, integrity error or lock | “Diagnose without deleting originals, resetting data or removing another writer's lock.” |
+| File changed, integrity error or lock | “Diagnose without deleting originals, resetting data or removing another writer's lock.” After a program closed unexpectedly: “Check whether the workspace lock is left over and remove it safely.” |
 | Service access is unavailable | “Show an allowed route or explain which selected export I should prepare.” |
 | Sending result is unclear | “Check status and evidence in the actual service first. Do not blindly resend.” |
 
