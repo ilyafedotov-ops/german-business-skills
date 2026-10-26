@@ -38,22 +38,31 @@ Separate the source's rule from the interpretation applied here. Preserve exact 
 
 ## Calculation, if needed
 
-- Calculation type / tax:
-- Currency and year:
-- Included items / exclusions:
-- Input amounts, sources and assumptions:
+- Requested amount / calculation scope / exclusions:
+- Currency and applicable year or transaction period:
+- Input readiness: sufficient / conditional scenario / missing prerequisites:
+- Input values, units, sources, effective dates and status (declared / checked / assumed / unknown):
+- Decisive missing facts and follow-up questions:
 - Tax base; distinguish turnover, profit and `zu versteuerndes Einkommen`:
-- Primary rule source / exact section / effective year (reference, not a copied formula):
-- Selected official calculator or accounting/tax product / edition / year / settings:
-- Tool status: not run / user-supplied result / observed run:
-- Observed rounding / unresolved rounding question:
-- Result evidence / export reference and time:
-- Input reconciliation / cross-check / unresolved differences:
-- Result and sensitivity to assumptions:
+- Primary rule sources / exact sections / retrieval dates / applicable periods:
+- Applicability, exceptions, boundaries and rounding checked:
+- Method: official/provider tool, or bounded local calculation derived from inspected rules:
+- Case-specific formula/derivation or tool edition/year/settings; link the calculation artifact:
+- Execution status: not run / user-supplied result / observed run:
+- Actual inputs, intermediate values, rounding, output and execution evidence:
+- Separate reviewer / independent method or tool / evidence / actual check outcome:
+- Verification status: not calculated / computed, independently unverified / discrepancy unresolved / checked within stated scope:
+- Input reconciliation, boundary/reverse checks and unresolved differences:
+- Result, assumptions, exclusions and sensitivity:
 - Prepayments already considered:
-- Review trigger:
+- Changes requiring a new calculation/check:
 
-Label estimates and cash-reserve scenarios. An estimate is not a tax assessment. Do not fill missing inputs with invented values or embed a reusable tax formula. If no suitable tool was run and no evidenced result is available, keep the amount unresolved and give the next steps to obtain it.
+Keep researched formulas in this case's record, never as reusable tax constants in
+the package. Use `tax-estimates.md` for prerequisite, execution and independence
+requirements. Leave dependent amounts unresolved when inputs, rules or execution
+are unavailable. If only the independent check is unavailable, label an actually
+computed result provisional. “Checked” requires evidence of both applicability
+and numerical checks; it never means a complete return, filing or tax assessment.
 
 ## Review issues and next actions
 

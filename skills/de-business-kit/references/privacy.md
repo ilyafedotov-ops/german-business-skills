@@ -2,6 +2,24 @@
 
 This is a practical workflow, not a compliance certificate. Use synthetic/redacted samples until the user has established an appropriate processing setup for real client data. Do useful non-personal preparation meanwhile.
 
+## Explain the data boundary before real documents
+
+Use the plain-language [English notice](../guides/user-guide.en.md#ai-limits-and-your-data)
+or [Russian notice](../guides/user-guide.ru.md#ограничения-ai-и-ваши-данные) when
+onboarding or before the first real personal/confidential document is read.
+Explain the actual provider and connected services, what file content/screenshots/
+tool outputs may leave the device, and the account settings or facts still unknown.
+A local folder, paid personal plan or disabled training setting does not establish
+local-only processing, no retention or an appropriate processing basis.
+
+Reuse an already explained, unchanged route; do not demand blanket acceptance or
+repeat a long notice on each request. Revisit material changes in provider, plan,
+connector or data sensitivity. Do not inspect private account settings or ingest
+files merely to fill out the notice; use authorized evidence and targeted questions.
+Never assert training is off, a DPA applies, EU-only storage or deletion is complete
+without evidence for that exact product/account. Continue with public rules,
+synthetic examples or locally minimized data when the route remains unresolved.
+
 ## Record the actual processing route
 
 In `00_admin/runtime.json`, identify assistant product, version if available, local/cloud execution, model provider, authentication route, subscription/contract, DPA status and scope, training settings, retention/logging, data residency scope, subprocessors and connected tools. A desktop app can run file tools locally while sending selected text, screenshots and tool output to remote models. Do not describe “local folder” as “local AI”.

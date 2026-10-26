@@ -27,6 +27,16 @@ For example, if a letter appears to require action tomorrow, surface that urgenc
 
 For a user's first consequential workflow, explain briefly in their chosen language: the assistant can misread evidence or cite an inapplicable rule; local files may be sent to a remote model; and “draft”, “reviewed”, “submitted” and “authority response received” describe different evidence. Use a synthetic example to show the review step and ask for the missing task facts rather than requesting blanket acceptance of every risk.
 
+Use the [English notice](../guides/user-guide.en.md#ai-limits-and-your-data) or
+[Russian notice](../guides/user-guide.ru.md#ограничения-ai-и-ваши-данные) for the short
+user-facing explanation: this kit is AI-assisted self-help, not a Steuerberater
+or professional tax/legal service; outputs can be wrong and no adviser–client
+relationship is established. Do not present the notice as a waiver of legal duties,
+permission to provide regulated advice, or a reason to abandon ordinary self-help.
+Suggest qualified review for a specific material unresolved issue, while continuing
+useful factual preparation. Reuse an explanation already given; do not append the
+full disclaimer to every answer.
+
 For organizations, identify who uses the AI on their behalf and the practical guidance they need for those tasks. AI Act duties depend on the actual provider/deployer role and intended use; static skill distribution alone does not settle either. A startup/bookkeeping workflow is not automatically a high-risk use case. A future hosted service or employment/credit decision feature needs its own assessment. Keep an appropriate record of guidance; do not label this short introduction a compliance certificate. Source: [European Commission AI-literacy FAQ, Article 4](https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers) and [current AI Act, especially Articles 3–6](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A02024R1689-20260727).
 
 ## Insurance and financial-service selection

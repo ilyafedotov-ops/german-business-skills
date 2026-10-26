@@ -38,11 +38,18 @@ For an ordinary first question, give the direct answer, a short practical explan
 
 For choices, compare eligibility, expected tax effect, cash flow, administrative work, evidence requirements and any binding period or reversal consequences. Keep lawful planning separate from an election: a recommendation is not a filed waiver or approved change. Explain which fact would change the recommendation.
 
-Follow [source-led tax estimates](tax-estimates.md): retrieve the applicable rule and use a suitable official calculator or the user's selected accounting/tax software. Do not embed tax formulas, rates, thresholds or rounding algorithms in package code/templates, or build an ad hoc tax engine as a fallback. Record inputs, currency, year, rule source, actual tool/settings, observed rounding and output. Existing decimal totals check recorded money, not tax treatment. Revenue, bank receipts, business profit, `zu versteuerndes Einkommen` and VAT are distinct. EÜR eligibility and adjustments require their own assessment; a bank total is not an EÜR.
+Follow [source-led calculations and checks](tax-estimates.md). Once the prerequisites
+are sufficient, use a suitable official/provider tool or a bounded local calculation
+based on newly inspected applicable rules. Record the case-specific formula,
+inputs, currency, year, rule source, actual execution, rounding and independent
+check. Keep year-specific tax formulas out of reusable package code/templates;
+this is not a general tax engine. Existing decimal totals check recorded money,
+not tax treatment. Revenue, bank receipts, profit, `zu versteuerndes Einkommen`
+and VAT remain distinct; cash totals alone do not establish EÜR or taxable income.
 
 For income tax, use the applicable year's rules and assessment circumstances. The BMF income-tax calculator derives tariff tax from an entered `zu versteuerndes Einkommen`; it does not establish that input or a complete personal liability. Separate income tax, VAT, trade tax, surcharges, prepayments and social contributions as relevant. Do not add them twice or assume that a business-only profit figure is the person's taxable income. Avoid a universal “save X%” rule; a cash reserve can be a labelled scenario based on stated assumptions, with exclusions and a review trigger.
 
-Do not upload identifying financial details to a public calculator. Use nonidentifying scenarios or the selected software within its verified scope. Do not claim a calculator or tool was run unless it actually was. When it is unavailable, provide the sourced method and prepared inputs, leaving the amount unresolved rather than inventing it. This package bundles no tax calculation engine.
+Do not upload identifying financial details to a public calculator. Use nonidentifying scenarios or the selected software within its verified scope. Do not claim a calculator or tool was run unless it actually was. When an official/provider tool is unavailable, assess the bounded local route in `tax-estimates.md`. Leave amounts unresolved when necessary inputs, applicable rules or executable arithmetic are unavailable; label missing independent verification explicitly. This package bundles no tax calculation engine.
 
 ## Apply the outcome to bookkeeping or forms
 

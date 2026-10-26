@@ -16,6 +16,9 @@ provider observations distinct from user-supplied files and simulated test outco
 2. Inventory available connector/API/browser/file tools before asking the user
    for information they can provide. A visible plugin or API document is not
    proof of credentials, permissions, supported write operations or current access.
+   When interaction is needed but unavailable, recommend the supported task-specific
+   setup under [interaction tools](assisted-services.md#recommend-interaction-tools-only-when-useful),
+   including suitability limits and a useful manual/file alternative.
 3. Read the provider's current official operation/format documentation. Establish
    authentication, permission scope, supported versions, limits and output format.
    Use official user-controlled login; never store passwords, TANs, tokens or

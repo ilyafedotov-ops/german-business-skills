@@ -1,10 +1,25 @@
-# Source-led tax estimates and report checks
+# Source-led calculations, estimates and report checks
 
-Use this reference with [tax questions](tax-consultant.md) for estimates and with [forms](forms.md) for return preparation. Keep tax formulas, rate tables, thresholds, rounding algorithms and year-specific field mappings out of package code and reusable templates. Retrieve the applicable rules when needed and use a suitable official calculator or the user's selected accounting/tax software. Do not create an ad hoc tax engine when a calculator is unavailable. Existing decimal totals and reconciliation check recorded money; they do not determine tax treatment.
+Use this reference with [tax questions](tax-consultant.md), accounting work and
+[forms](forms.md). Apply the shared prerequisite checks first: establish the
+requested amount, applicable period, relevant confirmed facts and missing inputs.
+Calculations are allowed when their rules, inputs and scope are established.
+There is no bundled complete statutory tax engine. Keep year-specific formulas,
+rates, thresholds and field mappings out of reusable package code/templates;
+research them for the particular case and retain the method in its private record.
+Local decimal totals alone do not determine tax treatment.
 
 ## Choose the calculation route
 
-Reuse the onboarding accounting choice. With existing software, inspect its exact product, edition, supported tax year and report; preserve its authoritative export instead of maintaining a second ledger. With local accounting, prepare the evidence and inputs for the relevant official form or suitable calculation tool. Choosing local records does not mean this package calculates a statutory return. Do not silently buy, connect or migrate to software. A consultation can proceed without creating a workspace.
+Reuse the onboarding accounting choice. With existing software, inspect its exact product, edition, supported tax year and report; preserve its authoritative export instead of maintaining a second ledger. With local accounting, prepare the evidence and inputs for the relevant official form or a supported calculation route below. Choosing local records does not mean this package calculates a statutory return. Do not silently buy, connect or migrate to software. A consultation can proceed without creating a workspace.
+
+Prefer an appropriate official calculator or the user's selected software when it
+covers the question and year. A **bounded local calculation** is also allowed:
+retrieve and check the applicable formula, conditions, units and rounding; execute
+it with available arithmetic tools; independently verify it as below. This can
+support an estimate, a component calculation or a check of another result. Do not
+turn a case-specific script into a maintained general tax engine, silently replace
+the chosen ledger or claim that one component proves a complete return.
 
 There is no assumed universal ELSTER calculator. Inspect the actual form and help: some fields require an amount prepared elsewhere. If a field needs a calculation that the available tool cannot support, identify that gap and prepare the remaining inputs. An ordinary self-accounting task does not require an accountant handoff.
 
@@ -22,16 +37,71 @@ Starting sources checked **2026-10-25**. Retrieve the applicable year again at u
 
 For every material rule, retain title, URL, section, retrieval date, effective period and applicability explanation using the existing consultation/source-check records. Read the full relevant source, not just a search snippet. If the source cannot be inspected or rounding/applicability is unclear, mark that point unresolved; do not implement a remembered or inferred formula as a fallback.
 
-## Prepare and estimate
+## Research, calculate and independently check
 
-1. Establish the user's question and tax/period. Reuse known facts and request only decisive missing inputs. Distinguish turnover, cash movements, profit, taxable income, VAT and prepayments. Missing information is unknown, not zero.
-2. Review the input population and tax treatment. Keep actual records separate from forecast assumptions. Include other relevant activities and personal circumstances only where needed. For VAT, establish Soll/Ist and its evidence separately from EÜR; inspect invoice, supply and payment dates instead of assigning every item to its cash month.
-3. Choose a tool that actually supports this question/year. For a forecast, define low/base/high input scenarios only when evidence supports that range; use the same verified tool for each. Do not substitute a universal reserve percentage or model-memory answer.
-4. Use nonidentifying inputs in public calculators. Apply privacy and existing authorization before accessing real records in a provider. User handles login/MFA. Record the exact tool/year, inputs, settings and observed output; retain a private export or screenshot where supported. Never say a tool ran if only its help page was read.
-5. Compare the result with its input evidence and report scope. Check signs, currency, period, net/gross units, coverage, prepayments and tool warnings. Use a second suitable official/provider result when available; investigate differences in inputs, scope, year and rounding rather than averaging results. Do not claim independent verification if both displays use the same calculation engine.
-6. Explain the estimate and what changes it. Separate estimated liability, already-paid amounts and the resulting planning need only when those components are evidenced. State excluded taxes/contributions and the next review trigger. A saved result is an estimate or draft, not an assessment or filing.
+1. **Establish sufficient inputs.** Identify the question, tax/transaction period,
+   currency, units, basis and scope. Reuse confirmed facts and ask only decisive
+   follow-ups. Distinguish turnover, gross/net receipts, profit, taxable income,
+   VAT and prepayments. Missing information is unknown, not zero. Identify whether
+   the user wants a factual result or a scenario. A scenario may use explicitly
+   stated assumptions; it must not become a confirmed profile fact.
+2. **Validate applicability before arithmetic.** Review source coverage, treatment,
+   other relevant activities and necessary assessment circumstances. For VAT,
+   establish Soll/Ist separately from EÜR and inspect invoice, supply and payment
+   dates. Research current primary sources for the **applicable period**, including
+   historical provisions, exceptions, thresholds, units, intermediate operations
+   and rounding. Record exact sections and dates. Do not calculate a tax amount from
+   remembered rules, a snippet, user assertions about the law or a current-year
+   formula applied to another year. Where a condition is unknown, ask or label a
+   conditional illustration; do not imply the condition was established.
+3. **Specify the method.** Name the actual official/provider tool and supported
+   year/settings, or derive a bounded formula from the inspected rules. Map every
+   input to its source or explicit assumption. Distinguish a formula stated in law
+   from algebra derived from it. For piecewise rules, show the selected branch and
+   boundary conditions. Keep the method and any small script with the case evidence,
+   outside installed skills; no new ledger, calculation service or registry.
+4. **Execute reproducibly.** Use an available calculator or deterministic executable
+   arithmetic, with decimal or exact rational values and the sourced rounding order.
+   Avoid binary-float money arithmetic and mental/model-only numerical answers.
+   Save inputs, tool/code and version where available, settings, execution output,
+   intermediate values and final result. Never say a tool ran when only its help
+   page was read. Use nonidentifying inputs in public tools; privacy, account access
+   and external-action authorization still apply.
+5. **Check separately before calling it checked.** Check both legal applicability
+   and numerical execution. When supported, use a separate reviewer agent for a
+   bounded read-only check of sources, effective period, input completeness and
+   independently derived result. Give the reviewer the question, source evidence
+   and inputs, withhold the first numerical answer until it has derived its own,
+   then compare. An agent's agreement alone is not mathematical verification:
+   require actual execution or a suitable independent published/tool result.
+   Alternatives include an independently operated appropriate official/provider
+   calculator, or a separately derived and executed method plus published known
+   answers and boundary/reverse checks appropriate to the calculation. Record who
+   or what checked which aspect, actual results and evidence. Re-running the same
+   script, displaying the same engine twice or saying “double-checked” is not an
+   independent check. If no independent route is available, label the calculation
+   **computed, independently unverified**, explain the missing check and do not
+   present it as filing-ready. Never fabricate a second reviewer or tool execution.
+6. **Investigate discrepancies.** Compare year, source version, inputs, signs,
+   gross/net units, scope, piecewise boundaries and rounding. Use exact agreement
+   where required; any tolerance needs a sourced rounding explanation, not a
+   convenient default. Do not average answers. A disagreement or unverified
+   material rule blocks a checked conclusion for the affected amount, not unrelated
+   preparation. Preserve the differing outputs and next diagnostic step.
+7. **Report and preserve.** Give the answer with its scope, assumptions, sources,
+   execution and check status. Separate estimated liability, prepayments and cash
+   planning; state exclusions and what would change the result. Preserve inputs and
+   effective dates in the existing consultation/task record through validated
+   writers where required. Changed facts, sources or settings invalidate affected
+   calculations and checks; recalculate a new version without erasing the old one.
 
-If the tool is unavailable, provide the sourced method, prepared inputs and exact steps to obtain the result. Ask for its relevant output if needed; do not invent a number, mark a calculation complete, or stop unrelated document work. A pasted user result is user-supplied until checked; retain that provenance.
+When a rule, necessary input or executable tool is unavailable, prepare the sourced
+method and missing-information questions; leave the dependent amount unresolved.
+If only the independent check is unavailable, an actually computed provisional
+amount may be shown with that limitation. A pasted user result remains
+user-supplied until checked. Useful preparation continues without compulsory
+software purchases, a GUI or an accountant handoff. A checked component or estimate
+is not a tax assessment, complete statutory return, posting or submission.
 
 ## VAT timing example and research limits
 
@@ -43,6 +113,27 @@ The 2026 UStVA public instructions require whole-euro bases and describe signs a
 
 ## Preserve the review trail
 
-Use the existing English/Russian consultation template for inputs, rule/tool references, observed result, assumptions, verification status and unresolved differences. If a private workspace exists, preserve a new version with source evidence and the actual tool export; do not replace history. No new calculation registry is needed.
+Use the existing English/Russian consultation template for input readiness, rule/method/tool references, actual execution, assumptions, independent check evidence and unresolved differences. If a private workspace exists, preserve a new version with source evidence and the actual tool export; do not replace history. No new calculation registry is needed.
 
 For a return, carry checked values into the existing [form preparation](preparation.md) and [filing evidence workflow](accounting-workflow.md). Recheck affected values after source records or settings change. Saved worksheet/source hashes establish local integrity, not legal correctness, current provider state or a successful tax calculation. Keep submission authorization and receipt tracking separate.
+
+## Calculation-validation source examples — 2026-10-26
+
+The following inspected sources support synthetic validation of the workflow,
+not permanent package constants. Recheck applicability and current wording at use.
+
+- [Rheinland-Pfalz Finance Ministry FAQ, Umsatzsteuer question 2](https://fm.rlp.de/themen/steuerrecht/fragen-und-antworten/seite)
+  supplies a gross/net VAT example and a published expected answer for comparison.
+- [UStG §§10, 12 and 28](https://www.gesetze-im-internet.de/ustg_1980/BJNR119530979.html)
+  distinguish consideration, applicable rates and the temporary 2020 period. The
+  practical test is that a historical transaction must not inherit today's rate.
+- [BMF current UStAE, section 14.5(20)](https://www.bundesfinanzministerium.de/UStAE),
+  inspected in its [official consolidated PDF](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Steuerarten/Umsatzsteuer/Umsatzsteuer-Anwendungserlass/Umsatzsteuer-Anwendungserlass-aktuell.pdf?__blob=publicationFile&v=52)
+  headed **Stand 2. Juni 2026**, specifies invoice-tax cent rounding. If the HTML
+  handbook is inaccessible, inspect this official alternative with available PDF
+  tools and check its actual version; an indexed snippet or older edition alone
+  cannot establish the requested period. Test both sides of a rounding boundary. This source
+  does not establish all UStVA field, negative-correction or intermediate rounding.
+
+Source/arithmetic examples are not desktop acceptance, live provider verification,
+complete tax correctness or a substitute for the actual case's independent check.

@@ -33,7 +33,10 @@ Ask `de-business-services` for access setup when needed, preserving this task.
 4. For local cash records follow [monthly workflow](../de-business-kit/references/monthly-workflow.md).
    Its cash arithmetic is not a statutory tax return. For year-end preparation use
    [annual workflow](../de-business-kit/references/annual-workflow.md).
-5. Produce a readable period summary with linked evidence, missing documents,
+5. For derived amounts and estimates use [source-led calculations and checks](../de-business-kit/references/tax-estimates.md).
+   Confirm prerequisites, research applicable rules, execute reproducibly and
+   independently check; ordinary totals do not establish tax treatment.
+6. Produce a readable period summary with linked evidence, missing documents,
    unmatched payments and unresolved treatment. Preserve corrections and history.
 
 Pass tax treatment, estimates, return preparation and authority letters to

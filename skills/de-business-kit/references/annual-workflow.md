@@ -32,7 +32,8 @@ cannot be labelled the complete EÜR, taxable income or VAT payable.
 Verify the actual tool edition, form and year, permissions and input mapping.
 Record which inputs were entered, actual output, tool/settings and whether the
 result was observed, user-supplied or not run. Investigate discrepancies without
-averaging results or inventing a fallback tax calculator.
+averaging results. Bounded component calculations can follow the researched local
+route in `tax-estimates.md`; their checks do not establish complete return coverage.
 
 Prepare the exact return draft and attachments, separate review and authorization,
 and use the existing filing preflight/evidence lifecycle when supported. A user
