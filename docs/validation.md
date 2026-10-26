@@ -6,6 +6,12 @@ Current capabilities are summarized in [project status](project-status.md). Date
 
 Checked **2026-10-26**. Tests use synthetic temporary data, never live business records or accounts.
 
+## Documentation consolidation (2026-10-26)
+
+Documentation-only refresh on top of `223194b`: README and package introductions, start/user guides, documentation navigation, current status, modes/accounting/preparation, architecture and ontology now describe the seven-skill lifecycle and optional GUI consistently. The new Unreleased changelog section records accumulated source changes without changing version `0.7.0-preview.1` or rewriting historical release entries. The user guides expose annual/change preparation, supplied exports, correction evidence and cross-period continuation; no runtime, schema, tax rule or execution workflow was added.
+
+`python3 -B tools/check_package.py`, `python3 -B tools/release.py check`, local Markdown file/anchor checks and `git diff --check` passed. Independent read-only documentation review found no blocker; EN/RU coverage and the German start-guide correction were inspected. Runtime/browser tests and host/service trials were not rerun for this text-only change. Earlier evidence retains its original source scope and dates; new source/package acceptance is not inferred from it. No package was published or host installation changed.
+
 ## Claude discovery and consultation follow-up (2026-10-26)
 
 This checkpoint changes portable guidance, evaluation scenarios and documentation on top of `a257ef2`; production runtime code is unchanged.

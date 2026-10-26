@@ -37,7 +37,7 @@ onboarding requirements. macOS also does not guarantee Python is installed.
 
 ## Next product work
 
-After bundle separation and instruction implementation, the next work is direct-entry P1 and P2–P5 journey acceptance on supported hosts and representative tasks. P6 needs a specific chosen service and verifiable operation; P7 needs separate interface and published-package acceptance. Exact state, dependencies and criteria are in the [plan](lifecycle.md); actual checks are in [validation](validation.md).
+Local direct-entry and synthetic P1–P7 trials, correction/export inspection and task continuation are recorded in [validation](validation.md). They do not close the full plan. The next acceptance work is current-ref Windows PowerShell 5.1 and other supported-platform checks, ordinary-user/first-launch journeys, and actual outcomes in selected services. Lexware remains on local examples by user choice. Publication and verification of a matching package are separate; [unreleased changes](../CHANGELOG.md#unreleased) describe the accumulated source work. The [plan](lifecycle.md) retains the remaining dependencies and criteria.
 
 ## Technical acceptance gates for existing routes
 

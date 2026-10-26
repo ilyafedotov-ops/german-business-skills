@@ -4,7 +4,7 @@
 
 Choose a concrete outcome in the [task guide](tasks.en.md).
 
-German Business Kit is a system of skills for entrepreneur assistance: preparing to start, forms, questions, services, daily work and reporting. Development and closure are intended areas, but preparation guidance is available; real execution needs separate acceptance. Describe the result you need in ordinary language. A simple question requires neither the local application nor workspace creation; tools are introduced for the task.
+German Business Kit is a system of skills for entrepreneur assistance: preparing to start, forms, questions, services, daily work and reporting. Preparation guidance also covers changes, first hire, pause and closure; real execution needs separate acceptance. Describe the result you need in ordinary language. A simple question requires neither the local application nor workspace creation; tools are introduced for the task.
 
 
 You can directly select `de-business-start`, `de-business-operations`, `de-business-accounting`, `de-business-tax`, `de-business-services` or `de-business-changes`. The general `de-business-kit` helps select the next action. See the [map and shared resources](../references/lifecycle.md). Install the complete bundle; keep one profile.
@@ -40,13 +40,13 @@ When the task needs accounting records, the assistant will establish where autho
 
 ## 4. Complete one small task
 
-Start with one document or a small selected batch. Before real personal data, establish where selected content may be processed: a local folder does not mean a local AI model. Enter passwords, certificates and verification codes only in the official authentication flow.
+Start with one question, plan, letter or selected document. For document work, use one file or a small selected batch. Before real personal data, establish where selected content may be processed: a local folder does not mean a local AI model. Enter passwords, certificates and verification codes only in the official authentication flow.
 
 Ask:
 
 > Show what you found, what you saved, what is missing and where I can open a readable result. Do not call a document reviewed or submitted without evidence.
 
-A useful first result: the file is found and preserved, its explanation can be read, and the next action is clear. If a tool is unavailable, the assistant should identify the specific unfinished step and continue available preparation.
+A useful first result answers your question or gives you a readable plan/draft, identifies missing facts and makes the next action clear. When files are involved, originals are preserved and linked. If a tool is unavailable, the assistant should identify the specific unfinished step and continue available preparation.
 
 ## 5. Save a continuation point
 

@@ -6,7 +6,7 @@
 
 Start with a task in ordinary language in Codex or Claude Code with the skill enabled. A simple question requires neither the local GUI nor full workspace setup. The local application and utilities support record operations; available integrations and the chosen accounting software complement that route.
 
-**Version [0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1).** The [real workspace interface](docs/gui.md) supports document import/review, cash-entry corrections, filing-evidence editing and backup/recovery with EN/RU/DE navigation. Packaged builds include their runtime; users do not install Python. Download availability depends on completed publication and verification of the matching platform archive. Platform checks and first-launch acceptance remain separate gates.
+**Source version: 0.7.0-preview.1.** The seven-skill lifecycle changes described here are in the current source; older release archives do not acquire them automatically. See [unreleased changes](CHANGELOG.md#unreleased) and [release verification](docs/releases.md). The [real workspace interface](docs/gui.md) supports document import/review, cash-entry corrections, filing-evidence editing and backup/recovery with EN/RU/DE navigation. Packaged builds include their runtime; users do not install Python. Download availability depends on completed publication and verification of the matching platform archive. Platform checks and first-launch acceptance remain separate gates.
 
 This preview includes a limited cash journal and filing-evidence tracking. It has no complete tax calculation engine or direct ELSTER transmission. The separate interactive prototype uses fictional data.
 
@@ -43,7 +43,7 @@ Already installed? Select **German Business Kit** from the skills available in y
 
 ```mermaid
 flowchart TD
-    A["Entrepreneur task at any stage"] --> B["Entry skill: context and module selection"]
+    A["Entrepreneur task at any stage"] --> B["Choose a domain skill directly or use the router"]
     B --> C["Formation · forms · questions · operations · reporting"]
     C --> D["Available tools and chosen services"]
     D --> E["Readable result, evidence and next action"]
@@ -65,7 +65,10 @@ Self-managed accounting and filing remain important parts of the product. The fi
 | Manage local cash records | Reviewed entries, splits, reversals and period reports | Limited journal, not a complete statutory ledger or tax engine |
 | Prepare taxes and letters | Source-based analysis, form worksheets, readable reports and recipient documents | Official forms/calculations must be checked for the actual year; submission is separate |
 | Track a filing | Versioned drafts, checks, authorization and observed receipt/response records | GUI uses the bundled protected engine; standalone utilities need their runtime. No direct ELSTER transmission |
-| Continue or recover work | Real EN/RU overview, open questions, next action and verified full backup/restore | Overview is a read-only snapshot; no automatic reminders or scheduled backups |
+| Continue or recover work | Active tasks across months, undated tasks, dependencies, evidence status and verified full backup/restore | Overview is a snapshot; GUI continuation prepares a copyable request, not an AI session |
+| Follow an invoice correction | Bounded standalone XML inspection, prior-invoice references and reviewed evidence links | No complete e-invoice validation, automatic refund or accounting correction |
+| Inspect a supplied service export | Export route/date basis, originals, inspected scope and missing evidence | Lexware trials use local examples; no live connector or automatic archive importer |
+| Prepare a change, first hire or closure | A before/after plan, dependencies, materials and unresolved obligations | No automatic registration, payroll calculation or cancellation |
 | Compare business services | Needs-based banking, insurance and software research using current sources | No automatic account opening, purchase or policy selection |
 
 **Windows application:** the packaged GUI includes its engine for supported document, cash-entry, filing-evidence and recovery operations. **Standalone PowerShell without Python:** native tools cover installation, start/resume, folder preview, intake, integrity, real overview and full backup/restore. Protected journal/filing writes, catalog updates and full filing preflight are not yet native. The assistant must identify an unavailable operation instead of claiming it succeeded. See [Windows guidance](docs/windows.md).
@@ -121,7 +124,7 @@ Changing the conversation language does not rename folders. Existing workspaces 
 
 ## Install
 
-The quick start above opens the local application. AI host installation is optional. For detailed steps:
+The quick start uses skills in your assistant. The local application is optional and has its own launch instructions. Choose the route you need:
 
 | Situation | Guide |
 | --- | --- |
@@ -137,7 +140,9 @@ The application runs from its extracted folder; no desktop installer is supplied
 
 ## Interface, validation and development
 
-The **[new local GUI](docs/gui.md)** connects those records to controlled actions. The generated **real workspace overview** reads your saved records and shows issues and next steps. The separate **[interactive prototype](docs/prototype.md)** demonstrates onboarding, document review, unmatched payments and resuming work with fictional data in browser storage. It is not connected to your real accounts.
+The **[local GUI](docs/gui.md)** connects those records to controlled actions. The generated **real workspace overview** reads your saved records and shows issues and next steps. The separate **[interactive prototype](docs/prototype.md)** demonstrates onboarding, document review, unmatched payments and resuming work with fictional data in browser storage. It is not connected to your real accounts.
+
+**Current source acceptance (2026-10-26):** local runtime tests and Chromium/WebKit journeys are recorded separately from fresh skill trials. Codex CLI 0.164.0 and Claude Code 2.1.310 discovered all seven skills on macOS; Claude used an explicit added-directory route. Current-source Windows 5.1/other platform checks, ordinary-user trials and real service operations remain open. The latest macOS arm64 package smoke passed, while interactive first launch stopped at browser setup. See the [dated validation record](docs/validation.md) for exact versions and limits.
 
 Historical evidence: the [0.6.0-preview.4 release workflow](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40288755911) passed Windows/macOS utility checks, native Windows PowerShell 5.1 checks, browser/document checks, security gates and release verification. That run covers the earlier skill baseline, not the 0.7 GUI. It does not establish nontechnical-user usability, live service integration or tax correctness. [Validation records](docs/validation.md) preserve the exact scope and remaining acceptance work.
 

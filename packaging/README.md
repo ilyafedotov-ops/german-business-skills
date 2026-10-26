@@ -30,7 +30,7 @@ After reviewing and installing the plugin through your host, open a fresh chat a
 
 The shared workflow and references are in `skills/de-business-kit/SKILL.md`. Setup should preserve unknown facts and distinguish creating a workspace from completing business or tax setup. Keep real records outside this plugin and public source repositories. Do not recreate an existing private workspace to change its language or working mode.
 
-A useful first task is to preserve one selected document, open a readable explanation and save the next action. Continue the same private workspace later; use your existing accounting program as authoritative when selected. Reviewing a document, recording an entry and submitting a return are separate steps.
+A useful first task is a focused answer, a launch plan, a reply draft or a selected document check. For ongoing work, save a readable result and the next action. Continue the same private workspace later; use your existing accounting program as authoritative when selected. Reviewing a document, recording an entry and submitting a return are separate steps.
 
 ## What the package requires
 

@@ -2,7 +2,7 @@
 
 [English](accounting.md) | [Русский](accounting.ru.md) | [Documentation](index.md)
 
-The welcome dialog establishes your accounting setup instead of choosing it for you. If you already use accounting software, identify the exact product and edition and continue using it as the authoritative system. If you want local records, the assistant explains the supported scope and collects the necessary accounting-method facts. You can postpone this decision and still organize documents or ask questions.
+When a task requires accounting, the assistant establishes your chosen system instead of selecting it for you. If you already use accounting software, identify the exact product and edition and continue using it as the authoritative system. If you want local records, the assistant explains the supported scope and collects the necessary accounting-method facts. You can postpone this decision and still organize documents or ask questions.
 
 Your choice is saved and reused when you return. Choosing a system does not change your VAT treatment or rewrite business facts. Changing systems after records exist requires a separate migration; the assistant cannot silently start a second set of books.
 

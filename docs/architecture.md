@@ -98,7 +98,7 @@ The current preview includes `workflows.py` for international transactions, acti
 
 ## Component and deployment architecture
 
-This is a host-driven skill with an offline filesystem backend. The host runs the conversation and invokes short-lived Python CLI processes. There is no persistent application server, database service, queue worker or built-in model API client. The local extension generates a static overview rather than introducing a web application backend.
+The assistant/CLI route uses the seven-skill bundle and an offline filesystem backend. The host runs the conversation and invokes short-lived Python CLI processes; the utilities can generate a static overview. The optional [real GUI](gui.md) instead runs a session-protected loopback service while its launcher is open, using the same records and protected writers. Neither route adds a database service, queue worker or built-in model API client. The diagram below describes the assistant/CLI route; the GUI adapter is described separately below.
 
 ```mermaid
 flowchart TB
@@ -123,7 +123,7 @@ flowchart TB
     X -. inspected evidence saved through host workflow .-> FS
 ```
 
-The diagram shows execution and dependency boundaries, not network access supplied by the Python utilities. Public source and the installed skill are separate from the private business workspace. `tools/install.py` copies the self-contained skill into host discovery directories; `tools/build_package.py` creates distribution bundles. Python is supplied by the environment. No production Python dependency beyond the standard library is required.
+The diagram shows execution and dependency boundaries, not network access supplied by the Python utilities. Public source and the installed skill are separate from the private business workspace. `tools/install.py` copies the complete self-contained skill bundle into host discovery directories; `tools/build_package.py` creates distribution bundles. Standalone CLI use requires an available Python runtime; the GUI application bundles its engine. No production Python dependency beyond the standard library is required.
 
 The host chooses a task module and supplies reviewed inputs. Python validates structures and performs deterministic operations. The host interprets business meaning and inspects external sources. This division keeps arithmetic and file operations reproducible while making semantic and authorization responsibilities explicit.
 
@@ -182,7 +182,7 @@ Recovery starts by inspecting failed-command outputs, current register hashes, o
 
 ## Design choices and validation scope
 
-One portable skill and one shared profile avoid divergent state across modes and hosts. Standard-library CLI processes reduce installation dependencies. JSON and ordinary files make evidence inspectable and portable, at the cost of multi-file recovery and coarse write locking. The casework register is rewritten as a whole and has a 50 MiB limit; this is not designed as a concurrent, high-volume accounting platform. Shared helpers reduce duplication, but casework imports internal helpers from `workspace.py` and `workflows.py`, so their contracts are coupled.
+One portable seven-skill bundle and one shared profile avoid divergent state across modes and hosts. Standard-library CLI processes reduce installation dependencies. JSON and ordinary files make evidence inspectable and portable, at the cost of multi-file recovery and coarse write locking. The casework register is rewritten as a whole and has a 50 MiB limit; this is not designed as a concurrent, high-volume accounting platform. Shared helpers reduce duplication, but casework imports internal helpers from `workspace.py` and `workflows.py`, so their contracts are coupled.
 
 Automated checks are `python3 -B -m unittest discover -s tests -v` and `python3 -B tools/check_package.py`. Tests cover local contracts; package checks cover structure, translations, JSON and local links. The [validation record](validation.md) separates historical runs, behavioral trials and integration gaps. A passing test run does not establish tax correctness, production connector support or desktop usability. This architecture describes the current source, not a certification or a release declaration.
 
