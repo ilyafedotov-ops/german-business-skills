@@ -1,4 +1,4 @@
-# Local plugin distribution — v0.7.0-preview.1
+# Local plugin distribution — v0.8.0-preview.1
 
 The [local GUI application](gui.md) bundles its engine for document review, cash entries, filing evidence and recovery on Windows/macOS; users do not install Python. Download availability requires publication and verification of the matching platform archive. Optional [standalone Windows tools](windows.md) cover installation, start/resume, preview, intake, integrity, real overview and full backup/restore; their advanced protected writers still require an existing supported engine.
 
@@ -16,10 +16,10 @@ Install the complete set together: domain skills use shared resources in `de-bus
 For the standalone application, use [application downloads and instructions](gui.md).
 The rest of this page covers the primary skill/plugin bundle. Users do not need
 to build the project. Once published, download the named Codex or Claude ZIP from
-[release 0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1),
+[release 0.8.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1),
 follow [download verification](releases.md), and extract it into a new folder using
 Explorer or Finder. Published filenames include the version, for example
-`de-business-kit-0.7.0-preview.1-codex.zip`.
+`de-business-kit-0.8.0-preview.1-codex.zip`.
 
 Inside the extracted folder, `codex` or `claude` is the marketplace root. Skip the
 build section and go to [host installation](#optional-host-installation-after-review).

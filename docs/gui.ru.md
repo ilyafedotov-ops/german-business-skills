@@ -1,10 +1,10 @@
-# Настоящий интерфейс рабочего пространства — 0.7.0-preview.1
+# Настоящий интерфейс рабочего пространства — 0.8.0-preview.1
 
 [English](gui.md) | [Русский](gui.ru.md) | [Инструкция пользователя](../gui/README.ru.md)
 
 Приложение `gui/` подключает браузерный интерфейс к операциям настоящего
 рабочего пространства. Отдельный `prototype/` остаётся вымышленной демонстрацией.
-Версия [0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1)
+Версия [0.8.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1)
 добавляет отдельные пакеты Windows x64, macOS Apple Silicon и macOS Intel.
 Используйте подходящий архив после публикации и проверки; локальная сборка или
 успешный тест не равны опубликованному выпуску платформы. [Проверка загрузки](releases.ru.md)

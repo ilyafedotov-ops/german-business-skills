@@ -3,7 +3,7 @@
 [English](windows.md) | [Русский](windows.ru.md) | [Quick start](quickstart.md)
 
 For the local application, download and verify the Windows x64 GUI archive for
-[0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1)
+[0.8.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1)
 when published. Extract the whole folder and open `GermanBusinessKit.exe`; its
 bundled engine supports document review, protected cash entries, filing evidence,
 drafts and recovery without a user-installed Python. Keep the launcher running.

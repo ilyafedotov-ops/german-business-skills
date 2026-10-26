@@ -1,10 +1,10 @@
-# Real workspace interface — 0.7.0-preview.1
+# Real workspace interface — 0.8.0-preview.1
 
 [English](gui.md) | [Русский](gui.ru.md) | [User instructions](../gui/README.md)
 
 The `gui/` application connects a browser interface to the real workspace writers.
 The separate `prototype/` remains a fictional demonstration. Version
-[0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1)
+[0.8.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1)
 adds standalone Windows x64, macOS Apple Silicon and macOS Intel packages. Use a
 matching archive only after publication and verification; a local build or
 passing test is not a published platform release. [Download verification](releases.md)

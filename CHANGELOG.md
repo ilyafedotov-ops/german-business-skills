@@ -6,9 +6,9 @@ Versions follow Semantic Versioning. All releases below are previews, not a
 certification of accounting correctness or desktop compatibility. Historical
 milestones are first published on 2026-10-26; their original commits are retained.
 
-## Unreleased
+## 0.8.0-preview.1
 
-Current source retains version `0.7.0-preview.1`; this section does not announce a new release or modify previously published assets.
+Lifecycle skill bundle preview. Publication requires the matching tag checks and verified assets; previously published versions remain unchanged.
 
 - Deliver the router and six domain skills as one portable bundle with shared profile/evidence, complete-set installation and detached resource checks.
 - Add EN/RU preparation and continuation across launch, customer work, correspondence, annual readiness, services, first hire, changes and closure.

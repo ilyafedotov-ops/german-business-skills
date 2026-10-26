@@ -36,4 +36,4 @@ The start guide and manual ship with the skill. User documents belong in a separ
 
 [Versions, signatures and release verification](releases.md)
 
-[Unreleased changes and release history](../CHANGELOG.md) distinguish current source from published packages.
+[Changes and release history](../CHANGELOG.md) distinguish current source from published packages.

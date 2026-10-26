@@ -2,10 +2,10 @@
 
 [English](project-status.md) | [Русский](project-status.ru.md) | [Documentation](index.md)
 
-Reviewed against the source on **2026-10-26**, version **0.7.0-preview.1**.
+Reviewed against the source on **2026-10-26**, version **0.8.0-preview.1**.
 This page describes implemented capabilities. Download availability depends on
 successful platform gates, publication and verification of the matching assets on
-the [version's release page](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1).
+the [version's release page](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1).
 See [GUI guidance](gui.md) for delivery scope and [validation](validation.md) for
 actual runs and their limits. Historical release runs do not establish acceptance
 of the new GUI; neither local checks nor hosted CI establish nontechnical-user
@@ -37,7 +37,7 @@ onboarding requirements. macOS also does not guarantee Python is installed.
 
 ## Next product work
 
-Local direct-entry and synthetic P1–P7 trials, correction/export inspection and task continuation are recorded in [validation](validation.md). They do not close the full plan. The next acceptance work is current-ref Windows PowerShell 5.1 and other supported-platform checks, ordinary-user/first-launch journeys, and actual outcomes in selected services. Lexware remains on local examples by user choice. Publication and verification of a matching package are separate; [unreleased changes](../CHANGELOG.md#unreleased) describe the accumulated source work. The [plan](lifecycle.md) retains the remaining dependencies and criteria.
+Local direct-entry and synthetic P1–P7 trials, correction/export inspection and task continuation are recorded in [validation](validation.md). They do not close the full plan. The next acceptance work is current-ref Windows PowerShell 5.1 and other supported-platform checks, ordinary-user/first-launch journeys, and actual outcomes in selected services. Lexware remains on local examples by user choice. Publication and verification of a matching package are separate; [release changes](../CHANGELOG.md#080-preview1) describe the accumulated source work. The [plan](lifecycle.md) retains the remaining dependencies and criteria.
 
 ## Technical acceptance gates for existing routes
 
