@@ -8,6 +8,12 @@ milestones are first published on 2026-10-26; their original commits are retaine
 
 ## Unreleased
 
+## 0.10.0-preview.1
+
+- Make the assistant and private business folder the primary route; add skill invocation, installation prompts, lifecycle examples and EN/RU visual guides. The GUI remains optional.
+- Apply shared prerequisites, reusable confirmed context, current primary-source research and separate arithmetic checks across workflows; document AI/provider processing, capable-model selection and task-specific browser/computer guidance.
+- Remove the documentation history archive; keep current status and validation summaries, with earlier work retained in Git.
+
 - Make the repository a Claude plugin marketplace: `.claude-plugin/marketplace.json` installs the published release pinned by tag and commit, so Cowork, chat and Claude Code users add `ilyafedotov-ops/german-business-skills` under **Customize → Plugins** in three steps. Rewrite the EN/RU README and installation guide around that route, keep Codex as a condensed project-skill route, redraw the setup diagrams and add a release step for moving the pin.
 - Add recorded invoice payment allocation across periods, readable EN/RU balances and EN/RU/DE GUI details; preserve partial/overpayments, refunds and corrections, flag unresolved currencies/directions, and invalidate filing source reports when the allocation basis changes.
 - Add native lock diagnosis/recovery and shared writer metadata; preserve exact raw lock bytes in Python and PowerShell audit history. Package the shared native helper explicitly.

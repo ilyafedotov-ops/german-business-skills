@@ -24,7 +24,7 @@ and [validation](validation.md) for actual trials and remaining limits.
 
 ## Source and published release
 
-`VERSION` and the published immutable [release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.9.0-preview.1) are **0.9.0-preview.1**, from `b7f85c0422429f94159a6cc6352f8b83ab4b5d63`. The release covers beginner installation, assisted-service refinements and documentation consolidation. It provides Codex/Claude skill bundles and Windows x64/macOS arm64/macOS x86_64 application archives. See [validation](validation.md) for exact platform, security and downloaded-asset results. Earlier tags/assets are preserved. This repository distributes skills and local applications; it has no hosted production application.
+Source `VERSION` is **0.10.0-preview.1**, prepared for the next release. Publication and downloaded-asset verification are pending. The previously verified immutable [release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.9.0-preview.1) is **0.9.0-preview.1**, from `b7f85c0422429f94159a6cc6352f8b83ab4b5d63`. The release covers beginner installation, assisted-service refinements and documentation consolidation. It provides Codex/Claude skill bundles and Windows x64/macOS arm64/macOS x86_64 application archives. See [validation](validation.md) for exact platform, security and downloaded-asset results. Earlier tags/assets are preserved. This repository distributes skills and local applications; it has no hosted production application.
 
 ## Implemented scope
 
