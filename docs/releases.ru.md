@@ -34,27 +34,37 @@ minor, совместимые исправления — patch, несовмес
 ## Скачать и проверить
 
 На [странице выпусков](https://github.com/ilyafedotov-ops/german-business-skills/releases)
-выберите нужную версию и найдите отметку **Immutable**. Скачайте именованный архив
-Codex или Claude и `SHA256SUMS` в новую папку. Windows проверяет хеш без Python:
+выберите [версию 0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1) и найдите отметку **Immutable**. Доступность требует завершённой
+публикации и проверки; отсутствующий платформенный архив ещё не готов к использованию.
+Скачайте подходящий архив GUI или необязательный ZIP Codex/Claude и `SHA256SUMS`
+в новую папку. Имена архивов приложения:
+
+- `de-business-kit-0.7.0-preview.1-gui-windows-x64.zip`
+- `de-business-kit-0.7.0-preview.1-gui-macos-arm64.tar.gz` (Apple Silicon)
+- `de-business-kit-0.7.0-preview.1-gui-macos-x86_64.tar.gz` (Intel)
+
+Примеры ниже проверяют необязательный ZIP Codex; подставьте точное имя скачанного
+архива GUI для проверки приложения. Windows проверяет хеш без Python:
 
 ```powershell
-Get-FileHash .\de-business-kit-0.6.0-preview.4-codex.zip -Algorithm SHA256
+Get-FileHash .\de-business-kit-0.7.0-preview.1-codex.zip -Algorithm SHA256
 ```
 
-В macOS: `shasum -a 256 de-business-kit-0.6.0-preview.4-codex.zip`. Сравните результат
+В macOS: `shasum -a 256 de-business-kit-0.7.0-preview.1-codex.zip`. Сравните результат
 с нужной строкой `SHA256SUMS`. Хеш из того же недоверенного источника не подтверждает
 автора. При наличии актуального необязательного GitHub CLI проверьте происхождение
-архива (2.103.2 проверил эти выпуски; 2.80 не смог прочитать их аттестации):
+архива (исторические проверки использовали 2.103.2; 2.80 не смог прочитать те аттестации):
 
 ```sh
-gh release verify v0.6.0-preview.4 -R ilyafedotov-ops/german-business-skills
-gh release verify-asset v0.6.0-preview.4 de-business-kit-0.6.0-preview.4-codex.zip -R ilyafedotov-ops/german-business-skills
-gh attestation verify de-business-kit-0.6.0-preview.4-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.6.0-preview.4 --deny-self-hosted-runners
+gh release verify v0.7.0-preview.1 -R ilyafedotov-ops/german-business-skills
+gh release verify-asset v0.7.0-preview.1 de-business-kit-0.7.0-preview.1-codex.zip -R ilyafedotov-ops/german-business-skills
+gh attestation verify de-business-kit-0.7.0-preview.1-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.7.0-preview.1 --deny-self-hosted-runners
 ```
 
 Для строгой фиксации добавьте `--source-digest` с полным ожидаемым коммитом тега.
 Не запускайте скачанные скрипты до проверки. Распакуйте в новую папку и следуйте
-[инструкции установки](distribution.ru.md). Сохраните предыдущий пакет и резервную
+[инструкции приложения](../gui/README.ru.md) для GUI или
+[инструкции установки skill](distribution.ru.md) для ZIP Codex/Claude. Сохраните предыдущий пакет и резервную
 копию частного пространства. Установка Python и автоматическое обновление не нужны.
 
 ## Публикация сопровождающим
@@ -80,7 +90,7 @@ gh attestation verify de-business-kit-0.6.0-preview.4-codex.zip --repo ilyafedot
 Локальная репетиция после создания точного тега:
 
 ```sh
-python3 -B tools/release.py prepare --tag v0.6.0-preview.4 --output /absolute/new/release-assets
+python3 -B tools/release.py prepare --tag v0.7.0-preview.1 --output /absolute/new/release-assets
 python3 -B tools/release.py verify --directory /absolute/new/release-assets
 ```
 
@@ -98,3 +108,24 @@ security severity >= 7 или уровне error. Метаданные чита�
 Первоисточники проверены 26.10.2026: [аттестации GitHub](https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations),
 [целостность выпусков](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/verify-release-integrity)
 и [безопасность Actions](https://docs.github.com/en/actions/reference/security/secure-use).
+
+## Нативные архивы GUI версии 0.7.0-preview.1
+
+Версия 0.7.0-preview.1 добавляет отдельные приложения Windows x64, macOS arm64 и macOS x86_64.
+Матрица CI `gui-package` использует инструменты сборки с закреплёнными хешами и
+проверяет распакованный архив без внешнего Python в `PATH`. В каждом пакете
+`GUI-MANIFEST.json` охватывает обычные файлы и ссылки нативных библиотек. Сборщик
+архива отклоняет специальные файлы и сверяет фактически упакованные байты
+с манифестом; только после этого создаётся внешняя контрольная сумма. ZIP skill
+остаются независимыми пакетами.
+
+Публикация ждёт всех платформенных сборок и проверок. Привилегированная задача
+проверяет три скачанных нативных архива, добавляет их в `SHA256SUMS`, затем
+подписывает и проверяет файлы прежним процессом выпуска. Код проекта и нативные
+программы в этой задаче не выполняются. Побайтовая повторяемость нативных пакетов
+не заявляется; проверка двойной сборкой относится к переносимым skill-пакетам.
+Происхождение GitHub не заменяет Authenticode или нотариальное заверение Apple.
+
+Фактические результаты и оставшиеся этапы — в [руководстве GUI](gui.ru.md)
+и [журнале проверок](validation.ru.md). Подтвердите публикацию и проверку на странице
+точной версии; документация исходников сама по себе их не подтверждает.

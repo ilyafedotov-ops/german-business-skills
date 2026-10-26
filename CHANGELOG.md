@@ -6,6 +6,23 @@ Versions follow Semantic Versioning. All releases below are previews, not a
 certification of accounting correctness or desktop compatibility. Historical
 milestones are first published on 2026-10-26; their original commits are retained.
 
+## 0.7.0-preview.1
+
+Version [0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1). Download availability requires successful platform gates, publication and verification of the matching assets.
+
+- Add a real local workspace GUI with English/Russian/German navigation, document
+  import/review, private saved drafts and contextual assistant requests.
+- Expose existing validated accounting configuration, cash entries, reversals,
+  linked corrections, period reports and versioned filing/evidence actions.
+  No tax calculation engine or ELSTER transmission is added.
+- Add full backup/verification/restore controls and explicit recovery states.
+- Protect local sessions with random credentials, same-origin/host checks,
+  workspace selection identities and optimistic concurrency for saved drafts.
+- Build separate Windows/macOS applications with an embedded runtime; end users
+  do not install Python. Native builds and packaged smoke tests become CI gates.
+  Native OS code signing/notarization and participant usability acceptance remain open.
+- Refresh bilingual quick starts, diagrams, folder examples and project descriptions.
+
 ## 0.6.0-preview.4
 
 - Retry cryptographic verification a bounded number of times when GitHub's newly

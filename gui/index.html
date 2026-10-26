@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>German Business Kit</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="i18n.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main" id="skip">Skip to content</a>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true">b.</span><span>German Business Kit</span></a>
+      <p id="workspace-name" class="workspace-name">Your private workspace</p>
+      <nav id="navigation" aria-label="Workspace"></nav>
+      <div class="sidebar-bottom"><p id="sidebar-note"></p><a id="settings-link" href="#settings">Settings and recovery</a><button id="help-button" class="text-button" type="button">Help me with this</button></div>
+    </aside>
+    <div class="body">
+      <header class="topbar"><div><label for="period" id="period-label">Working month</label><input id="period" type="month" required></div><div><label for="language" id="language-label">Interface language</label><select id="language"><option value="en">English</option><option value="ru">Русский</option><option value="de">Deutsch</option></select></div><span id="save-status" role="status"></span></header>
+      <div id="notice" role="status" hidden></div>
+      <div id="error" role="alert" tabindex="-1" hidden></div>
+      <main id="main" tabindex="-1"><p>Opening your workspace…</p></main>
+      <footer id="footer"></footer>
+    </div>
+  </div>
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title"><h2 id="confirm-title"></h2><div id="confirm-summary"></div><p id="confirm-note"></p><div class="actions"><button type="button" id="cancel-confirm"></button><button type="button" id="accept-confirm" class="primary"></button></div></dialog>
+  <dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-heading"><h2 id="help-title"></h2><button type="button" id="close-help"></button></div><label for="help-prompt" id="help-label"></label><textarea id="help-prompt" readonly rows="7"></textarea><p id="help-hint" class="hint"></p><button type="button" id="copy-help" class="primary"></button><p id="copy-status" role="status"></p></dialog>
+</body>
+</html>

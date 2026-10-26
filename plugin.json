@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "de-business-kit",
-  "version": "0.6.0-preview.4",
-  "description": "English and Russian workspaces for German sole traders: evidence-linked cash records, readable reports and tax preparation.",
+  "version": "0.7.0-preview.1",
+  "description": "Self-managed accounting and tax preparation for German sole traders: organized documents, limited cash records, readable reports and manual ELSTER guidance in English and Russian.",
   "author": {
     "name": "German Business Kit contributors"
   },
@@ -11,7 +11,7 @@
     "com.openai": {
       "interface": {
         "displayName": "German Business Kit",
-        "shortDescription": "German business records, reports and tax preparation"
+        "shortDescription": "German self-accounting, documents and tax preparation"
       }
     }
   }

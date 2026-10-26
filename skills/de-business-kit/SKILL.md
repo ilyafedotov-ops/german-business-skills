@@ -13,7 +13,7 @@ description: >-
 
 # German Business Kit
 
-Use one private workspace per natural-person entrepreneur. Keep multiple activities in that profile, with activity IDs. Support **English (`en`) and Russian (`ru`)** throughout conversation and user-facing reports; retain official German form labels. Version: **0.5.0 preview**, source review **2026-10-25**.
+Use one private workspace per natural-person entrepreneur. Keep multiple activities in that profile, with activity IDs. Support **English (`en`) and Russian (`ru`)** throughout conversation and user-facing reports; retain official German form labels. This is preview functionality; use the installed package metadata for its release version. A package version does not establish that legal/provider sources are current.
 
 Self-managed accounting and tax reporting are the primary workflow. Accountant consultation and export are optional. The limited local cash journal and filing-evidence lifecycle are implemented; complete statutory accounting and ELSTER transmission remain unfinished. The first monthly route combines local cash records with manual ELSTER, without overriding an existing accounting-system choice. Native Windows supports intake, integrity, real overview and full recovery; protected accounting/filing writes and full preflight still require a supported existing runtime.
 

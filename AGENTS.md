@@ -35,6 +35,7 @@ protected journal/filing writers or full filing preflight.
 | Preparation and payment utilities | [workflows.py](skills/de-business-kit/scripts/workflows.py), [payments.py](skills/de-business-kit/scripts/payments.py) |
 | Templates, languages and folder names | [assets](skills/de-business-kit/assets/), [locale manifest](skills/de-business-kit/assets/locales.json), [folder mapping](skills/de-business-kit/assets/folder-layouts.json) |
 | Readable documents and recipient materials | [Document authoring](skills/de-business-kit/references/document-authoring.md), [readable-output rules](skills/de-business-kit/references/readable-output.md) |
+| Real local GUI and packaged runtime | [GUI](gui/), [scope/security](docs/gui.md), [build](tools/build_gui.py), [adapter tests](tests/test_gui_server.py); use canonical writers, workspace identity and draft version checks |
 | Interactive demonstration | [prototype](prototype/), [prototype scope](docs/prototype.md); fictional data, not a connected accounting application |
 | Installation and packaging | [tools](tools/), [distribution](docs/distribution.md), [package readmes](packaging/) |
 | Verification and known gaps | [tests](tests/), [behavioral scenarios](evals/scenarios.json), [validation record](docs/validation.md), [CI](.github/workflows/) |
@@ -130,6 +131,7 @@ an instruction to install Python on users' machines.
 | Native Windows script or shared filesystem contracts | `powershell.exe -NoProfile -File tests/native/windows-smoke.ps1` on Windows; inspect Windows CI and cross-runtime tests. A Linux PowerShell container is not Windows PowerShell 5.1 acceptance. |
 | Real overview | `npm run test:overview -- --browser=chromium` and `--browser=webkit`; check empty, blocked and corrupt states in EN/RU. Native overview also needs `tests/native/overview-smoke.ps1`. |
 | Full backup/restore | `python3 -B -m unittest discover -s tests -p test_recovery.py -v`, native `tests/native/recovery-smoke.ps1`, and cross-runtime verification. Test refusal to overwrite, unsafe paths, corruption, manifest identity and concurrent writers. |
+| Real GUI behavior or packaging | `npm run test:gui` in Chromium/WebKit, `tests/test_gui_server.py`, packaged smoke with empty PATH, native Windows/macOS CI. Never expose the workspace as a static web directory or bypass protected writers. |
 | Prototype behavior or appearance | `npm test` and `npm run test:browser`; inspect affected journeys, screenshots and console/network errors. Use existing development dependencies. |
 | Printable HTML template | `npm run test:documents`; inspect actual rendered/exported artifacts, including long tables and language coverage. |
 | Skill workflow or routing | Relevant fresh-session trials from `evals/scenarios.json`, using synthetic inputs without revealing evaluation criteria; record actual host/version and outcomes. |

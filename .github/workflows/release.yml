@@ -48,7 +48,7 @@ jobs:
           retention-days: 7
 
   publish:
-    needs: build
+    needs: [build, checks]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -61,6 +61,28 @@ jobs:
         with:
           name: release-assets
           path: release-assets
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: gui-release-*
+          path: gui-assets
+          merge-multiple: true
+      - name: Verify native application archives
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd gui-assets
+          shopt -s nullglob
+          sums=(*.sha256)
+          [[ ${#sums[@]} -eq 3 ]]
+          for sum in "${sums[@]}"; do sha256sum --check --strict "$sum"; done
+          # Copy only named build outputs; execute no application/project code here.
+          files=(de-business-kit-*-gui-windows-x64.zip de-business-kit-*-gui-macos-arm64.tar.gz de-business-kit-*-gui-macos-x86_64.tar.gz)
+          [[ ${#files[@]} -eq 3 ]]
+          [[ $(find . -maxdepth 1 -type f | wc -l) -eq 6 ]]
+          for file in "${files[@]}"; do
+            cp -- "$file" ../release-assets/
+            sha256sum "$file" >> ../release-assets/SHA256SUMS
+          done
       - name: Check downloaded bytes
         working-directory: release-assets
         run: sha256sum --check --strict SHA256SUMS

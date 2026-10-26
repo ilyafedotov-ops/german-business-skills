@@ -10,6 +10,7 @@
 
 | Task | Guide |
 | --- | --- |
+| Use the real GUI release candidate | [GUI capabilities and delivery](gui.md), [GUI user instructions](../gui/README.md) |
 | Set up the app or update the skill | [Getting started](quickstart.md), [Windows without Python](windows.md), [installation and updates](distribution.md) |
 | Organize existing records | [Email, services and folders](existing-data.md), [document workflow](document-workflow.md) |
 | Find files and choose folder language | [Folder structure](folder-structure.md) |

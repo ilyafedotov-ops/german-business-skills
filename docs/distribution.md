@@ -1,12 +1,31 @@
-# Local plugin distribution — v0.6.0-preview.4
+# Local plugin distribution — v0.7.0-preview.1
 
-Windows users can start without Python using [native Windows tools](windows.md). The native entry point shares the existing workspace and covers installation, start/resume, preview, intake, integrity, real overview and full backup/restore; advanced validated automation remains an optional Python-engine capability.
+The [local GUI application](gui.md) bundles its engine for document review, cash entries, filing evidence and recovery on Windows/macOS; users do not install Python. Download availability requires publication and verification of the matching platform archive. Optional [standalone Windows tools](windows.md) cover installation, start/resume, preview, intake, integrity, real overview and full backup/restore; their advanced protected writers still require an existing supported engine.
 
 [English](distribution.md) | [Русский](distribution.ru.md)
 
 The maintained workflow lives only in `skills/de-business-kit`. Root `plugin.json` declares the portable Agent Plugins identity; `.claude-plugin/plugin.json` is its thin Claude adapter. The offline builder copies that same skill into two independent local marketplace bundles. It includes the license, manifests, authored EN/RU readmes from `packaging/` and complete skill resources; repository tests, Git history, root-level private files and machine settings are excluded. Review the canonical skill before packaging: the builder is not a secret scanner.
 
 This preview supplies no MCP server, lifecycle hook, credential, automatic installer or updater. Installing a plugin does not grant Python execution, filesystem access, browser tools, subscriptions or access to banking, Lexware or ELSTER. Actual host tools, permissions and account policy control those capabilities.
+
+## Use a published package
+
+For the standalone application, use [application downloads and instructions](gui.md).
+The rest of this page covers optional AI skill/plugin packages. Users do not need
+to build the project. Once published, download the named Codex or Claude ZIP from
+[release 0.7.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.7.0-preview.1),
+follow [download verification](releases.md), and extract it into a new folder using
+Explorer or Finder. Published filenames include the version, for example
+`de-business-kit-0.7.0-preview.1-codex.zip`.
+
+Inside the extracted folder, `codex` or `claude` is the marketplace root. Skip the
+build section and go to [host installation](#optional-host-installation-after-review).
+In those examples replace `/absolute/path/to/new-review-bundle/codex` or
+`/absolute/path/to/new-review-bundle/claude` with that actual extracted directory.
+Ask the assistant to resolve the path and explain the installation before running
+it. The [start guide](../skills/de-business-kit/guides/start.en.md) covers your first
+useful task. Published archives stay unchanged; source documentation edits appear
+in packages only after a new release.
 
 ## Build and review without installing
 
