@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="704" viewBox="0 0 760 704" role="img" aria-labelledby="title desc" xml:lang="en">
+<title id="title">Your assistant. Your business folder.</title>
+<desc id="desc">Work in Claude or Codex. No separate app needed. Ask in your own words: Use de-business-kit. Help me prepare a proposal from these agreed terms. Clarify, then prepare: Reuse confirmed facts. Ask for missing details. Get a readable draft and the next action. Save and continue: For ongoing work, use your private folder. Keep results, confirmed facts and open questions. Workflow illustration. A simple question needs no folder.</desc>
+<rect width="760" height="704" rx="24" fill="#f7f5ef"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#173e4b">
+<text x="32" y="47" font-size="19" font-weight="700" fill="#173e4b">GERMAN BUSINESS KIT</text>
+<text x="32" y="92" font-size="34" font-weight="700" fill="#173e4b">Your assistant. Your business folder.</text>
+<text x="32" y="128" font-size="24" font-weight="400" fill="#173e4b">Work in Claude or Codex. No separate app needed.</text>
+<rect x="32" y="158" width="696" height="134" rx="16" fill="#ddece8"/>
+<circle cx="66" cy="194" r="18" fill="#173e4b"/>
+<text x="60" y="201" font-size="22" font-weight="700" fill="#ffffff">1</text>
+<text x="100" y="201" font-size="28" font-weight="700" fill="#173e4b">Ask in your own words</text>
+<text x="100" y="236" font-size="25" font-weight="400" fill="#173e4b">Use de-business-kit. Help me prepare</text>
+<text x="100" y="268" font-size="25" font-weight="400" fill="#173e4b">a proposal from these agreed terms.</text>
+<path d="M66 298 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="316" width="696" height="134" rx="16" fill="#f6ddcd"/>
+<circle cx="66" cy="352" r="18" fill="#173e4b"/>
+<text x="60" y="359" font-size="22" font-weight="700" fill="#ffffff">2</text>
+<text x="100" y="359" font-size="28" font-weight="700" fill="#173e4b">Clarify, then prepare</text>
+<text x="100" y="394" font-size="25" font-weight="400" fill="#173e4b">Reuse confirmed facts. Ask for missing details.</text>
+<text x="100" y="426" font-size="25" font-weight="400" fill="#173e4b">Get a readable draft and the next action.</text>
+<path d="M66 456 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="474" width="696" height="134" rx="16" fill="#e1e8ef"/>
+<circle cx="66" cy="510" r="18" fill="#173e4b"/>
+<text x="60" y="517" font-size="22" font-weight="700" fill="#ffffff">3</text>
+<text x="100" y="517" font-size="28" font-weight="700" fill="#173e4b">Save and continue</text>
+<text x="100" y="552" font-size="25" font-weight="400" fill="#173e4b">For ongoing work, use your private folder.</text>
+<text x="100" y="584" font-size="25" font-weight="400" fill="#173e4b">Keep results, confirmed facts and open questions.</text>
+<text x="32" y="659" font-size="22" font-weight="400" fill="#173e4b">Workflow illustration. A simple question needs no folder.</text>
+</g></svg>

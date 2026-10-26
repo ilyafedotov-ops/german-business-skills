@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="704" viewBox="0 0 760 704" role="img" aria-labelledby="title desc" xml:lang="ru">
+<title id="title">От установки к первой задаче</title>
+<desc id="desc">Начните с запроса для копирования в руководстве. Попросите установить набор: Вставьте ссылку на репозиторий и запрос. Ассистент проверит путь для приложения. Пройдите шаги для приложения: Claude: добавьте маркетплейс и плагин. Codex: скопируйте весь набор в проект. Проверьте в новой задаче или чате: Все семь скиллов должны быть доступны. Используй de-business-kit. Дай простую задачу. Схема установки, а не снимок экрана приложения.</desc>
+<rect width="760" height="704" rx="24" fill="#f7f5ef"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#173e4b">
+<text x="32" y="47" font-size="19" font-weight="700" fill="#173e4b">GERMAN BUSINESS KIT</text>
+<text x="32" y="92" font-size="34" font-weight="700" fill="#173e4b">От установки к первой задаче</text>
+<text x="32" y="128" font-size="24" font-weight="400" fill="#173e4b">Начните с запроса для копирования в руководстве.</text>
+<rect x="32" y="158" width="696" height="134" rx="16" fill="#ddece8"/>
+<circle cx="66" cy="194" r="18" fill="#173e4b"/>
+<text x="60" y="201" font-size="22" font-weight="700" fill="#ffffff">1</text>
+<text x="100" y="201" font-size="28" font-weight="700" fill="#173e4b">Попросите установить набор</text>
+<text x="100" y="236" font-size="25" font-weight="400" fill="#173e4b">Вставьте ссылку на репозиторий и запрос.</text>
+<text x="100" y="268" font-size="25" font-weight="400" fill="#173e4b">Ассистент проверит путь для приложения.</text>
+<path d="M66 298 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="316" width="696" height="134" rx="16" fill="#f6ddcd"/>
+<circle cx="66" cy="352" r="18" fill="#173e4b"/>
+<text x="60" y="359" font-size="22" font-weight="700" fill="#ffffff">2</text>
+<text x="100" y="359" font-size="28" font-weight="700" fill="#173e4b">Пройдите шаги для приложения</text>
+<text x="100" y="394" font-size="25" font-weight="400" fill="#173e4b">Claude: добавьте маркетплейс и плагин.</text>
+<text x="100" y="426" font-size="25" font-weight="400" fill="#173e4b">Codex: скопируйте весь набор в проект.</text>
+<path d="M66 456 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="474" width="696" height="134" rx="16" fill="#e1e8ef"/>
+<circle cx="66" cy="510" r="18" fill="#173e4b"/>
+<text x="60" y="517" font-size="22" font-weight="700" fill="#ffffff">3</text>
+<text x="100" y="517" font-size="28" font-weight="700" fill="#173e4b">Проверьте в новой задаче или чате</text>
+<text x="100" y="552" font-size="25" font-weight="400" fill="#173e4b">Все семь скиллов должны быть доступны.</text>
+<text x="100" y="584" font-size="25" font-weight="400" fill="#173e4b">Используй de-business-kit. Дай простую задачу.</text>
+<text x="32" y="659" font-size="22" font-weight="400" fill="#173e4b">Схема установки, а не снимок экрана приложения.</text>
+</g></svg>

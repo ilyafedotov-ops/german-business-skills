@@ -124,6 +124,13 @@ def snapshot(source: Path) -> Dict[str, bytes]:
                     f"skills/{NAME}/guides/images/entrepreneur-journey.png",
                     f"skills/{NAME}/guides/images/setup-map.en.svg",
                     f"skills/{NAME}/guides/images/setup-map.ru.svg",
+                    f"skills/{NAME}/guides/images/how-it-works.en.svg",
+                    f"skills/{NAME}/guides/images/how-it-works.ru.svg",
+                    f"skills/{NAME}/guides/images/assisted-install.en.svg",
+                    f"skills/{NAME}/guides/images/assisted-install.ru.svg",
+                    f"skills/{NAME}/guides/images/first-task.en.svg",
+                    f"skills/{NAME}/guides/images/first-task.ru.svg",
+                    f"skills/{NAME}/guides/images/claude-marketplace.jpg",
                 }
                 if name.startswith(".") or (entry.suffix not in {".md", ".json", ".yaml", ".py"}
                         and not reviewed_guide_image

@@ -8,13 +8,72 @@ suitable permitted browser or computer tools, it can enter supported fields,
 inspect the result and guide you through the remaining steps. Availability is
 checked for your actual app, account and requested operation.
 
+Start with the [skill invocation instructions](user-guide.en.md#call-a-skill). For a service-access task select `de-business-services`; for the business task below name `de-business-operations`.
+
+## When to enable browser or computer tools
+
+German Business Kit supplies business instructions. Your assistant supplies the
+actual tools, helper skills and permissions. Enabling a skill alone does not
+connect a bank, open your browser session or authorize changes.
+
+| Your task | Useful capability |
+| --- | --- |
+| Research current rules or read public help pages | Web search/page reading; interactive browser or desktop access is usually unnecessary. |
+| Read or update records through an existing supported connection | The suitable connector and its scoped permissions; no extra browser setup for operations it already supports. |
+| Navigate a supported site, inspect a draft, enter agreed fields or obtain a selected export | Interactive browser tools; verify support for the actual site, account, save/download/upload operation and data. |
+| Work in an installed application with no suitable connector/browser route | Native computer use, only when the host supports that app, OS, operation and data. |
+| Explain a question or work with an already supplied file | Chat and file/document tools; browser/computer access is optional. |
+
+**Check suitability before sensitive accounts.** Anthropic currently strongly
+advises against using its built-in browser or Chrome integration for financial
+accounts, medical information or other people's personal data, and advises against
+granting native control to banking, healthcare or government apps. Some sites are
+blocked. Do not use desktop control to bypass a browser restriction. For real
+ELSTER, bank or client-record work, check the chosen host's current restrictions
+and processing terms first; use a suitable supported connection, appropriately
+minimized file or guided manual route when UI control is unsuitable. You can still
+prepare values and review evidence without giving the assistant control of a portal.
+[Data-processing guidance](user-guide.en.md#ai-limits-and-your-data).
+
+### Enable the capability in your app
+
+These provider-documented routes were checked **26 October 2026**. Names,
+availability and organizational policies can differ; the assistant should inspect
+what is actually available rather than claim that a switch exists for every user.
+
+| App/route | Setup when offered |
+| --- | --- |
+| Codex / ChatGPT desktop, built-in browser | Ask to use **@Browser**. It uses a separate browser profile; manage access in **Settings → Browser → Agent permissions**. It currently cannot automate file uploads; handle those manually or use another supported route. [Browser guide](https://learn.chatgpt.com/docs/browser). |
+| Codex with your existing browser session | **Settings → Computer Use → select browser → Install** the official extension; return to confirm **Manage**, then select **@Chrome**, **@Edge** or the supported browser in the conversation. [Extension guide](https://learn.chatgpt.com/docs/chrome-extension). |
+| Codex with native applications | **Plugins → Computer Use → Install plugin/Enable**, enable its server and skill controls, then **Try now**. Review app permissions under **Settings → Computer use** and the prompted OS permissions. [Computer Use guide](https://learn.chatgpt.com/docs/computer-use). |
+| Claude Cowork, browser | Where available, its built-in browser needs no extension. Choose under **Settings → Cowork → Preferred browser**. For existing Chrome tabs, use **Customize → Connectors → Claude in Chrome → Configure**, then enable it for the conversation. [Built-in browser](https://support.claude.com/en/articles/16607400-use-the-built-in-browser-in-claude-cowork), [Chrome setup](https://support.claude.com/en/articles/12012173-get-started-with-claude-in-chrome). |
+| Claude with native applications | Current beta: Pro/Max on supported macOS/Windows desktop. Use **Settings → Capabilities**, or **System → This computer → Enable computer use**, when shown; review app access. Current documentation excludes Team/Enterprise from this native feature. [Computer-use setup and limits](https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork). |
+
+Start with the smallest access needed. Keep login, MFA and certificates in the
+official user-controlled flow; never share secrets in chat. Browser content,
+screenshots and tool results may reach the AI provider. Review requested scope
+and hide unrelated sensitive content before screen access. Enabling control does
+not authorize sending, purchasing, paying or submitting; your task's scope and
+any final action you reserve for yourself still apply. You can disable access
+again in the host. Do not disable security controls or install arbitrary tools.
+
+Try a public or fictional task first:
+
+> Use de-business-services. Check whether you can open and read this public help page with the available browser tools. Do not log in, fill forms or change anything. Tell me what you actually observed and whether this tool supports the interaction I will need later.
+
+The assistant should read the relevant installed helper skill's instructions, if
+present, and verify a small permitted operation after setup. **Configured** is
+not the same as **tested for this operation**. If the tool is absent or you prefer
+not to enable it, continue with a field worksheet, selected export or manual steps.
+The kit does not require Python, Playwright or a developer environment for this.
+
 ## 1. Say what you want to finish
 
 Give the service name and result, such as preparing a registration form, editing
 an invoice draft or downloading October's documents. If a draft already exists,
 point to it. You do not need to know about APIs, connectors or file schemas.
 
-> I use Lexware Office in my browser. Help me correct an existing invoice draft.
+> Use de-business-operations. I use Lexware Office in my browser. Help me correct an existing invoice draft.
 > Fill the confirmed information and show me the preview. I will finalize and
 > send it myself. Tell me what you can access before making changes.
 
