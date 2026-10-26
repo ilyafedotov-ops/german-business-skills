@@ -2,6 +2,8 @@
 
 [English](index.md) | [Русский](index.ru.md)
 
+**Need help filling a portal draft or exporting from your software?** [Assisted service guide](../skills/de-business-kit/guides/assisted-services.en.md).
+
 **Installing your first AI app?** [Illustrated setup from zero](../skills/de-business-kit/guides/install.en.md) · [Short checklist](quickstart.md).
 
 **First visit:** [Start here](../skills/de-business-kit/guides/start.en.md). **Already working:** [User guide](../skills/de-business-kit/guides/user-guide.en.md).

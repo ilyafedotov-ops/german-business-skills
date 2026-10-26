@@ -164,3 +164,7 @@ stay open. A partial payment or CreditNote does not automatically mean the invoi
 is settled, money was refunded or accounting was corrected. Existing software
 remains authoritative; ask to continue the saved case when new evidence arrives.
 This is bounded evidence preparation, not technical e-invoice validation or sending.
+
+## Assisted forms and service operations
+
+For practical help inside ELSTER, Lexware Office or another service, use the [step-by-step assisted-service guide](assisted-services.en.md). The assistant checks available connector/browser/computer tools, fills authorized draft fields and reads them back, while you retain login and any final action you choose to do manually. Missing tool access leads to precise guided steps, not invented completion.

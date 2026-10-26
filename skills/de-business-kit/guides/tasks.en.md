@@ -47,3 +47,7 @@ No live connector, payroll calculation, official transmission or reminder is
 established by saving a worksheet. An external action uses the reviewed target,
 exact files and matching authorization. A manual route can still support your
 own accounting and reporting without making an accountant the mandatory endpoint.
+
+## Work in a portal or accounting app
+
+Ask: “Fill the known draft fields and show me the review; I will confirm myself.” Follow [assisted forms and service operations](assisted-services.en.md) for access discovery, user login, draft entry, export checks and the manual handoff.

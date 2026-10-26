@@ -10,6 +10,38 @@ Read the [domain ontology](ontology.md) for entities, relationships and state me
 
 The [accounting workflow](accounting.md) adds an explicitly selected authoritative system when accounting work needs it, limited local cash journal and filing evidence lifecycle through the existing `desk.py` entry point. `casefiles/accounting.py` stores additive state in `04_accounting/register.json`; it reuses workspace locks, evidence fingerprints and history, and checks register state against its latest audit checkpoint. Local cash reports include source-entry/configuration fingerprints and per-account reconciliation CSVs. Filing versions freeze payload/source files, separate review/authorization from uncertain attempts and manually observed receipts/responses, and block stale local-report preflight. No provider/ERiC transport or complete statutory tax calculator is added.
 
+## Assisted external-service execution
+
+The services skill discovers an operation-specific route; the business-domain
+skill owns the values, interpretation and review. The shared
+[assisted-service workflow](../skills/de-business-kit/references/assisted-services.md)
+connects available host connectors, browser/computer tools and manual steps.
+This is an instruction layer over actual host capabilities, not a new connector
+runtime or permissions system. It reuses the operation note and existing task,
+source-map and filing evidence writers.
+
+```mermaid
+flowchart TD
+    A[Requested task and existing scope] --> B[Discover tools and verify product operation]
+    B --> C[Suitable connector or browser or permitted desktop tool]
+    B --> D[Guided manual steps for unsupported parts]
+    C --> E[Prepare and enter authorized draft fields]
+    D --> E
+    E --> F[Read back values, version and warnings]
+    F --> G[Concrete review and action boundary]
+    G --> H[User performs reserved final action]
+    G --> I[Assistant executes only if specifically authorized and permitted]
+    H --> J[Inspect status or receipt; preserve uncertainty]
+    I --> J
+```
+
+Authentication remains user-controlled. Draft autosave is an external write;
+requested entry may authorize it, read-only inspection does not. Finalizing,
+posting, locking and sending are separate effects. A missing API operation can
+use a supported UI route; no capability is inferred from an installed skill.
+Confirmed manual submission needs the same evidence discipline as tool execution.
+Local synthetic browser trials do not establish real ELSTER/Lexware acceptance.
+
 ## Intended result
 
 An entrepreneur brings a task at any stage: prepare to start, register an activity, choose a service, fill in a form, answer a question, manage daily work or prepare reporting. Changes and closure have journey instructions; real execution needs separate acceptance. The [lifecycle map](lifecycle.md) defines coverage and priorities. The router or a directly selected domain skill loads relevant modules and available tools; shared facts and decisions support continuation. Local utilities, the GUI and integrations serve these outcomes. Self-managed accounting and filing use the chosen system; a proprietary complete ledger and ELSTER connector are not prerequisites for every route. Consultation and exports remain optional.

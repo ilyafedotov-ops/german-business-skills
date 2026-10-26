@@ -15,6 +15,10 @@ Use [daily operations](../de-business-kit/references/operations.md) for the
 customer-to-payment or purchasing journey. Identify which result is requested:
 a draft, review, payment follow-up, correction or reply. Do not turn it into a
 full month-close task.
+For entering or editing a customer document in the chosen software, use
+[assisted service operations](../de-business-kit/references/assisted-services.md).
+A supported browser draft route can complement a read-only connector; do not
+issue/finalize/send an invoice merely to save or preview it.
 
 - Preserve agreed scope, evidence, dates, currency, recipient and document version.
   Unknown price, identifier, tax treatment or delivery fact stays unresolved.

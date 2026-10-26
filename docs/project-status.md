@@ -2,6 +2,8 @@
 
 [English](project-status.md) | [Русский](project-status.ru.md) | [Documentation](index.md)
 
+**Assisted-service workflow (2026-10-26):** domain skills now share operation-specific integration discovery, supported setup, browser/desktop draft assistance, side-effect checks and a user-held final-confirmation route. [User guide](../skills/de-business-kit/guides/assisted-services.en.md). These are agent workflows over available host tools; no production connector or new filing transport was added. Exact synthetic trials and unresolved real-service acceptance are recorded in [validation](validation.md).
+
 **Beginner onboarding update (2026-10-26):** [illustrated installation from zero](../skills/de-business-kit/guides/install.en.md) now covers the host and complete skill setup. Fresh Codex EN/RU and constrained Claude EN conversations exercised real installed skills; a Claude first-answer scope regression was fixed and retested. Desktop installation/sign-in and ordinary-user acceptance remain open. [Exact evidence](validation.md).
 
 Reviewed against the source on **2026-10-26**, version **0.8.0-preview.1**.

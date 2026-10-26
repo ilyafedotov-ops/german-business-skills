@@ -14,6 +14,11 @@ references relevant to the task. Use the user's language and saved context.
 Use [tax preparation](../de-business-kit/references/tax-consultant.md) and
 [German rules](../de-business-kit/references/german-rules.md) for the actual year
 and facts. Answer an ordinary question without requiring setup or month-end work.
+For filling or reviewing a real portal draft, use
+[assisted service operations](../de-business-kit/references/assisted-services.md)
+with [forms](../de-business-kit/references/forms.md). Use available authorized
+browser/computer tools for preparation and readback; honor a user-held final
+confirmation instead of either refusing all assistance or submitting silently.
 
 - Separate known facts, user assumptions, current evidence and unanswered issues.
   Use [source-led estimates](../de-business-kit/references/tax-estimates.md);

@@ -19,6 +19,29 @@ reuse the existing source map/task evidence. Paths below are **logical**: resolv
 them with `workspace.py folders` or native `-Action folders` before ordinary file
 access. Do not create parallel folders or rewrite canonical records directly.
 
+## Assisted drafts and exports
+
+Use [assisted service operations](assisted-services.md) for nontechnical users
+who need practical help in the actual account, and the dated
+[current source record](assisted-services-sources.md) for route constraints.
+An existing suitable connector is useful for supported reads; use an available
+browser for unsupported draft edits or UI export steps rather than demanding API
+setup. Confirm the observed edition, company, document and current UI controls.
+
+The current documented invoices API has no invoice-update operation, and a draft
+invoice has no downloadable invoice file. Do not infer editing support from a
+create/read endpoint or finalize an invoice to make a PDF download work. Use
+supported browser draft editing/preview; explain an unavailable export precisely.
+`Abschließen und Speichern` finalizes/assigns the invoice number in the documented
+creation route—it is not merely saving a draft. Read back the resulting draft and
+leave finalization/sending to the user when that is their chosen boundary.
+
+For an export, set the requested period/date basis and output, inspect any locking
+or transfer option before execution, and verify the downloaded original file.
+Preserve a task-specific handoff if download/upload or a final action is unsupported.
+These are agent workflows; only local Lexware examples have been tested. Live acceptance remains unperformed
+until an explicitly available test account and operation are actually checked.
+
 ## First bounded document read
 
 For the selected Lexware Office acceptance route, start with a user-designated

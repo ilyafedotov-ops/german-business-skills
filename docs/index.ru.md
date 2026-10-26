@@ -2,6 +2,8 @@
 
 [English](index.md) | [Русский](index.ru.md)
 
+**Нужно заполнить черновик в портале или выгрузить данные из программы?** [Помощь с сервисами](../skills/de-business-kit/guides/assisted-services.ru.md).
+
 **Впервые устанавливаете приложение с ИИ?** [Пошаговая установка с нуля](../skills/de-business-kit/guides/install.ru.md) · [Краткий список шагов](quickstart.ru.md).
 
 **Первый раз:** [Начните здесь](../skills/de-business-kit/guides/start.ru.md). **Уже работаете:** [Руководство пользователя](../skills/de-business-kit/guides/user-guide.ru.md).

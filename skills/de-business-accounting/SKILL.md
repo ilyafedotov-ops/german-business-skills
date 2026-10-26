@@ -16,6 +16,12 @@ and reuse the saved authoritative system. If undecided, ask local versus exact
 existing software only when accounting work requires it. No default, shadow ledger
 or inference of EÜR eligibility from choosing local records.
 
+For work in that software use [assisted service operations](../de-business-kit/references/assisted-services.md):
+discover existing connectors and browser/desktop tools, inspect the chosen
+account, and carry out the authorized draft/import/export scope. Verify side
+effects and actual results; document a manual handoff for unsupported actions.
+Ask `de-business-services` for access setup when needed, preserving this task.
+
 1. Inspect the relevant period, originals and unresolved tasks through
    [document workflow](../de-business-kit/references/document-workflow.md) and
    [bookkeeping](../de-business-kit/references/bookkeeping.md).

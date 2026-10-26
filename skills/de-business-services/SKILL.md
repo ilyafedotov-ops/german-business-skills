@@ -1,7 +1,7 @@
 ---
 name: de-business-services
 description: >-
-  Research banking, insurance and software for German sole traders, or establish a verified access route to existing services. Русский: банк, страхование, выбор программы, подключение. Use for selection and access setup, not routine bookkeeping or tax decisions.
+  Research banking, insurance and software for German sole traders; discover and set up available connector, browser or desktop routes for a concrete service task. Русский: банк, страхование, выбор программы, подключение. Use for integration discovery, selection and access setup; domain skills own business decisions and draft work.
 ---
 
 # Business Services
@@ -21,6 +21,12 @@ For an existing service use [existing data](../de-business-kit/references/existi
 [access map](../de-business-kit/references/data-source-access.md) and
 [connection verification](../de-business-kit/references/connections.md).
 Inspect actual host tools and permissions before promising an integration.
+For discovery/setup or work in the service UI, follow
+[assisted service operations](../de-business-kit/references/assisted-services.md).
+Select an actually available connector, browser or permitted computer-control
+route and help carry out the authorized draft/read/export work. Offer a supported
+setup or guided-manual fallback for missing capabilities; do not default to API
+credentials, a paid plan or instructions alone when suitable tools are available.
 
 Produce either a sourced comparison connected to user needs, or a bounded access
 record: exact system/account context, permitted operation, tested outcome,

@@ -8,8 +8,9 @@ plan, local/cloud execution mode, and available tools before using an adapter.
 
 Windows onboarding defaults to available host tools and Windows PowerShell 5.1; Python, Git, WSL and PowerShell 7 are not required for native setup/intake. Follow [native Windows](native-windows.md) before selecting a runtime. A missing advanced validator is an explicit capability gap, not permission to rewrite protected JSON by hand.
 
-This package contains one self-contained skill, `de-business-kit`, with task
-modules under `references/`. Keep `name` and `description` in `SKILL.md` and use
+This package contains seven skills installed together, with shared task modules
+and resources under `de-business-kit/references/`. The catalog in
+`../assets/skill-set.json` owns membership; never install a dependent skill alone. Keep `name` and `description` in `SKILL.md` and use
 relative resource paths. OpenAI and Claude Code support the Agent Skills format.
 Keep provider-specific tool names and settings out of the common workflow.
 `agents/openai.yaml` supplies optional OpenAI UI metadata. A skill describes a
@@ -20,7 +21,7 @@ workflow; it does not grant permissions or install tools.
 | Codex | `.agents/skills/de-business-kit/` | `~/.agents/skills/de-business-kit/` | `$de-business-kit` in CLI/IDE; use the available desktop skill picker |
 | Claude Code, including Desktop Code tab local sessions | `.claude/skills/de-business-kit/` | `~/.claude/skills/de-business-kit/` | `/de-business-kit` |
 
-The canonical distribution source is `skills/de-business-kit/`. Copy it with
+The canonical distribution source is the complete `skills/` bundle. Copy it with
 the native [Windows installer](native-windows.md) or optional `tools/install.py` when Python is already available; do not store private business files in that
 source tree. The installer supports project or user scope, validates both
 destinations before writing, and refuses existing installations. It does not
@@ -38,6 +39,12 @@ Sources:
 - [Claude Code: Extend Claude with skills](https://code.claude.com/docs/en/skills)
 
 ## Browser and computer capabilities
+
+Use [assisted service operations](assisted-services.md) for current task-level
+capability discovery, supported setup and practical form/draft/export assistance.
+The dated host descriptions below are starting points to recheck, not guaranteed
+permissions in a session. Follow actual selected tool/skill instructions and keep
+the user's manual final-confirmation preference.
 
 For connecting existing email/accounting services and importing their records, use [existing-data onboarding](existing-data.md). Verify the actual operation and account; tool discovery is not connection proof.
 

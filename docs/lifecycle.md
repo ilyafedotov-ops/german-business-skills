@@ -243,3 +243,7 @@ No day estimates are assigned: P2–P6 depend on source research, tool access an
 ### P7 beginner setup and first conversation (2026-10-26)
 
 The [new illustrated installation guide](../skills/de-business-kit/guides/install.en.md) starts with choosing/installing the AI host and ends with a first task and later continuation. Fresh Codex EN/RU and constrained normal-mode Claude EN trials now exercise installed skill loading and conversation. A first-answer scope failure in Claude was corrected in shared onboarding and retested. Packaging includes the reviewed artwork; desktop first installation, ordinary-user testing and live provider operations remain open. See [validation](validation.md) for the exact evidence and limits.
+
+### P2/P3/P6: assisted forms, drafts and service operations (2026-10-26)
+
+The services skill now discovers and prepares an operation-specific connector/browser/desktop/manual route. The responsible domain skill fills authorized draft fields and checks actual state while preserving user-controlled login and final confirmation. Shared instructions, EN/RU handoff notes and user guides cover ELSTER/municipal routing, Lexware draft/API limits and export side effects; local browser fixtures support reproducible trials. No bundled production adapter, live-service acceptance or new state schema is implied. See [validation](validation.md).
