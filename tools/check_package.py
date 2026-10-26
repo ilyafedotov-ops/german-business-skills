@@ -42,7 +42,7 @@ def main():
         "skills/de-business-kit/references/tax-consultant.md",
         "skills/de-business-kit/references/language-and-modes.md",
         "skills/de-business-kit/assets/locales.json",
-        "plugin.json", ".claude-plugin/plugin.json", "tools/build_package.py",
+        "plugin.json", ".claude-plugin/plugin.json", ".claude-plugin/marketplace.json", "tools/build_package.py",
         "packaging/README.md", "packaging/README.ru.md",
         "skills/de-business-kit/guides/install.en.md", "skills/de-business-kit/guides/install.ru.md", "docs/distribution.md", "docs/distribution.ru.md",
         "skills/de-business-kit/references/onboarding.md",

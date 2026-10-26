@@ -1,6 +1,6 @@
 # Local plugin distribution — v0.9.0-preview.1
 
-**New users:** follow the [desktop-first illustrated setup](../skills/de-business-kit/guides/install.en.md). It covers host installation and a project-local copy of all seven skills without requiring terminal commands. This page covers advanced source, plugin and update routes.
+**New users:** follow the [illustrated setup](../skills/de-business-kit/guides/install.en.md). It covers the Claude plugin marketplace (Cowork, chat and Claude Code) and a project-local Codex copy, without terminal commands. This page covers the marketplace contract and advanced source, plugin and update routes.
 
 The [local GUI application](gui.md) bundles its engine for document review, cash entries, filing evidence and recovery on Windows/macOS; users do not install Python. Download availability requires publication and verification of the matching platform archive. Optional [standalone Windows tools](../skills/de-business-kit/guides/user-guide.en.md#check-your-own-environment) cover installation, start/resume, preview, intake, integrity, real overview and full backup/restore; their advanced protected writers still require an existing supported engine.
 
@@ -12,6 +12,14 @@ This preview supplies no MCP server, lifecycle hook, credential, automatic insta
 
 
 Install the complete set together: domain skills use shared resources in `de-business-kit`. Invoke a domain skill directly when appropriate. The shared profile and chosen accounting system persist; changing skills does not restart setup. These changes are in source and local builds; previously published archives remain unchanged.
+
+## GitHub marketplace for Claude
+
+The repository root is also a Claude plugin marketplace. `.claude-plugin/marketplace.json` lists one plugin, `de-business-kit`, whose `github` source pins the latest published release tag **and** its commit SHA. Users add `ilyafedotov-ops/german-business-skills` under Claude **Customize → Plugins → Add → Add marketplace**, or run `claude plugin marketplace add ilyafedotov-ops/german-business-skills` and `claude plugin install de-business-kit@german-business-kit`. A plugin added in claude.ai or the desktop app is saved to the account and reaches Cowork, chat and signed-in Claude Code sessions.
+
+Claude fetches the plugin from the pinned commit, so changes on the default branch are never installed before release. At that commit the plugin root is the repository root (`.claude-plugin/plugin.json` plus `skills/`); Claude loads only the seven skills, and the root contains no `bin/`, hooks, agents or MCP configuration. The marketplace name `german-business-kit` differs from `de-business-kit-preview` used by local review bundles, so both can be registered. Anthropic's directory review does not cover marketplaces added by address.
+
+The marketplace file is read from the default branch; the address works only after this file is merged there. Move the pin only after publication and asset verification, as described in [maintainer publication](releases.md#maintainer-publication). `tests/test_packaging.py` checks the entry name, the tag and commit formats and, where the tag is fetched, that the tag resolves to the pinned commit and its plugin manifest.
 
 ## Use a published package
 
@@ -89,7 +97,7 @@ claude plugin marketplace add /absolute/path/to/new-review-bundle/claude
 claude plugin install de-business-kit@de-business-kit-preview
 ```
 
-Start a fresh Claude Code session and invoke `/de-business-kit:de-business-kit`. Registration and installation use the host's default scope; review its settings and intended scope first. See the [Claude marketplace procedure](https://code.claude.com/docs/en/plugin-marketplaces) and [manifest reference](https://code.claude.com/docs/en/plugins-reference), checked 2026-10-25. These commands cover the local Claude Code route; Claude Desktop/Cowork import remains a separate unperformed acceptance check.
+Start a fresh Claude Code session and invoke `/de-business-kit:de-business-kit`. Registration and installation use the host's default scope; review its settings and intended scope first. See the [Claude marketplace procedure](https://code.claude.com/docs/en/plugin-marketplaces) and [manifest reference](https://code.claude.com/docs/en/plugins-reference), checked 2026-10-25. These commands cover a local review bundle. Ordinary users install through the [GitHub marketplace](#github-marketplace-for-claude); a Cowork desktop installation trial remains open.
 
 Avoid enabling both a copied standalone skill and its plugin in one session. Keep the previous reviewed package until the replacement passes a synthetic check. Do not delete or recreate the private business workspace when upgrading a skill.
 
@@ -106,5 +114,7 @@ The CI workflow runs native `windows-latest` (Python 3.9/3.14) and `macos-latest
 No desktop installation, discovery, permission prompt, account synchronization or complete live workflow has been tested by this packaging work. Record host/product version, OS, language, discovery, setup, resumption and synthetic-file results before claiming desktop support. Use the [validation notes](validation.md) and [scenario cases](../evals/scenarios.json).
 
 On **2026-10-26**, Claude Code **2.1.310** also discovered all seven standalone project skills in two fresh control-initialize processes using explicit `--add-dir`. No model turn was sent. This is a separate bounded CLI result, not automatic discovery or desktop acceptance; see the [validation record](validation.md).
+
+On **2026-10-26**, Claude Code **2.1.310** `plugin validate` passed for the root marketplace, with warnings only about the repository-root plugin (no icon, root `CLAUDE.md` not loaded, an untracked ignored `.DS_Store`). In an isolated configuration directory, adding the local checkout as a marketplace and installing `de-business-kit@german-business-kit` fetched commit `b7f85c0422429f94159a6cc6352f8b83ab4b5d63` from GitHub; `plugin details` listed seven skills, and the installed `skills/` tree was byte-identical to that commit. This proves the pinned source, not the `owner/repo` address before merge or installation in Cowork, chat or the desktop UI.
 
 [Versions, signatures and release verification](releases.md)

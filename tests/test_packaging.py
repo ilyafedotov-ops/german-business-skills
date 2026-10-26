@@ -291,5 +291,38 @@ class PackagingTests(unittest.TestCase):
         self.assertEqual(list(elsewhere.iterdir()), [])
 
 
+class RootMarketplaceTests(unittest.TestCase):
+    """The GitHub marketplace must install a published tag, not unreleased source."""
+
+    def setUp(self):
+        self.catalog = json.loads((ROOT / ".claude-plugin/marketplace.json").read_text(encoding="utf-8"))
+        [self.entry] = self.catalog["plugins"]
+        self.source = self.entry["source"]
+
+    def test_entry_names_the_plugin_and_pins_a_tag_and_commit(self):
+        manifest = json.loads((ROOT / ".claude-plugin/plugin.json").read_text(encoding="utf-8"))
+        # Local review bundles register "de-business-kit-preview"; one name per user.
+        self.assertNotEqual(self.catalog["name"], "de-business-kit-preview")
+        self.assertEqual(self.entry["name"], manifest["name"])
+        self.assertEqual(self.source["source"], "github")
+        self.assertEqual(self.source["repo"], "ilyafedotov-ops/german-business-skills")
+        self.assertRegex(self.source["ref"], r"^v[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$")
+        self.assertRegex(self.source["sha"], r"^[0-9a-f]{40}$")
+
+    def test_pinned_commit_is_the_tagged_release_plugin(self):
+        git = ["git", "-C", str(ROOT)]
+        tag = subprocess.run(git + ["rev-parse", "--verify", "--quiet",
+                                    f"refs/tags/{self.source['ref']}^{{commit}}"],
+                             capture_output=True, text=True)
+        if tag.returncode != 0:
+            self.skipTest("Release tag is not fetched in this checkout")
+        self.assertEqual(tag.stdout.strip(), self.source["sha"])
+        pinned = json.loads(subprocess.run(
+            git + ["show", f"{self.source['sha']}:.claude-plugin/plugin.json"],
+            capture_output=True, text=True, check=True).stdout)
+        self.assertEqual(pinned["name"], self.entry["name"])
+        self.assertEqual("v" + pinned["version"], self.source["ref"])
+
+
 if __name__ == "__main__":
     unittest.main()

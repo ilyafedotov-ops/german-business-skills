@@ -1,6 +1,6 @@
 # German Business Kit — local preview 0.9.0-preview.1
 
-**First-time installation:** open `skills/de-business-kit/guides/install.en.md` inside this plugin folder. It explains the AI app, account sign-in, project-local installation, all seven skills and your first fictional task. [Online guide](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/skills/de-business-kit/guides/install.en.md).
+**First-time installation:** open `skills/de-business-kit/guides/install.en.md` inside this plugin folder. It explains installing through the Claude plugin marketplace or into a Codex project, and your first fictional task. [Online guide](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/skills/de-business-kit/guides/install.en.md).
 
 **Start here:** `skills/de-business-kit/guides/user-guide.en.md`. These files ship inside the extracted package; the source checkout is not needed.
 

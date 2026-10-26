@@ -1,6 +1,6 @@
 # German Business Kit — локальная предварительная версия 0.9.0-preview.1
 
-**Первая установка:** откройте `skills/de-business-kit/guides/install.ru.md` внутри этой папки плагина. Руководство объясняет приложение с ИИ, вход в аккаунт, установку семи скиллов в проект и первую вымышленную задачу. [Версия онлайн](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/skills/de-business-kit/guides/install.ru.md).
+**Первая установка:** откройте `skills/de-business-kit/guides/install.ru.md` внутри этой папки плагина. Руководство объясняет установку через маркетплейс плагинов Claude или в проект Codex и первую вымышленную задачу. [Версия онлайн](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.9.0-preview.1/skills/de-business-kit/guides/install.ru.md).
 
 **Начните здесь:** `skills/de-business-kit/guides/user-guide.ru.md`. Эти файлы входят в распакованный пакет; исходный репозиторий не нужен.
 

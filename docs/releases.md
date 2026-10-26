@@ -90,6 +90,11 @@ Python installation or automatic update is required for Windows users.
    a successful release. If a draft remains after failure, inspect it explicitly;
    the workflow never overwrites existing releases. A published mistake needs a
    new version, not a moved tag or replaced asset.
+5. Only after step 4 succeeds, set `ref` in the root `.claude-plugin/marketplace.json`
+   to the new tag and `sha` to its commit, run `python3 -B -m unittest tests.test_packaging -v`
+   and merge that change to the default branch. Until then the
+   [GitHub marketplace](distribution.md#github-marketplace-for-claude) keeps
+   installing the previous verified release; it never installs unreleased source.
 
 Local rehearsal after creating the exact tag:
 
