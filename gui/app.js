@@ -184,15 +184,28 @@
     const rows=[...(overview.open_items||[]),...(overview.open_questions||overview.questions||[]).filter(item=>['open','deferred'].includes(item.status)),...(snapshot.accounting?.filings||[]).flatMap(item=>(item.check?.issues||[]).map(issue=>({...issue,ref:item.record.filing_id})))];
     return (errors.length?`<div class="warning"><strong>${label('issueUnknown')}</strong><ul>${errors.map(error=>`<li>${esc(typeof error==='string'?error:JSON.stringify(error))}</li>`).join('')}</ul></div>`:'')+(rows.length?'<ul>'+rows.map(row=>`<li>${esc(row.title||row.detail||window.GUI_I18N[language]['issue-'+row.code]||t('issueUnknown'))}${row.ref?` <span class="muted">${esc(snapshot.documents?.find(item=>item.record.document_id===row.ref)?.record.title||(row.ref===period?period:row.ref))}</span>`:''}</li>`).join('')+'</ul>':`<p class="muted">${label('noIssues')}</p>`);
   }
+  function activeTasks() {
+    return snapshot?.overview?.active_tasks || [];
+  }
+  function taskList(tasks) {
+    if (!tasks.length) return '';
+    return `<section class="section"><h2>${label('activeTasks')}</h2><p class="hint">${label('taskScope')}</p><ul class="file-list" aria-label="${label('activeTasks')}">${tasks.map(task=>`<li><div class="path"><h3>${esc(task.title)}</h3></div><p>${label('status')}: ${esc(t('task-'+task.status))} · ${label('taskOwner')}: ${esc(task.owner)}</p><p class="hint">${task.due_date?`${label('taskDate')}: ${esc(task.due_date)}<br>${label('taskDateSource')}: <span>${esc(task.deadline_source)}</span>`:label('taskUndated')}</p><p class="hint">${label('taskEvidence-'+task.evidence_status)}</p>${task.pending_dependencies?.length?`<p class="hint">${label('taskDependencies')}: ${esc(task.pending_dependencies.join(', '))}</p>`:''}${task.readiness!=='ready'?`<p class="hint">${label('taskReadiness-'+task.readiness)}</p>`:''}${task.note?`<p class="path">${esc(task.note)}</p>`:''}</li>`).join('')}</ul></section>`;
+  }
+  function hasBusinessRecords() {
+    return Boolean(snapshot?.overview?.workspace_has_documents || snapshot?.documents?.length || snapshot?.accounting?.entries?.length || snapshot?.accounting?.filings?.length || snapshot?.accounting?.configuration);
+  }
   function homePage() {
-    const docs=snapshot.documents||[], pending=docs.filter(item=>item.record.review_status!=='reviewed'&&item.record.review_status!=='excluded');
-    const config=snapshot.accounting?.configuration;
+    const docs=snapshot.documents||[], pending=docs.filter(item=>!['reviewed','excluded'].includes(item.record.review_status));
+    const empty=!hasBusinessRecords(), config=snapshot.accounting?.configuration;
     const hasDraft=drafts.continuation&&drafts[drafts.continuation.editor?.kind==='entry'?'entry':drafts.continuation.editor?.kind==='filing'?'filing':drafts.continuation.editor?.kind+':'+drafts.continuation.editor?.id];
+    const errors=snapshotUnavailable||(snapshot.errors||[]).length||(snapshot.overview?.errors||[]).length;
+    const tasks=errors?[]:activeTasks();
+    const nextTask=tasks.find(task=>task.id===snapshot.overview?.next_task_id);
     const filingAttention=snapshot.accounting?.filings?.some(item=>item.record.state==='submission_unconfirmed'||(item.check?.issues||[]).length);
-    const key=hasDraft?'continueWork':filingAttention?'inspectFiling':!docs.length?'noDocuments':pending.length?'reviewNext':!config?'chooseAccounts':'continueWork';
-    const button=hasDraft?'continueWork':filingAttention?'inspectFiling':!docs.length?'addDocuments':pending.length?'reviewNext':!config?'chooseAccounts':'continueWork';
-    const target=hasDraft?'resume-work':filingAttention?'inspect-next-filing':!docs.length?'documents':pending.length?'review-next':!config?'accounts':'month';
-    return intro('homeTitle','homeText')+`<section class="next-step"><h2>${label(key)}</h2><p>${label('coverage')}</p><div class="actions">${action(button,target,'primary')}${action('refresh','refresh')}</div></section><dl class="facts"><div><dt>${label('received')}</dt><dd>${docs.length}</dd></div><div><dt>${label('reviewed')}</dt><dd>${docs.filter(item=>item.record.review_status==='reviewed').length}</dd></div><div><dt>${label('recorded')}</dt><dd>${snapshot.accounting?.entries?.length ?? '—'}</dd></div><div><dt>${label('filingCount')}</dt><dd>${snapshot.accounting?.filings?.length ?? '—'}</dd></div></dl><section class="section"><h2>${label('attention')}</h2>${issues()}</section>`;
+    const key=errors?'issueUnknown':hasDraft?'continueWork':filingAttention?'inspectFiling':tasks.length?'reviewTasks':empty?'askTask':pending.length?'reviewNext':!config?'chooseAccounts':'continueWork';
+    const button=errors?'refresh':hasDraft?'continueWork':filingAttention?'inspectFiling':tasks.length?'continueAssistant':empty?'help':pending.length?'reviewNext':!config?'chooseAccounts':'continueWork';
+    const target=errors?'refresh':hasDraft?'resume-work':filingAttention?'inspect-next-filing':tasks.length||empty?'help':pending.length?'review-next':!config?'accounts':'month';
+    return intro('homeTitle','homeText')+`<section class="next-step"><h2>${nextTask&&!hasDraft&&!filingAttention?esc(nextTask.title):label(key)}</h2><p>${label(errors?'taskRepair':hasDraft||filingAttention?'coverage':tasks.length?'taskContinueHint':empty?'askTaskHint':'coverage')}</p><div class="actions">${action(button,target,'primary')}${errors?'':action('refresh','refresh')}</div></section>${taskList(tasks)}<dl class="facts"><div><dt>${label('received')}</dt><dd>${docs.length}</dd></div><div><dt>${label('reviewed')}</dt><dd>${docs.filter(item=>item.record.review_status==='reviewed').length}</dd></div><div><dt>${label('recorded')}</dt><dd>${snapshot.accounting?.entries?.length ?? '—'}</dd></div><div><dt>${label('filingCount')}</dt><dd>${snapshot.accounting?.filings?.length ?? '—'}</dd></div></dl><section class="section"><h2>${label('attention')}</h2>${issues()}</section>`;
   }
   function documentsPage() {
     return intro('documentsTitle','documentsText')+`<section class="panel"><form id="import-form"><div class="field"><label for="document-files">${label('chooseFiles')}</label><input id="document-files" type="file" multiple accept=".pdf,.xml,.png,.jpg,.jpeg,.tif,.tiff,.csv"><p class="hint">${label('importHint')}</p><p id="selected-files" class="hint">${selectedFiles.map(file=>esc(file.name)).join(', ')}</p></div><div class="grid">${field('import-period','storageMonth',period,'month')}${field('received-on','receivedOn',today(),'date')}</div><button type="submit" class="primary">${label('importFiles')}</button></form>${importOutcome?`<div class="section"><h3>${label('importResult')}</h3>${formatResult(importOutcome)}</div>`:''}</section><div class="search">${field('search','search','','search','',false)}</div><div id="document-list">${documentList('')}</div>`;
@@ -399,6 +412,18 @@
   function openHelp() {
     $('help-title').textContent=t('helpTitle');$('help-label').textContent=t('helpLabel');$('help-hint').textContent=t('helpHint');$('copy-help').textContent=t('copy');$('close-help').textContent=t('close');$('copy-status').textContent='';
     const contexts={en:`Help me continue my own German business work in ${period}. I am on “${t(route)}”${editor?`, reviewing ${editor.kind} ${editor.id||''}`:''}. Check the actual saved records and available tools. Explain the next useful step and any unresolved evidence. Keep review, accounting entries and manual ELSTER outcomes distinct. Do not send anything automatically.`,ru:`Помоги продолжить самостоятельный учёт бизнеса в Германии за ${period}. Я в разделе «${t(route)}»${editor?`, проверяю ${editor.kind} ${editor.id||''}`:''}. Проверь сохранённые записи и доступные инструменты. Объясни следующий шаг и недостающие доказательства. Разделяй проверку, записи учёта и фактический результат ручной подачи ELSTER. Ничего не отправляй автоматически.`,de:`Hilf mir, meine eigene Unternehmensarbeit in Deutschland für ${period} fortzusetzen. Ich bin auf „${t(route)}“${editor?`, bei ${editor.kind} ${editor.id||''}`:''}. Prüfe gespeicherte Daten und verfügbare Werkzeuge. Erkläre den nächsten Schritt und offene Nachweise. Halte Prüfung, Buchungen und manuelle ELSTER-Ergebnisse getrennt. Versende nichts automatisch.`};
+    if (route==='home' && !editor && (snapshotUnavailable||(snapshot?.errors||[]).length||(snapshot?.overview?.errors||[]).length||activeTasks().length||!hasBusinessRecords())) {
+      const errors=snapshotUnavailable||(snapshot?.errors||[]).length||(snapshot?.overview?.errors||[]).length;
+      const tasks=errors?[]:activeTasks();
+      const nextTask=tasks.find(task=>task.id===snapshot.overview?.next_task_id);
+      const taskContext=nextTask ? `${nextTask.id}: ${nextTask.title}` : tasks.map(task=>`${task.id}: ${task.title}`).join('\n');
+      const homeContexts={
+        en:errors?t('taskRepair'):tasks.length?`Help me continue this German business task: ${taskContext}. Inspect its saved state, dependencies and evidence before suggesting the next step. Do not mark tasks complete or perform external actions automatically.`:`${t('askTask')} Help me choose the task I want to work on in my German business. Ask about my intended outcome and inspect existing records before proposing a route.`,
+        ru:errors?t('taskRepair'):tasks.length?`Помоги продолжить задачу бизнеса в Германии: ${taskContext}. Проверь сохранённое состояние, зависимости и доказательства перед следующим шагом. Не отмечай задачи выполненными и не выполняй внешние действия автоматически.`:`${t('askTask')} Помоги выбрать задачу для моего бизнеса в Германии. Уточни желаемый результат и проверь существующие записи перед выбором маршрута.`,
+        de:errors?t('taskRepair'):tasks.length?`Hilf mir bei dieser Unternehmensaufgabe in Deutschland: ${taskContext}. Prüfe gespeicherten Stand, Abhängigkeiten und Nachweise vor dem nächsten Schritt. Markiere keine Aufgabe als erledigt und führe keine externen Aktionen automatisch aus.`:`${t('askTask')} Hilf mir, meine gewünschte Unternehmensaufgabe in Deutschland zu wählen. Frage nach meinem Ziel und prüfe vorhandene Daten vor einem Routenvorschlag.`
+      };
+      contexts[language]=homeContexts[language];
+    }
     $('help-prompt').value=contexts[language];$('help-dialog').showModal();
   }
   window.addEventListener('beforeunload',event=>{if(dirty){event.preventDefault();event.returnValue='';}});
