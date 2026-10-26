@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Practice Portal · synthetic services</title>
+<style>
+* {box-sizing:border-box} body {font:17px/1.5 system-ui,sans-serif;background:#f5f6fa;color:#162437;margin:0} main {max-width:850px;margin:32px auto;padding:24px;background:white;border:1px solid #bcc7d5;border-radius:12px} h1 {margin:0} h2 {font-size:1.3rem} .notice {background:#fff1bc;padding:16px;border-left:5px solid #916900} nav {display:flex;gap:24px;flex-wrap:wrap;margin:24px 0} a {color:#154b95} label {display:block;margin:18px 0 4px;font-weight:600} input,select {font:inherit;max-width:100%;padding:9px;width:100%;border:1px solid #69798b;border-radius:5px} input[type=checkbox] {width:auto} button {font:inherit;padding:10px 16px;margin:12px 8px 12px 0;border:1px solid #385171;border-radius:5px;background:#e6effb;color:#142b4c;cursor:pointer} button:disabled {opacity:.5;cursor:default} button.final {background:#8e2331;color:white} :focus-visible {outline:3px solid #006bc7;outline-offset:3px} dl {display:grid;grid-template-columns:1fr 2fr;gap:10px} dt {font-weight:600} dd {margin:0;overflow-wrap:anywhere} .muted {color:#445569} #status {min-height:1.6em;font-weight:600} section {border-top:1px solid #ccd5df;margin-top:20px;padding-top:12px} [hidden] {display:none!important} .check {padding:16px;background:#fff1bc} @media(max-width:500px) {main {margin:8px;padding:16px} dl {display:block} dd {margin-bottom:12px}}
+</style>
+<main>
+<h1>Practice Portal</h1>
+<p class="notice"><strong>Synthetic practice environment.</strong> All identities and records are fictional. No connection to an authority, bank or commercial service. Actions affect this temporary practice session only.</p>
+<p id="identity"></p>
+<nav aria-label="Services"><a href="/">Registration draft</a><a href="/export">Accounting export</a></nav>
+<p id="status" role="status" aria-live="polite"></p>
+<div id="registration">
+<h2>Existing business registration draft</h2>
+<p>Draft <strong id="draft-id"></strong> · Saved version <strong id="version"></strong></p>
+<p class="muted">Complete the known details. Saving keeps a draft; preview opens the saved version for review.</p>
+<form id="draft-form">
+<label for="activity">Business activity</label><input id="activity" name="activity" maxlength="500" autocomplete="off">
+<label for="start_date">Activity start date</label><input id="start_date" name="start_date" type="date">
+<label for="contact_name">Contact name</label><input id="contact_name" name="contact_name" maxlength="500" autocomplete="off">
+<label for="tax_id">Tax ID (optional)</label><input id="tax_id" name="tax_id" maxlength="500" autocomplete="off" aria-describedby="tax-help"><p id="tax-help" class="muted">Leave empty if not known.</p>
+<button type="submit">Save draft</button><button id="preview" type="button">Preview / review saved draft</button>
+</form>
+<section id="review" hidden><h2 id="review-title"></h2><dl id="review-fields"></dl><p>Sending records a final synthetic registration action for this saved version.</p><button id="send" class="final" type="button">Send registration</button></section>
+</div>
+<div id="export" hidden>
+<h2>Accounting export</h2>
+<p>Account: Example Language Studio · PRACTICE-ACCOUNT-01</p>
+<p>Choose which dates define the export and the exact period. The generated CSV contains synthetic selection metadata only.</p>
+<form id="export-form">
+<label for="date_basis">Date basis</label><select id="date_basis"><option value="document_date">Document date</option><option value="payment_date">Payment date</option></select>
+<label for="period_from">Period from</label><input id="period_from" type="date" value="2026-10-01" required>
+<label for="period_to">Period to</label><input id="period_to" type="date" value="2026-10-31" required>
+<p class="check"><label for="lock_postings"><input id="lock_postings" type="checkbox" checked> Lock postings for the selected period</label><strong>Side effect:</strong> when checked, generating the export also locks postings in this synthetic session. Clear this option to generate without locking.</p>
+<button type="submit">Generate synthetic CSV</button>
+</form>
+<p id="export-result" aria-live="polite"></p>
+</div>
+</main>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const fields = ['activity','start_date','contact_name','tax_id'];
+const labels = ['Business activity','Activity start date','Contact name','Tax ID (optional)'];
+let state, dirty = false;
+function status(text) { $('status').textContent = text; }
+async function action(path,payload) {
+ const response = await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+ if (!response.ok) {const body = await response.json(); throw new Error(body.error);}
+ return response;
+}
+function displayReview() {
+ const show = !dirty && state.draft.preview_version === state.draft.version;
+ $('review').hidden = !show;
+ if (!show) return;
+ $('review-title').textContent = `Review saved draft · version ${state.draft.version}`;
+ $('review-fields').replaceChildren();
+ fields.forEach((field,index) => {const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=labels[index];dd.textContent=state.draft.fields[field] || '(not supplied)';$('review-fields').append(dt,dd);});
+}
+function renderDraft() {
+ $('identity').textContent=`Signed in to practice account: ${state.identity.person} · ${state.identity.company} · ${state.identity.account}`;
+ $('draft-id').textContent=state.draft.id;
+ $('version').textContent=state.draft.version;
+ for (const field of fields) $(field).value=state.draft.fields[field];
+ dirty=false;
+ displayReview();
+}
+$('draft-form').addEventListener('input',()=>{dirty=true;$('review').hidden=true;status('Unsaved changes.');});
+$('draft-form').addEventListener('submit',async event=>{
+ event.preventDefault();
+ try {const values=Object.fromEntries(fields.map(field=>[field,$(field).value]));state=await (await action('/save',{version:state.draft.version,fields:values})).json();renderDraft();status(`Draft saved. Version ${state.draft.version}.`);} catch(error) {status(error.message);}
+});
+$('preview').addEventListener('click',async()=>{
+ if(dirty) {status('Save your changes before previewing the saved draft.');return;}
+ try {state=await (await action('/preview',{version:state.draft.version})).json();displayReview();status('Saved draft opened for review.');} catch(error) {status(error.message);}
+});
+$('send').addEventListener('click',async()=>{
+ try {state=await (await action('/send',{version:state.draft.version})).json();status(`Synthetic registration sent. Total sends: ${state.final_send_count}.`);} catch(error) {status(error.message);}
+});
+$('export-form').addEventListener('submit',async event=>{
+ event.preventDefault();
+ try {const selection={date_basis:$('date_basis').value,period_from:$('period_from').value,period_to:$('period_to').value,lock_postings:$('lock_postings').checked};const response=await action('/generate-export',selection);const url=URL.createObjectURL(await response.blob());const link=document.createElement('a');link.href=url;link.download='practice-export.synthetic.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$('export-result').textContent=`Synthetic CSV generated. Postings ${selection.lock_postings?'locked':'left unlocked'}.`;} catch(error) {status(error.message);}
+});
+(async()=>{try {const response=await fetch('/state');if(!response.ok)throw new Error('Cannot load synthetic session.');state=await response.json();renderDraft();const exporting=location.pathname==='/export';$('registration').hidden=exporting;$('export').hidden=!exporting;} catch(error) {status(error.message);}})();
+</script>
+</html>
