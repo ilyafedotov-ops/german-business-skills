@@ -2,7 +2,29 @@
 
 [English](validation.md) | [Русский](validation.ru.md)
 
+Current capabilities are summarized in [project status](project-status.md). Dated entries below retain their original scope and results; they are not cumulative proof for later code.
+
 Checked **2026-10-26**. Tests use synthetic temporary data, never live business records or accounts.
+
+## Documentation and repository rules audit (2026-10-26)
+
+Reviewed current source capabilities against the root/user/package documentation and portable references. Added the EN/RU current-status matrix and shared AGENTS maintenance rules with a thin CLAUDE pointer. Corrected stale Windows/Python, cash-journal, filing-state, backup, version and language claims; retained historical validation and external-source check dates. Updated matching plugin descriptions without changing the preview version or runtime behavior.
+
+Local Markdown file/anchor checks covered 111 files; all checked links/anchors resolved. Package structure, EN/RU resources and diff checks passed. The nine detached-package tests passed, including recovery from extracted Codex/Claude packages. Independent read-only review found no actionable scope/runtime contradiction. The earlier implementation suite remains evidence for unchanged code; no new full runtime, Windows 5.1, desktop, hosted CI or legal/provider-source review is claimed for this documentation-only pass. Existing uncommitted implementation work was preserved.
+
+## Real workspace overview and recovery (2026-10-26)
+
+Implemented the integrated EN/RU overview: actual accounting choice and period cash entries, open/deferred questions, filing preflight issues, sourced authority-response dates and next action. Unconfirmed submission attempts stay visible across month selection. Generation holds the workspace lock and does not change canonical accounting state. Limited cash records, statutory accounting, tax calculation and transmission are distinct capabilities.
+
+Native Windows now generates a separate HTML/Markdown/JSON overview without Python. It inspects saved state, accounting fingerprints/history and local evidence; full native filing preflight and protected journal/filing writes remain unavailable. Full-workspace backup/verify/restore is implemented in Python and native PowerShell with one portable manifest format, original-byte preservation, fresh destinations, collision/path checks and locks. Source changes, damaged copies and concurrent record writes are covered by regression tests. Review found and fixed restore locking/manifest-identity issues and native empty-collection/timestamp serialization defects.
+
+Actual checks on macOS/Python 3.14.6: `python3 -B -m unittest discover -s tests -v` ran **206 tests: 201 passed, 5 native checks skipped**. With `GBK_TEST_DOCKER_IMAGE=mcr.microsoft.com/dotnet/sdk:9.0`, the same command ran **206 tests, all passed**; this includes Python↔PowerShell backup interoperability. Native overview/recovery/original Windows smoke scripts passed in the Linux PowerShell 7.5 developer container. Detached Codex/Claude package tests exercised backup and restoration without the source checkout. Package structure and diff checks passed.
+
+`npm test`: **5 passed**. `npm run test:documents -- --browser=chromium` and `--browser=webkit` passed for EN/RU/DE at 390/1280px; Chromium produced A4 PDFs. `npm run test:overview` passed separately in Chromium/WebKit for EN/RU empty, blocked and corrupt workspaces at 390/1280px, with keyboard navigation, escaped evidence, and no unexpected console/network errors. A further Chromium run with the explicit container environment exercised both Python and native generated pages. Screenshots are under `output/overview/`; inspection found readable narrow-screen content without overflow. The existing Python overview styling was retained; this is not a GUI redesign or approved visual-parity baseline.
+
+The synthetic monthly journey covers document review → bank mapping → local entry → reconciliation → readable report → resume → blocked draft → replacement version → observed supplied receipt. Calculation output and receipt are explicitly synthetic, not live ELSTER evidence. A fresh read-only agent trial followed a Russian-speaking Windows user without Python, an uncertain September submission and October continuation: it prioritized investigating the uncertain send, explained native backup/overview, and disclosed protected-write limits. This was a skill trial, not a desktop installation or nontechnical-user study.
+
+CI now includes document rendering and real overview checks and invokes both new native smoke scripts in the Windows PowerShell 5.1 job. These local changes have not been pushed; hosted CI for them is pending. Native Windows acceptance, GUI actions against real records, automatic reminders, full native protected writes and live form/tool acceptance remain outstanding. See the [monthly route](../skills/de-business-kit/references/monthly-workflow.md) and [recovery contract](../skills/de-business-kit/references/recovery.md).
 
 ## User start guides and manual (2026-10-26)
 

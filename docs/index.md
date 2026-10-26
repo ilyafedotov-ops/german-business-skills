@@ -4,6 +4,8 @@
 
 **First visit:** [Start here](../skills/de-business-kit/guides/start.en.md). **Already working:** [User guide](../skills/de-business-kit/guides/user-guide.en.md).
 
+[Current project status](project-status.md) separates implemented capabilities, runtime limits and remaining work.
+
 ## Find your task
 
 | Task | Guide |
@@ -17,6 +19,8 @@
 | Compare banks, insurance or services | [Service selection](service-selection.md) |
 | Resolve a problem or recover work | [Help and backups](../skills/de-business-kit/guides/user-guide.en.md#help) |
 | See the proposed interface | [Prototype with fictional data](prototype.md) |
+| Follow one month through manual ELSTER | [Monthly workflow](../skills/de-business-kit/references/monthly-workflow.md), [accounting](accounting.md) |
+| Back up or restore the whole workspace | [Full backup and recovery](../skills/de-business-kit/references/recovery.md) |
 
 ## Validation and development
 

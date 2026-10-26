@@ -2,6 +2,8 @@
 
 [English](prototype-validation.md) | [Русский](prototype-validation.ru.md)
 
+Current capabilities are summarized in [project status](project-status.md). Dated entries below retain their original scope and results; they are not cumulative proof for later code.
+
 Checked on **2026-10-25**, on macOS ARM64, Node 22.23.2 and Playwright 1.63.0. Scope: the static fictional prototype in `prototype/`, not the installed skill, a production desktop application or live accounting services.
 
 ## Functional browser evidence

@@ -1,6 +1,6 @@
-# Local plugin distribution — v0.3.0 preview
+# Local plugin distribution — v0.5.0 preview
 
-Windows users can start without Python using [native Windows tools](windows.md). The native entry point shares the existing workspace and covers installation, start/resume, preview, intake and integrity; advanced validated automation remains an optional Python-engine capability.
+Windows users can start without Python using [native Windows tools](windows.md). The native entry point shares the existing workspace and covers installation, start/resume, preview, intake, integrity, real overview and full backup/restore; advanced validated automation remains an optional Python-engine capability.
 
 [English](distribution.md) | [Русский](distribution.ru.md)
 

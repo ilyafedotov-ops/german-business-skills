@@ -13,3 +13,6 @@ Before adding an adapter, assess untrusted-document prompt injection, credential
 The supplied tests use synthetic temporary data. Live host integration, professional-law review and complete accounting/retention-process assurance are separate activities; do not advertise them as completed.
 
 Language and mode settings are workflow preferences, not new permissions. Translation must preserve evidence, numbers and review status. A tax-consultant mode does not authorize external submissions or establish a licensed professional relationship.
+
+
+Full-workspace backups contain the same private information as the source, including hidden records and history. The recovery tools copy readable bytes; their manifest is not a signature, encryption or a tax-compliance certificate. They reject unsafe paths and existing restore destinations and lock cooperating writers during copy verification. Protect backup storage separately; never delete an old workspace merely because recovery verification passed.

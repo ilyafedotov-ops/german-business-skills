@@ -1,5 +1,7 @@
 # Primary-source UX research for an owner-operated accounting desk
 
+Historical research: the proposals and source-check dates below describe that investigation. For subsequent implementation and remaining gaps, see [current project status](../project-status.md), [prototype](../prototype.md) and [validation](../validation.md). This note does not renew the external-source checks.
+
 Maintainer research note. Sources checked online on **2026-10-25**. This records design evidence and hypotheses; it does not implement or validate a GUI, certify accessibility, or establish German tax obligations.
 
 ## Audience and scope

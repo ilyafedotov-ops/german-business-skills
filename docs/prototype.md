@@ -42,3 +42,6 @@ npm run test:browser -- --browser=webkit
 ```
 
 The tests open the actual HTML file directly. Screenshots go to ignored `output/prototype/`. The prototype adds no production dependency and performs no network requests. The portable skill packages remain separate.
+
+
+For actual business records use [the generated workspace overview](document-workflow.md), not this demo. Both real generators read canonical files and produce static snapshots; neither turns prototype buttons into real accounting actions. See [current status](project-status.md).

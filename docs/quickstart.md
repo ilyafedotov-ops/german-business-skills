@@ -17,3 +17,6 @@ Use your existing app and begin with one small task. Keep business documents sep
 Installed packages contain both guides under `skills/de-business-kit/guides/`; you do not need the repository open. New workspaces have their own short start note. Updating the skill does not rewrite older workspaces.
 
 [Actual validation and limitations](validation.md) are separate from instructions: describing a step does not prove it works in every Windows/macOS or AI-app version.
+
+
+[For the local cash journal + manual ELSTER month](../skills/de-business-kit/references/monthly-workflow.md), follow the preserved evidence and review sequence. Use [the real overview](document-workflow.md) to resume and [verified full recovery](../skills/de-business-kit/references/recovery.md) before a move or protected migration. [Runtime and capability limits](project-status.md).

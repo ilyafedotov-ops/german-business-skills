@@ -2,7 +2,7 @@
 
 **English** · [Русский](README.ru.md)
 
-**First use:** [Start here](skills/de-business-kit/guides/start.en.md) · **Daily work:** [User guide](skills/de-business-kit/guides/user-guide.en.md) · **All topics:** [Help](docs/index.md)
+**First use:** [Start here](skills/de-business-kit/guides/start.en.md) · **Daily work:** [User guide](skills/de-business-kit/guides/user-guide.en.md) · **All topics:** [Help](docs/index.md) · [Current capabilities and limits](docs/project-status.md)
 
 The welcome dialog now records whether you use **local records or existing accounting software**, without preselecting either. [Accounting workflow](docs/accounting.md) covers the local reviewed cash journal, period reports, and versioned filing/Finanzamt evidence tracking. Existing software remains authoritative when selected. These additions do not yet provide complete statutory EÜR/VAT calculations or an ELSTER transport.
 
@@ -43,6 +43,9 @@ The modes share one workspace and evidence history. Switching mode does not crea
 | Private folder structure | Executable offline initializer |
 | First use and recovery | Safe start/resume, synthetic demo, local doctor and explicit setup issues |
 | Shared records | Typed profile facts and locked, evidence-backed task/question/decision updates with history |
+| Real overview | EN/RU snapshots of documents, accounting choice, open questions, filing issues and next action; native and Python scopes are distinct |
+| Local cash journal and filing records | Reviewed cash entries/reversals and versioned filing evidence through validated writers; no live transmission |
+| Full backup/restore | Verified complete workspace copies and fresh-location restoration through Python or native PowerShell |
 | Original-document intake | Byte-preserving copy, SHA-256 index and exact-content duplicate detection |
 | Original verification | Integrity checks and detection of unexpected files in originals folders |
 | CSV reconciliation | Exact Decimal arithmetic, explicit transaction IDs, currency-separated totals and exceptions |
@@ -51,11 +54,13 @@ The modes share one workspace and evidence history. Switching mode does not crea
 | Provider selection and forms | Requirements-led comparison, current-source checks and reviewable form worksheets |
 | Codex / Claude Code installation | Installer for one self-contained skill in the selected host's discovery directory |
 
-**A complete accounting ledger and ELSTER submission integration are core capabilities still to be completed.** This preview implements preparation, proposals, reconciliation and form worksheets; it does not yet provide complete bookkeeping/accounting or submit returns. A verified records archive supports your review and retention, and can optionally be shared; it does not close a month or complete a filing. There are **no production banking, Lexware or ELSTER connectors, autonomous filings or background scheduler** in this preview. Browser work requires tools actually available in the host. A skill does not grant browser access. Desktop-app integration must be verified in the installed app version.
+**A complete accounting ledger and ELSTER submission integration are core capabilities still to be completed.** This preview implements preparation, proposals, reconciliation, a limited cash journal, filing evidence tracking and form worksheets; it does not yet provide complete bookkeeping/accounting or submit returns. A verified records archive supports your review and retention, and can optionally be shared; it does not close a month or complete a filing. There are **no production banking, Lexware or ELSTER connectors, autonomous filings or background scheduler** in this preview. Browser work requires tools actually available in the host. A skill does not grant browser access. Desktop-app integration must be verified in the installed app version.
+
+The real workspace overview now shows accounting records, open questions and filing blockers. Windows PowerShell can generate its own read-only overview and perform verified full backup/restore without Python. The first monthly route is local cash records plus manual ELSTER; existing software remains authoritative when chosen. See [current status](docs/project-status.md) and [the monthly workflow](skills/de-business-kit/references/monthly-workflow.md).
 
 ## Install
 
-**Windows without Python:** use the [native Windows guide](docs/windows.md). Codex/Claude Code can use Windows PowerShell 5.1 for installation, start/resume and document intake. Git, WSL and PowerShell 7 are not prerequisites. The commands below are the optional Python-engine route, also used by developers; they are not required Windows onboarding steps.
+**Windows without Python:** use the [native Windows guide](docs/windows.md). Codex/Claude Code can use Windows PowerShell 5.1 for installation, start/resume, document intake, overview and full backup/restore. Git, WSL and PowerShell 7 are not prerequisites. The commands below are the optional Python-engine route, also used by developers; they are not required Windows onboarding steps.
 
 The optional Python utilities require **Python 3.9+**, with no additional Python packages. Clone the public source repository outside your private business workspace:
 
@@ -94,7 +99,7 @@ python3 skills/de-business-kit/scripts/workspace.py configure --root /absolute/p
 python3 skills/de-business-kit/scripts/workspace.py status --root /absolute/path/to/private-workspace
 ```
 
-An explicit language request in chat controls that task. “Use Russian from now on” or `configure --language ru` changes the persistent preference. Existing `de` language settings remain accepted for compatibility; the maintained localized documentation/templates in this release are English and Russian.
+An explicit language request in chat controls that task. “Use Russian from now on” or `configure --language ru` changes the persistent preference. German (`de`) physical folders and a German start guide are supported. The complete user-guide/report set remains English/Russian; changing report language never renames existing folders.
 
 ### Update an existing installation
 
@@ -133,7 +138,7 @@ Keep business data **outside the public source checkout and every Git repository
 | `01_profile/business.json` | Shared entrepreneur profile, activities and provenance of facts |
 | `02_registration/` | Registration plans, form worksheets and confirmations |
 | `03_banking/` | Requirements, comparisons and bank records |
-| `04_accounting/` | Software choice, workflow and responsibility agreement |
+| `04_accounting/` | Accounting choice, cash journal, filing register and period reports |
 | `05_tax/YYYY/consultations/` | Sourced tax consultations and calculations |
 | `06_bookkeeping/YYYY/MM/originals/` | Original files preserved without modification |
 | `06_bookkeeping/YYYY/MM/derived/` | OCR, extracted fields and normalized CSVs |
@@ -145,7 +150,7 @@ Keep business data **outside the public source checkout and every Git repository
 
 See [workspace commands and formats](skills/de-business-kit/references/workspace.md). Local execution does not mean that the model processes data locally: the workflow checks the actual AI product, plan and connected tools before reading real third-party personal data. Passwords, API secrets, TANs and ELSTER certificates do not belong in profile files or chat.
 
-Originals, hashes and local logs support an organized process; they do not certify GoBD compliance. The utilities do not encrypt files or configure Windows ACLs. Access controls, retention and backups remain part of the user's storage process.
+Originals, hashes and local logs support an organized process; they do not certify GoBD compliance. The utilities do not encrypt files or configure Windows ACLs. The full backup/restore tools verify copies; access controls, retention and protected backup storage remain part of the user’s storage process.
 
 ## Working principles
 
@@ -162,7 +167,7 @@ Sources and applicability rules are documented in [German rules](skills/de-busin
 
 ```bash
 python3 -B -m unittest discover -s tests -v
-python3 tools/check_package.py
+python3 -B tools/check_package.py
 ```
 
 See [validation status](docs/validation.md), [architecture](docs/architecture.md), [behavioral scenarios](evals/scenarios.json), [contributing](CONTRIBUTING.md) and [security reporting](SECURITY.md). Utility tests validate local behavior; they do not establish the correctness of tax conclusions or replace integration checks in desktop apps.

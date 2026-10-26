@@ -1,5 +1,7 @@
 # GUI/UX research recommendation
 
+Historical research: the proposals and source-check dates below describe that investigation. For subsequent implementation and remaining gaps, see [current project status](../project-status.md), [prototype](../prototype.md) and [validation](../validation.md). This note does not renew the external-source checks.
+
 Research date: **2026-10-25**. Baseline inspected: **`c4c00ab`**. This is a maintainer design brief, not an implemented interface, a usability-test result or a change to the accounting contract. Concurrent uncommitted accounting work is outside this assessment. See the [primary UX sources](gui-ux-primary-sources.md) for source findings and their authority.
 
 Implementation follow-up: the [synthetic clickable prototype](../prototype.md) now exercises the four proposed journeys. Its [verification record](../prototype-validation.md) is separate from this research baseline; production integration and participant testing remain open.

@@ -27,3 +27,6 @@ Folder language is separate from conversation/report preferences. Switching the 
 New CLI workspaces default to this layout. `--layout legacy` / `-Layout legacy` explicitly selects the older layout. The low-level Python `init_workspace` API keeps its legacy default for existing callers; `start_workspace` defaults to localized folders. Existing workspaces resume without migration. Migration would require a preview, verified backup, collision checks, reference mapping and original-hash verification; no migration is supplied now.
 
 Native Windows setup, scan, intake and integrity checks use the same mapping as the optional Python workflows, accounting reports and archives. This does not add native Windows support for Python-only advanced operations. German folder names and the start guide are implemented; the prototype and all generated report templates are not fully translated. Native runtime validation on Linux is not Windows PowerShell 5.1 acceptance; see [validation](validation.md).
+
+
+Use [full backup/restore](../skills/de-business-kit/references/recovery.md) to preserve the complete layout, including `.business-kit` and `.workspace-layout.json`. Real overview files live in the mapped admin area; ask the assistant for their actual path instead of creating an English technical folder manually.

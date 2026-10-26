@@ -1,10 +1,10 @@
 # German Business Kit architecture
 
-Windows users can start without Python using [native Windows tools](windows.md). The native entry point shares the existing workspace and covers installation, start/resume, preview, intake and integrity; advanced validated automation remains an optional Python-engine capability.
+Windows users can start without Python using [native Windows tools](windows.md). The native entry point shares the existing workspace and covers installation, start/resume, preview, intake, integrity, real overview and full backup/restore; advanced validated automation remains an optional Python-engine capability.
 
 [English](architecture.md) · [Русский](architecture.ru.md)
 
-Project version: **0.5.0 preview**. Source review: **2026-10-25**.
+Project version: **0.5.0 preview**. Implementation reviewed **2026-10-26**; external-source checks retain their recorded dates. [Current scope](project-status.md).
 
 Read the [domain ontology](ontology.md) for entities, relationships and state meanings. The **local casework extension** is part of the source implementation; it is not evidence of a published release or completed desktop integration.
 
@@ -25,6 +25,7 @@ The portable entry point is `de-business-kit`. Its `SKILL.md` routes to task-spe
 | `SKILL.md` | Task routing, language/mode selection, common invariants and result reporting |
 | `references/` | Workflows, source maps and rules for the current task |
 | `assets/en/`, `assets/ru/` | Equivalent user-facing report templates, indexed by `assets/locales.json` |
+| Native PowerShell utilities | Installation, intake/integrity, evidence-inspecting overview and portable recovery without Python |
 | Local Python utilities | Repeatable filesystem operations, preference persistence and deterministic reconciliation |
 | Private workspace | Facts, originals, proposals, decisions, source checks and operation evidence |
 | Host capabilities | Model, file access, web research, browser tools and task permissions |
@@ -38,7 +39,7 @@ The two named working modes are `bookkeeping` and `tax-consultant`; `general` co
 
 `00_admin/workspace.json` stores the default `language` and `mode`. The `configure` command persists an explicit preference change with history and an audit event; `status` exposes the current values. An explicit one-task request takes priority in the conversation. A request to translate one report does not replace the saved language or rewrite historical records.
 
-User-facing conversations and Markdown reports support **English and Russian**. Agent instructions, JSON keys, enum values, paths and IDs remain shared in English. Exact German terms and form labels are preserved and explained in the chosen language. A translation is a linked rendering of the same evidence and decision, not new verification. Legacy `de` preferences remain accepted by the CLI, but this release has no complete German template set.
+User-facing conversations and Markdown reports support **English and Russian**. Agent instructions, JSON keys, enum values, logical path IDs and record IDs remain stable; physical folder names support EN/RU/DE. Exact German terms and form labels are preserved and explained in the chosen language. A translation is a linked rendering of the same evidence and decision, not new verification. German folders and a German start guide are supported; the complete report/template set remains EN/RU. Folder language is pinned at creation and differs from conversation/report language. See [folder mapping](folder-structure.md).
 
 The workspace format remains **schema version 1**. A v0.1 workspace without `mode` is read as `general`; it does not need to be recreated. Changing a language or mode never changes profile facts, `vat_current_regime`, bookkeeping method or authority filings. The same profile and evidence history serve both languages and all modes.
 
@@ -62,7 +63,7 @@ Hashes, history and procedures support record organization; compliance of the co
 
 ## Current limits and future work
 
-Version 0.4 adds guided setup, synthetic demo, runtime assessment records, typed profile values and validated register writes while preserving language/mode support. It contains no complete accounting ledger, production bank, Lexware or ELSTER connector, automatic filings, complete personal-tax engine, integrated OCR/XML validator or scheduler. The existing reconciliation ledger CSV is an input, not a complete posting system; ELSTER worksheets are preparation, not submission. Browser instructions use only capabilities actually available in the host. No end-to-end desktop integration test is implied by local tests.
+The current preview includes guided setup, synthetic demo, runtime assessment records, typed profile values and validated register writes while preserving language/mode support. It contains no complete accounting ledger, production bank, Lexware or ELSTER connector, automatic filings, complete personal-tax engine, integrated OCR/XML validator or scheduler. The existing reconciliation ledger CSV is an input, not a complete posting system; ELSTER worksheets are preparation, not submission. Browser instructions use only capabilities actually available in the host. No end-to-end desktop integration test is implied by local tests.
 
 | Future work | Evidence needed before claiming support |
 |---|---|
@@ -72,7 +73,7 @@ Version 0.4 adds guided setup, synthetic demo, runtime assessment records, typed
 | Lexware Office read-only adapter | Verified API version, minimum permissions, test environment and reconciled objects |
 | Draft writes and assisted forms | Concrete preview, scoped authorization, readback, timeout handling and duplicate prevention |
 | Additional accounting products and e-invoice validation | Verified supported formats, actual validators and shared behavioral cases |
-| Local plugin distribution | Bundles are built from one canonical skill; actual desktop discovery and account policy remain separate checks |
+| Installed package acceptance | Local bundles already exist; actual desktop discovery, update behavior and account policy remain separate checks |
 | Additional jurisdictions or hosted services | Separate requirements, maintenance process and service-model review |
 
 ## Maintenance and validation
@@ -87,7 +88,7 @@ Use the [beginner guide](quickstart.md) and [distribution guide](distribution.md
 
 ## International preparation records
 
-Version 0.4 adds `workflows.py` for international transactions, activity classification and ELSTER worksheets, and `payments.py` for normalized payment events and strict Stripe activity CSVs. Both reuse private-workspace storage protections and write new JSON/Markdown reports with source fingerprints. Runtime dependencies remain Python standard library. Source checks record the exact applicable period; their content still requires human/agent review. Workspace schema stays version 1; no migration or separate entrepreneur profile is needed. See [workflow guide](workflows.md).
+The current preview includes `workflows.py` for international transactions, activity classification and ELSTER worksheets, and `payments.py` for normalized payment events and strict Stripe activity CSVs. Both reuse private-workspace storage protections and write new JSON/Markdown reports with source fingerprints. Runtime dependencies remain Python standard library. Source checks record the exact applicable period; their content still requires human/agent review. Workspace schema stays version 1; no migration or separate entrepreneur profile is needed. See [workflow guide](workflows.md).
 
 ## Component and deployment architecture
 
@@ -135,6 +136,9 @@ These components describe code present in this source snapshot. `SKILL.md` route
 | [summary.py](../skills/de-business-kit/scripts/casefiles/summary.py) | Read-only projection of documents, open reviews, deadlines and reconciliation evidence | In-memory snapshot consumed by overview/archive |
 | [overview.py](../skills/de-business-kit/scripts/casefiles/overview.py) | English/Russian static HTML, Markdown and JSON generation | `00_admin/overview.*`, initial `START-HERE.md` |
 | [archive.py](../skills/de-business-kit/scripts/casefiles/archive.py) | Select linked records/evidence, build a manifest, verify directory and ZIP | Unique `07_exports/YYYY-MM/archive-*` artifacts |
+| [accounting.py](../skills/de-business-kit/scripts/casefiles/accounting.py) | Accounting choice, reviewed cash movements and filing-evidence lifecycle/preflight | `04_accounting/register.json`, frozen files and history |
+| [windows-overview.ps1](../skills/de-business-kit/scripts/windows-overview.ps1) | Native saved-state and local-evidence inspection under the workspace lock | Separate `00_admin/native-overview.*` projections |
+| [recovery.py](../skills/de-business-kit/scripts/recovery.py) / [recovery.ps1](../skills/de-business-kit/scripts/recovery.ps1) | Full portable backup/verify/restore, safe paths and coordinated copying | External manifest plus complete workspace tree; fresh restored location |
 
 The casework register has schema version 1 while proposals have schema version 2. These versions are independent of workspace schema version 1. Unsupported casework schemas and old proposal contracts require explicit handling; no silent migration is supplied.
 
@@ -156,7 +160,7 @@ Canonical state is the profile, registers, original index and preserved evidence
 
 Writers share `.workspace.lock`. Updates to editable register/casework records use expected hashes where their commands require them, rejecting stale or missing versions. JSON replacement is atomic per file. Casework writes save a history snapshot, replace the register and append an audit event; derived artifacts can also be written during an operation. These writes are not one crash-atomic transaction. Locks coordinate participating scripts, not arbitrary filesystem editors.
 
-Recovery starts by inspecting the failed command's outputs, current register hashes, originals and history. Run the relevant integrity/diagnostic commands and preserve unexplained files before retrying. A generated overview refuses to overwrite files that do not carry its expected marker. Its multi-file generation is not a transactional snapshot of all workspace state; regenerate after changes before relying on its display. The archive builder holds the shared lock while assembling its export, although external editors remain outside that coordination.
+Recovery starts by inspecting failed-command outputs, current register hashes, originals and history. Preserve unexplained files. Both overview generators hold the workspace lock while reading and writing their projections and refuse to overwrite unmarked user files. Their separate output writes are not a crash-atomic transaction and the view can become stale after generation. The selected-record archive is distinct from full recovery. `recovery.py` and `recovery.ps1` preserve the complete workspace in a shared directory/manifest format, exclude only the active root lock, and verify copied bytes and paths. They restore only into a new private directory, hold its lock through copy verification, and use the same captured verified manifest for identity and content. Existing files, linked/unsafe paths, collisions or modified members stop the operation; partial output is preserved for inspection. Hashes do not authenticate the backup or establish tax correctness. See [recovery](../skills/de-business-kit/references/recovery.md).
 
 ## Trust boundaries and guarantees
 
@@ -174,7 +178,7 @@ Recovery starts by inspecting the failed command's outputs, current register has
 
 One portable skill and one shared profile avoid divergent state across modes and hosts. Standard-library CLI processes reduce installation dependencies. JSON and ordinary files make evidence inspectable and portable, at the cost of multi-file recovery and coarse write locking. The casework register is rewritten as a whole and has a 50 MiB limit; this is not designed as a concurrent, high-volume accounting platform. Shared helpers reduce duplication, but casework imports internal helpers from `workspace.py` and `workflows.py`, so their contracts are coupled.
 
-Automated checks are `python3 -B -m unittest discover -s tests -v` and `python3 tools/check_package.py`. Tests cover local contracts; package checks cover structure, translations, JSON and local links. The [validation record](validation.md) separates historical runs, behavioral trials and integration gaps. A passing test run does not establish tax correctness, production connector support or desktop usability. This architecture describes the current source, not a certification or a release declaration.
+Automated checks are `python3 -B -m unittest discover -s tests -v` and `python3 -B tools/check_package.py`. Tests cover local contracts; package checks cover structure, translations, JSON and local links. The [validation record](validation.md) separates historical runs, behavioral trials and integration gaps. A passing test run does not establish tax correctness, production connector support or desktop usability. This architecture describes the current source, not a certification or a release declaration.
 
 The [core capability plan](core-capabilities.md) defines the unfinished ledger and ELSTER work and its acceptance evidence.
 
@@ -185,3 +189,7 @@ The [core capability plan](core-capabilities.md) defines the unfinished ledger a
 ## Readable document authoring
 
 [Document authoring](../skills/de-business-kit/references/document-authoring.md) and the shared [readable-output contract](../skills/de-business-kit/references/readable-output.md) route all substantial skill results to user-readable views. EN/RU report/review Markdown, a German recipient-letter template and one static printable HTML asset are packaged with the skill. Rendering/export uses available host/browser tools; no new document runtime or transmission adapter is bundled. Canonical records remain authoritative; readable copies and recipient artifacts do not advance filing states.
+
+## Real view and prototype
+
+`casefiles/overview.py` collects accounting status and filing issues from the existing accounting checks under the shared lock, together with casework and open questions. Uncertain submissions and dated responses remain visible across months. `windows-overview.ps1` produces separate `native-overview.*` projections with local hash/history inspection; it does not implement full filing preflight. The English interactive `prototype/` still uses synthetic browser storage and does not mutate either workspace. [Runtime matrix](project-status.md).

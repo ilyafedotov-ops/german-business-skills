@@ -2,13 +2,13 @@
 
 [English](ontology.md) · [Русский](ontology.ru.md) · [Architecture](architecture.md)
 
-Source snapshot: **2026-10-25**, version **0.5.0 preview**, including the local casework extension. The extension is present in the working tree; its presence does not establish release, installation or desktop integration. This document describes the implemented domain concepts and their relationships. It is a conceptual ontology mapped to JSON/Python contracts, not an RDF/OWL schema or a new storage format.
+Source snapshot: **2026-10-26**, version **0.5.0 preview**, including the local casework extension. The extension is present in the working tree; its presence does not establish release, installation or desktop integration. This document describes the implemented domain concepts and their relationships. It is a conceptual ontology mapped to JSON/Python contracts, not an RDF/OWL schema or a new storage format.
 
 ## Domain and identity
 
-The [accounting workflow](accounting.md) adds three related concepts: an **accounting configuration** chosen during welcome (`local` or `external`, never defaulted), immutable **cash entries** with split lines and linked reversals/replacements, and **filing versions** binding a frozen report to its source evidence, review/authorization events and separately observed receipt/responses. Their additive register is `04_accounting/register.json`. Cash entries are limited preparation and filing records are evidence tracking; neither establishes complete tax calculation or a live transport. Existing external software remains authoritative when selected.
+The [accounting workflow](accounting.md) adds three related concepts: an **accounting configuration** chosen during welcome (`local` or `external`, never defaulted), immutable **cash entries** with split lines and linked reversals/replacements, and **filing versions** binding a frozen report to its source evidence, review/authorization events and separately observed receipt/responses. Their additive register is `04_accounting/register.json`. Cash entries are recorded local cash movements, not merely proposals; filing records track evidence; neither establishes complete tax calculation or a live transport. Existing external software remains authoritative when selected.
 
-The primary domain is one natural-person entrepreneur managing their own bookkeeping/accounting and tax reporting. Current implementation covers business facts, documents, preparation, proposals, reconciliation and form worksheets. Complete accounting ledger functionality and ELSTER submission integration remain core capabilities to complete; optional accountant consultation/export is a separate branch. One private workspace carries that person's shared context across activities, periods, languages and working modes. A workspace UUID identifies the workspace; it is not an official taxpayer identifier. Separate workspaces for different people are a workflow boundary, not a centrally enforced identity registry.
+The primary domain is one natural-person entrepreneur managing their own bookkeeping/accounting and tax reporting. Current implementation covers business facts, documents, proposals, reconciliation, limited cash records, filing evidence, readable views and full recovery. Complete accounting ledger functionality and ELSTER submission integration remain core capabilities to complete; optional accountant consultation/export is a separate branch. One private workspace carries that person's shared context across activities, periods, languages and working modes. A workspace UUID identifies the workspace; it is not an official taxpayer identifier. Separate workspaces for different people are a workflow boundary, not a centrally enforced identity registry.
 
 Legal form, activity classification, VAT regime and accounting method are separate dimensions. Changing the conversation mode or adding an activity does not itself change any of them. This is the product's modeling rule; applying tax rules to an actual case requires the source-review workflow.
 
@@ -35,7 +35,11 @@ Legal form, activity classification, VAT regime and accounting method are separa
 | Reconciliation report | Arithmetic comparison of supplied bank/ledger or payment-provider records | Derived exports; links to source fingerprints and unresolved differences |
 | Provider observation | Evidence of an externally observed provider record and status | Casework `observations`; linked to a proposal, provider and evidence file |
 | Operation | A proposed external action, its payload, authorization and result evidence | `assets/operation.json` template; no executable operation engine |
-| Overview | A regenerable view of current records and open work | `00_admin/overview.json`, `.md`, `.html`; not canonical business state |
+| Accounting configuration | Explicit authoritative system and accounting method | `04_accounting/register.json` → `configuration`; evidence and fingerprint |
+| Cash entry | Reviewed cash movement with splits, preserved correction/reversal links | `register.json` → `entries`; not a complete statutory ledger |
+| Filing version | Frozen payload/sources and review, authorization, receipt and response evidence | `register.json` → `filings`; state independent of real transmission |
+| Full workspace backup | Complete portable recovery copy, distinct from a selected archive | External directory with `manifest.json` and `files/`; only root lock excluded |
+| Overview | A regenerable view of current records and open work | `00_admin/overview.*` or separate `native-overview.*`; projections, not canonical business state |
 | Records archive | A selected, verifiable package for the user’s review and retention; optional sharing | Export directory and ZIP with `manifest.json`, record snapshots, originals and evidence |
 | Audit event / history | Trace of a utility action and preserved previous state | `09_audit/events.json` and `09_audit/history/`; not a tamper-proof event store |
 
@@ -65,6 +69,12 @@ flowchart TD
     P --> H
     Q --> H
     T --> H
+    W --> AC[Accounting configuration]
+    AC --> CE[Reviewed cash entries]
+    CE --> CR[Cash report]
+    W --> FV[Frozen filing versions]
+    FV --> FR[Observed receipts and responses]
+    W --> BK[Full backup manifest and files]
 ```
 
 Arrows denote semantic relationships or derivation, not uniform foreign-key enforcement. For example, proposals validate their original document and source-check references, while `activity_id` is currently checked as nonempty text rather than resolved against a dedicated activity registry. Payment references in catalog records are also textual links. The diagram must not be read as a fully enforced relational database schema.
@@ -110,7 +120,7 @@ stateDiagram-v2
     rejected --> [*]
 ```
 
-Approval requires reviewed core invoice fields, acceptable states for all supplied extractions, resolved arithmetic, a reviewer and period-specific source evidence. An approved or rejected record cannot be edited in place by `save_proposal`; a correction begins as another draft. The saved proposal retains `provider_state: unknown`; a separate observation records external evidence without converting approval into a posting. Preparation, user approval, evidence of actual posting/submission and the Finanzamt response are separate stages. The current records describe preparation and observations, not a complete ledger or submission state machine; a transmission receipt does not establish acceptance of tax treatment.
+Approval requires reviewed core invoice fields, acceptable states for all supplied extractions, resolved arithmetic, a reviewer and period-specific source evidence. An approved or rejected record cannot be edited in place by `save_proposal`; a correction begins as another draft. The saved proposal retains `provider_state: unknown`; a separate observation records external evidence without converting approval into a posting. Preparation, user approval, evidence of actual posting/submission and the Finanzamt response are separate stages. The filing register has a local evidence state machine, separate from any provider transport or complete accounting engine; a transmission receipt does not establish acceptance of tax treatment.
 
 ## Interpretation rules
 
@@ -125,4 +135,10 @@ Approval requires reviewed core invoice fields, acceptable states for all suppli
 
 ## Owning contracts
 
-The implementation owns the exact fields and validation rules: [workspace core](../skills/de-business-kit/scripts/workspace.py), [preparations](../skills/de-business-kit/scripts/workflows.py), [payment events](../skills/de-business-kit/scripts/payments.py), [casework storage](../skills/de-business-kit/scripts/casefiles/storage.py), [document catalog](../skills/de-business-kit/scripts/casefiles/documents.py), [proposal and source review](../skills/de-business-kit/scripts/casefiles/reviews.py), and [records archive](../skills/de-business-kit/scripts/casefiles/archive.py). The [architecture](architecture.md) explains how those contracts are executed and where their guarantees end.
+The implementation owns the exact fields and validation rules: [workspace core](../skills/de-business-kit/scripts/workspace.py), [preparations](../skills/de-business-kit/scripts/workflows.py), [payment events](../skills/de-business-kit/scripts/payments.py), [casework storage](../skills/de-business-kit/scripts/casefiles/storage.py), [document catalog](../skills/de-business-kit/scripts/casefiles/documents.py), [proposal and source review](../skills/de-business-kit/scripts/casefiles/reviews.py), and [records archive](../skills/de-business-kit/scripts/casefiles/archive.py), [accounting and filing records](../skills/de-business-kit/scripts/casefiles/accounting.py), and [recovery](../skills/de-business-kit/scripts/recovery.py). The [architecture](architecture.md) explains how those contracts are executed and where their guarantees end.
+
+## Filing states and recovery identity
+
+Filing versions accept `draft`, `reviewed`, `authorized`, `submission_unconfirmed`, `submitted` and `cancelled`. Authority responses append to a submitted filing; they do not introduce an `accepted` state. `filing-check` reports local evidence blockers without changing state or granting approval. Generic `operation.json` uses a separate template vocabulary and is not the filing writer.
+
+A backup ID identifies a captured manifest and its complete file tree. Verification concerns byte/path equality; it does not certify the source records, repair them or advance their states. Restore uses a new destination and preserves workspace identity. Logical path names in this document resolve through the EN/RU/DE layout map.
