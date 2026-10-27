@@ -118,6 +118,38 @@ Primary sources checked 2026-10-26: [GitHub attestations](https://docs.github.co
 [release integrity](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/verify-release-integrity),
 and [secure Actions use](https://docs.github.com/en/actions/reference/security/secure-use).
 
+## CI coverage and duplicate-run prevention
+
+`Checks` always starts and ends with a stable **Checks gate**; it does not use
+workflow-level path skips. Every selected mode validates packages, release metadata,
+the fetched marketplace tag/commit, local documentation links and the selector's
+regressions on Ubuntu. Security analysis and PR dependency review run independently
+with their existing triggers and policies.
+
+- **Full:** runtime, skill instructions, tests, tooling, workflows, dependencies,
+  version/build changes and unknown paths retain Windows/macOS Python, browsers,
+  native PowerShell, GUI builds and artifact-transfer checks. Tags and reusable
+  release calls always select this mode and produce fresh release artifacts.
+- **Documentation:** only regular root Markdown, Markdown below `docs/` or
+  `packaging/`, and the root marketplace manifest may take the short path. Changes
+  to portable skill guides/templates still require full checks. Renames are checked
+  as deletion plus addition; unreadable diffs or special file modes select full.
+- **Reuse after merge:** a `main` push may reuse a completed successful Checks run
+  from the same repository and associated merged PR. Its latest attempt must record
+  that PR number, **full** coverage and the exact whole Git tree in the successful
+  gate step. Matching the PR head SHA alone is insufficient. Missing, stale,
+  ambiguous or inaccessible evidence falls back to full checks; fork PRs do not reuse.
+
+The final gate rejects failed planners/quick checks, missing matrix results and
+unexpected skips before recording evidence. Reuse skips only duplicate runtime
+matrices; quick checks and current security scans still run. A CI-only deployment
+activates these workflows on `main`; it does not replace immutable product assets
+or advance the marketplace version. [Validation](validation.md) distinguishes
+local regression checks from actual hosted full/reuse/documentation runs.
+
+GitHub behavior checked **2026-10-27**: [PR merge checkout semantics](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#pull_request)
+and [required/skipped status checks](https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/troubleshooting-required-status-checks).
+
 ## Native GUI archives in 0.7.0-preview.1
 
 Version 0.7.0-preview.1 adds separate Windows x64, macOS arm64 and macOS x86_64 applications.

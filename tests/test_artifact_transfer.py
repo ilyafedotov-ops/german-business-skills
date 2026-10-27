@@ -1,6 +1,7 @@
 """Exercise the actual PR artifact verifier with valid and damaged payloads."""
 import hashlib
 import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -29,6 +30,7 @@ class ArtifactTransferTests(unittest.TestCase):
     def verify(self, expected):
         workflow = (ROOT / '.github/workflows/checks.yml').read_text()
         job = workflow.split('\n  artifact-transfer:\n', 1)[1]
+        job = re.split(r'\n  [a-zA-Z0-9_-]+:\n', job, maxsplit=1)[0]
         script = textwrap.dedent(job.split('        run: |\n', 1)[1])
         result = subprocess.run(['bash', '-c', script], cwd=self.root, capture_output=True, text=True)
         self.assertEqual(result.returncode == 0, expected, result.stdout + result.stderr)
