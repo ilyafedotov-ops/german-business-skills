@@ -194,6 +194,8 @@ The implementation owns the exact fields and validation rules: [workspace core](
 
 An **invoice payment comparison** is an immutable private report over reviewed invoice-stated due and explicit bank transaction references. It is distinct from cash-journal settlement, provider allocation and customer debt. Prepaid receipts already included in due are excluded from subtraction; ambiguous inputs/correction effects have no inferred remainder. Its audit checkpoint and source/invoice-family fingerprints support freshness checks; a current report is not proof of paid status.
 
+A **payment follow-up draft** binds recipient identity, language and wording mode to an immutable comparison fingerprint. Recipient text and private review are distinct artifacts. Its `not_sent` value describes this preparation-only workflow, not observed mailbox state; it grants no sending authority and is not invoice-delivery evidence.
+
 ## Filing states and recovery identity
 
 Filing versions accept `draft`, `reviewed`, `authorized`, `submission_unconfirmed`, `submitted` and `cancelled`. Authority responses append to a submitted filing; they do not introduce an `accepted` state. `filing-check` reports local evidence blockers without changing state or granting approval. Generic `operation.json` uses a separate template vocabulary and is not the filing writer.

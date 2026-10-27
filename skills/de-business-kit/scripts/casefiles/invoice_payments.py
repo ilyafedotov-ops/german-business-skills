@@ -155,30 +155,35 @@ def prepare(root, input_path, expected, language="en"):
                 "status": status, "comparison_remaining": report["comparison_remaining"], "issues": issues}
 
 
+def _checked(root, state, report_path):
+    """Read and validate under the caller-held workspace lock."""
+    physical = ws._physical(root, report_path)
+    report = ws._load(ws._inside(root, physical))
+    events = ws._load(ws._inside(root, ws.EVENTS))
+    if not any(e.get("action") == "invoice_payment_comparison_saved" and
+               e.get("details") == {"path": physical, "sha256": st.digest(report)} for e in events):
+        raise ws.WorkspaceError("Payment report has no matching audit checkpoint or was changed.")
+    st.check_evidence(root, report["markdown"])
+    row, family = _context(root, state, report["invoice_id"])
+    issues = []
+    if st.digest(family) != report["family_sha256"]:
+        issues.append("invoice_context_changed")
+    for source in report["sources"]:
+        st.check_evidence(root, source)
+        try:
+            st.check_evidence(root, source["source"])
+        except (OSError, ws.WorkspaceError):
+            issues.append("working_source_changed:" + source["source"]["path"])
+    return report, {"report_sha256": st.digest(report), "current": not issues, "freshness_issues": issues,
+            "comparison_issues": report["issues"], "status": report["status"],
+            "comparison_remaining": report["comparison_remaining"] if not issues else None}
+
+
 def check(root, report_path):
     root = ws._workspace(root)
     with ws._locked(root):
-        state = inv._load(root)
-        physical = ws._physical(root, report_path)
-        report = ws._load(ws._inside(root, physical))
-        events = ws._load(ws._inside(root, ws.EVENTS))
-        if not any(e.get("action") == "invoice_payment_comparison_saved" and
-                   e.get("details") == {"path": physical, "sha256": st.digest(report)} for e in events):
-            raise ws.WorkspaceError("Payment report has no matching audit checkpoint or was changed.")
-        st.check_evidence(root, report["markdown"])
-        row, family = _context(root, state, report["invoice_id"])
-        issues = []
-        if st.digest(family) != report["family_sha256"]:
-            issues.append("invoice_context_changed")
-        for source in report["sources"]:
-            st.check_evidence(root, source)
-            try:
-                st.check_evidence(root, source["source"])
-            except (OSError, ws.WorkspaceError):
-                issues.append("working_source_changed:" + source["source"]["path"])
-        return {"current": not issues, "freshness_issues": issues,
-                "comparison_issues": report["issues"], "status": report["status"],
-                "comparison_remaining": report["comparison_remaining"] if not issues else None}
+        _, result = _checked(root, inv._load(root), report_path)
+        return result
 
 
 def render(report):

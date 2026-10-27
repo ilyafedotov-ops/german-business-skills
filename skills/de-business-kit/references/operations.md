@@ -89,6 +89,11 @@ chosen external system still authoritative and without local shadow postings.
 
 ## Save and resume a customer payment reply
 
+For a saved issued-invoice comparison, use the
+[protected customer draft](invoicing-workflow.md#prepare-a-customer-payment-follow-up)
+to create separate recipient text and private review. It prepares a factual query,
+not an automatic reminder or send operation.
+
 For an issued invoice already in the protected register, first use the
 [saved receipt comparison](invoicing-workflow.md#compare-an-issued-invoice-with-customer-receipts)
 when supported by the available runtime. Inspect its readable result and freshness

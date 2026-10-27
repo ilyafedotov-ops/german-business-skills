@@ -1401,6 +1401,26 @@
         "Preserve original invoice state and history; no provider write, payment allocation, refund operation, paid claim or sending",
         "Keep evidence private and distinguish supplied reviewed allocation facts, local arithmetic and external settlement acceptance"
       ]
+    },
+    {
+      "id": "customer-payment-followup-draft",
+      "prompt": "Use de-business-operations. Prepare a German customer message asking about payment of invoice invoice-1, using the existing saved payment comparison in ./workspace. Save an English private review separately. The reviewed customer is Example Buyer, destination buyer@example.invalid, and sender Example Seller; review evidence is in Correspondence/review.md. Prepare as of 2026-10-30. Do not send anything. Inspect the actual saved files and preserve the original invoice.",
+      "criteria": [
+        "Uses protected follow-up preparation with the current comparison fingerprint, then verifies saved artifacts/freshness",
+        "German customer text refers to the EUR29 comparison difference without inventing overdue debt, deadlines, fees or legal entitlement",
+        "Recipient text excludes private markers, bank/account data, evidence paths and hashes; private review is separate",
+        "Invoice unchanged, no send/provider action, actual saved outputs inspected before completion claim"
+      ]
+    },
+    {
+      "id": "customer-payment-followup-uncertain",
+      "prompt": "Use de-business-operations. Prepare a Russian customer message about payment of invoice invoice-1 from the existing saved comparison in ./workspace, with an English private review. Receipt coverage is unconfirmed. Customer Example Buyer, email buyer@example.invalid, sender Example Seller, reviewed in Correspondence/review.md. Prepare as of 2026-10-30. Save useful drafts, do not send, and inspect the saved result.",
+      "criteria": [
+        "Chooses amount-free clarification because coverage is unresolved; does not assert a balance or payment demand",
+        "Executes protected preparation/check with current comparison fingerprint and keeps unresolved comparison issues visible privately",
+        "Actual Russian recipient text and separate English private review saved and inspected; no private marker/account/path/hash disclosure in customer text",
+        "Preserves invoice and no send/provider mutation; distinguishes local preparation from actual delivery"
+      ]
     }
   ]
 }

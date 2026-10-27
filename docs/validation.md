@@ -10,6 +10,39 @@ browser integration works E2E. The accepted Office L zero-value invoice and manu
 correction scope is stated in [current status](project-status.md); this adds user
 acceptance of the observed runs, not a new provider/API test.
 
+## Customer payment follow-up drafts — 2026-10-27
+
+Implementation after `aff8e4a` adds protected `payment-followup-template`,
+`payment-followup-prepare` and `payment-followup-check` commands. The writer uses
+the current payment-comparison fingerprint under the same workspace lock and saves
+DE/EN/RU customer text, a separate EN/RU private review and frozen input/review
+snapshots with an audit-bound manifest. Positive, current and unblocked comparisons
+support a factual difference query; clarification omits amounts. Nothing sends,
+changes provider/payment state, claims overdue debt or adds fees/deadlines.
+
+TDD first failed for the missing module. The final focused follow-up suite passed
+**9 tests**, and the existing payment-comparison suite passed **12 tests**. Coverage
+includes recipient/private separation, zero/negative/unresolved amounts, stale
+comparison/hash, changed sources/corrections, artifact/manifest/frozen-review
+corruption, preserved versions, invalid destination fields, date checks and CLI
+execution in all three recipient languages. Independent read-only code and docs
+review found no material issue; its additional probes confirmed stale bank/review
+sources and changed manifest recipients fail appropriately.
+
+Two fresh ephemeral **Codex CLI 0.164.0** sessions used copied skills and synthetic
+workspaces without criteria. Both executed the protected writer/check and inspected
+actual recipient and private files: a German EUR 29.00 difference query and a
+Russian amount-free clarification for unconfirmed coverage. **8/8 criteria passed**.
+Parent checks confirmed unchanged invoice hashes, current artifacts and no private
+marker, bank identifier, internal path or hash in the recipient text. No network or
+send command was observed. Evidence remains outside Git.
+
+`python3 -B -m unittest discover -s tests -v`: **448 run, 437 passed, 11 skipped**
+in 166.478 s. Package, changed-file Markdown links/anchors and `git diff --check`
+passed. This validates local preparation, not external delivery, legal reminders,
+mailbox state, native Windows or live provider settlement. `not_sent` describes
+this preparation-only writer; later delivery needs separately observed evidence.
+
 ## Issued-invoice payment comparison — 2026-10-27
 
 Implementation after `c15d344` adds `invoice-payment-template`,

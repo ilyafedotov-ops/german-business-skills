@@ -201,6 +201,56 @@ If Python is unavailable, perform and save the same source-led comparison with
 available host tools; do not claim these protected checks were executed or require
 a runtime installation. This route needs no API key, provider upgrade or bank write.
 
+## Prepare a customer payment follow-up
+
+Use the saved comparison to prepare a neutral customer query, with its private
+review kept separate. This optional Python route writes actual recipient text in
+German, English or Russian, an EN/RU private review, frozen input/review evidence
+and an audit-bound manifest. It neither sends nor changes provider/payment state.
+
+| Command in `desk.py` | Purpose |
+| --- | --- |
+| `payment-followup-template` | Request fields for a new draft |
+| `payment-followup-prepare --root <private> --input <relative-json> --expected-sha256 <comparison-hash> --language en` | Save a new recipient draft and separate private review |
+| `payment-followup-check --root <private> --report <manifest-json>` | Check the exact saved files and underlying comparison before reuse |
+
+Run `invoice-payment-check` first and use its `report_sha256`. Fill
+`comparison_file`, `mode`, `recipient={channel:"email",address:<exact destination>}`,
+`customer_name`, `sender_name`, `recipient_language` (`de`, `en`, `ru`),
+`prepared_on` and a separate `review_file`. The review must support the destination,
+customer/invoice identity, names/signature, inclusion facts and requested wording.
+These are operator-supplied reviewed facts, not authenticated customer identity.
+Recipient and private-review languages are independent.
+
+- `balance_query` requires a current, positive comparison with no unresolved
+  comparison issues. Its text asks about an unexplained difference; it makes no
+  assertion of overdue debt or legal entitlement and adds no fee or deadline.
+- `clarification` omits all amounts and asks which payments relate to the invoice.
+  Use it when coverage, allocation, currency or corrections remain unresolved,
+  or when a zero/negative comparison needs clarification rather than a demand.
+  Stale inputs are blocked for both modes: prepare a fresh comparison first.
+
+Inspect the actual `recipient_path` and `review_path`. Only the recipient text is
+customer material; never attach the private review, manifest, statement or source
+snapshots. The template body includes only invoice number, customer/sender names,
+and, for a balance query, comparison date/difference/currency. Check that the supplied
+names and invoice number are themselves suitable for the recipient. No account,
+receipt IDs, local paths, source notes or hashes are copied into the message.
+
+Before external delivery, run `payment-followup-check`, inspect `current` and
+`comparison_issues`, and review the exact destination/text under the user's
+authorization. `delivery_state=not_sent` means this preparation workflow has not
+sent anything; it does not inspect an external mailbox. There is no automated
+dispatch/receipt tracking for these letters. Preserve actual later dispatch/receipt
+evidence separately using the existing correspondence/task workflow. Do not use
+invoice-delivery actions to claim this letter was delivered.
+
+Each preparation creates a new version. Changed input, review, comparison or invoice
+history invalidates reuse; corrupted frozen evidence or edited recipient/review
+artifacts fail closed. Revise inputs and create a new version, preserving the old
+files. If the runtime is unavailable, prepare the same separate files with available
+host tools and state which protected checks were not executed.
+
 ## Save and resume
 
 Every action needs `actor`, `evidence_file`, `note`, `occurred_on` and the freshly

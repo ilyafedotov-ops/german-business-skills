@@ -6,13 +6,23 @@ import json
 import sys
 
 import workspace as ws
-from casefiles import accounting, invoicing, invoice_payments, lexware
+from casefiles import accounting, invoicing, invoice_payments, payment_followup, lexware
 from casefiles import bank, documents, archive, folders, invoice_xml, overview, reviews, storage
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("payment-followup-template")
+    for name in ("payment-followup-prepare", "payment-followup-check"):
+        followup = sub.add_parser(name)
+        followup.add_argument("--root", required=True)
+        if name == "payment-followup-prepare":
+            followup.add_argument("--input", required=True)
+            followup.add_argument("--expected-sha256", required=True)
+            followup.add_argument("--language", choices=["en", "ru"], default="en")
+        else:
+            followup.add_argument("--report", required=True)
     sub.add_parser("invoice-payment-template")
     for name in ("invoice-payment-prepare", "invoice-payment-check"):
         payment = sub.add_parser(name)
@@ -101,7 +111,13 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         command = args.command
-        if command == "invoice-payment-template":
+        if command == "payment-followup-template":
+            result = payment_followup.template()
+        elif command == "payment-followup-prepare":
+            result = payment_followup.prepare(args.root, args.input, args.expected_sha256, args.language)
+        elif command == "payment-followup-check":
+            result = payment_followup.check(args.root, args.report)
+        elif command == "invoice-payment-template":
             result = invoice_payments.template()
         elif command == "invoice-payment-prepare":
             result = invoice_payments.prepare(args.root, args.input, args.expected_sha256, args.language)
