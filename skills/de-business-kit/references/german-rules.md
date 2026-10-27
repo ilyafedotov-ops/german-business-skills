@@ -6,6 +6,35 @@ Checked: **2026-10-25**. Scope: a natural person running service activities in G
 
 Continue collecting facts, organising documents, checking arithmetic, preparing field worksheets and identifying specific questions when a tax issue is unresolved. Hold only the affected tax conclusion or external action. Distinguish factual extraction, a proposed treatment, a user decision, an adviser decision and an authority determination. Never silently turn a suggestion into an approved posting.
 
+## Recover an unavailable primary source
+
+Use this sequence for material legal rules, calculations and official procedures:
+
+1. Open the specific official provision or guidance and inspect its relevant text,
+   including conditions, exceptions and application provisions. Search results are
+   discovery aids, not proof that the source was read.
+2. If that page fails or returns incomplete text, try the publisher's full-act HTML,
+   official consolidated PDF or linked official alternative. Locate the exact
+   section and inspect its context; use PDF extraction or page inspection as needed.
+   For an older period retrieve the applicable version, not merely today's text.
+3. An equivalent primary authority publication can support the same claim only
+   when its scope, wording and applicable period actually cover it. A mirror, cached
+   snippet or secondary summary is not automatically equivalent. Do not evade an
+   access control or assume a newer PDF applies retroactively.
+4. Record the failed route, successful URL/title/section, actual retrieval date,
+   visible version, applicable period and any remaining gap in the existing
+   consultation/source evidence. Do not report a successful source check for an
+   inaccessible page. Where available, keep the inspected extract/export with its
+   source identity; a URL alone is not a preserved copy.
+5. If the alternatives still leave a material condition unverified, name that
+   condition and keep the affected conclusion provisional or unresolved. Continue
+   independent factual preparation. Do not fill the gap with remembered law or
+   snippets, or add peripheral legal claims whose sources were not checked.
+
+“Full relevant text” means enough of the actual primary document to establish the
+rule and its qualifications; it does not require reading an entire statute for
+every question. Retrieval success and applicability are separate checks.
+
 For companies, partnerships, complex payroll, cash-register operations, regulated activities, insolvency, foreign establishments or complex cross-border transactions, prepare a factual handoff and route the specialised question outside this initial release. Do not claim those cases are covered merely because the files can be created.
 
 ## Keep four independent classifications

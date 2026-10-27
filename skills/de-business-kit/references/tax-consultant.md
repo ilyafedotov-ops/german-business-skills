@@ -24,7 +24,7 @@ Do not request a complete personal financial history for a narrow VAT question. 
 
 ## Research the rule that applies
 
-Read `german-rules.md` as a source map, then retrieve the relevant official source for this task. Prefer the statute and its application provisions, BMF or state tax-administration guidance, current ELSTER help and the competent authority's current procedure. Use provider documentation for product behavior. A search snippet alone is insufficient for a material tax conclusion when the full source is available.
+Read `german-rules.md` as a source map, then retrieve the relevant official source for this task. Prefer the statute and its application provisions, BMF or state tax-administration guidance, current ELSTER help and the competent authority's current procedure. Use provider documentation for product behavior. Apply its [source recovery sequence](german-rules.md#recover-an-unavailable-primary-source) before leaving a failed link unresolved. A search snippet alone does not establish a material tax conclusion.
 
 Record the source title, URL, precise provision or section, retrieval date, publication/update date if available, effective period and why it applies. Use `assets/source-check.json` for reusable checks. A new publication date does not necessarily mean that the rule applies to an older tax year. If current and historic wording differ, identify the relevant version explicitly.
 
@@ -57,6 +57,75 @@ For a receipt, link the consultation ID, source checks and necessary factual con
 
 For a form, hand over to `forms.md` with proposed field values and evidence. Preserve exact German field labels. Check the scope of existing authorization for the concrete recipient, period, action and payload before any external mutation. Finish the reviewable draft first; resolve only missing authorization at the action boundary. Do not repeat a confirmation already supplied for that exact operation. Record transmission evidence separately from substantive authority acceptance.
 
+## Prepare or revise an income-tax prepayment request
+
+For “reduce my tax prepayments”, first identify the tax and year. This route covers
+preparation of an **Einkommensteuer-Vorauszahlungen** adjustment; do not apply it
+unchanged to VAT, trade tax or other taxes. Use [correspondence](correspondence.md)
+for recipient/private separation and [continuation](continuation.md) for saving.
+
+1. **Read the existing case.** Inspect the current notice (or label the user's
+   summary), its instalments and dates, actual credited payments/refunds, relevant
+   forecast and prior requests/responses. Establish whether a changed notice,
+   deferral or suspension exists. Reuse known facts; identity placeholders do not
+   block preparing a draft. A request for preparation does not authorize sending.
+2. **Establish the forecast's basis.** Separate expected annual income tax after
+   creditable withholding but before prepayments from profit, revenue and the
+   amount still payable. If that annual tax is already supplied, retain its
+   provenance and uncertainty; do not invent a tariff derivation or ask for a full
+   tax history just to subtract known credits. If it must be derived, use the
+   source-led calculation workflow first. Keep other taxes separate.
+3. **Inspect applicable rules and route.** Retrieve EStG §37, AO §124 and current
+   ELSTER help linked below using the source-recovery sequence. Check the specific
+   year and requested adjustment. Prefer the dedicated **Antrag auf Anpassung von
+   Vorauszahlungen** when appropriate. A German explanation is draft text for that
+   route, not an official payload or proof that portal fields were inspected.
+4. **Compute a proposal, not an assessment.** Execute the bounded reconciliation
+   of the supported annual forecast and credited prepayments. Show the current
+   assessed instalment alongside the requested change and its assumptions. Apply
+   the independent-check requirements in `tax-estimates.md`; retain actual code or
+   tool output. Do not automatically spread a difference across several remaining
+   dates, round an amount, request a negative instalment or promise a refund.
+   Overpayments, missing credits and multiple remaining instalments need their
+   specific treatment checked. The current notice remains the basis for payment
+   unless effective changed assessment or other applicable relief is evidenced.
+5. **Save and inspect the actual package.** When durable files are requested, use
+   the already selected private location. In a managed workspace resolve logical
+   tax/correspondence folders with `folders`; otherwise use the selected private
+   folder without forcing initialization. Create a new case/version directory
+   without symlinks or overwriting existing files. Save:
+   - German recipient draft with period, proposed adjustment, supported reason and
+     explicit missing identity/reference fields; no private paths or review notes;
+   - separate EN/RU private review with current versus requested amounts, input and
+     source references, actual arithmetic/check status, missing facts, selected
+     route and exact external-action state;
+   - calculation evidence and source/input versions needed to reproduce it, plus
+     continuation details in that review: case ID, output filenames, prior version
+     if any, open items, authorization scope and one next action.
+   Link preserved originals instead of copying unrelated records. List only actual
+   selected attachments; never attach the private review by default. Reopen saved
+   files and compare their amounts, period, audience and draft status before
+   reporting success. If a write fails, report the unsaved part explicitly.
+6. **Resume from files.** Read the saved review and referenced evidence in a fresh
+   session. A corrected forecast invalidates the affected draft, calculation and
+   check. Preserve their bytes, create a linked revision, recompute and inspect its
+   actual files. The new review identifies which earlier proposal it supersedes;
+   keep submission/authority state separate. A changed estimate or transmission
+   receipt never becomes an amended notice. Update an existing task only through
+   its validated writer and current expected hash; if unavailable, state the
+   unsaved task update in the readable continuation note. No parallel register.
+
+Primary starting sources checked **2026-10-27** for this preparation route:
+[EStG §37](https://www.gesetze-im-internet.de/estg/__37.html),
+[AO §124](https://www.gesetze-im-internet.de/ao_1977/__124.html),
+[ELSTER request](https://www.elster.de/eportal/formulare-leistungen/alleformulare/eingvorauszlg)
+and [public help](https://www.elster.de/elsterweb/helpGlobal?themaGlobal=help_eing_vorauszlg).
+Recheck at use. Synthetic example: an annual forecast of €2,000 after withholding
+and before prepayments, €1,800 credited and one remaining assessed instalment of
+€600 gives a requested remainder of €200. A corrected €2,300 forecast gives €500;
+both remain proposals while the unchanged notice calls for €600. These figures
+illustrate reconciliation, not a reusable tax formula or a guaranteed decision.
+
 ## Resolve uncertainty without stopping useful work
 
 Name the specific review issue and the evidence needed. For example: a prior VAT waiver cannot be located; mixed activity classification is disputed; a foreign establishment affects tax residence; a material correction concerns already filed returns; an objection deadline is near; payroll, a corporation or a partnership falls outside this release's scope. Prepare the relevant facts, document references and precise questions for the appropriate Steuerberater or authority. Continue unaffected extraction, arithmetic, draft preparation and organization.
@@ -65,7 +134,7 @@ Do not redirect every ordinary tax explanation to a professional. Do not imply t
 
 ## Save and finish
 
-Use [English consultation template](../assets/en/tax-consultation.md) or [Russian consultation template](../assets/ru/tax-consultation.md). Fill only applicable sections; remove irrelevant empty tables. Save a material consultation as `05_tax/YYYY/consultations/YYYY-MM-DD-<opaque-id>.md` inside the selected private workspace. Create directories as needed without following symlinks or overwriting existing files. Do not write private reports into the skill installation or source repository.
+Use [English consultation template](../assets/en/tax-consultation.md) or [Russian consultation template](../assets/ru/tax-consultation.md). Fill only applicable sections; remove irrelevant empty tables. In a managed workspace, resolve the logical `05_tax/YYYY/consultations/` destination with `folders` before saving a new `YYYY-MM-DD-<opaque-id>.md` report or case directory. For a selected private folder without managed records, follow [standalone continuation](continuation.md#without-a-workspace). Create directories as needed without following symlinks or overwriting existing files. Do not write private reports into the skill installation or source repository.
 
 Include the question, known facts and evidence, assumptions, conclusion, sources and dates, any calculation, options, precise review issues and next action. Preserve consultation IDs when changing language. A translated copy is another rendering of the same analysis, not a new tax decision. A later substantive correction should reference the earlier report instead of erasing it.
 
