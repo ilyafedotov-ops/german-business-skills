@@ -8,6 +8,9 @@ does not create a legal invoice, assign numbers, contact a provider or send mail
 Use available authorized host tools for those operations; use guided manual
 execution when the tool cannot perform the exact operation. Do useful preparation
 without installing a runtime or changing the chosen invoicing/accounting system.
+For Lexware Office, use the [provider draft/readback and browser sending route](lexware.md#provider-invoice-draft-readback-and-sending).
+Its opt-in API adapter creates an external draft; this local evidence writer alone
+does not. Keep the provider attempt and invoice issue/delivery states separate.
 
 ## Prepare the concrete invoice or correction
 

@@ -88,6 +88,16 @@ is a projection, while follow-up tasks stay in the existing register. The CLI
 records evidence; host/manual provider execution is a separate step. No GUI or
 native-only writer is implied. Mutable invoice state cannot itself be evidence.
 
+The optional Lexware adapter attaches provider request, attempt, UUID, readback
+and artifact evidence to that same invoice row. It commits intent before network
+creation, reserves account/object identity across cases, and preserves responses
+before parsing. Provider draft creation is distinct from issuance. Requests use a
+fixed HTTPS origin and process-held secret; no credentials enter records. Readback
+changes invalidate preparation authority; active-attempt scope changes block a
+new browser action. Downloads require matching readbacks around retrieval. Browser
+handoff carries the object/attempt and frozen delivery scope evidence, including
+the reviewed message envelope/text. It executes no browser action by itself.
+
 ## Intended result
 
 An entrepreneur brings a task at any stage: prepare to start, register an activity, choose a service, fill in a form, answer a question, manage daily work or prepare reporting. Changes and closure have journey instructions; real execution needs separate acceptance. The [lifecycle map](../skills/de-business-kit/references/lifecycle.md) defines coverage and priorities. The router or a directly selected domain skill loads relevant modules and available tools; shared facts and decisions support continuation. Local utilities, the GUI and integrations serve these outcomes. Self-managed accounting and filing use the chosen system; a proprietary complete ledger and ELSTER connector are not prerequisites for every route. Consultation and exports remain optional.
@@ -123,7 +133,7 @@ The bundle contains seven directly usable skills with one shared profile. `de-bu
 | Host capabilities | Model, file access, web research, browser tools and task permissions |
 | Accounting product / authority | Actual postings, transmissions, receipts and official responses |
 
-The skill cannot create browser tools, API access or permissions. Availability depends on the host and current session. Bundled scripts operate offline; the host's model can still process selected data remotely.
+The skill cannot create browser tools, API access or permissions. Availability depends on the host and current session. Local record utilities operate offline. The opt-in Lexware adapter sends the explicitly reviewed request to its fixed provider API; the host's model can also process selected data remotely.
 
 The lifecycle worksheets and continuation notes reuse existing tasks, decisions and evidence. They add no state schema or autonomous workflow runner; the assistant prepares and verifies each result through available tools.
 
@@ -198,7 +208,7 @@ flowchart TB
     X -. inspected evidence saved through host workflow .-> FS
 ```
 
-The diagram shows execution and dependency boundaries, not network access supplied by the Python utilities. Public source and the installed skill are separate from the private business workspace. `tools/install.py` copies the complete self-contained skill bundle into host discovery directories; `tools/build_package.py` creates distribution bundles. Standalone CLI use requires an available Python runtime; the GUI application bundles its engine. No production Python dependency beyond the standard library is required.
+The diagram shows the local execution boundary; the optional Lexware adapter additionally connects to its fixed provider API when explicitly invoked. Public source and the installed skill are separate from the private business workspace. `tools/install.py` copies the complete self-contained skill bundle into host discovery directories; `tools/build_package.py` creates distribution bundles. Standalone CLI use requires an available Python runtime; the GUI application bundles its engine. No production Python dependency beyond the standard library is required.
 
 The host chooses a task module and supplies reviewed inputs. Python validates structures and performs deterministic operations. The host interprets business meaning and inspects external sources. This division keeps arithmetic and file operations reproducible while making semantic and authorization responsibilities explicit.
 
@@ -251,7 +261,7 @@ Recovery starts by inspecting failed-command outputs, current register hashes, o
 | Received content → records | Original hashes, size/type checks, explicit validators; content treated as evidence | File authenticity and business truth still require review |
 | Candidate → reviewed proposal | Field states, source fingerprints, arithmetic and reviewer metadata | Reviewer names are supplied text; no authenticated multi-user approval service |
 | Local files → model context | Host capability and processing assessment workflow | Offline utilities do not make host model inference local |
-| Local approval → provider state | Separate proposals, operation template and evidence observations | No bank, Lexware or ELSTER write/readback adapter |
+| Local approval → provider state | Protected attempts, exact scope, Lexware draft/readback adapter and browser handoff | No bank/ELSTER transport; no Lexware API finalize/send; operator authorization remains an attestation |
 | Records → overview | Escaped static HTML, restrictive CSP, no application JavaScript | Saved view can become stale; no live synchronization |
 | Workspace → records archive | Explicit selection, manifest, file hashes and verification | Integrity does not prove completeness, delivery or recipient acceptance |
 

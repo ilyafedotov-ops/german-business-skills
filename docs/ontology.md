@@ -51,6 +51,11 @@ no local state establishes payment, customer agreement, legal effect or provider
 execution. `00_admin/invoicing.json` owns this optional chain; the existing task
 register owns follow-up work.
 
+A provider draft is an external object, not a local draft or issued invoice. Its
+creation attempt, returned UUID, independent readback, review and final artifact
+remain separate evidence on the invoice row. Browser handoffs identify an existing
+object/attempt; they do not establish that finalization or sending occurred.
+
 | Concept | Meaning and relationships | Current representation |
 | --- | --- | --- |
 | Entrepreneur / business profile | Shared context for the person and their business activities | `01_profile/business.json`; `facts` keyed by field name |

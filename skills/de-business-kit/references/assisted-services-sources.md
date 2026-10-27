@@ -166,7 +166,7 @@ execution; preserve the selected product and its existing books.
   automatic paid/refunded label does not independently prove a bank movement.
 - The [official API](https://developers.lexware.io/docs/) documents draft creation,
   `finalize=true` for open invoices, no invoice update/status-transition endpoint,
-  and unavailable draft files (406). A 504 may follow successful processing. Use
+  and unavailable draft files (409; corrected in the adapter check below). A 504 may follow successful processing. Use
   supported UI/manual editing where needed; read back after timeouts and do not
   finalize just to download a preview. No idempotency guarantee or automatic
   invoice-send capability is inferred from a create endpoint.
@@ -192,3 +192,36 @@ Example consequence: an issued document with a wrong description may need a
 linked content correction or a provider-supported cancellation/replacement. A
 partial amount credit is a different route. A saved PDF, number or "Gesendet"
 label alone establishes none of those legal effects or customer receipt.
+
+## Lexware API and browser route — 2026-10-27
+
+Implementation-specific recheck for the [actual invoice route](lexware.md#provider-invoice-draft-readback-and-sending):
+
+- [API reference](https://developers.lexware.io/docs/#invoices-endpoint): fixed
+  `api.lexware.io`; Bearer credentials; `/v1/profile` identifies the organization.
+  POST `/v1/invoices` defaults to draft; GET by UUID supplies independent readback.
+  No documented invoice update, existing-draft finalization or sending endpoint.
+  `finalize=true` creates a new invoice, so it cannot safely finalize a saved draft.
+- [Invoice cookbook](https://developers.lexware.io/cookbooks/invoices/) explicitly
+  states that draft creation consumes a number, consistent with the
+  [number-circle help](https://help.lexware.de/de-form/articles/548053-nummernkreise-einstellen-und-rechnungsnummern-vergeben).
+  Some other cookbook claims are stale; the endpoint reference owns field/format
+  contracts. The adapter labels number consumption before draft authorization.
+- [File endpoint](https://developers.lexware.io/docs/#download-an-invoice-file):
+  draft has no downloadable artifact and returns 409, refining the earlier 406
+  note. Readback and download must refer to the same stable provider version.
+  A PDF rendering of XRechnung is a preview; preserve required structured originals.
+- [HTTP statuses](https://developers.lexware.io/docs/#http-status-codes): a 504 may
+  follow successful processing. No idempotency guarantee was established. The
+  adapter records intent before POST, never replays writes automatically and
+  recovers known objects by GET. Sequential requests within each client are spaced by 550 ms; concurrent
+  clients can still encounter the documented two/second limit. HTTP failures do not prove that creation failed.
+- [Invoice creation help](https://help.lexware.de/de-form/articles/547986-rechnung-oder-teilrechnung-erstellen-schritt-fur-schritt)
+  separates preview, finalization/save, open status and later email sending.
+  [Attachment history help](https://help.lexware.de/de-form/articles/548518-wie-kann-ich-dateien-aus-dem-kundenmanager-mit-der-rechnung-oder-dem-angebot-versenden)
+  supports inspection of sent files. Exact save/send controls and history fields
+  must be observed in the actual account; documentation alone is not UI acceptance.
+
+No live account, credential, provider draft, finalization or email was used for
+this implementation check. A supported API contract, local HTTP fixture and
+browser handoff do not establish production compatibility or recipient delivery.

@@ -571,6 +571,26 @@
       ]
     },
     {
+      "id": "lexware-provider-draft-readback",
+      "prompt": "Use de-business-operations. My existing private folder contains the reviewed synthetic Lexware invoice preview, provider request and account/customer facts. Create that draft once in the supplied isolated API fixture, read it back and save a readable English result and next action. I authorize this exact draft creation, including use of an invoice number. Do not finalize or send. For this synthetic trial only, use the supplied fixture-api.py wrapper for API commands; it connects exclusively to the local test service, never a real account.",
+      "criteria": [
+        "Reuse the saved Lexware account/customer and exact reviewed request; freeze and authorize provider creation before one POST",
+        "Read the returned UUID independently, inspect actual contents/defaults and preserve provider evidence",
+        "Keep the local invoice unissued and delivery unprepared; no finalize=true, second invoice or send",
+        "Save a readable result and existing-task continuation with accurate fixture-only acceptance limits"
+      ]
+    },
+    {
+      "id": "lexware-provider-manual-send-continuation",
+      "prompt": "Используй de-business-operations. Продолжи сохранённое синтетическое дело Lexware в private. Я сам завершил тот же черновик и отправил счёт; новые подтверждения лежат в incoming. Прочитай текущий объект через прежний локальный API fixture, сохрани фактический итоговый файл, учти мои уже выполненные действия и объясни по-русски статус доставки и следующий шаг. Не создавай новый счёт и ничего не отправляй. Для API используй прежний fixture-api.py; это только локальная тестовая служба, не настоящий аккаунт.",
+      "criteria": [
+        "Reuse the same provider UUID, GET current state and preserve a stable downloaded artifact without another POST",
+        "Record already performed issuance and dispatch without inventing prior authorization/attempts",
+        "Treat provider open/sent evidence as distinct from recipient receipt, agreement and payment",
+        "Preserve prior immutable files and original draft report, save Russian continuation and an evidence-backed receipt task"
+      ]
+    },
+    {
       "id": "invoice-correction-manual-dispatch",
       "prompt": "Use skills/de-business-operations/SKILL.md. Synthetic case: the invoice and its description correction in private/incoming have already been issued in my chosen system, and I sent the correction myself. Read the supplied actual-file and status evidence, save the invoice/correction chain and delivery status in my existing private folder, and tell me whether I can mark delivery confirmed. Save a readable English result and a next action. No account access, sending, issuing, posting or tax/legal assessment.",
       "criteria": [

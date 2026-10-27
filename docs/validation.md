@@ -4,6 +4,57 @@
 
 Evidence index updated **2026-10-27**. Tests and public examples use synthetic data. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## Lexware provider draft and sending route — 2026-10-27
+
+Local implementation after `2a26dfe` adds an opt-in, fixed-origin Lexware Office
+draft/readback adapter and a same-object browser finalization/sending handoff.
+**24 provider regressions** and **23 existing invoicing tests** passed independent
+review. Coverage includes durable intent before POST, exact authorized bytes,
+account/object mismatch, one-attempt creation, GET-only recovery, malformed JSON,
+preserved responses, redirects/credential echoes, download version drift and stale
+browser authorization. A temporary mutation restoring the unsafe post-lock request
+reread failed the race regression as expected; repository source was unchanged.
+
+Full `python3 -B -m unittest discover -s tests -v`: **427 run, 416 passed, 11
+platform skips** on macOS/Python 3.14.6. Package, local Markdown links/anchors and
+`git diff --check` passed. Loopback HTTP tests exercised actual request paths and
+headers; TLS configuration was inspected through a test socket replacement, not
+a real provider handshake. Independent final code/contract review found no blockers.
+
+Fresh Codex CLI **0.164.0** trials used copied skills and an explicitly synthetic
+HTTP fixture. The initial session could not reach the fixture from its child
+sandbox: the account check failed before POST, and it saved an honest blocked
+report/task with zero creations. A fresh continuation with test-session network
+access enabled reused the unchanged authorization, created exactly one draft and
+independently GET-read the same UUID. It preserved the blocked report, left the
+invoice unissued/unsent and distinguished stipulated amounts from missing computed
+totals in that fixture response. The blocked run is not relabelled successful.
+
+A third fresh session resumed supplied evidence of the owner's manual finalization
+and send of that same object. It GET-read version 2, downloaded the PDF between
+matching readbacks, inspected its text/render and recorded only historical issue
+and dispatch. The fixture's total remained **one POST**; this session used six
+GETs and no writes. Recipient receipt stayed unconfirmed, with an open task and a
+new Russian report. **31** prior non-mutable files survived the first continuation,
+then **52** survived the second; audit prefixes and evidence hashes were preserved.
+**35** readable-report links resolved. Raw Markdown evidence copies retain their
+original bytes/source-relative links, not links rebased to the snapshot directory.
+
+All **144** baseline skill files per session stayed unchanged, with no cache extras.
+Only provider/privacy documentation and the CLI help description differed between
+copies; the final copy matches current portable source. Independent artifact and
+provenance review found no blockers. Requested model/effort were GPT-6 Astra/high;
+this records the request, not independently attested serving identity. The custom
+writable harness is not sealed-runner or isolation acceptance.
+
+Sources and supported-operation limits are in the [portable provider record](../skills/de-business-kit/references/assisted-services-sources.md#lexware-api-and-browser-route--2026-10-27).
+Evidence stays outside Git under `.lexware-route-20261027`. The wrapper replaces
+the fixed provider TLS socket with local HTTP and uses a synthetic credential;
+these are synthetic API/CLI trials, not live Lexware, production TLS, actual browser
+finalization/send, recipient receipt, legal/tax/format, native Windows, hosted CI
+or published-package acceptance. API draft creation consumes a provider number;
+the browser handoff itself performs no external action.
+
 ## Invoice correction and delivery workflow — 2026-10-27
 
 Local implementation after `45337e6` adds protected invoice/correction records,

@@ -49,9 +49,12 @@ election, refund or filing operation; [validation](validation.md) records live a
 The optional Python invoicing workflow now records reviewed drafts, issue/correction
 attempts, actual issued artifacts, dispatch and receipt evidence through protected
 writers. It supports historical issued/sent documents, linked corrections, explicit
-failure/retry and all-period continuation. Provider execution still uses the chosen
-host connector/browser/manual route; no invoice transport or automatic numbering
-is bundled. Native-only and GUI invoicing controls remain unimplemented.
+failure/retry and all-period continuation. The opt-in Lexware Office adapter now
+creates a provider draft, preserves its ID and reads it back; final artifact
+downloads check provider version stability. It binds browser finalization/sending
+to that same object and protected attempt. No API finalization/send endpoint is
+invented; those actions require the actual authorized host/browser/manual route.
+Live-account acceptance, native-only and GUI invoicing controls remain open.
 
 ## Source and published release
 
@@ -62,7 +65,7 @@ is bundled. Native-only and GUI invoicing controls remain unimplemented.
 | Area | Available now | Boundary |
 | --- | --- | --- |
 | Skills and lifecycle | Optional router plus six directly usable domain skills; shared profile, EN/RU worksheets and continuation | Guidance/preparation does not establish registration, contract, hire or closure |
-| Access and assisted services | Operation-specific discovery of host connector, browser, permitted computer-use or manual routes; authorized draft entry, readback, export checks and user-held final action | Instructions over available host tools; no bundled production connectors. Real ELSTER/Lexware acceptance is open; Lexware uses local examples by user choice |
+| Access and assisted services | Host connector/browser/manual discovery; bounded opt-in Lexware draft/readback API and exact-object browser handoff; authorized draft entry and export checks | Lexware API tested with synthetic transport, not a live account; finalization/email use the actual host/manual route. ELSTER acceptance remains open |
 | Intake and documents | Preserved originals, hashes, catalog, reviewed proposals, bank mapping/reconciliation and bounded standalone UBL Invoice/CreditNote/CII inspection | No complete OCR, embedded-PDF XML or technical e-invoice validation pipeline |
 | Accounting | Explicit local/external choice; limited reviewed EÜR cash entries, splits, line VAT as stated with links to approved proposals, reversals/corrections, period reports and account CSVs | Existing software stays authoritative when selected. No complete statutory ledger or bundled tax formulas; stated-VAT sums are not a Voranmeldung; eligibility is not inferred |
 | Filing evidence | Frozen versions, preflight, review/authorization, uncertain attempts, observed receipts and authority responses | Tracks local evidence; calculates no statutory return and sends nothing to ELSTER |

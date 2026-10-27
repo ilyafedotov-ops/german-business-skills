@@ -91,10 +91,18 @@ provide its actual file and status evidence: this is recorded as a past event,
 without inventing earlier authorization. Sending, cancellation and other external
 changes need authorization covering the concrete action and its effects.
 
-The protected local commands need an available Python runtime. The current GUI
+For Lexware Office you can ask: “Prepare this draft in my existing Lexware company,
+read it back and save the result. Keep finalization and sending separate.” An
+opt-in adapter can create/read the draft with existing API access; creation already
+uses an invoice number. It then helps continue the same invoice in the browser
+for finalization and sending. No API access is required for the guided browser
+route. Never paste an API key into chat or a business document.
+
+The protected local commands and optional API adapter need an available Python runtime. The current GUI
 and standalone native Windows tools have no invoice lifecycle controls; without
 the writer, the assistant saves a readable continuation and helps with the chosen
-service. The kit has no bundled live invoicing/mail connector or automatic numbers.
+service. The adapter has synthetic test coverage; live account acceptance remains
+open. It does not assign numbers itself or provide an email-send API.
 
 ## Keep your work in one folder
 
