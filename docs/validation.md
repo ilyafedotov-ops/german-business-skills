@@ -10,6 +10,35 @@ browser integration works E2E. The accepted Office L zero-value invoice and manu
 correction scope is stated in [current status](project-status.md); this adds user
 acceptance of the observed runs, not a new provider/API test.
 
+## Selective CI deployed: full and reuse paths — 2026-10-27
+
+[PR #20](https://github.com/ilyafedotov-ops/german-business-skills/pull/20) passed all
+**20 checks** at `6ef40cb` and merged under the previous branch requirements as
+`175ab0936b64a1751ed085d43af37b0e269e789f`.
+[Full Checks run 40550000915](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40550000915)
+selected `full`, passed every platform matrix and the final gate in **18 min 58 s**.
+The gate recorded PR **20**, full coverage and tree
+`c3c5e96e361f3f69a8df9e9b3f164aae97e6dff8`.
+
+[Main Checks run 40553134356](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40553134356)
+selected `reuse` of that same PR run and tree and succeeded in **45 s**: selector,
+quick checks and final gate passed; five duplicate runtime job groups were
+intentionally skipped without scheduling their matrices. These are observed run
+wall times, not a general performance guarantee. Independent main security scans
+passed; all three analyses at the merge commit had zero results/errors and zero
+open alerts. PR security scans were also clear on the exact tested merge ref.
+
+After merging under the old requirements, the seven individual runtime check names
+were replaced by app-bound `Checks gate`. All five security requirements, their
+App IDs, strict up-to-date enforcement and every other branch-protection field
+were verified unchanged. Exact before/after and rollback settings remain outside
+Git. No published product asset or marketplace version changed; the verified
+immutable release remains `v0.11.0-preview.1`. Tag/reusable calls are configured to
+force full validation; no new release-tag run is claimed by this CI-only deployment.
+
+The separate documentation-only path is exercised by the validation-record update;
+its hosted result is distinct from the full/reuse evidence above.
+
 ## Selective CI preparation — 2026-10-27
 
 Implementation after `604967e` adds [coverage selection](releases.md#ci-coverage-and-duplicate-run-prevention):
