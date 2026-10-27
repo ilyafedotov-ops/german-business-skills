@@ -1,0 +1,1342 @@
+{
+  "schema_version": 1,
+  "source": {
+    "url": "https://finber.de/faq_freiberufler_germany/",
+    "reviewed_on": "2026-10-27",
+    "question_count": 60,
+    "use": "Question-number coverage index only. Secondary answers are not the oracle. Independent synthetic prompts live in scenarios.json."
+  },
+  "baseline_commit": "085489d3773c1ac04d877951b6e06d21cedb5fb3",
+  "coverage_meaning": {
+    "covered": "Existing prompts and criteria exercise the central concern, not every subquestion and not a passing trial.",
+    "partial": "Related scenario exists but omits material parts.",
+    "missing": "No dedicated baseline scenario identified; general research guidance may still help.",
+    "outside_scope": "Complete specialized outcome exceeds current sole-trader scope; test factual preparation and appropriate routing, not promised completion."
+  },
+  "rows": [
+    {
+      "question": 1,
+      "topic": "classification",
+      "owner": "de-business-start",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "direct-start-without-setup"
+      ],
+      "pilot_cases": [
+        "faq-classification-evidence"
+      ]
+    },
+    {
+      "question": 2,
+      "topic": "determination",
+      "owner": "de-business-start",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "mixed-activities-elster-s-g"
+      ],
+      "pilot_cases": [
+        "faq-classification-evidence"
+      ]
+    },
+    {
+      "question": 3,
+      "topic": "software",
+      "owner": "de-business-start",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "lifecycle-second-activity-launch"
+      ],
+      "pilot_cases": [
+        "faq-classification-evidence"
+      ]
+    },
+    {
+      "question": 4,
+      "topic": "creative work",
+      "owner": "de-business-start",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "mixed-activities-elster-s-g"
+      ],
+      "pilot_cases": [
+        "faq-ksk-trade-registration"
+      ]
+    },
+    {
+      "question": 5,
+      "topic": "consulting",
+      "owner": "de-business-start",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "direct-start-without-setup"
+      ],
+      "pilot_cases": [
+        "faq-classification-evidence"
+      ]
+    },
+    {
+      "question": 6,
+      "topic": "entities",
+      "owner": "de-business-start",
+      "baseline_coverage": "outside_scope",
+      "existing_cases": [],
+      "pilot_cases": []
+    },
+    {
+      "question": 7,
+      "topic": "mixed activities",
+      "owner": "de-business-start",
+      "baseline_coverage": "covered",
+      "existing_cases": [
+        "mixed-activities-elster-s-g",
+        "second-activity-vat"
+      ],
+      "pilot_cases": []
+    },
+    {
+      "question": 8,
+      "topic": "registration",
+      "owner": "de-business-start",
+      "baseline_coverage": "covered",
+      "existing_cases": [
+        "elster-assisted-registration-location",
+        "elster-no-browser"
+      ],
+      "pilot_cases": []
+    },
+    {
+      "question": 9,
+      "topic": "pending number",
+      "owner": "de-business-operations",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": []
+    },
+    {
+      "question": 10,
+      "topic": "description",
+      "owner": "de-business-start",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "assisted-registration-manual-confirmation"
+      ],
+      "pilot_cases": [
+        "faq-classification-evidence"
+      ]
+    },
+    {
+      "question": 11,
+      "topic": "VAT election",
+      "owner": "de-business-tax",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "new-business-threshold",
+        "second-activity-vat"
+      ],
+      "pilot_cases": [
+        "faq-founding-year-2026"
+      ]
+    },
+    {
+      "question": 12,
+      "topic": "trade registration",
+      "owner": "de-business-start",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "elster-assisted-registration-location"
+      ],
+      "pilot_cases": []
+    },
+    {
+      "question": 13,
+      "topic": "identifiers",
+      "owner": "de-business-tax",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "international-ku-consumer-elster"
+      ],
+      "pilot_cases": []
+    },
+    {
+      "question": 14,
+      "topic": "income tax",
+      "owner": "de-business-tax",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "tax-bounded-local-calculation",
+        "tax-consultant-reserve-ru"
+      ],
+      "pilot_cases": [
+        "faq-zero-receipts-annual-2025",
+        "faq-income-tax-prepayment-2026"
+      ]
+    },
+    {
+      "question": 15,
+      "topic": "prepayments",
+      "owner": "de-business-tax",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-income-tax-prepayment-2026"
+      ]
+    },
+    {
+      "question": 16,
+      "topic": "filing deadlines",
+      "owner": "de-business-tax",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "urgent-authority-letter"
+      ],
+      "pilot_cases": [
+        "faq-adviser-deadline-2025",
+        "faq-vat-deadline-2026"
+      ]
+    },
+    {
+      "question": 17,
+      "topic": "spouses",
+      "owner": "de-business-tax",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": []
+    },
+    {
+      "question": 18,
+      "topic": "zero income",
+      "owner": "de-business-tax",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-zero-sales-vat-2026",
+        "faq-zero-receipts-annual-2025"
+      ]
+    },
+    {
+      "question": 19,
+      "topic": "VAT duties",
+      "owner": "de-business-tax",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "foreign-saas-ku"
+      ],
+      "pilot_cases": [
+        "faq-foreign-saas-2026"
+      ]
+    },
+    {
+      "question": 20,
+      "topic": "turnover limits",
+      "owner": "de-business-tax",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "new-business-threshold",
+        "second-activity-vat"
+      ],
+      "pilot_cases": [
+        "faq-founding-year-2026"
+      ]
+    },
+    {
+      "question": 21,
+      "topic": "VAT arithmetic",
+      "owner": "de-business-tax",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "cash-line-stated-vat",
+        "tax-bounded-local-calculation"
+      ],
+      "pilot_cases": []
+    },
+    {
+      "question": 22,
+      "topic": "VAT periods",
+      "owner": "de-business-tax",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "lifecycle-annual-stale-and-uncertain"
+      ],
+      "pilot_cases": [
+        "faq-vat-deadline-2026"
+      ]
+    },
+    {
+      "question": 23,
+      "topic": "foreign customers",
+      "owner": "de-business-tax",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "international-ku-consumer-elster"
+      ],
+      "pilot_cases": [
+        "faq-eu-customer-service-2026",
+        "faq-third-country-business-2026",
+        "faq-third-country-consumer-2026",
+        "faq-property-service-place-2026",
+        "faq-digital-service-threshold-2026"
+      ]
+    },
+    {
+      "question": 24,
+      "topic": "input VAT",
+      "owner": "de-business-tax",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "foreign-saas-ku"
+      ],
+      "pilot_cases": [
+        "faq-foreign-saas-2026",
+        "faq-mixed-phone-costs-2026"
+      ]
+    },
+    {
+      "question": 25,
+      "topic": "trade tax",
+      "owner": "de-business-tax",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "mixed-activities-elster-s-g"
+      ],
+      "pilot_cases": []
+    },
+    {
+      "question": 26,
+      "topic": "tax credit",
+      "owner": "de-business-tax",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": []
+    },
+    {
+      "question": 27,
+      "topic": "invoice fields",
+      "owner": "de-business-operations",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "direct-operations-draft",
+        "customer-correction-xml-evidence"
+      ],
+      "pilot_cases": [
+        "faq-small-invoice-2026",
+        "faq-einvoice-transition-2026"
+      ]
+    },
+    {
+      "question": 28,
+      "topic": "small invoices",
+      "owner": "de-business-operations",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-small-invoice-2026"
+      ]
+    },
+    {
+      "question": 29,
+      "topic": "electronic invoices",
+      "owner": "de-business-accounting",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "xml-technical-versus-tax-review",
+        "customer-correction-xml-evidence"
+      ],
+      "pilot_cases": [
+        "faq-einvoice-transition-2026"
+      ]
+    },
+    {
+      "question": 30,
+      "topic": "expenses",
+      "owner": "de-business-accounting",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "self-accounting-documents-resume"
+      ],
+      "pilot_cases": [
+        "faq-homeworking-expense-2026",
+        "faq-mixed-phone-costs-2026",
+        "faq-mixed-vehicle-costs-2026"
+      ]
+    },
+    {
+      "question": 31,
+      "topic": "EÜR",
+      "owner": "de-business-accounting",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "direct-accounting-external",
+        "self-accounting-documents-resume"
+      ],
+      "pilot_cases": [
+        "faq-mixed-phone-costs-2026"
+      ]
+    },
+    {
+      "question": 32,
+      "topic": "assets",
+      "owner": "de-business-accounting",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "asset-installments-conceptual-answer"
+      ],
+      "pilot_cases": [
+        "faq-low-value-asset-2026",
+        "faq-computer-depreciation-2026"
+      ]
+    },
+    {
+      "question": 33,
+      "topic": "personal contributions",
+      "owner": "de-business-tax",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": []
+    },
+    {
+      "question": 34,
+      "topic": "accounting support",
+      "owner": "de-business-services",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "wiso-product-ambiguity",
+        "existing-services-no-purchase-option"
+      ],
+      "pilot_cases": []
+    },
+    {
+      "question": 35,
+      "topic": "retention",
+      "owner": "de-business-accounting",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "retention-hold",
+        "archive-integrity"
+      ],
+      "pilot_cases": []
+    },
+    {
+      "question": 36,
+      "topic": "health cover",
+      "owner": "de-business-services",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "needs-led-bank-insurance-comparison"
+      ],
+      "pilot_cases": [
+        "faq-gkv-income-evidence"
+      ]
+    },
+    {
+      "question": 37,
+      "topic": "health contributions",
+      "owner": "de-business-services",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-gkv-income-evidence"
+      ]
+    },
+    {
+      "question": 38,
+      "topic": "provisional assessment",
+      "owner": "de-business-services",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-gkv-income-evidence"
+      ]
+    },
+    {
+      "question": 39,
+      "topic": "pension duties",
+      "owner": "de-business-services",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-one-client-status"
+      ]
+    },
+    {
+      "question": 40,
+      "topic": "pension contributions",
+      "owner": "de-business-services",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-pension-contribution-2026"
+      ]
+    },
+    {
+      "question": 41,
+      "topic": "client concentration",
+      "owner": "de-business-services",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-one-client-status"
+      ]
+    },
+    {
+      "question": 42,
+      "topic": "KSK",
+      "owner": "de-business-services",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-ksk-trade-registration"
+      ]
+    },
+    {
+      "question": 43,
+      "topic": "qualifying periods",
+      "owner": "de-business-start",
+      "baseline_coverage": "outside_scope",
+      "existing_cases": [],
+      "pilot_cases": []
+    },
+    {
+      "question": 44,
+      "topic": "family cover",
+      "owner": "de-business-services",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-family-cover-2026"
+      ]
+    },
+    {
+      "question": 45,
+      "topic": "parental benefit",
+      "owner": "de-business-changes",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-parental-benefit-2026"
+      ]
+    },
+    {
+      "question": 46,
+      "topic": "child benefit",
+      "owner": "de-business-changes",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-child-benefit-2026"
+      ]
+    },
+    {
+      "question": 47,
+      "topic": "business account",
+      "owner": "de-business-services",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "bank-selection"
+      ],
+      "pilot_cases": []
+    },
+    {
+      "question": 48,
+      "topic": "bank access",
+      "owner": "de-business-services",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "bank-selection",
+        "bank-funds-protection-evidence"
+      ],
+      "pilot_cases": []
+    },
+    {
+      "question": 49,
+      "topic": "employment status",
+      "owner": "de-business-services",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-one-client-status"
+      ]
+    },
+    {
+      "question": 50,
+      "topic": "status risks",
+      "owner": "de-business-services",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-one-client-status"
+      ]
+    },
+    {
+      "question": 51,
+      "topic": "pricing",
+      "owner": "de-business-operations",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": []
+    },
+    {
+      "question": 52,
+      "topic": "contracts",
+      "owner": "de-business-operations",
+      "baseline_coverage": "partial",
+      "existing_cases": [
+        "contract-dispute-self-help"
+      ],
+      "pilot_cases": []
+    },
+    {
+      "question": 53,
+      "topic": "double taxation",
+      "owner": "de-business-tax",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": []
+    },
+    {
+      "question": 54,
+      "topic": "residence application",
+      "owner": "de-business-start",
+      "baseline_coverage": "outside_scope",
+      "existing_cases": [],
+      "pilot_cases": []
+    },
+    {
+      "question": 55,
+      "topic": "residence renewal",
+      "owner": "de-business-changes",
+      "baseline_coverage": "outside_scope",
+      "existing_cases": [],
+      "pilot_cases": []
+    },
+    {
+      "question": 56,
+      "topic": "work permission",
+      "owner": "de-business-start",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-work-permission-2026"
+      ]
+    },
+    {
+      "question": 57,
+      "topic": "permanent residence",
+      "owner": "de-business-changes",
+      "baseline_coverage": "outside_scope",
+      "existing_cases": [],
+      "pilot_cases": []
+    },
+    {
+      "question": 58,
+      "topic": "startup support",
+      "owner": "de-business-start",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-startup-support-2026"
+      ]
+    },
+    {
+      "question": 59,
+      "topic": "home office",
+      "owner": "de-business-tax",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-homeworking-expense-2026"
+      ]
+    },
+    {
+      "question": 60,
+      "topic": "vehicle use",
+      "owner": "de-business-tax",
+      "baseline_coverage": "missing",
+      "existing_cases": [],
+      "pilot_cases": [
+        "faq-mixed-vehicle-costs-2026"
+      ]
+    }
+  ],
+  "pilot": {
+    "case_sources": {
+      "faq-founding-year-2026": [
+        "ku-2025"
+      ],
+      "faq-adviser-deadline-2025": [
+        "advised-deadlines"
+      ],
+      "faq-foreign-saas-2026": [
+        "service-place",
+        "recipient-liability",
+        "ku-2025"
+      ],
+      "faq-classification-evidence": [
+        "freelance-basis"
+      ],
+      "faq-gkv-income-evidence": [
+        "gkv-law",
+        "gkv-income",
+        "gkv-evidence"
+      ],
+      "faq-one-client-status": [
+        "pension-one-client",
+        "pension-exemption",
+        "employment-status",
+        "status-process"
+      ],
+      "faq-ksk-trade-registration": [
+        "ksk-faq",
+        "ksk-law"
+      ],
+      "faq-family-cover-2026": [
+        "family-law",
+        "family-total-income",
+        "family-limits-2026"
+      ],
+      "faq-pension-contribution-2026": [
+        "pension-contribution-law",
+        "pension-values-2026"
+      ],
+      "faq-parental-benefit-2026": [
+        "parental-eligibility",
+        "parental-period",
+        "parental-income-evidence"
+      ],
+      "faq-child-benefit-2026": [
+        "child-benefit-principle",
+        "child-benefit-changes"
+      ],
+      "faq-work-permission-2026": [
+        "work-activity-definition",
+        "work-title-conditions",
+        "work-side-permission"
+      ],
+      "faq-startup-support-2026": [
+        "startup-grant-law",
+        "startup-grant-process",
+        "startup-unemployment-hours"
+      ],
+      "faq-small-invoice-2026": [
+        "small-invoice-law",
+        "ordinary-invoice-law"
+      ],
+      "faq-einvoice-transition-2026": [
+        "ordinary-invoice-law",
+        "einvoice-transition-law",
+        "einvoice-bmf-faq"
+      ],
+      "faq-homeworking-expense-2026": [
+        "homeworking-law",
+        "homeworking-2026-handbook",
+        "homeworking-administration"
+      ],
+      "faq-vat-deadline-2026": [
+        "vat-period-deadline",
+        "deadline-weekend-law",
+        "vat-extension-law",
+        "vat-extension-procedure",
+        "berlin-holidays-2026"
+      ],
+      "faq-low-value-asset-2026": [
+        "asset-gwg-law",
+        "asset-afa-law"
+      ],
+      "faq-computer-depreciation-2026": [
+        "computer-life-bmf",
+        "asset-gwg-law",
+        "asset-afa-law"
+      ],
+      "faq-mixed-phone-costs-2026": [
+        "mixed-input-vat-law",
+        "mixed-service-ustae",
+        "mixed-service-current-ustae",
+        "euer-paid-input-vat"
+      ],
+      "faq-mixed-vehicle-costs-2026": [
+        "mixed-car-law",
+        "mixed-car-bmf"
+      ],
+      "faq-eu-customer-service-2026": [
+        "eu-customer-place",
+        "eu-recipient-liability",
+        "fr-service-recipient",
+        "eu-service-invoice",
+        "eu-service-zm",
+        "eu-service-vat-report"
+      ],
+      "faq-third-country-business-2026": [
+        "cross-border-place-2026",
+        "cross-border-zm-scope",
+        "cross-border-current-ustae",
+        "eu-service-implementing-rules"
+      ],
+      "faq-third-country-consumer-2026": [
+        "cross-border-place-2026",
+        "cross-border-zm-scope",
+        "cross-border-current-ustae",
+        "eu-service-implementing-rules"
+      ],
+      "faq-property-service-place-2026": [
+        "cross-border-place-2026",
+        "cross-border-zm-scope",
+        "cross-border-current-ustae",
+        "eu-property-specific-site"
+      ],
+      "faq-digital-service-threshold-2026": [
+        "cross-border-place-2026",
+        "cross-border-current-ustae",
+        "eu-service-implementing-rules",
+        "eu-oss-threshold-guide",
+        "union-oss-law",
+        "cross-border-sme-separation"
+      ],
+      "faq-zero-sales-vat-2026": [
+        "zero-sales-vat-duty",
+        "zero-sales-input-vat",
+        "vat-excess-consent"
+      ],
+      "faq-zero-receipts-annual-2025": [
+        "requested-return-duty",
+        "annual-euer-dataset",
+        "annual-euer-result",
+        "euer-paid-input-vat"
+      ],
+      "faq-income-tax-prepayment-2026": [
+        "prepayment-adjustment-law",
+        "notice-continued-effect",
+        "prepayment-request-route",
+        "personal-income-tax-expense"
+      ]
+    },
+    "mode": "Opt-in tools/run_research_evals.py with native public web search and visible local arithmetic; separate from the ten-case runner. Follow-ups replay captured context.",
+    "grading": "Every case-specific criterion plus source inspection, practical usefulness, fact reuse, and no invented actions. Any material wrong deadline/obligation or fabricated action fails; inaccessible decisive evidence is uncertain, never pass.",
+    "sources": [
+      {
+        "id": "ku-2025",
+        "url": "https://finanzamt.hessen.de/steuern/umsatzsteuer-kleinunternehmer",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2025 onward; pilot founding year 2026",
+        "finding": "Actual qualifying founding-year turnover limit EUR 25000, no annualization; crossing and subsequent transactions taxable, earlier exempt transactions remain exempt. Registration estimates are distinct."
+      },
+      {
+        "id": "advised-deadlines",
+        "url": "https://finanzamt.sachsen-anhalt.de/service/abgabefristen",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Mandatory advised calendar-year returns for 2024/2025; no early demand or individual extension",
+        "finding": "Ordinary advised 2024 deadline 30 April 2026; 2025 deadline 1 March 2027 after Sunday adjustment. Agriculture/forestry has separate rules."
+      },
+      {
+        "id": "freelance-basis",
+        "url": "https://www.gesetze-im-internet.de/estg/__18.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Current consolidated text inspected for 2026 pilot",
+        "finding": "Listed and similar professions and actual professional activity matter. Does not determine this mixed software business or make a marketing title binding."
+      },
+      {
+        "id": "service-place",
+        "url": "https://www.gesetze-im-internet.de/ustg_1980/__3a.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Current consolidated text; October 2026 business service",
+        "finding": "Business-recipient establishment rule is subject to service-specific exceptions; determine actual supply and establishments."
+      },
+      {
+        "id": "recipient-liability",
+        "url": "https://www.gesetze-im-internet.de/ustg_1980/__13b.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Current consolidated text; October 2026 incoming service",
+        "finding": "Qualifying incoming foreign business services can create recipient liability; small-business status does not remove this assessment."
+      },
+      {
+        "id": "gkv-law",
+        "url": "https://www.gesetze-im-internet.de/sgb_5/__240.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Voluntary GKV members; 2026 pilot",
+        "finding": "Economic capacity and contributory income, provisional evidence and calendar-year finalization; statutory minima/maxima and exceptions remain applicable."
+      },
+      {
+        "id": "gkv-income",
+        "url": "https://www.bundesgesundheitsministerium.de/beitraege/seite",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Current page with 2026 context",
+        "finding": "Voluntary-member contribution assessment can include rental and capital income in addition to business profit."
+      },
+      {
+        "id": "gkv-evidence",
+        "url": "https://www.tk.de/techniker/versicherung/gut-versichert-in-jeder-lebenslage/versichert-als-selbststaendige/einkommen-nachweisen-und-berechnen-2007146",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Page dated 29 January 2026; insurer explanation, not every insurer notice",
+        "finding": "Profit rather than turnover, expected income/latest tax assessment and final income evidence; possible refund/additional payment."
+      },
+      {
+        "id": "pension-one-client",
+        "url": "https://www.gesetze-im-internet.de/sgb_6/__2.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Current consolidated text; 2026 pilot, sentence 1 no.9",
+        "finding": "Cumulative conditions include regularly no qualifying insured employee and durably/essentially one client; other occupational grounds are separate."
+      },
+      {
+        "id": "pension-exemption",
+        "url": "https://www.gesetze-im-internet.de/sgb_6/__6.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Current consolidated text; 2026 pilot, subsections 1a and 2-4",
+        "finding": "Conditional initial exemption requires an application and insurer decision; not automatic for all founders."
+      },
+      {
+        "id": "employment-status",
+        "url": "https://www.gesetze-im-internet.de/sgb_4/__7.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Current consolidated text; 2026 pilot",
+        "finding": "Instructions and organizational integration indicate employment; client count alone does not decide the overall relationship."
+      },
+      {
+        "id": "status-process",
+        "url": "https://www.gesetze-im-internet.de/sgb_4/__7a.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 pilot; some extended procedural provisions sunset 30 June 2027",
+        "finding": "DRV determination assesses individual circumstances; do not turn a preparation checklist into an observed status decision."
+      },
+      {
+        "id": "ksk-faq",
+        "url": "https://www.kuenstlersozialkasse.de/kuenstler-und-publizisten/faq-kuenstler-und-publizisten",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Current official FAQ inspected 27 October 2026; questions 2,3,9,11",
+        "finding": "Gewerbeanmeldung is neither prerequisite nor exclusion. Actual ongoing artistic/publicistic earning activity and individual evidence/assessment matter."
+      },
+      {
+        "id": "ksk-law",
+        "url": "https://www.gesetze-im-internet.de/ksvg/__1.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Current consolidated text; 2026 pilot",
+        "finding": "Activity and employee conditions apply, including exceptions. Other eligibility/exclusion provisions require case-specific checking."
+      },
+      {
+        "id": "family-law",
+        "url": "https://www.gesetze-im-internet.de/sgb_5/__10.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 family-cover case; subsections 1 and 6",
+        "finding": "Main-occupation exclusion and regular total-income test are separate. Facts and changes must be reported; insurer decision and cover continuity remain separate outcomes."
+      },
+      {
+        "id": "family-total-income",
+        "url": "https://www.gesetze-im-internet.de/sgb_4/__16.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 total-income definition",
+        "finding": "Total income sums tax-law income categories; stated net rental income is not omitted from the family-cover assessment."
+      },
+      {
+        "id": "family-limits-2026",
+        "url": "https://www.tk.de/techniker/versicherung/tk-leistungen/schwangerschaft-und-familie/entlastung-fuer-familien/versichert-als-familie-in-der-familienversicherung/voraussetzung-familienversicherung-gatte-lebenspartner-2005650",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026; official insurer page dated 2025-12-05",
+        "finding": "Ordinary monthly limit EUR 565; EUR 603 for qualifying marginal employment. With no employment, EUR 450 profit plus EUR 150 net rental income exceeds the ordinary limit."
+      },
+      {
+        "id": "pension-contribution-law",
+        "url": "https://www.gesetze-im-internet.de/sgb_6/__165.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 compulsory self-employed case; subsection 1",
+        "finding": "Standard or evidenced income basis; half standard through third calendar year following start year (end 2029 for first start in 2026). Startup records when no assessment exists; annual rates and limits remain applicable."
+      },
+      {
+        "id": "pension-values-2026",
+        "url": "https://rvrecht.deutsche-rentenversicherung.de/SharedDocs/rvRecht/07_AktuelleWerte/A-C/awert_byhc.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 row, Pflichtversicherte Selbstständige ab 2025; published 2025-11-10",
+        "finding": "Published monthly standard EUR 735.63 and half standard EUR 367.82. These are table values, not a personalized income-based assessment or a fixed amount for future years."
+      },
+      {
+        "id": "parental-eligibility",
+        "url": "https://www.gesetze-im-internet.de/beeg/__1.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Child born September 2026; subsections 1,6,8",
+        "finding": "Self-employment is not itself excluded; 32 weekly hours averaged over child life-month, with other eligibility and income-ceiling conditions separate."
+      },
+      {
+        "id": "parental-period",
+        "url": "https://www.gesetze-im-internet.de/beeg/__2b.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "September 2026 birth; subsection 2; no shifting grounds",
+        "finding": "Normally last completed pre-birth tax assessment period for self-employment: calendar 2025 on fixture facts. Special grounds and mixed-income rules are separate."
+      },
+      {
+        "id": "parental-income-evidence",
+        "url": "https://familienportal.de/familienportal/familienleistungen/elterngeld/arbeitssituation",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 EÜR case; Arbeit und Einkommen mit Elterngeld",
+        "finding": "For EÜR, receipt timing matters even for earlier work; gross receipts are not one-to-one award reductions. Forecast/provisional then actual/final evidence; balance-sheet timing differs."
+      },
+      {
+        "id": "child-benefit-principle",
+        "url": "https://www.bmbfsfj.bund.de/bmbfsfj/themen/familie/familienleistungen/kindergeld",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 domestic German-parent/minor-child case; page dated 2026-01-01",
+        "finding": "Kindergeld is income-independent and generally covers children under 18; business start or higher parental profit alone does not remove entitlement on the stated facts."
+      },
+      {
+        "id": "child-benefit-changes",
+        "url": "https://www.arbeitsagentur.de/familie-und-kinder/veraenderungen-mitteilen",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 existing Kindergeld claim, minor child",
+        "finding": "Relevant household, residence, payment and foreign-benefit changes go promptly to Familienkasse. Reporting to another authority is not sufficient; no universal profit-fluctuation reporting duty is inferred."
+      },
+      {
+        "id": "work-activity-definition",
+        "url": "https://www.gesetze-im-internet.de/aufenthg_2004/__2.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 base/follow-up; subsection 2",
+        "finding": "Erwerbstätigkeit includes employment and self-employment. Unrestricted wording changes the conclusion from employment-only evidence."
+      },
+      {
+        "id": "work-title-conditions",
+        "url": "https://www.gesetze-im-internet.de/aufenthg_2004/__4a.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 valid-title case; subsections 1 and 3",
+        "finding": "Statutory/title conditions and full restrictions matter; copied Beschäftigung wording alone does not establish freelance permission. Do not infer authorization from tax registration."
+      },
+      {
+        "id": "work-side-permission",
+        "url": "https://www.gesetze-im-internet.de/aufenthg_2004/__21.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026; subsections 5 and 6",
+        "finding": "Freelance and possible side self-employment permission routes; professional permission remains separate. Not every valid-title holder needs a new section 21 title."
+      },
+      {
+        "id": "startup-grant-law",
+        "url": "https://www.gesetze-im-internet.de/sgb_3/__93.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 ordinary ALG I case; subsections 1 and 2",
+        "finding": "At least 150 remaining entitlement days at commencement plus viability and capabilities; 120 fails ordinary condition. Main work or business plan does not cure it."
+      },
+      {
+        "id": "startup-grant-process",
+        "url": "https://www.arbeitsagentur.de/arbeitslos-arbeit-finden/arbeitslosengeld/gruendungszuschuss-beantragen",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026; fixture expressly excludes disability/rehabilitation exception",
+        "finding": "Discretionary grant, at least 15 weekly hours for main activity, preparations before starting. Disability exception exists but is not applicable to this fixture; alternative support needs separate eligibility."
+      },
+      {
+        "id": "startup-unemployment-hours",
+        "url": "https://www.gesetze-im-internet.de/sgb_3/__138.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 ordinary ALG I continuation; subsection 3",
+        "finding": "Ordinary unemployment requires work under 15 weekly hours, subject to narrow exceptions; planned 20-hour self-employment is not harmless to continued ordinary ALG I."
+      },
+      {
+        "id": "small-invoice-law",
+        "url": "https://www.gesetze-im-internet.de/ustdv_1980/__33.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 ordinary domestic invoice; excludes sections 3c,6a,13b UStG",
+        "finding": "EUR 250 inclusive gross total; supplier identity/address, issue date, goods/service particulars, combined gross amount and rate suffice for reduced minimum fields. EUR 250.01 loses relief."
+      },
+      {
+        "id": "ordinary-invoice-law",
+        "url": "https://www.gesetze-im-internet.de/ustg_1980/__14.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026; subsections 1,2,4",
+        "finding": "Structured e-invoice definition and ordinary fields: party identities, supplier tax number or VAT ID, issue date, unique number, supply description/date, net consideration and applicable reductions, rate and tax amount. Conditional special fields are not universal."
+      },
+      {
+        "id": "einvoice-transition-law",
+        "url": "https://www.gesetze-im-internet.de/ustg_1980/__27.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2025-2026 supplies sent by 31 December 2026; subsection 38",
+        "finding": "Paper or consented other electronic format remains permitted in first transition; no preceding-year turnover condition for this 2026 case."
+      },
+      {
+        "id": "einvoice-bmf-faq",
+        "url": "https://www.bundesfinanzministerium.de/Content/DE/FAQ/e-rechnung.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026; questions 2,11,12",
+        "finding": "Unstructured PDF is a sonstige Rechnung, not E-Rechnung. Issuing transition does not defer receiving structured invoices since 2025; receiving can use an email inbox."
+      },
+      {
+        "id": "homeworking-law",
+        "url": "https://www.gesetze-im-internet.de/estg/__4.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026; subsection 5 sentence 1 nos.6b/6c",
+        "finding": "Separate Arbeitszimmer and daily allowance regimes; EUR 6 per qualifying day, EUR 1260 maximum across activities. Double-household deductible accommodation and overlapping room deductions excluded."
+      },
+      {
+        "id": "homeworking-2026-handbook",
+        "url": "https://lsth.bundesfinanzministerium.de/lsth/2026/A-Einkommensteuergesetz/II-Einkommen-2-24b/3-Gewinn-4-7i/Paragraf-4/inhalt.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 official handbook",
+        "finding": "Confirms applicable daily allowance law: 180 eligible days yield EUR 1080 below annual cap; deduction is not the same as tax saved."
+      },
+      {
+        "id": "homeworking-administration",
+        "url": "https://ao.bundesfinanzministerium.de/lsth/2024/B-Anhaenge/Anhang-19-Druck/I/anhang-19-I-NEU.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Circular 15 August 2023 for post-2022 work, reproduced in 2024 handbook; read with 2026 law",
+        "finding": "Paragraphs 3-4 distinguish shared living room from qualifying Arbeitszimmer; 27-30 daily conditions and day records. A practical day log is not a mandatory official form. Retrieved directly via HTTP after web-reader failure."
+      },
+      {
+        "id": "vat-period-deadline",
+        "url": "https://www.gesetze-im-internet.de/ustg_1980/__18.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Q3 2026; subsection 1; quarterly status stipulated",
+        "finding": "Advance return and payment ordinarily due by tenth day after the period. Annual/adviser-return deadlines are distinct."
+      },
+      {
+        "id": "deadline-weekend-law",
+        "url": "https://www.gesetze-im-internet.de/ao_1977/__108.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Q3 2026 dates; subsection 3",
+        "finding": "Saturday/Sunday/holiday deadline moves to next working day; 10 October 2026 Saturday becomes Monday 12 October on Berlin facts."
+      },
+      {
+        "id": "vat-extension-law",
+        "url": "https://www.gesetze-im-internet.de/ustdv_1980/__46.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Effective existing Dauerfristverlängerung for Q3 2026",
+        "finding": "One-month extension for return and payment gives 10 November 2026, not 12 November by adding a month to adjusted October date. Direct HTTP retrieval verified after web-reader failure."
+      },
+      {
+        "id": "vat-extension-procedure",
+        "url": "https://www.gesetze-im-internet.de/ustdv_1980/__48.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 quarterly filer with valid existing extension",
+        "finding": "Application timing and monthly special advance-payment procedure; do not require a new application or invent monthly special prepayment for the stipulated quarterly case."
+      },
+      {
+        "id": "berlin-holidays-2026",
+        "url": "https://www.berlin.de/en/tourism/travel-information/1887651-2862820-public-holidays-school-holidays.en.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Berlin 2026 calendar",
+        "finding": "Neither 12 October nor 10 November is a public holiday. Weekdays independently computed; third-party/unadjusted dates or a redirected 2027 calendar do not override the 2026 statutory rule."
+      },
+      {
+        "id": "asset-gwg-law",
+        "url": "https://www.gesetze-im-internet.de/estg/__6.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 acquisition; subsections 2 and 2a",
+        "finding": "Optional immediate deduction for qualifying independently usable movable depreciable assets up to EUR 800 relevant cost. Record above EUR 250 unless particulars apparent in accounts. EUR 800.01 loses GWG relief; no-pool fixture retained."
+      },
+      {
+        "id": "asset-afa-law",
+        "url": "https://www.gesetze-im-internet.de/estg/__7.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 acquisition; ordinary AfA and applicable 2025-2027 movable-asset alternatives",
+        "finding": "Crossing GWG ceiling does not automatically select one depreciation method or useful life. Determine applicable treatment from source and asset facts without an invented charge."
+      },
+      {
+        "id": "computer-life-bmf",
+        "url": "https://esth.bundesfinanzministerium.de/esth/2025/B-Anhaenge/Anhang-01/V/inhalt.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "BMF letter 22 February 2022, paragraphs 1-3 and 6-8, official EStH 2025 reproduction; applies fiscal years ending after 2020; bounded 2026 check found no superseding restriction",
+        "finding": "Qualifying notebook may use one-year useful life and full acquisition-year AfA despite October acquisition and cost above GWG ceiling. Not GWG, new depreciation method or formal section 5(1) election. Asset records retained; net cost separate from deductible VAT."
+      },
+      {
+        "id": "mixed-input-vat-law",
+        "url": "https://www.gesetze-im-internet.de/ustg_1980/__15.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 ongoing services; subsection 1; other deduction conditions stipulated",
+        "finding": "Input VAT relates to enterprise use with valid invoice; do not infer full entitlement for private use of ongoing services."
+      },
+      {
+        "id": "mixed-service-ustae",
+        "url": "https://ao.bundesfinanzministerium.de/usth/2024/A-Umsatzsteuergesetz/IV-Steuer-und-Vorsteuer/Paragraf-15/ae-15-2c.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "UStAE 15.2c(2) no. 1, official 2024 handbook; corroborated by current official UStAE PDF during 2026 check",
+        "finding": "Mixed services must be apportioned; telephone service expressly acquired for enterprise only to business-use extent. Distinct from capital-good allocation choices."
+      },
+      {
+        "id": "mixed-service-current-ustae",
+        "url": "https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Steuerarten/Umsatzsteuer/Umsatzsteuer-Anwendungserlass/Umsatzsteuer-Anwendungserlass-aktuell.pdf?__blob=publicationFile&v=107",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Current official PDF search extraction inspected 2026-10-27, section 15.2c",
+        "finding": "Corroborates mixed telephone-service apportionment; not proof of a personalized VAT assessment or a full archived PDF payload."
+      },
+      {
+        "id": "euer-paid-input-vat",
+        "url": "https://www.elster.de/eportal/helpGlobal?themaGlobal=help_euer_ufa_77_2025",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Official 2025 help used for accounting distinction, NOT 2026 form-line mapping",
+        "finding": "Net mixed telecommunications expense and paid deductible input VAT are separate EÜR expense items. Fixture business net EUR 840 plus paid input VAT EUR 159.60 gives EUR 999.60 expense-side cash; private gross EUR 428.40. Separate refunds/settlements remain distinct."
+      },
+      {
+        "id": "mixed-car-bmf",
+        "url": "https://esth.bundesfinanzministerium.de/esth/2025/B-Anhaenge/Anhang-16/III/inhalt.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "BMF vehicle guidance, official EStH 2025 reproduction, paragraph 31, checked for 2026 fixture",
+        "finding": "10-50% business use excludes the 1% method; actual-cost private withdrawal. At 40/60 and established EUR 10000 cost, private EUR 6000 leaves net business EUR 4000. This does not determine VAT or certify a Fahrtenbuch."
+      },
+      {
+        "id": "eu-customer-place",
+        "url": "https://www.gesetze-im-internet.de/ustg_1980/__3a.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "October 2026 ordinary human consultancy; subsections 1, 2, 4 and 5",
+        "finding": "B2B recipient-place France; corrected French private consumer uses German supplier-place rule. Live calls/bespoke emails alone do not make an automated electronic service or trigger digital EUR 10000/OSS rules."
+      },
+      {
+        "id": "eu-recipient-liability",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A02006L0112-20250414",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Consolidated VAT Directive, 14 April 2025, Articles 44, 45, 192a and 196; applicable 2026 fixture",
+        "finding": "Customer-place B2B and recipient liability where supplier not established in customer state. Current article 196 inspected via official search extraction; direct page hit JavaScript verification."
+      },
+      {
+        "id": "fr-service-recipient",
+        "url": "https://www.impots.gouv.fr/professionnel/prestations-entre-assujettis",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 bounded French business purchase of ordinary service from German-established supplier",
+        "finding": "French official guidance confirms French VAT/customer liability for the supplied B2B facts. No German VAT is charged; not a German-exempt domestic transaction."
+      },
+      {
+        "id": "eu-service-invoice",
+        "url": "https://www.gesetze-im-internet.de/ustg_1980/__14a.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "October 2026 intra-EU recipient-liability service; subsection 1",
+        "finding": "Both VAT IDs and recipient-liability wording accompany ordinary particulars; statutory following-month fifteenth-day invoice rule. No invented IDs or issued invoice."
+      },
+      {
+        "id": "eu-service-zm",
+        "url": "https://www.gesetze-im-internet.de/ustg_1980/__18a.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 EU B2B service; subsections 2, 7 and 8",
+        "finding": "General ZM inclusion for specified recipient-liability EU services; actual cadence/exemptions require taxpayer facts. Corrected EU-consumer ordinary service is not a ZM sale."
+      },
+      {
+        "id": "eu-service-vat-report",
+        "url": "https://www.gesetze-im-internet.de/ustg_1980/__18b.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 VAT returns/advance returns for EU services",
+        "finding": "Separate reporting for relevant intra-EU services in performance period; no guessed form line, filing cadence, submission or receipt."
+      },
+      {
+        "id": "mixed-car-law",
+        "url": "https://www.gesetze-im-internet.de/estg/__6.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 income-tax vehicle private use; subsection 1 no. 4",
+        "finding": "1% method requires more than 50% business use. A properly assigned business car at 40% business use remains outside that method; supplied actual costs support a separate private-use adjustment."
+      },
+      {
+        "id": "cross-border-place-2026",
+        "url": "https://www.gesetze-im-internet.de/ustg_1980/__3a.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "October 2026 services; subsections 1, 2, 3 no.1, 4 no.3 and 5",
+        "finding": "Full current statutory text inspected. US business advice follows recipient establishment; technical advice to US consumer follows the third-country exception. Corrected EU consumer advice follows Germany. Specific-site property plans follow France; automated software follows electronic-service rules."
+      },
+      {
+        "id": "cross-border-zm-scope",
+        "url": "https://www.gesetze-im-internet.de/ustg_1980/__18a.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "October 2026 service ZM; subsections 2 and 7 no.3",
+        "finding": "Full public statutory HTML inspected by direct HTTP after web timeouts. Service ZM concerns qualifying section 3a(2) services in another EU state with recipient liability; no such ZM for these US, consumer or property-location transactions. This does not exclude other return disclosures."
+      },
+      {
+        "id": "cross-border-current-ustae",
+        "url": "https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Steuerarten/Umsatzsteuer/Umsatzsteuer-Anwendungserlass/Umsatzsteuer-Anwendungserlass-aktuell.pdf?__blob=publicationFile&v=108",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Official PDF header 2 June 2026, inspected 27 October 2026; sections 3a.2(11)/(12), 3a.3(8)/(10), 3a.9a and 3a.12",
+        "finding": "Direct public HTTP retrieved full 7928607-byte PDF after web 503; parsed relevant text, SHA256 ab78ca30d2e9573755053f3b2d2a96f0987b26953176c1ade54a44f5c152aa5f. Supports alternative US business evidence, specific-site property distinction, automatic software classification and destination treatment from the entire threshold-crossing sale, without retroactive change to earlier sales."
+      },
+      {
+        "id": "eu-service-implementing-rules",
+        "url": "https://eur-lex.europa.eu/eli/reg/2011/282/oj/",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Regulation 282/2011 Articles 7 and 18(3); checked alongside current 2026 BMF guidance",
+        "finding": "Official indexed original text supports automated software classification and alternative third-country business evidence. Direct current-consolidation retrieval blocked by JavaScript/bot challenge; no full consolidated-page inspection claimed. Current full German statute and BMF guidance independently corroborate decisive propositions."
+      },
+      {
+        "id": "eu-property-specific-site",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX%3A32013R1042",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Regulation 1042/2013 introduction of Article 31a(2)(a)/(3)(a); checked against current BMF property guidance",
+        "finding": "Official indexed text distinguishes plans for a particular plot from generic plans. Direct EUR-Lex retrieval blocked; current full BMF section 3a.3 corroborates the bounded identified-site fixture. No French liability/registration conclusion established."
+      },
+      {
+        "id": "eu-oss-threshold-guide",
+        "url": "https://vat-one-stop-shop.ec.europa.eu/one-stop-shop_en",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Official Commission OSS guidance inspected 27 October 2026, including section 9",
+        "finding": "Full page inspected. Combined VAT-exclusive EUR 10000 test uses prior/current years and single-state conditions. The EUR 9800 plus EUR 500 crossing sale follows France for all EUR 500; earlier EUR 9800 is not retroactively changed. OSS is optional and does not replace domestic returns."
+      },
+      {
+        "id": "union-oss-law",
+        "url": "https://www.gesetze-im-internet.de/ustg_1980/__18j.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "October 2026 Union OSS procedure",
+        "finding": "Full statutory text inspected. Notification, scope and valid participation must be checked; threshold crossing does not enroll a trader. Ordinary destination-country compliance remains the alternative. No registration or submission is performed."
+      },
+      {
+        "id": "cross-border-sme-separation",
+        "url": "https://www.gesetze-im-internet.de/ustg_1980/__19a.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 cross-border small-enterprise exemption procedure",
+        "finding": "Full statutory text inspected. Foreign exemption has its own application and eligibility conditions, distinct from the EUR 10000 place rule and OSS. Fixture expressly excludes exemption; ordinary German VAT liability alone would not establish that exclusion."
+      },
+      {
+        "id": "zero-sales-vat-duty",
+        "url": "https://www.gesetze-im-internet.de/ustg_1980/__18.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "September 2026, existing monthly UStVA duty; subsections 1 and 2",
+        "finding": "Full statutory text inspected. No sales does not itself remove the stipulated monthly duty; no exemption was granted. The fixture does not ask for filing-date or penalty calculations."
+      },
+      {
+        "id": "zero-sales-input-vat",
+        "url": "https://www.gesetze-im-internet.de/ustg_1980/BJNR119530979.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 complete UStG, section 15(1) no.1; act header amendment 29 June 2026",
+        "finding": "Full-act HTML recovered the relevant section after single-page timeout. Confirmed business invoice gives EUR 19 input tax against EUR 0 output tax; wholly private correction removes it. Supplied deduction period and other conditions are not rederived."
+      },
+      {
+        "id": "vat-excess-consent",
+        "url": "https://www.gesetze-im-internet.de/ao_1977/BJNR006130976.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 AO section 168; act header amendment 3 July 2026",
+        "finding": "Full-act HTML recovered section 168 after single-page timeout. A calculated input-tax excess is not proof of authority consent, offset or paid refund; no specific repayment date or actual submission follows from arithmetic."
+      },
+      {
+        "id": "requested-return-duty",
+        "url": "https://www.gesetze-im-internet.de/ao_1977/__149.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2025 return expressly requested in 2026; subsection 1",
+        "finding": "Full statutory text inspected. A valid tax-office request creates the specified filing duty despite no receipts. The supplied valid extension to 30 November 2026 is retained; no generic deadline substitutes for it."
+      },
+      {
+        "id": "annual-euer-dataset",
+        "url": "https://www.gesetze-im-internet.de/estdv_1955/__60.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2025 EÜR requested in 2026; subsection 4",
+        "finding": "Full statutory text inspected. EÜR uses the prescribed dataset with the statutory hardship alternative. This supports preparation, not a claim of an actual submitted form."
+      },
+      {
+        "id": "annual-euer-result",
+        "url": "https://www.gesetze-im-internet.de/estg/__4.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2025 business result; subsections 3 and 4, checked with ELSTER 2025 guidance",
+        "finding": "Full statutory text inspected. Stipulated EUR 0 receipts minus EUR 1200 qualifying paid gross costs yields EUR -1200 business loss; this is not personal income-tax liability or recognized loss acceptance."
+      },
+      {
+        "id": "prepayment-adjustment-law",
+        "url": "https://www.gesetze-im-internet.de/estg/__37.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 ESt prepayments; subsections 1, 3 and 5",
+        "finding": "Full statutory text inspected. Finanzamt sets and may adjust prepayments. EUR 2000 supported annual tax after withholding minus EUR 1800 credited prepayments leaves EUR 200 forecast remainder; the effective December notice remains EUR 600 until changed or other relief applies."
+      },
+      {
+        "id": "notice-continued-effect",
+        "url": "https://www.gesetze-im-internet.de/ao_1977/__124.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 existing prepayment notice; subsection 2",
+        "finding": "Full statutory text inspected. A valid administrative act continues until changed or otherwise resolved; a request alone does not authorize unilateral underpayment."
+      },
+      {
+        "id": "prepayment-request-route",
+        "url": "https://www.elster.de/eportal/formulare-leistungen/alleformulare/eingvorauszlg",
+        "checked_on": "2026-10-27",
+        "applicable_period": "Public ELSTER adjustment form checked 27 October 2026",
+        "finding": "Public title/version page inspected. Establishes a named adjustment-request route, not account access, field-level acceptance or a submitted/approved request. The draft uses placeholders only."
+      },
+      {
+        "id": "personal-income-tax-expense",
+        "url": "https://www.gesetze-im-internet.de/estg/__12.html",
+        "checked_on": "2026-10-27",
+        "applicable_period": "2026 personal income-tax prepayments; no.3",
+        "finding": "Full statutory text inspected. Personal income-tax payments are not deductible operating expenses in EÜR; cash outflow is separate from business profit."
+      }
+    ],
+    "limits": "Primary-source verification covers only bounded pilot expectations. Baseline coverage labels remain historical. Batch 2 does not cover every insurance or benefit variant, Einstiegsgeld, residence title, actual authority decision or complete application. Other rows still require dated source research before a legal answer rubric. Repository status/validation owns observed outcomes. Batch 3 tests specified domestic invoice particulars/transition, a bounded homeworking allowance and confirmed quarterly VAT deadlines; not complete invoice validation, asset accounting, all expense categories or every filing frequency. Batch 4 covers specified movable assets, supported mixed-service/car allocations and ordinary German-French human consultancy. It does not certify all asset choices, VAT allocations, foreign income taxes, permanent establishments, third-country supplies or actual ledger/filing integrations."
+  }
+}

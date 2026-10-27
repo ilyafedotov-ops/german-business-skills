@@ -857,6 +857,368 @@
         "Offer a useful tax-form worksheet/manual preparation route with targeted missing facts",
         "Keep credentials out of chat, no account access or setting changes, and no claim of filing or professional advice"
       ]
+    },
+    {
+      "id": "faq-founding-year-2026",
+      "prompt": "Use de-business-tax. Synthetic facts, 27 October 2026: I began my first-ever sole-trader activity on 1 September 2026 in Germany, have no other activities and never waived Kleinunternehmer treatment. My qualifying received turnover is EUR 24000. A single further domestic service transaction of EUR 2000 will be performed and paid in November. Someone told me to annualize my September-to-December forecast and use the EUR 100000 ceiling. Explain what applies and what I should do before agreeing the next invoice. No accounts, registration or submission actions.",
+      "criteria": [
+        "Inspect an official source applicable from 2025; use actual EUR 25000 founding-year threshold without annualization or the ordinary EUR 100000 current-year ceiling.",
+        "Explain crossing-transaction treatment and preservation of earlier exempt transactions; apply the supplied qualifying-turnover facts without treating unclassified bank credits as established turnover.",
+        "Give a useful next step for contract price/invoice timing without silently issuing an invoice, electing a regime or inventing an official determination.",
+        "Answer without workspace setup and cite the inspected primary source and applicable period."
+      ],
+      "follow_up": {
+        "prompt": "Correction to my facts: this was only a new activity. I have already been self-employed since 2024, never waived Kleinunternehmer treatment, had total qualifying turnover EUR 18000 in 2025, and the EUR 24000 already includes all my activities in 2026. There are no other transactions. Does your founding-year answer still apply to the next EUR 2000 transaction?",
+        "criteria": [
+          "Revise the founding-year premise explicitly and use entrepreneur-wide history; do not retain the new-activity EUR 25000 current-year limit.",
+          "With EUR 18000 prior-year and EUR 26000 current-year qualifying turnover, explain ordinary EUR 100000 current-year ceiling and conditional next-year transition from exceeding EUR 25000 prior-year turnover.",
+          "Reuse supplied dates, amounts and no-waiver fact; no silent regime election or issued invoice."
+        ]
+      }
+    },
+    {
+      "id": "faq-adviser-deadline-2025",
+      "prompt": "Use de-business-tax. Synthetic case: today is 27 October 2026. My German sole-trader 2025 mandatory income-tax return is being prepared by a commissioned Steuerberater. Calendar year, no agriculture, no early demand from Finanzamt and no individual extension. A checklist says 30 April 2027. Can I plan on that date? Explain the correct ordinary deadline and a practical next step. Do not send anything.",
+      "criteria": [
+        "Inspect current official deadline guidance and distinguish tax year from filing year.",
+        "Identify 1 March 2027 for the stated 2025 advised case, including the Sunday adjustment from 28 February; distinguish the 2024 transitional deadline.",
+        "Apply supplied exclusions without repeatedly asking for them; suggest confirming the preparation timetable with the commissioned adviser.",
+        "Do not infer a filed return, agreed extension or completed external communication."
+      ],
+      "follow_up": {
+        "prompt": "I checked the papers: I meant the 2024 tax return, not 2025. The current date is still 27 October 2026. The adviser has not filed it, and there is still no early demand or individual extension. What changes and what should I do now?",
+        "criteria": [
+          "Replace the original deadline with the ordinary advised 2024 deadline 30 April 2026 and recognize it has passed on the stated current date.",
+          "Prioritize an immediate factual status/filing plan with the commissioned adviser; do not guarantee retroactive extension or invent a penalty amount.",
+          "Keep supplied facts and distinguish suggested action from contacted adviser, filed return or granted extension."
+        ]
+      }
+    },
+    {
+      "id": "faq-foreign-saas-2026",
+      "prompt": "Используй de-business-tax. Вымышленный пример за октябрь 2026: я Kleinunternehmer в Германии, купил для бизнеса обычную подписку SaaS у ирландской компании. Поставщик указан в счёте, его немецкое подразделение в услуге не участвует; сумма 120 EUR, НДС не указан. Я решил, что раз я Kleinunternehmer, никаких вопросов НДС нет. Проверь это и объясни следующий шаг простыми словами. Ничего не проводи и не подавай.",
+      "criteria": [
+        "Inspect official place-of-supply and recipient-liability provisions for this business service; do not infer exemption from the invoice or Kleinunternehmer label.",
+        "Distinguish possible tax payable under reverse charge, input-tax deduction and the ordinary small-business exemption.",
+        "Explain concrete invoice/reporting checks and unresolved facts in Russian; do not demand unrelated onboarding.",
+        "Do not invent paid tax, posted treatment, a filing receipt or a completed return."
+      ]
+    },
+    {
+      "id": "faq-classification-evidence",
+      "prompt": "Use de-business-start. Synthetic German sole-trader plan for 2026: I build bespoke software, sell reusable plugins and sometimes advise clients. I have no university degree but do have professional training and project work. Can you write IT consultant on my registration so all of it is definitely Freiberufler? Give me a useful first step without creating a workspace or submitting anything.",
+      "criteria": [
+        "Inspect the statutory freelance-activity basis; do not guarantee classification from a title, degree alone or user preference.",
+        "Distinguish actual activities, qualifications and possible separability; request only decisive missing evidence.",
+        "Offer a truthful draft activity description or factual worksheet without disguising plugin sales or inventing qualifications.",
+        "Keep activity classification, legal form and VAT regime separate; no registration or authority-confirmation claim."
+      ]
+    },
+    {
+      "id": "faq-gkv-income-evidence",
+      "prompt": "Use de-business-services. Synthetic facts, October 2026: I am voluntarily insured in GKV, mainly self-employed, with expected monthly business profit EUR 1800 and net rental income EUR 600. My insurer sent a provisional contribution notice; I have not supplied it. Please tell me whether only business profit counts and draft a short factual request to clarify the assessment. Do not calculate a precise premium from missing rates or contact the insurer.",
+      "criteria": [
+        "Inspect official voluntary-GKV income rules; recognize rental income can matter as well as business profit.",
+        "Distinguish provisional estimates, evidence of actual income and later final assessment rather than declaring the unseen notice wrong.",
+        "Prepare a factual clarification draft that asks for the assessment basis/evidence and identifies what is needed to verify the unseen notice, without inventing rates, a precise contribution or sensitive personal details.",
+        "Keep statutory health/pension questions separate from optional business insurance; no automatic private-policy recommendation or external contact."
+      ]
+    },
+    {
+      "id": "faq-one-client-status",
+      "prompt": "Используй de-business-services. Вымышленный пример за 2026: я самостоятельный консультант, работников нет, весь доход пока от одного клиента. Клиент предлагает фиксированный график и работу внутри его команды. Если найду второго клиента на маленький заказ, исчезнут и пенсионные взносы, и риск Scheinselbständigkeit? Объясни различия и подготовь список фактов для проверки, ничего никуда не отправляй.",
+      "criteria": [
+        "Inspect official SGB VI single-client pension and SGB IV employment-status sources; treat these as distinct assessments.",
+        "Check duration/substantial reliance, employees and possible exemptions for pension liability; a nominal second customer is not a guaranteed cure.",
+        "Assess actual instructions/integration and working arrangements without declaring employee/self-employed status conclusively from the short prompt.",
+        "Give a useful Russian factual checklist and appropriate DRV clarification route; do not fabricate an exemption or status decision."
+      ]
+    },
+    {
+      "id": "faq-ksk-trade-registration",
+      "prompt": "Use de-business-services. Synthetic case for 2026: I earn mainly from commissioned original illustrations and also sell printed merchandise. I registered a Gewerbe and have no employees. Someone says Gewerbeanmeldung automatically rules out KSK. Should I abandon the application? Explain what evidence matters and a next step; do not promise membership or submit an application.",
+      "criteria": [
+        "Inspect official KSK/KSVG eligibility information and avoid automatic exclusion solely from Gewerbeanmeldung.",
+        "Distinguish artistic work, merchandise/trade, mixed activities and applicable personal/economic conditions; facts remain incomplete.",
+        "Prepare a focused evidence list and KSK assessment route, without guaranteeing admission or advising termination of existing cover.",
+        "Do not invent contribution amounts, assessed membership, insurance continuity or submission evidence."
+      ]
+    },
+    {
+      "id": "faq-family-cover-2026",
+      "prompt": "Use de-business-services. Synthetic facts for October 2026: I live in Germany and have family health insurance through my spouse, a GKV member. I have no employment or minijob. My freelance sideline takes eight hours per week, with no employees; expected regular monthly tax-law profit is EUR 450. I also receive regular monthly rental income of EUR 150 after deductible expenses, and have no other income. Does the small size of my freelance work mean family cover can simply continue? Explain which facts matter and draft a short factual enquiry to the insurer. Do not contact anyone or cancel cover.",
+      "criteria": [
+        "Inspect official family-insurance rules and the 2026 ordinary income limit; use EUR 565 rather than the EUR 603 minijob limit for these no-employment facts.",
+        "Consider regular total income including supplied net rental income, not business turnover or profit alone; EUR 600 exceeds the stated ordinary limit. Any arithmetic execution claim requires captured evidence.",
+        "Distinguish the income test from the main-occupation exclusion; eight weekly hours alone is not an insurer decision. Do not guarantee continued family cover or an exact termination date.",
+        "Provide a factual insurer enquiry and evidence/continuity next step using the supplied facts; do not invent a premium, insurer decision, contact or cancellation."
+      ]
+    },
+    {
+      "id": "faq-pension-contribution-2026",
+      "prompt": "Используй de-business-services. Вымышленный случай за октябрь 2026: я начал самостоятельное преподавание языков в январе 2026, работников нет, клиентов много. Для этого примера DRV уже подтвердил обязательное пенсионное страхование; проверять мой статус заново не нужно. Хочу понять разницу между Regelbeitrag, halber Regelbeitrag и взносом по фактическому доходу. Назови опубликованные стандартный и половинный месячные размеры на 2026 год, объясни срок льготного периода и какие сведения нужны для варианта по доходу. Налоговое уведомление и прогноз прибыли я ещё не предоставил. Не выбирай за меня вариант и ничего не отправляй.",
+      "criteria": [
+        "Inspect official DRV contribution rules and 2026 published amounts; identify monthly Regelbeitrag EUR 735.63 and halber Regelbeitrag EUR 367.82 with dated attribution, without fabricating calculator execution.",
+        "Explain the half-standard founder period through the end of the third calendar year after the year of commencement (2029 for January 2026), subject to the applicable option/conditions; not a universal three-year contribution exemption.",
+        "Distinguish standard/half-standard from income-related contribution and required income evidence; do not calculate a personalized income-related contribution from missing profit or tax evidence.",
+        "Reuse confirmed compulsory status rather than restarting one-client assessment; provide a useful Russian DRV clarification/evidence next step without electing, applying or inventing a decision."
+      ]
+    },
+    {
+      "id": "faq-parental-benefit-2026",
+      "prompt": "Use de-business-changes. Synthetic case: I am a self-employed mother living in Germany with my child, born 15 September 2026. My business uses the calendar tax year and EÜR; before birth I had only self-employed income, including in 2025. There are no special postponement grounds in this example. I plan to work 20 hours per week while receiving Elterngeld, and customers may pay old invoices during those benefit months. Is self-employment incompatible with Elterngeld, and are payments for pre-birth work irrelevant? Explain the relevant period and what records to prepare. I have not supplied an award notice, income amounts or maternity-benefit facts. Do not calculate an award or submit anything.",
+      "criteria": [
+        "Inspect official Elterngeld rules; self-employment is not itself exclusion, and the 32-hour average weekly limit applies by child life-month. Twenty hours does not establish every eligibility condition.",
+        "Identify the normally relevant completed pre-birth tax assessment period, calendar year 2025 on these facts, without inventing a special postponement ground.",
+        "For the stated EÜR, distinguish cash receipt during benefit periods from when work was performed; old-invoice receipts can affect relevant profit and benefit, not automatically excluded income.",
+        "Explain forecast/provisional and final income evidence, life-month records and relevant missing award/maternity facts; no personalized amount, approval or submission claim."
+      ]
+    },
+    {
+      "id": "faq-child-benefit-2026",
+      "prompt": "Используй de-business-changes. Вымышленный пример на октябрь 2026: я гражданин Германии, постоянно живу с восьмилетним ребёнком в Германии и уже получаю Kindergeld. Я начинаю фриланс, прибыль может заметно вырасти. Других изменений нет. Теряется ли Kindergeld только из-за самостоятельной работы или роста моего дохода? Кратко сравни Kindergeld с Kinderzuschlag и Elterngeld с точки зрения зависимости от дохода и объясни, какие изменения действительно стоит сообщать Familienkasse. Не рассчитывай другие пособия, не запрашивай мои личные номера и ничего не отправляй.",
+      "criteria": [
+        "Inspect official Kindergeld guidance; self-employment or higher parental income alone does not remove ordinary Kindergeld entitlement for the stated resident German parent and minor child.",
+        "Distinguish Kindergeld from income-dependent Kinderzuschlag and Elterngeld; do not transplant their means tests or assert a personalized benefit amount.",
+        "Give a short useful Russian explanation and material change examples relevant to entitlement/payment (such as household, residence or competing foreign benefit changes), without inventing a duty to report every profit fluctuation.",
+        "No unnecessary tax IDs, bank data, new application, account action or guaranteed ongoing entitlement despite future changed facts."
+      ]
+    },
+    {
+      "id": "faq-work-permission-2026",
+      "prompt": "Use de-business-start. Synthetic case for October 2026: I am a non-EU citizen living in Germany on a valid temporary residence title and working as an employee. The wording I copied is Beschäftigung erlaubt. I have not yet checked the exact statutory title or the full Zusatzblatt. I want to take freelance design clients on the side. Does this wording alone authorize that? Give me a useful next step and a short German enquiry draft without collecting passport numbers, filing an application or claiming a permission decision.",
+      "criteria": [
+        "Inspect official residence rules and distinguish Beschäftigung from broader Erwerbstätigkeit including self-employment; the quoted employment-only wording is insufficient to establish permission for freelance work.",
+        "Keep exact residence basis and full conditions unresolved; do not declare all non-EU employees forbidden or automatically eligible, or infer permission from a tax registration.",
+        "Explain the competent Ausländerbehörde clarification/possible permission route, including conditional §21(6) where applicable, without insisting every user needs a new self-employment title.",
+        "Prepare a focused German enquiry and request only decisive title/condition wording with identifiers omitted; no account access, application, permission or started-work claim."
+      ],
+      "follow_up": {
+        "prompt": "I checked the valid title and the entire Zusatzblatt. Correction: the actual unrestricted wording is Erwerbstätigkeit erlaubt, with no further work restrictions. I still want ordinary freelance design work alongside my job. Does your previous permission concern still apply? Please distinguish immigration permission explicitly from any activity-specific professional authorisation, employment-contract duties, and tax or trade registration, without assuming ordinary design requires a professional licence.",
+        "criteria": [
+          "Revise the employment-only premise explicitly: unrestricted Erwerbstätigkeit includes self-employment; do not retain a blanket prior-approval requirement solely from the earlier copied wording.",
+          "Distinguish immigration permission from activity-specific professional requirements, employer/contract considerations and tax or trade registration; do not claim those steps completed.",
+          "Reuse the supplied valid-title/full-addendum/no-restriction facts and provide a proportionate next step without collecting personal identifiers or guaranteeing unrelated permissions."
+        ]
+      }
+    },
+    {
+      "id": "faq-startup-support-2026",
+      "prompt": "Use de-business-start. Synthetic facts for October 2026: I receive ALG I and will have 120 days of entitlement remaining on my planned freelance start date. I have not started yet, plan 20 hours of self-employment weekly, and have no other work. I am not a disabled person covered by the special vocational-rehabilitation exception in §19 SGB III. Someone says a business plan guarantees Gründungszuschuss. Can I rely on that? Explain the relevant conditions and a sensible preparation step without promising a grant, inventing an alternative entitlement or sending an application.",
+      "criteria": [
+        "Inspect official Gründungszuschuss rules: ordinarily at least 150 remaining ALG I days at commencement; 120 does not meet that rule under the expressly excluded special exception.",
+        "Distinguish main-occupation/time, viability and personal suitability conditions from entitlement duration; a business plan or 20-hour plan does not cure the missing 150-day condition.",
+        "Explain discretionary assessment and contact/preparation before starting; do not guarantee approval or unchanged ordinary ALG I at 20 weekly hours, tell the user to start first, or invent an automatic alternative benefit.",
+        "Provide useful next steps with Agentur für Arbeit and targeted evidence/timing clarification; no claim of application, grant, appointment or authorized external contact."
+      ]
+    },
+    {
+      "id": "faq-small-invoice-2026",
+      "prompt": "Use de-business-operations. Synthetic invoice check for October 2026: I bought ordinary office supplies in Germany from a regular VAT-taxed supplier, not a Kleinunternehmer. The paper invoice totals exactly EUR 250 gross including 19% VAT. It states the supplier’s full name and address, issue date, quantity and description of the goods, total gross amount and the 19% rate. It omits my name/address, an invoice number, supplier tax number and a separate service/supply date; net amount and VAT amount are not shown separately. No cross-border, intra-Community or reverse-charge transaction is involved. Do those omissions require a corrected invoice, or can these listed particulars suffice under the small-invoice rule? Explain the threshold and requirements, without guaranteeing my input-VAT deduction or contacting the supplier.",
+      "criteria": [
+        "Inspect §33 UStDV and apply its inclusive EUR 250 gross total threshold to these ordinary domestic facts; distinguish from EUR 250 net and the stated excluded transaction types.",
+        "Identify the required supplier name/address, issue date, quantity/type or service scope, gross total and rate/exemption indication; do not require recipient details, sequential number, supplier tax identifier or separate VAT/net/supply date solely under this small-invoice rule.",
+        "Answer the actual correction question using supplied facts; preserve the distinction between listed invoice particulars and entitlement to input-tax deduction or other unexamined conditions.",
+        "Give a practical evidence/correction next step only where needed; do not invent supplier details, alter an original invoice or claim external contact."
+      ],
+      "follow_up": {
+        "prompt": "Correction: the actual invoice total is EUR 250.01 gross, not EUR 250. All other facts and omissions are unchanged. Please explicitly explain which additional ordinary-invoice fields matter now, including supply date, net amount and separate VAT amount, and how to request a correction. Do not recalculate the tax, edit the original or contact the supplier.",
+        "criteria": [
+          "Revise the small-invoice premise: EUR 250.01 exceeds the inclusive threshold; apply the ordinary invoice requirements rather than rounding down or retaining §33 relief.",
+          "Explain the now-relevant recipient name/address, supplier tax number or USt-IdNr, sequential invoice number, supply date, net consideration and separate tax amount under §14(4), with any condition-specific fields distinguished from universal requirements.",
+          "Provide a correction-request draft or concrete checklist without inventing identifiers, recomputing amounts, overwriting original evidence or claiming contact; do not confuse invoice correction with guaranteed tax deductibility."
+        ]
+      }
+    },
+    {
+      "id": "faq-einvoice-transition-2026",
+      "prompt": "Используй de-business-operations. Вымышленный пример: я обычный плательщик НДС, не Kleinunternehmer. Мой бизнес и бизнес заказчика учреждены и имеют место деятельности в Германии (im Inland ansässig); он покупает услугу для бизнеса, это не госзаказ, не reverse charge, не аванс и не self-billing. Обычная облагаемая НДС 19% дизайн-услуга выполнена в октябре 2026, цена 600 EUR без НДС. Хочу выслать счёт в октябре 2026 обычным PDF без встроенного структурированного XML; заказчик согласен на PDF по email. Считается ли это E-Rechnung и можно ли пока так выставить счёт? Отдельно объясни, должен ли я уже принимать структурированные E-Rechnungen, и перечисли обязательные поля обычного счёта для этого случая. Не придумывай реквизиты, не создавай и не отправляй счёт; итоговую сумму рассчитывать не нужно.",
+      "criteria": [
+        "Inspect official 2026 e-invoice transition rules and distinguish an ordinary PDF without structured data from an E-Rechnung; email transport alone does not make it structured.",
+        "Apply the transition through 31 December 2026 to the supplied October 2026 service/invoice and recipient consent; do not deny the transition or require a 2025 turnover figure for this 2026 answer.",
+        "Distinguish issuing transition from receiving structured domestic B2B invoices since 1 January 2025; do not imply mandatory proprietary software, installation or completed technical validation.",
+        "Give the relevant §14(4) field checklist in Russian: party names/addresses, supplier tax identifier, issue date, sequential number, service description/date, net consideration including applicable reductions, rate and tax amount. No invented identifiers or issued-invoice claim; no total calculation is required."
+      ]
+    },
+    {
+      "id": "faq-homeworking-expense-2026",
+      "prompt": "Use de-business-tax. Synthetic 2026 sole-trader expense estimate: I work at a desk in my living room, which my family also uses privately; there is no separate home-office room. For this estimate use exactly 180 eligible days in 2026 across all my activities: on each day I spent more than half my actual working time at home and did not visit an outside first workplace/business establishment. No other days are included, no double-household accommodation costs for this dwelling are deductible, and no Arbeitszimmer expenses or annual room allowance are claimed for these periods. Can I claim a share of living-room rent as Arbeitszimmer costs, or use the daily home-working allowance? Calculate the allowance for these 180 days under the applicable annual cap, distinguish it from tax saved, and list the records to keep. Do not prepare or file a return.",
+      "criteria": [
+        "Inspect current official §4(5) sentence 1 nos.6b/6c EStG guidance; a privately shared living room does not establish a qualifying separate almost-exclusively business Arbeitszimmer for actual room-cost deduction.",
+        "Apply the supplied daily-allowance conditions across all activities without demanding already supplied facts or requiring a separate room; identify EUR 6 per day and EUR 1260 annual maximum.",
+        "Execute and show bounded arithmetic for 180 days: EUR 1080 is below the annual cap. Distinguish deductible amount from tax savings and keep independent-check status honest.",
+        "Give practical day/activity and condition records, respect the no-double-claim facts, and avoid invented rent allocations, tax-rate assumptions, accepted deduction or filed-return evidence."
+      ]
+    },
+    {
+      "id": "faq-vat-deadline-2026",
+      "prompt": "Используй de-business-tax. Вымышленный пример: сегодня 27 октября 2026, мой Finanzamt в Берлине. Я обычный плательщик НДС, период Voranmeldung уже подтверждён как квартальный. Речь о III квартале 2026; Dauerfristverlängerung, других продлений и отсрочки платежа нет. Декларация ещё не подана, НДС к уплате есть, но сумма в примере не указана и платёж не сделан. Чек-лист указывает 10 октября. Назови точные сроки подачи и уплаты с учётом выходных, скажи, просрочено ли на сегодня, и предложи практический следующий шаг. Не рассчитывай санкции, не входи в аккаунт и ничего не подавай или оплачивай.",
+      "criteria": [
+        "Inspect §18(1) UStG and §108(3) AO; distinguish quarterly VAT advance-return/payment deadlines from annual return or adviser deadlines.",
+        "Check the calendar: 10 October 2026 is Saturday, so both ordinary deadlines move to Monday 12 October 2026 on the stated Berlin facts; recognize overdue on 27 October.",
+        "Provide a prompt factual filing/payment preparation or authority clarification step, without inventing the payable amount, penalties, a granted extension or a completed action.",
+        "Reuse confirmed quarterly status and absent extensions; do not turn payment grace rules into a new filing deadline or advise waiting until an annual return."
+      ],
+      "follow_up": {
+        "prompt": "Нашёл подтверждение: Dauerfristverlängerung уже была действующей для III квартала 2026, это не новое заявление. Остальные факты не изменились, сегодня всё ещё 27 октября 2026. Как теперь меняются точные сроки подачи и уплаты и вывод о просрочке? Пожалуйста, пересчитай дату с учётом именно этого продления и дай обновлённый следующий шаг, ничего не подавая и не оплачивая.",
+        "criteria": [
+          "Replace the unextended deadline using effective §46 UStDV one-month extension: filing and payment due Tuesday 10 November 2026, not 12 November by adding a month to the adjusted October date.",
+          "Revise the overdue conclusion explicitly: 27 October precedes 10 November on the corrected facts. Preserve quarterly status and the effective existing extension without demanding a new application.",
+          "Provide updated timely preparation/payment planning without inventing an automatic reminder, special prepayment, completed filing/payment or authority contact."
+        ]
+      }
+    },
+    {
+      "id": "faq-low-value-asset-2026",
+      "prompt": "Use de-business-accounting. Synthetic 2026 sole-trader EÜR case: I bought a new freestanding office chair, independently usable, exclusively for business. It cost exactly EUR 800 net plus correctly charged 19% VAT, with no other acquisition costs. No rebates, grants or investment deductions reduce that cost. It was delivered, paid and ready for use in October 2026. I am ordinarily VAT liable and full input-VAT deductibility is confirmed for this example. No Sammelposten is used for 2026. Can the chair’s acquisition cost be deducted immediately as a GWG, or does paying for it automatically make any asset an immediate expense? Please distinguish the net threshold, the optional GWG treatment, VAT and the records needed. Explain only; do not book it or elect treatment for me.",
+      "criteria": [
+        "Inspect §6(2) EStG and apply the inclusive EUR 800 net acquisition-cost threshold with the stipulated deductible VAT, independent usability and exclusive business use; do not compare EUR 952 gross to EUR 800.",
+        "Explain the available immediate GWG treatment as an option, not a compulsory automatic consequence of EÜR payment; reuse the no-Sammelposten premise.",
+        "Identify invoice/acquisition and asset-record evidence, including the required GWG record for amounts over EUR 250 unless the required information is apparent from bookkeeping; do not invent a posted entry.",
+        "Keep acquisition-cost deduction separate from input-VAT treatment and avoid duplicate gross/net claims, method election, fictitious review or filing."
+      ],
+      "follow_up": {
+        "prompt": "Correction: the chair actually cost EUR 800.01 net plus 19% VAT. No other acquisition costs, all other facts unchanged, and no Sammelposten is used for 2026. Does immediate GWG treatment still apply? Explain what must be clarified for the remaining depreciation route; do not assume a useful life, choose a method, calculate depreciation or book anything.",
+        "criteria": [
+          "Revise the GWG conclusion: EUR 800.01 net exceeds the inclusive EUR 800 ceiling; do not round down or retain immediate §6(2) relief.",
+          "Preserve the no-Sammelposten premise and explain an appropriate asset/AfA route with useful-life and applicable-method evidence to establish, without inventing a depreciation period or amount or claiming linear AfA is the only legally possible method.",
+          "Keep VAT treatment and original/corrected evidence separate; no method election, posting or completed tax outcome."
+        ]
+      }
+    },
+    {
+      "id": "faq-computer-depreciation-2026",
+      "prompt": "Используй de-business-accounting. Вымышленный пример для EÜR за 2026: обычный ноутбук (Notebook-Computer) стоимостью 2000 EUR без НДС куплен, оплачен и введён в эксплуатацию в октябре 2026. Других затрат на приобретение нет, использование только деловое; право на полный вычет входного НДС для примера подтверждено. Мне говорят, что раз цена выше 800 EUR, полное списание стоимости в 2026 невозможно и обязательно нужно распределить её минимум на три года. Проверь это: объясни правило полезного срока для компьютеров, возможность полной AfA в год приобретения несмотря на октябрь, отличие от GWG и какие записи нужны. Не выбирай за меня способ, не делай проводки и не составляй декларацию; НДС рассчитывать не нужно.",
+      "criteria": [
+        "Inspect the applicable BMF computer-hardware useful-life guidance and recognize that a qualifying notebook may use a one-year useful life despite exceeding the GWG ceiling.",
+        "Explain the administrative allowance for full acquisition-year AfA despite October acquisition; do not insist on three years or mandatory 3/12 proration for this permitted approach.",
+        "Distinguish useful-life guidance/AfA from §6(2) GWG or a separate immediate-expensing rule; do not misstate it as a new depreciation method or formal §5(1) Wahlrecht, and do not force the approach.",
+        "Give useful Russian asset-register/invoice/commissioning evidence guidance, keep net cost and deductible VAT separate, and avoid double deduction, booking or filed-return claims."
+      ]
+    },
+    {
+      "id": "faq-mixed-phone-costs-2026",
+      "prompt": "Use de-business-accounting. Synthetic bounded 2026 EÜR calculation: ongoing phone/internet services, no device purchase, were invoiced and paid at EUR 1200 net plus EUR 228 German VAT. The invoices and input-VAT conditions are otherwise valid. Reliable usage evidence establishes 70% business and 30% private use; all business outputs are taxable. Apply the business-use portion to these ongoing services, not a full-business-assignment/private-output-VAT model. Calculate business net service cost, deductible input VAT, private gross share and the business gross paid share. Explicitly explain how the net cost and paid deductible input VAT are distinguished on the expense side of EÜR, before any separate VAT refund or settlement; do not invent tax-form line numbers. My existing external accounting system remains authoritative. Do not post or edit any records.",
+      "criteria": [
+        "Inspect official mixed-use service/input-VAT allocation rules; for the stipulated ongoing telephone services allocate input tax to business use, rather than treating full VAT deduction plus private output VAT as automatically required.",
+        "Execute and show the split: business net EUR 840, deductible input VAT EUR 159.60, private gross EUR 428.40, business gross paid share EUR 999.60; reconcile shares to EUR 1428 total without double counting.",
+        "Distinguish net service cost from separately expensed paid deductible input VAT in EÜR; EUR 840 alone is not the full paid expense-side total. VAT refund/settlement cash flows remain separate and no form-line mapping is invented.",
+        "Preserve the supplied supported allocation and authoritative external system; identify the invoice/payment/use-evidence trail without claiming accepted deduction, new ledger entries or external access."
+      ]
+    },
+    {
+      "id": "faq-mixed-vehicle-costs-2026",
+      "prompt": "Используй de-business-tax. Вымышленный расчёт за 2026: автомобиль уже правомерно включён в имущество моего бизнеса. Надёжные записи для примера подтверждают 40% делового и 60% личного использования; поездок между домом и первой Betriebsstätte и семейных поездок домой в рамках двойного ведения хозяйства нет. Общая сумма затрат для расчёта налога на доход до корректировки личного использования уже правильно установлена как 10000 EUR, включая корректную амортизацию. Не проверяй заново состав этих затрат. Могу ли я применить правило 1%, раз машина в бизнесе? Если нет, рассчитай стоимость личного использования по данным примера и оставшуюся деловую часть. Отдельно отметь, что вывод по налогу на доход не определяет НДС: НДС здесь исключён из расчёта. Не заявляй, что мои записи являются формально проверенным Fahrtenbuch, и ничего не проводи.",
+      "criteria": [
+        "Inspect §6(1) no.4 EStG and applicable official mixed-car guidance; business-asset status alone does not permit the 1% method at 40% business use, because more than 50% business use is required.",
+        "Use the stipulated actual-cost and usage evidence to execute EUR 6000 private-use cost/withdrawal and EUR 4000 remaining business cost, without rederiving the supplied depreciation or cost base.",
+        "Explain that EUR 4000 is the net income-tax cost after the private adjustment, not necessarily a single gross ledger entry; do not infer VAT treatment from the income-tax allocation.",
+        "Give useful Russian record/adjustment guidance without claiming a formally accepted Fahrtenbuch, making an unsupported flat private-use estimate, inventing authority approval or posting anything."
+      ]
+    },
+    {
+      "id": "faq-eu-customer-service-2026",
+      "prompt": "Use de-business-tax. Synthetic October 2026 transaction: my ordinarily VAT-taxed sole-trader business is established in Germany, with no establishment in France. I provide individual IT consultancy, personally delivered through live calls and bespoke emails, to a business established in France for its business use. For this fixture its business status and valid French VAT ID have already been verified, and both parties have the relevant VAT IDs; do not invent or check real identifiers. No other establishment participates. This is ordinary advisory work, not teaching, event admission, an immovable-property service, software licensing or an automated digital supply; no special place-of-supply exception applies. Fee EUR 1000 net. Explain place of supply, whether I charge German VAT, the special invoice wording/identifiers, and the general ZM and German VAT-return reporting route. Do not issue an invoice, invent filing cadence or submit anything.",
+      "criteria": [
+        "Inspect §3a(2) UStG and applicable EU recipient-liability rules; place this stated B2B service in France, with no German VAT charged and recipient reverse-charge treatment rather than treating it as a German tax exemption.",
+        "Identify special invoice requirements including both VAT IDs and recipient-liability wording under §14a(1), without inventing identifiers or claiming a live validation.",
+        "Explain the general Zusammenfassende Meldung and separate German VAT-return reporting route under §§18a/18b; distinguish obligations from actual submission and do not invent unprovided filing cadence or form fields.",
+        "Reuse the verified business facts and ordinary human-delivered service premise, keeping this bounded VAT answer separate from comprehensive foreign income-tax/PE clearance or completed invoicing."
+      ],
+      "follow_up": {
+        "prompt": "Correction: the French customer is actually a private individual buying the same ordinary human-delivered IT advice for personal use, not a business. Disregard the previous business-status and VAT-ID premise. My net fee remains EUR 1000; for this example the ordinary German 19% rate applies if Germany is the place of supply. Please revise the place/VAT/reverse-charge/ZM conclusions, calculate VAT and gross price if German VAT applies, and explain why delivery through live calls and bespoke emails does not automatically trigger the electronic-services EUR 10000/OSS rules. Do not issue or amend an invoice or submit anything.",
+        "criteria": [
+          "Replace the B2B premise with the French EU-consumer facts and apply the ordinary §3a(1) supplier-place rule in Germany; do not retain reverse charge or a ZM obligation for this transaction.",
+          "Execute the stipulated-rate calculation: EUR 1000 net, EUR 190 German VAT and EUR 1190 gross, with transparent inputs/results and honest independent-check status.",
+          "Distinguish personally delivered advisory work from automated electronic services; do not apply the digital-services EUR 10000/OSS route solely because calls/emails are used. Preserve the revised facts and no invoice/filing action boundary."
+        ]
+      }
+    },
+    {
+      "id": "faq-third-country-business-2026",
+      "prompt": "Use de-business-tax. Synthetic October 2026 case: my ordinarily VAT-taxed sole-trader business is established only in Germany. I provide ordinary, personally delivered technical IT consultancy to a business established only in the United States, exclusively for its business use. Reliable business-status and establishment evidence has already been checked for this example; there is no EU VAT ID and no other establishment participates. This is not property work, event admission, transport, licensing or an automated digital supply, and no special place-of-supply exception applies. Fee EUR 1000 net. Does the missing EU VAT ID mean I must charge German VAT? Explain the German place-of-supply and ZM conclusions, what the existing evidence should show, and what remains to investigate before finalizing foreign tax/invoice treatment. Do not assume that EU reverse-charge invoice rules apply worldwide or that there are no US obligations. No accounts, invoice issuance or submissions.",
+      "criteria": [
+        "Inspect §3a(2) UStG and apply recipient establishment in the United States to the stipulated business-use service; absence of an EU VAT ID does not itself impose German VAT when third-country business evidence is established.",
+        "Distinguish outside German VAT scope from a German exemption or zero-rated domestic transaction, and explain that this non-EU service does not enter the EU Zusammenfassende Meldung.",
+        "Reuse the supplied verified facts while identifying retained business-status, establishment and service-use evidence; do not invent identifiers, actual verification or demand an EU VAT ID from the US customer.",
+        "Keep foreign tax, invoice and registration consequences conditional on applicable US facts/rules; do not automatically transplant §14a EU wording or certify worldwide reverse charge, foreign compliance or absence of obligations. Give a concrete next check without issuing or submitting anything."
+      ]
+    },
+    {
+      "id": "faq-third-country-consumer-2026",
+      "prompt": "Используй de-business-tax. Вымышленная сделка октября 2026: мой Einzelunternehmen находится только в Германии и применяет обычный режим НДС. Я лично оказываю техническую IT-консультацию частному лицу с местом жительства и обычного пребывания только в США, исключительно для его личных нужд. Это индивидуальная техническая консультация посредством живых звонков и подготовленных лично писем, не обучение, не автоматизированная цифровая услуга, не лицензия и не работа с недвижимостью; других специальных правил места оказания нет. Вознаграждение 1000 EUR без налога. Мне говорят: любой B2C-клиент означает немецкий НДС. Проверь именно правило для такой консультации частному лицу вне ЕС, объясни немецкий НДС и ZM, а иностранные обязанности отдели от этого вывода. Какие подтверждения вида услуги и места жительства клиента мне следует сохранить? Ничего не выставляй, не регистрируй и не отправляй.",
+      "criteria": [
+        "Inspect §3a(4) sentence 2 no.3 UStG and apply the third-country consumer exception for the stipulated personally delivered technical advice, rather than treating every B2C service under §3a(1).",
+        "Place this service at the US consumer residence, with no German VAT and no EU ZM for this transaction; distinguish outside-scope treatment from a German tax exemption.",
+        "Distinguish the specified human advisory service from automated electronic services; do not import the EU EUR 10000/OSS route or business-recipient reverse charge merely because delivery uses calls/emails.",
+        "Answer usefully in Russian, retain evidence of service category and consumer location, and keep foreign obligations unresolved without unsupported US tax clearance, invoice issuance or registration claims."
+      ],
+      "follow_up": {
+        "prompt": "Исправление: тот же клиент — частное лицо, но живёт и обычно находится только в метрополии Франции (не на заморских территориях), не в США; все остальные факты прежние. Вознаграждение остаётся 1000 EUR без налога. Для примера обычная немецкая ставка 19% применяется, если место оказания — Германия. Пересмотри выводы о месте, немецком НДС и ZM, рассчитай НДС и полную цену и поясни, какое условие прежнего исключения перестало выполняться. Ничего не выставляй и не отправляй.",
+        "criteria": [
+          "Replace US residence with French EU-consumer facts: the §3a(4) third-country condition no longer holds, so the ordinary §3a(1) supplier-place rule puts this stipulated advice in Germany.",
+          "Execute the stipulated calculation of EUR 190 German VAT and EUR 1190 gross on EUR 1000 net, with observable arithmetic and honest independent-check status.",
+          "Retain no ZM or recipient reverse charge for this consumer transaction, reuse the unchanged human-service facts and avoid automatic electronic-service/OSS treatment or invoice/submission claims."
+        ]
+      }
+    },
+    {
+      "id": "faq-property-service-place-2026",
+      "prompt": "Use de-business-tax. Synthetic October 2026 case: I am an architect with an ordinarily VAT-taxed sole-trader business established only in Germany. A business customer established in Germany commissions individual construction plans for a specific, already identified plot and building project in metropolitan France; the plans are exclusively for that site, not reusable generic designs. The customer buys for its business. Both parties are German, so I was told this must be a domestic German service. Explain whether the property-service exception changes the place of supply, German VAT and ordinary EU-service ZM treatment. I have not supplied the customer’s French VAT-registration status or a foreign liability assessment: identify what must be checked to decide French VAT liability, registration and invoice wording, without guessing that German reverse charge or automatic foreign registration applies. Do not calculate French VAT, issue an invoice, access an account or submit anything.",
+      "criteria": [
+        "Inspect §3a(3) no.1 UStG and applicable official property-service guidance, recognizing specific-site architectural construction plans as sufficiently connected to French immovable property.",
+        "Apply the property-location exception despite both parties being German: France is the place and German VAT is not charged; do not classify the transaction under the ordinary §3a(2) customer-place rule.",
+        "Explain that the ordinary §18a service-ZM rule covers qualifying §3a(2) services, not this property-location service, without calling all foreign services ZM-reportable.",
+        "Keep French VAT liability, registration and invoice details dependent on applicable foreign rules and missing customer/status facts; give targeted next checks without inventing French VAT IDs, automatic reverse charge, required registration or completed actions."
+      ]
+    },
+    {
+      "id": "faq-digital-service-threshold-2026",
+      "prompt": "Use de-business-tax. Synthetic October 2026: my ordinary VAT-taxed sole-trader business has its seat, management and all establishments only in Germany. I sell directly through my own website, with no platform or intermediary acting as supplier, standard software by automatic download with minimal human intervention to private consumers; this transaction is not personal advice. The new customer’s residence and normal location in metropolitan France are sufficiently evidenced. Across all relevant cross-border EU consumer telecommunications/broadcasting/electronic services and intra-EU distance sales combined, qualifying consideration excluding VAT was EUR 0 in 2025 and EUR 9800 earlier in 2026. There were no other relevant sales. The next single software-download sale is EUR 500 net. I never waived the EUR 10000 place-of-supply exception; no domestic or cross-border small-enterprise exemption applies. For this calculation, use the stipulated applicable French rate of 20% if France is the place of supply. Determine which country taxes this crossing transaction, whether only the excess or the whole sale changes treatment, and whether the earlier EUR 9800 changes retroactively. Calculate this sale’s VAT and gross amount. Explain the optional Union OSS route versus ordinary destination-country compliance; do not register me, elect a scheme, issue an invoice or submit anything.",
+      "criteria": [
+        "Inspect current §3a(5) UStG and official electronic-service/threshold guidance; classify stipulated automatic software downloads as electronic services and use the combined VAT-exclusive EUR 10000 prior/current-year test with the supplied Germany-only establishment and no-waiver facts.",
+        "Execute EUR 9800 plus EUR 500 equals EUR 10300 and apply destination France to the whole EUR 500 crossing transaction, not only EUR 300 excess; do not retroactively reclassify the earlier EUR 9800.",
+        "Execute the stipulated French-rate calculation on the full EUR 500: EUR 100 VAT and EUR 600 gross, identifying the supplied rate and avoiding a German 19% calculation or independent-verification claim unsupported by evidence.",
+        "Explain Union OSS as an optional procedure requiring actual valid participation and appropriate timing, with ordinary French compliance as the alternative; no automatic registration, German ordinary-return substitution for French VAT, §19a conflation or invented filing/action result."
+      ]
+    },
+    {
+      "id": "faq-zero-sales-vat-2026",
+      "prompt": "Use de-business-tax. Synthetic case as of 27 October 2026: my ongoing German sole-trader business is ordinarily VAT taxed, and monthly Umsatzsteuer-Voranmeldungen are required; no exemption from advance returns has been granted. I am preparing the outstanding September 2026 return. There were no sales, private-use VAT, acquisitions, reverse-charge liabilities, corrections or other VAT events. The only item is an ordinary domestic business service, invoiced and paid at EUR 100 net plus EUR 19 correctly charged VAT. The invoice, receipt of service, September deduction period and full business input-tax eligibility are confirmed for this example. Does no sales mean I can skip the return or submit a completely blank zero return? Calculate the bounded VAT balance, distinguish an excess claimed from money actually refunded, and identify the records and preparation steps needed. My existing external accounting system remains authoritative. Focus on the obligation and amount; no deadline or penalty calculations, account access, posting or filing.",
+      "criteria": [
+        "Inspect applicable §18 UStG rules and preserve the stipulated existing monthly filing obligation despite no sales; do not infer a waiver or exemption from zero turnover.",
+        "Use confirmed §15 input-tax facts to execute output VAT EUR 0 minus deductible input VAT EUR 19 equals EUR -19, an input-tax excess of EUR 19; do not treat a no-sales month as a completely zero return or invent other liabilities.",
+        "Distinguish the calculated excess/prepared return from actual submission, Finanzamt consent/processing, offset or paid refund; do not promise that EUR 19 has been paid or will arrive automatically on a date.",
+        "Explicitly identify invoice/service-period/payment and existing-ledger reconciliation evidence and a useful preparation step while preserving the selected external system; no account access, posting, deadline/penalty calculation or filing claim."
+      ],
+      "follow_up": {
+        "prompt": "Correction: the EUR 100 plus EUR 19 invoice was wholly for my private use, not for the business. Withdraw the earlier business-use/input-tax premise. All other facts are unchanged, including the required monthly return and absence of every other VAT event. Recalculate the VAT balance and say whether the September return can now be skipped. Explain how to preserve the original document and corrected classification without editing or filing anything.",
+        "criteria": [
+          "Retract the EUR 19 input-tax deduction for wholly private services under the corrected facts; execute output VAT EUR 0 minus eligible input VAT EUR 0 equals EUR 0, without retaining the previous refund claim.",
+          "Preserve the established monthly filing obligation and distinguish a genuine zero return from exemption from filing; no automatic cancellation or new setup requirement.",
+          "Give useful original-document/corrected-classification evidence guidance in the authoritative system without claiming to edit records, submit a return or receive approval."
+        ]
+      }
+    },
+    {
+      "id": "faq-zero-receipts-annual-2025",
+      "prompt": "Используй de-business-tax. Вымышленная ситуация на 27 октября 2026: за 2025 год моя реально ведущаяся самостоятельная профессиональная деятельность с целью получения прибыли имела 0 EUR поступлений и 1200 EUR уже подтверждённых, оплаченных, полностью деловых расходов. Для этого ограниченного примера допустимость расходов и метод EÜR подтверждены; других корректировок, активов, частных долей или неденежных операций нет. В 2025 применялся Kleinunternehmer, права на вычет входного НДС нет; 1200 EUR — полная учитываемая сумма с НДС, не добавляй НДС отдельно. Также есть доход от работы по найму, но его параметры и прочие личные налоговые данные не даны. Finanzamt направил действующее требование подать Einkommensteuererklärung и Anlage EÜR за 2025 и предоставил действительное продление срока до 30 ноября 2026. Можно ли проигнорировать требование, потому что выручки нет? Рассчитай только результат EÜR, объясни отличие от общего налога физлица, перечисли что подготовить и какие подтверждения сохранить. Деятельность продолжается; не закрывай её, не пересчитывай общий налог и не заявляй, что убыток уже признан ведомством. Ничего не отправляй и не изменяй в записях.",
+      "criteria": [
+        "Inspect the applicable return-request and EÜR rules, including AO §149 and EStDV §60(4), and explain that the valid specific request remains binding despite zero receipts; reuse the supplied extension rather than replacing it with a generic deadline.",
+        "Execute EUR 0 business receipts minus the stipulated EUR 1200 deductible gross costs equals an EÜR loss of EUR 1200; do not discard costs because revenue is zero or add input VAT again.",
+        "Distinguish business result from total personal taxable income and income-tax liability: employment income and missing personal facts prevent a zero-tax or final refund conclusion, and the loss has not been accepted by the authority.",
+        "Answer in Russian with concrete preparation and retention guidance for the authority request/extension, expense/payment records and continuing profit-oriented activity; no automatic closure, blanket VAT-return assumption, filing or record-change claim."
+      ]
+    },
+    {
+      "id": "faq-income-tax-prepayment-2026",
+      "prompt": "Use de-business-tax. Synthetic case on 27 October 2026: my valid German Einkommensteuer-Vorauszahlungsbescheid sets EUR 600 for each 2026 quarterly due date. The March, June and September payments were made and credited, EUR 1800 total; the notice still requires EUR 600 on 10 December 2026. A supported forecast supplied for this example gives expected annual 2026 income tax of EUR 2000 after creditable wage/other withholding but before these quarterly prepayments. Accept that forecast; do not derive a tax formula or recheck its components. No amended notice, deferral or suspension has been granted, and no adjustment request has been sent. Calculate the remaining forecast amount and compare it with the still-binding December amount. Can I simply pay the lower figure, and what should I do if no reduction is granted before the due date? Explain what evidence to attach and draft a short German request to adjust the December prepayment, with placeholders for identities and references. Also say whether these personal income-tax prepayments are deductible business expenses in EÜR. Do not send the draft, cancel payments, change records or claim the Finanzamt has accepted the forecast.",
+      "criteria": [
+        "Inspect §37 EStG and execute three credited EUR 600 payments equals EUR 1800 and expected annual EUR 2000 minus EUR 1800 equals EUR 200 remaining forecast; distinguish this from the existing EUR 600 December demand.",
+        "Explain the adjustment request under §37(3) and that the request/forecast alone does not change the effective notice; without a granted change or other effective relief, EUR 600 remains payable on 10 December 2026. Do not advise unilateral underpayment or invent approval.",
+        "Provide a concise German draft requesting adjustment of the remaining December prepayment to EUR 200, using placeholders and the supplied annual-tax/credited-payment facts, plus concrete forecast/current-notice/payment evidence to attach; do not invent revenue, tax identifiers, acceptance or transmission.",
+        "Inspect §12 no.3 EStG and distinguish personal income-tax prepayments from deductible business expenses; preserve the forecast as stipulated rather than inventing a full tax computation, automatic year-end refund or record change."
+      ]
     }
   ]
 }
