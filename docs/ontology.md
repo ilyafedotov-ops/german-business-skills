@@ -43,6 +43,14 @@ VAT-ID possession/use are distinct facts or reviewed conclusions. A request for
 correction, issued correction and observed refund remain separate evidence;
 none is inferred from another. These distinctions reuse existing records.
 
+An invoice workflow is a local evidence chain with a stable business-operation
+reference, issuing system/account, customer/currency, frozen draft and actual issued
+artifact. Draft replacement, issued correction, dispatch attempt and recipient
+receipt are distinct relationships/events. A correction retains its issued parent;
+no local state establishes payment, customer agreement, legal effect or provider
+execution. `00_admin/invoicing.json` owns this optional chain; the existing task
+register owns follow-up work.
+
 | Concept | Meaning and relationships | Current representation |
 | --- | --- | --- |
 | Entrepreneur / business profile | Shared context for the person and their business activities | `01_profile/business.json`; `facts` keyed by field name |

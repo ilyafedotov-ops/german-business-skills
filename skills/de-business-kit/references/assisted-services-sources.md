@@ -145,3 +145,50 @@ must name the actual host/tool, account scope and operation, use synthetic
 fixtures where possible, and inspect read-back/artifacts and any confirmation.
 Public documentation supports a route proposal; observed service state supports
 claims about what happened.
+
+## Invoice correction and delivery check — 2026-10-27
+
+Checked **2026-10-27** for the protected [invoicing workflow](invoicing-workflow.md).
+These public sources establish documented routes, not access or acceptance in a
+particular account. Recheck the applicable transaction period and actual UI before
+execution; preserve the selected product and its existing books.
+
+- Lexware's [creation help](https://help.lexware.de/de-form/articles/547986-rechnung-oder-teilrechnung-erstellen-schritt-fur-schritt)
+  separates finalization from sending. Its [numbering help](https://help.lexware.de/de-form/articles/548053-nummernkreise-einstellen-und-rechnungsnummern-vergeben)
+  says drafts receive numbers, while the creation article associates final numbering
+  with completion. This inconsistency remains unresolved without actual route
+  observation: a number alone cannot prove issuance, and no local number is assigned.
+- [Correction/amount help](https://help.lexware.de/de-form/articles/640615-rechnung-korrigieren-oder-rechnungsbetrag-korrigieren-so-gehst-du-vor)
+  distinguishes amount corrections from content errors; [cancellation/reissue](https://help.lexware.de/de-form/articles/548199-abgeschlossene-rechnungen-stornieren-und-neu-ausstellen)
+  and [locked-document correction](https://help.lexware.de/de-form/articles/548776-wie-berichtige-ich-einen-beleg)
+  describe different effects on originals, numbers, bookings and payment links.
+  Inspect sent/locked/paid state and the exact supported branch. A provider's
+  automatic paid/refunded label does not independently prove a bank movement.
+- The [official API](https://developers.lexware.io/docs/) documents draft creation,
+  `finalize=true` for open invoices, no invoice update/status-transition endpoint,
+  and unavailable draft files (406). A 504 may follow successful processing. Use
+  supported UI/manual editing where needed; read back after timeouts and do not
+  finalize just to download a preview. No idempotency guarantee or automatic
+  invoice-send capability is inferred from a create endpoint.
+- [Sent-attachment history](https://help.lexware.de/de-form/articles/548518-wie-kann-ich-dateien-aus-dem-kundenmanager-mit-der-rechnung-oder-dem-angebot-versenden)
+  and [email logging](https://help.lexware.de/de-form/articles/548812-lexware-ios-app-belege-per-e-mail-versenden-und-im-kundencenter-teilen)
+  support inspecting dispatch evidence. They do not establish customer receipt,
+  reading, agreement or payment. [E-invoice sending](https://help.lexware.de/de-form/articles/547942-e-rechnungen-versenden-und-empfangen)
+  also permits downloaded files sent separately; preserve the actual destination,
+  final files and route's receipt evidence. If unavailable, delivery stays unconfirmed.
+- [UStDV §31(5)](https://www.gesetze-im-internet.de/ustdv_1980/__31.html)
+  permits specifically linked correction of missing/incorrect particulars; full
+  cancellation/reissue is not the universal rule. [UStG §14](https://www.gesetze-im-internet.de/ustg_1980/__14.html)
+  distinguishes statutory self-billing (`Gutschrift`) from a provider's credit-note
+  label. No automated legal classification is implemented.
+- For the **2026** transition, [UStG §27(38)](https://www.gesetze-im-internet.de/ustg_1980/__27.html)
+  and the [BMF UStAE snapshot dated 2025-12-31, section 14.11](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Steuerarten/Umsatzsteuer/Umsatzsteuer-Anwendungserlass/Umsatzsteuer-Anwendungserlass-31-12-2025.pdf?__blob=publicationFile&v=2)
+  require checking the actual format duty and available transition. Do not claim
+  every 2026 correction must be XML, or that an email always suffices. This dated
+  BMF snapshot is navigation evidence, not a claim to be the latest consolidated
+  guidance; research the actual case before asserting compliance.
+
+Example consequence: an issued document with a wrong description may need a
+linked content correction or a provider-supported cancellation/replacement. A
+partial amount credit is a different route. A saved PDF, number or "Gesendet"
+label alone establishes none of those legal effects or customer receipt.

@@ -78,6 +78,16 @@ continuation; the existing task register remains authoritative. Invoice-time
 amount due and current bank evidence are separate, and amount-due profile rules
 are not executed by the inspector or proposal arithmetic.
 
+Invoice workflow state is separate from accounting: optional
+`00_admin/invoicing.json` uses the shared workspace lock, expected record hashes,
+preimage history and an audit checkpoint/checksum. Existing workspace schemas are
+unchanged. Draft/source, final issued artifact and event evidence are frozen
+separately. Delivery scope binds final bytes, destination, attachments and the
+correction family; outcome recording targets an exact attempt. A readable status
+is a projection, while follow-up tasks stay in the existing register. The CLI
+records evidence; host/manual provider execution is a separate step. No GUI or
+native-only writer is implied. Mutable invoice state cannot itself be evidence.
+
 ## Intended result
 
 An entrepreneur brings a task at any stage: prepare to start, register an activity, choose a service, fill in a form, answer a question, manage daily work or prepare reporting. Changes and closure have journey instructions; real execution needs separate acceptance. The [lifecycle map](../skills/de-business-kit/references/lifecycle.md) defines coverage and priorities. The router or a directly selected domain skill loads relevant modules and available tools; shared facts and decisions support continuation. Local utilities, the GUI and integrations serve these outcomes. Self-managed accounting and filing use the chosen system; a proprietary complete ledger and ELSTER connector are not prerequisites for every route. Consultation and exports remain optional.

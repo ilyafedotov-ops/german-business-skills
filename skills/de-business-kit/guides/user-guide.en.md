@@ -78,6 +78,24 @@ even when merely possessing it does not. A correction request is not a guarantee
 refund. Bring the invoice, goods route and known VAT-regime facts; the assistant
 should ask only for missing details. See the [shared EU goods checks](../references/international.md#before-ordering-goods-from-another-eu-country).
 
+## Issue, correct and confirm delivery
+
+> Use de-business-operations. Continue this invoice in my chosen invoicing system. Prepare the exact invoice or correction, show its final files and recipient, and keep issue, sending and delivery confirmation separate. Save the current status and next step.
+
+The assistant can prepare the supported service operation and retain its observed
+result in your private folder. It keeps the original and correction, the reviewed
+draft and actual issued file, and each sending attempt. A send log means sent;
+delivery needs a receipt or customer acknowledgement. After a timeout it checks
+the existing result before retrying. If you already issued or sent a document,
+provide its actual file and status evidence: this is recorded as a past event,
+without inventing earlier authorization. Sending, cancellation and other external
+changes need authorization covering the concrete action and its effects.
+
+The protected local commands need an available Python runtime. The current GUI
+and standalone native Windows tools have no invoice lifecycle controls; without
+the writer, the assistant saves a readable continuation and helps with the chosen
+service. The kit has no bundled live invoicing/mail connector or automatic numbers.
+
 ## Keep your work in one folder
 
 For ongoing work, choose a private permanent folder such as **My business**, separate from the downloaded kit, installed skills and any Git repository. Give your assistant access to that folder. In Codex, keep using the project where the skills are installed and also grant access to the business folder; opening a different project may hide project-local skills.

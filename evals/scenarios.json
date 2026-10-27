@@ -571,6 +571,26 @@
       ]
     },
     {
+      "id": "invoice-correction-manual-dispatch",
+      "prompt": "Use skills/de-business-operations/SKILL.md. Synthetic case: the invoice and its description correction in private/incoming have already been issued in my chosen system, and I sent the correction myself. Read the supplied actual-file and status evidence, save the invoice/correction chain and delivery status in my existing private folder, and tell me whether I can mark delivery confirmed. Save a readable English result and a next action. No account access, sending, issuing, posting or tax/legal assessment.",
+      "criteria": [
+        "Inspect supplied original, linked amendment, authoritative readback and dispatch log; preserve bytes and chosen system/account",
+        "Record historical issue and manual dispatch without fabricated prior review, authorization or begin events",
+        "A sent log alone leaves amendment dispatched, not delivered; original delivery remains unknown",
+        "Save readable English result and an evidence-backed open receipt task; no inferred agreement, payment or legal validity"
+      ]
+    },
+    {
+      "id": "invoice-correction-delivery-continuation",
+      "prompt": "Используй skills/de-business-operations/SKILL.md. Продолжи сохранённое дело со счётом и исправлением в private. В private/incoming появился ответ клиента recipient-acknowledgement.md. Прочитай его, обнови подтверждённый статус доставки исправления, сохрани русское пояснение и следующий шаг. Другие факты не менялись. Синтетический пример по состоянию на 27 октября 2026; никаких новых отправок, выставления, проводок или доступа к аккаунтам.",
+      "criteria": [
+        "Resume the saved manual-dispatch case and inspect acknowledgement correlation with the same document, destination and dispatch",
+        "Record amendment receipt against the existing observed attempt without creating a new send or issue",
+        "Preserve original invoice record, earlier immutable files and audit prefix; original delivery, payment and agreement remain unknown",
+        "Save a new Russian explanation and complete only the existing receipt task with preserved evidence"
+      ]
+    },
+    {
       "id": "lifecycle-pause-and-migration",
       "prompt": "Я временно приостанавливаю одну деятельность и продолжаю другую. Хочу позже перенести учёт из внешней программы; локальная рабочая папка уже содержит защищённые записи. Есть неоплаченный счёт и незаконченный налоговый вопрос. Подготовь план, без переноса, отмены договоров или удаления.",
       "criteria": [

@@ -7,6 +7,9 @@ For a multi-step customer case use the private [EN worksheet](../assets/en/custo
 or [RU worksheet](../assets/ru/customer-case.md) alongside recipient documents.
 For an ordinary question or letter use [correspondence](correspondence.md).
 The worksheet links actual records; it neither issues invoices nor replaces books.
+For issue/correction and delivery execution, load the
+[invoicing workflow](invoicing-workflow.md): inspect existing cases, prepare the
+actual chosen-system operation, retain distinct attempts and record observed results.
 
 ## Customer request to payment
 

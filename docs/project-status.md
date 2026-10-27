@@ -46,6 +46,13 @@ and the distinction between foreign VAT and German acquisition/destination VAT.
 Operations, accounting and tax skills share this source. It adds no tax engine,
 election, refund or filing operation; [validation](validation.md) records live acceptance.
 
+The optional Python invoicing workflow now records reviewed drafts, issue/correction
+attempts, actual issued artifacts, dispatch and receipt evidence through protected
+writers. It supports historical issued/sent documents, linked corrections, explicit
+failure/retry and all-period continuation. Provider execution still uses the chosen
+host connector/browser/manual route; no invoice transport or automatic numbering
+is bundled. Native-only and GUI invoicing controls remain unimplemented.
+
 ## Source and published release
 
 `VERSION` and the verified immutable [release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.10.0-preview.1) are **0.10.0-preview.1**, from `9a4f33dc2dc5c02fdf26edd9daaf2d97e1f7ba56`. Published on **2026-10-26**, it includes assistant-first guides, shared workflow checks, cash-entry VAT evidence and payment reconciliation, safe lock recovery and the Claude marketplace. All eight downloaded assets passed checksum, release-attestation and exact-source provenance checks. It provides Codex/Claude skill bundles and Windows x64/macOS arm64/macOS x86_64 application archives. See [validation](validation.md) for results and remaining limits. Earlier tags/assets are preserved. This repository distributes skills and local applications; it has no hosted production application.

@@ -10,6 +10,9 @@ accounting choice merely to reopen a formation plan or letter.
 1. Resolve folders and identity using [workspace](workspace.md). Inspect the
    relevant task by ID and its evidence health; reuse saved language and the
    explicitly chosen authoritative system. Do not infer facts from filenames.
+   For invoicing tasks, use `desk.py invoice-list` across all periods and
+   `invoice-show` for the case before trusting an exported status. Follow the
+   [invoicing workflow](invoicing-workflow.md) for unknown issue/delivery outcomes.
 2. Compare the result's source versions with current evidence. A changed original,
    new authority letter or revised user fact can invalidate a proposal or review.
    Preserve the old result and prepare a linked revision; do not silently rehash.

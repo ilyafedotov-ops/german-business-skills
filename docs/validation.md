@@ -4,6 +4,55 @@
 
 Evidence index updated **2026-10-27**. Tests and public examples use synthetic data. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## Invoice correction and delivery workflow — 2026-10-27
+
+Local implementation after `45337e6` adds protected invoice/correction records,
+issue attempts, delivery packages and receipt evidence. **23 focused regressions**
+pass, including stale authorization after a sibling correction, corrupt related
+evidence, corrected unissued customer/currency facts, historical manual dispatch
+and outcome chronology. Independent code and EN/RU contract review found no blockers.
+
+`python3 -B -m unittest discover -s tests -v`: **403 run, 392 passed, 11 platform
+skips**. The earlier 400-test run had one 40-second PowerShell timeout in an existing
+overview test; the isolated native task-overview module then passed **10/10**, and
+the final full run passed without changing timeouts. Its initial timeout cause
+remains unconfirmed. `npm run test:overview -- --browser=chromium` and its WebKit
+variant passed EN/RU empty, blocked, corrupt and lifecycle cases at 390/1280 px,
+with keyboard/escaping checks and no console/network errors. Package, local
+Markdown links/anchors and `git diff --check` passed.
+
+`tests/native/overview-smoke.ps1` and `tests/native/windows-smoke.ps1` passed under
+local PowerShell **7.5.4** with `TMPDIR=/private/tmp`. The first overview invocation
+correctly refused macOS's linked `/var` temporary path; no guard was weakened.
+These checks and the cross-runtime unit tests are not Windows PowerShell 5.1
+acceptance. Windows CI wiring was inspected; this local source was not run there.
+
+Two fresh Codex CLI **0.164.0** sessions requested `gpt-6-astra` / high and exited
+zero. The initial session recorded an already issued original and description
+amendment, adopted the owner's historical send without fabricated authorization,
+left it dispatched without a receipt and saved an English result/open task. The
+fresh continuation inspected the supplied customer acknowledgement, recorded
+delivery against the same observed send and saved Russian v02/completed receipt
+task. Original-invoice delivery, agreement and payment remained unknown. Independent
+artifact/provenance review found no blockers: the original record and **41** prior
+non-mutable files were unchanged, audit history remained a prefix, frozen evidence
+hashes/checkpoints matched and **19** report links resolved.
+
+Both sessions preserved all **143** baseline skill files, but each added **14**
+bytecode-cache files; these writable trials are not sealed-runner acceptance.
+Between copies only the invoicing chronology guards and EN/RU guides changed;
+the second baseline matches the final portable source. Prompts and continuation
+criteria are retained in `evals/scenarios.json`; actual supplied fixtures, runs,
+hashes and reports stay outside Git under `.invoicing-workflow-20261027`.
+Requested models are recorded, not independently attested; evidence authenticity
+was stipulated for the synthetic case.
+
+Legal/provider checks are dated in the [portable source map](../skills/de-business-kit/references/assisted-services-sources.md#invoice-correction-and-delivery-check--2026-10-27).
+No live provider, external issue/cancellation/send, tax/format certification,
+native Windows desktop, GUI invoicing controls, hosted CI or published-package
+acceptance is claimed. The runtime records evidence; actual provider operations
+still use the chosen authorized host/manual route.
+
 ## EU goods VAT warnings — 2026-10-27
 
 Local changes after `3066d5a` add shared pre-order and received-invoice checks,
