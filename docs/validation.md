@@ -10,6 +10,27 @@ browser integration works E2E. The accepted Office L zero-value invoice and manu
 correction scope is stated in [current status](project-status.md); this adds user
 acceptance of the observed runs, not a new provider/API test.
 
+## Selective CI preparation — 2026-10-27
+
+Implementation after `604967e` adds [coverage selection](releases.md#ci-coverage-and-duplicate-run-prevention):
+short package/metadata/link checks for repository documentation and marketplace-only
+changes, and reuse of a successful same-repository PR's full checks after merge only
+for the exact tested Git tree. Security scans remain independent; release tags force
+all platform tests and fresh artifacts. Missing evidence falls back to full checks.
+
+TDD covered selection, rename/mode safety, missing APIs, latest attempts, failed or
+ambiguous evidence, PR identity/full coverage and gate failures. Independent review
+found a wrong-PR evidence ambiguity and an existing artifact-test parser that read
+past its job; both were reproduced and fixed. The missing-tag packaging skip is now
+an explicit failure in CI. Final local evidence: **481 Python tests run, 470 passed,
+11 skipped** in 160.382 s; selector **20 passed**, documentation checker **8 passed**,
+artifact-transfer **5 passed**; package/version/pin/link checks, actionlint **1.7.12**
+and `git diff --check` passed. No production dependency was added.
+
+Hosted full PR, post-merge reuse and documentation-only execution remain separate
+acceptance gates at this preparation point. No new product version or published
+asset replacement is needed for this CI-only deployment.
+
 ## Published 0.11 release and marketplace activation — 2026-10-27
 
 [PR #18](https://github.com/ilyafedotov-ops/german-business-skills/pull/18) passed all
