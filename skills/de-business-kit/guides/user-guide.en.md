@@ -101,8 +101,11 @@ route. Never paste an API key into chat or a business document.
 The protected local commands and optional API adapter need an available Python runtime. The current GUI
 and standalone native Windows tools have no invoice lifecycle controls; without
 the writer, the assistant saves a readable continuation and helps with the chosen
-service. The adapter has synthetic test coverage; live account acceptance remains
-open. It does not assign numbers itself or provide an email-send API.
+service. One authorized zero-value browser test completed creation, readback,
+finalization, sending and acknowledged receipt in an existing company. The API
+adapter still has synthetic coverage only; live API acceptance and ordinary
+nonzero invoices/corrections remain open. It does not assign numbers itself or
+provide an email-send API.
 
 ## Keep your work in one folder
 

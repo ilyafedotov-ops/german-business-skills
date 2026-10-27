@@ -2,7 +2,48 @@
 
 [English](validation.md) · [Русский](validation.ru.md) · [Technical documentation](index.md)
 
-Evidence index updated **2026-10-27**. Tests and public examples use synthetic data. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
+Evidence index updated **2026-10-27**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
+
+## Lexware live browser acceptance — 2026-10-27
+
+Against source `7a3ad48`, the connected Chrome browser on macOS completed one
+owner-authorized **zero-value test invoice in an existing business company**.
+This was not a provider sandbox. The user explicitly selected the company and
+own recipient address after the accounting-record effect was explained. Private
+account identity, original PDFs, screenshots and protected evidence stay outside
+Git under `lexware-live-20261027`; no API credential or adapter request was used.
+Host: macOS **27.0.1**, installed Chrome **156.0.8078.48**.
+
+Observed journey: save one draft, independently select it from the document list
+and reopen it, preview, finalize that same UUID with **Abschließen + speichern**,
+inspect/download the one-page final PDF, review the exact email/sole recipient,
+disable the default extra copy, send once and reopen the provider's **versendet
+am** history. The sent recipient, subject, message and single PDF matched review.
+The actual sent-history attachment was downloaded and was **byte-identical** to
+the final reviewed PDF. The user explicitly acknowledged receiving the email and
+PDF; this is recipient acknowledgement, not an independently inspected mailbox receipt.
+Protected local issue/delivery attempts finished as `issued` / `delivered` with
+EN/RU reports and preserved evidence.
+
+Live findings: the browser rejected a title longer than 25 characters; saving the
+draft already assigned a number; the zero-value finalized invoice automatically
+showed **bezahlt**, without a payment action. The email iframe failed to render;
+its exact observed same-origin UI URL worked in a separate tab. Browser extension
+popups interrupted work and required user dismissal; native macOS Save dialogs
+required completion. A finalization readback timed out, so the result was checked
+without repeating the write. These observations refine the portable route;
+this assisted run does not establish unattended reliability.
+
+Package/local-link checks, **116** changed-file Markdown links/anchors and
+`git diff --check` passed. Canonical invoice preflight reported no issues; preserved
+evidence hashes and final/sent PDF equality were verified. Independent read-only
+review found no blockers; it relied on the reported live observations, without
+accessing private account artifacts. Runtime code is unchanged.
+
+Still open: live API adapter/TLS acceptance, ordinary nonzero invoice tax/payment
+correctness, required structured e-invoices, provider corrections and error/retry
+journeys, native Windows and release acceptance. Earlier synthetic results below
+retain their original scope; this live run does not convert them into provider tests.
 
 ## Lexware provider draft and sending route — 2026-10-27
 
@@ -315,7 +356,7 @@ Native Windows acceptance requires Windows PowerShell 5.1 on Windows; a macOS/Li
 ## Open validation gaps
 
 - Ordinary-user desktop install, sign-in, first launch, continuation and recovery on supported Windows/macOS hosts; other discovery routes and real installation screenshots/video.
-- Real service-specific access, draft/export/submission and readback; Lexware remains local by user choice. No real ELSTER authentication or transmission was tested by the synthetic portal.
+- Broader service-specific access, exports/submissions and readback beyond the bounded Lexware browser run above. Live API adapter acceptance remains open. No real ELSTER authentication or transmission was tested by the synthetic portal.
 - Complete browser artifact retrieval in the assisted export journey; generation confirmation alone is insufficient.
 - Representative complete accounting/reporting periods and actual selected calculation/form-tool results, beyond local cash arithmetic.
 - Intermittent local PowerShell timeouts remain unexplained in historical runs. Later successful checks do not establish their cause or universal host reliability.

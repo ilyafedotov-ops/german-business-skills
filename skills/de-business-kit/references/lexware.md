@@ -34,15 +34,19 @@ The current documented invoices API has no invoice-update operation, and a draft
 invoice has no downloadable invoice file. Do not infer editing support from a
 create/read endpoint or finalize an invoice to make a PDF download work. Use
 supported browser draft editing/preview; explain an unavailable export precisely.
-`Abschließen und Speichern` finalizes/assigns the invoice number in the documented
-creation route—it is not merely saving a draft. Read back the resulting draft and
+`Abschließen und Speichern` finalizes the invoice; a number may already have been
+assigned when saving the draft and does not establish issue. Read back the resulting draft and
 leave finalization/sending to the user when that is their chosen boundary.
 
 For an export, set the requested period/date basis and output, inspect any locking
 or transfer option before execution, and verify the downloaded original file.
 Preserve a task-specific handoff if download/upload or a final action is unsupported.
-Only local Lexware examples and synthetic adapter requests have been tested. Live acceptance remains unperformed
-until an explicitly available test account and operation are actually checked.
+On **2026-10-27**, one authorized zero-value browser journey in an existing
+business company completed draft creation/readback, finalization, PDF inspection,
+sending and recipient acknowledgement. This was not a provider sandbox. The sent
+PDF matched the reviewed final file byte-for-byte. The API adapter remains tested
+with synthetic transport only; broader invoices, corrections and unattended
+operation are not established by this bounded run.
 
 ## Provider invoice draft, readback and sending
 
@@ -121,13 +125,17 @@ actual authorized browser session, or guide the user through it:
 2. Record `begin-issue` immediately before finalization. `desk.py lexware-handoff
    --root <private> --id <id> --kind finalize` returns the documented permalink,
    exact company/object and attempt. This is a handoff, not a browser action.
-3. In the same draft, the documented route is **Weiter zur Vorschau**, then
-   **Abschließen und Speichern**. Inspect the actual current controls before
+3. In the same draft, use **Weiter zur Vorschau**, then the separate finalization/
+   save choice. The live 2026-10-27 UI exposed **Abschließen + speichern** in the
+   split-button menu; selecting it executed finalization. Inspect current controls before
    using them; do not create a new draft or select a combined finalize-and-send
    operation. A combined action is unsupported by this separate review sequence.
    Honor a user-reserved final click; otherwise execute within existing concrete
    authorization using the host's supported browser tool.
-4. Re-select the invoice and inspect **Offen**, identity and final content. Use
+4. Re-select the invoice and inspect the actual finalized status, identity and
+   final content. Ordinary unpaid invoices may show **Offen**; the live zero-value
+   test immediately showed **bezahlt** without a payment action. Do not infer a
+   cash movement or sending from that label. Use
    `readback`, then `download` with explicit `media_type=application/pdf` or
    `application/xml`, then `review-readback`. The adapter checks readback before
    and after download; drift blocks using the artifact. Preserve required original
@@ -159,8 +167,9 @@ the supported browser (or the user performs it if reserved). No invented public
 API endpoint or private browser API is used. Reopening an unknown attempt is an
 investigation, never permission to click send again.
 
-Re-select the invoice and inspect the actual **Gesendet am ...** history and sent
-files. Preserve the observed recipient, timestamp, artifact set and dispatch
+Re-select the invoice and inspect the actual sent history (**versendet am ...**
+in the live 2026-10-27 UI) and sent files. Preserve the observed recipient, date/time
+with only the precision exposed, artifact set and dispatch
 reference, then `confirm-dispatched` against the same attempt. If no message ID
 is exposed, use a documented correlation reference from the actual provider
 history; do not invent a provider-issued ID. An API status of `open` or `paid`
@@ -168,8 +177,17 @@ does not prove sending. An unclear result stays `delivery_unconfirmed`.
 Only separately inspected receipt/customer acknowledgement supports
 `confirm-delivered`; sending, receipt, agreement and payment remain distinct.
 
-These labels/routes were checked in official documentation on **2026-10-27**;
-the exact final send control and all history fields need live inspection. See
+Official documentation was checked on **2026-10-27**. The live browser run on the
+same date observed **Senden**, the date-only sent-history entry, recipient/message
+and a downloadable sent attachment. Download that actual attachment and compare
+with the reviewed file when available; do not infer byte equality from a name.
+The composer enabled an extra copy by default: inspect it against the authorized
+recipient scope. A browser title longer than 25 characters was rejected; keep a
+long test/business reference in the introduction or line description. If a provider
+iframe stays blank, an exact observed same-origin UI URL may be opened separately;
+never guess a private endpoint or replay the send. A standalone composer can remain
+open after sending, so inspect refreshed history before deciding the outcome.
+Native Save dialogs must complete before claiming an original download. See
 [provider source details](assisted-services-sources.md#lexware-api-and-browser-route--2026-10-27).
 Save versioned EN/RU explanations and existing follow-up tasks. The GUI and
 standalone native Windows tools have no controls for this adapter.

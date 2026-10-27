@@ -225,3 +225,15 @@ Implementation-specific recheck for the [actual invoice route](lexware.md#provid
 No live account, credential, provider draft, finalization or email was used for
 this implementation check. A supported API contract, local HTTP fixture and
 browser handoff do not establish production compatibility or recipient delivery.
+
+A separate **2026-10-27 live browser check** against source `7a3ad48` subsequently
+completed one owner-authorized zero-value invoice in an existing business company,
+not a sandbox. The observed route was draft save/readback, **Weiter zur Vorschau**,
+split-menu **Abschließen + speichern**, then email **Senden** and **versendet am**
+history. A number was assigned at draft save; final zero value showed **bezahlt**
+without payment. The browser title limit was 25 characters. The sent history
+exposed a date, exact recipient/message and a downloadable attachment; sent and
+reviewed final PDFs matched byte-for-byte, and the recipient acknowledged receipt.
+The email copy switch defaulted on. Private evidence stays outside the package.
+This is direct observation of that route, not another API/documentation check,
+legal validation, correction acceptance or a guarantee of current UI labels.

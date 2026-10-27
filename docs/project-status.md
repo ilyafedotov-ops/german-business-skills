@@ -54,7 +54,11 @@ creates a provider draft, preserves its ID and reads it back; final artifact
 downloads check provider version stability. It binds browser finalization/sending
 to that same object and protected attempt. No API finalization/send endpoint is
 invented; those actions require the actual authorized host/browser/manual route.
-Live-account acceptance, native-only and GUI invoicing controls remain open.
+One authorized live browser journey now covers zero-value draft creation/readback,
+same-object finalization, PDF inspection, sending and recipient acknowledgement.
+The sent-history PDF matched the reviewed file byte-for-byte. This used an existing
+business company, not an isolated sandbox. Live API adapter acceptance, nonzero
+invoice/correction coverage, native-only and GUI invoicing controls remain open.
 
 ## Source and published release
 
@@ -65,7 +69,7 @@ Live-account acceptance, native-only and GUI invoicing controls remain open.
 | Area | Available now | Boundary |
 | --- | --- | --- |
 | Skills and lifecycle | Optional router plus six directly usable domain skills; shared profile, EN/RU worksheets and continuation | Guidance/preparation does not establish registration, contract, hire or closure |
-| Access and assisted services | Host connector/browser/manual discovery; bounded opt-in Lexware draft/readback API and exact-object browser handoff; authorized draft entry and export checks | Lexware API tested with synthetic transport, not a live account; finalization/email use the actual host/manual route. ELSTER acceptance remains open |
+| Access and assisted services | Host connector/browser/manual discovery; bounded opt-in Lexware draft/readback API and exact-object browser handoff; authorized draft entry and export checks | Lexware browser zero-value journey through acknowledged receipt checked live; API adapter remains synthetic-only. Nonzero invoices/corrections and ELSTER acceptance remain open |
 | Intake and documents | Preserved originals, hashes, catalog, reviewed proposals, bank mapping/reconciliation and bounded standalone UBL Invoice/CreditNote/CII inspection | No complete OCR, embedded-PDF XML or technical e-invoice validation pipeline |
 | Accounting | Explicit local/external choice; limited reviewed EÜR cash entries, splits, line VAT as stated with links to approved proposals, reversals/corrections, period reports and account CSVs | Existing software stays authoritative when selected. No complete statutory ledger or bundled tax formulas; stated-VAT sums are not a Voranmeldung; eligibility is not inferred |
 | Filing evidence | Frozen versions, preflight, review/authorization, uncertain attempts, observed receipts and authority responses | Tracks local evidence; calculates no statutory return and sends nothing to ELSTER |
@@ -89,7 +93,7 @@ P1–P7 are **partially accepted**, not a completed end-to-end lifecycle. This t
 | P3 — Daily work and questions | Proposals, invoices, letters, correction/partial-payment evidence and saved follow-up | Representative customer journeys in chosen software, actual document issue/delivery/payment evidence; complete download retrieval in the tested browser route |
 | P4 — Accounting and reporting | Limited local cash journal, external-system route, monthly/annual preparation and filing evidence | Representative complete period through selected calculation/form tools and manual ELSTER; criteria below |
 | P5 — Change, hire, pause and close | Before/after plans, dependencies, first-hire preparation and history/access retention | Real selected service/authority outcomes; payroll and legal filings require their own supported tools |
-| P6 — Service access | Needs-led comparison, supplied-export inspection and capability/setup discovery | Real operation-scoped access/readback in selected products; account/edition permissions and source coverage. Lexware stays local until the user changes that choice |
+| P6 — Service access | Needs-led comparison, supplied-export inspection and capability/setup discovery | Real operation-scoped access/readback in selected products; account/edition permissions and source coverage. Lexware has one authorized zero-value browser journey; broader operations and live API acceptance remain open |
 | P7 — Delivery and usability | Illustrated installation, complete-bundle packaging, local GUI and verified preview release | Nontechnical Windows/macOS first launch, install/update/continuation and error-recovery trials, starting with Cowork and Codex skill invocation, useful result and same-folder continuation; ambiguous requests, saved-fact reuse and calculation checks; other host routes; real installation screenshots/video after those journeys are observed |
 
 The [FAQ evaluation map](../evals/faq-coverage.json), reviewed on **2026-10-27**,
