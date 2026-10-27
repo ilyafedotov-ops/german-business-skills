@@ -125,7 +125,7 @@ Find **German Business Kit** in the plugin list (look under **Discover** if it i
 
 The plugin is saved to your Claude account, so it also works in Claude chat and in Claude Code when you sign in with the same account. The seven skills share one business context; you never set them up separately.
 
-Anthropic reviews plugins listed in its own directory, not plugins added by address. This address installs the exact published release of this open-source project, currently 0.10.0-preview.1.
+Anthropic reviews plugins listed in its own directory, not plugins added by address. This address installs the verified release pinned by this project’s marketplace. The marketplace pin advances only after publication and asset verification.
 
 ## Try your first task
 
@@ -178,9 +178,9 @@ In the Codex desktop app, plugins come from OpenAI's directory or your workspace
 
 ### 2. Download the kit
 
-Open the [0.10.0-preview.1 release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.10.0-preview.1), expand **Assets** if needed, and download two files into the same folder:
+Open the [0.11.0-preview.1 release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.11.0-preview.1), expand **Assets** if needed, and download two files into the same folder:
 
-- **`de-business-kit-0.10.0-preview.1-codex.zip`**
+- **`de-business-kit-0.11.0-preview.1-codex.zip`**
 - **`SHA256SUMS`**, the checksum list that detects a damaged or changed download
 
 The `-gui-` archives are a separate optional application; you do not need them.
@@ -191,7 +191,7 @@ Give Codex access to the two files with its file-access control, or copy their f
 
 > I am setting up German Business Kit in this local Business Assistant project in Codex. My ZIP is at [full ZIP path] and SHA256SUMS is at [full checksum-file path]. Check the ZIP against its checksum and stop if it does not match. Extract it into a new folder, then copy all seven complete skill folders into this project's .agents/skills. Use native file tools, preserve existing files and stop if a destination already exists. Do not install runtimes, change security settings or change global app configuration. Tell me the seven installed names and how to start a fresh session.
 
-Review that any file-access request names your download and the **Business Assistant** project. A matching checksum shows the file is undamaged; checking who published it is a separate step described in [download verification](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.10.0-preview.1/docs/releases.md#download-and-verify).
+Review that any file-access request names your download and the **Business Assistant** project. A matching checksum shows the file is undamaged; checking who published it is a separate step described in [download verification](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.11.0-preview.1/docs/releases.md#download-and-verify).
 
 ### 4. Start a fresh chat
 

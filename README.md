@@ -191,7 +191,7 @@ You do not need to edit JSON or remember these paths.
 - **It prepares; you decide and send.** The assistant drafts forms, letters and records. You sign in to ELSTER, your bank or your accounting software yourself and make the final click.
 - **Research before calculation, checks before reliance.** It clarifies missing facts, researches rules for the relevant period and can calculate bounded estimates with recorded checks. A complete statutory tax engine and direct ELSTER transmission are not included. You can manage your own reporting, with professional help for specific issues.
 - **Your data stays your choice.** Content your assistant reads can be sent to its AI provider; local storage does not mean local-only processing. Try a fictional example first, keep real records in a separate private folder, and never type passwords or TANs into the chat.
-- **This is a preview** (0.10.0-preview.1). See [what works today and what is planned](docs/project-status.md).
+- **This is a preview** (0.11.0-preview.1). See [what works today and what is planned](docs/project-status.md).
 
 ## More
 

@@ -10,6 +10,25 @@ browser integration works E2E. The accepted Office L zero-value invoice and manu
 correction scope is stated in [current status](project-status.md); this adds user
 acceptance of the observed runs, not a new provider/API test.
 
+## 0.11 release preparation — 2026-10-27
+
+Release review of the 17 workflow commits after `085489d` found one blocking
+nested-correction defect: direct-parent checks could miss uncertain delivery or
+pending work elsewhere in the original invoice family. Two regression cases first
+failed. Shared family checks now guard creation and live issue preparation, including
+frozen ancestor evidence; observed outcomes for already-started attempts remain
+recordable. Five added regressions and independent re-review verified the fix.
+The other bounded release review found no actionable issue in preparation/filing,
+XML inspection, native mutable-register handling or research-runner contracts.
+
+Local candidate checks: full Python **453 run, 442 passed, 11 skipped** in
+162.869 s; invoicing **28 passed**; release tests **7 passed**; packaging **16 passed**;
+version/package/Markdown/diff checks passed. Initial release tests correctly refused
+the missing new Russian changelog section; that metadata error was corrected before
+these passing runs. Hosted exact-head PR/tag checks, asset provenance verification
+and marketplace activation are separate pending release gates. No published tag or
+asset was changed, and the marketplace remains on the previous verified release.
+
 ## Customer payment follow-up drafts — 2026-10-27
 
 Implementation after `aff8e4a` adds protected `payment-followup-template`,
