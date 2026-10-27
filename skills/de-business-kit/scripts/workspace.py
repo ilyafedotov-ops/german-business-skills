@@ -448,7 +448,7 @@ def _evidence_path(root: Path, value: str) -> Path:
     path = _inside(root, value)
     mutable = {PROFILE, DOCUMENTS, EVENTS, MARKER, RUNTIME, LOCK, LAYOUT,
                "00_admin/tasks.json", "00_admin/questions.json", "00_admin/decisions.json", "00_admin/casework.json",
-               "04_accounting/register.json"}
+               "04_accounting/register.json", "00_admin/invoicing.json"}
     if (_logical(root, path) in mutable
             or path.exists() and any(_path(root, item).exists() and path.samefile(_path(root, item)) for item in mutable)):
         raise WorkspaceError("Use a preserved evidence document or history snapshot, not a mutable administrative file.")

@@ -147,6 +147,22 @@ class NativeTaskOverviewTests(unittest.TestCase):
         self.assertEqual(snapshot['next_task_id'], 'a')
         self.assertEqual(snapshot['active_tasks'][0]['readiness'], 'needs_review')
 
+    def test_mutable_invoice_register_cannot_establish_task_readiness(self):
+        import hashlib
+        from casefiles import summary
+        self.task('invoice-follow-up')
+        register = self.root / '00_admin/invoicing.json'
+        register.write_text('{"synthetic":"mutable"}')
+        path = self.root / '00_admin/tasks.json'
+        records = json.loads(path.read_text())
+        records[0].update(evidence_file='00_admin/invoicing.json', evidence_sha256=hashlib.sha256(register.read_bytes()).hexdigest())
+        path.write_text(json.dumps(records))
+        with self.assertRaises(ws.WorkspaceError):
+            summary.collect(self.root, '2026-10')
+        snapshot, _ = self.view()
+        self.assertEqual(snapshot['next_action'], 'repair')
+        self.assertEqual(snapshot['active_tasks'], [])
+
     def test_cyclic_dependencies_and_unsafe_evidence_fail_closed(self):
         self.task('one')
         self.task('two', depends_on=['one'])

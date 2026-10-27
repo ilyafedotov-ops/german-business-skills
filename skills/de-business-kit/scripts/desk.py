@@ -6,13 +6,26 @@ import json
 import sys
 
 import workspace as ws
-from casefiles import accounting
+from casefiles import accounting, invoicing
 from casefiles import bank, documents, archive, folders, invoice_xml, overview, reviews, storage
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
+    invoice_template = sub.add_parser("invoice-template")
+    invoice_template.add_argument("--kind", choices=["invoice", "action"], required=True)
+    for name in ("invoice-create", "invoice-action", "invoice-show", "invoice-list", "invoice-report"):
+        part = sub.add_parser(name)
+        part.add_argument("--root", required=True)
+        if name in {"invoice-create", "invoice-action"}:
+            part.add_argument("--input", required=True)
+        else:
+            part.add_argument("--language", choices=["en", "ru"], default="en")
+        if name in {"invoice-show", "invoice-report"}:
+            part.add_argument("--id", required=True)
+        if name == "invoice-action":
+            part.add_argument("--expected-sha256", required=True)
     accounting_template = sub.add_parser("accounting-template")
     accounting_template.add_argument("--kind", choices=["configuration", "entry", "filing", "filing-action"], required=True)
     for name in ("accounting-status", "accounting-configure", "entry-post", "entry-reverse", "period-report", "filing-create", "filing-show", "filing-check", "filing-action"):
@@ -69,7 +82,21 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         command = args.command
-        if command == "accounting-template":
+        if command == "invoice-template":
+            result = invoicing.template(args.kind)
+        elif command.startswith("invoice-"):
+            root = ws._workspace(args.root)
+            if command == "invoice-create":
+                result = invoicing.create(root, ws._load(ws._inside(root, args.input)))
+            elif command == "invoice-action":
+                result = invoicing.act(root, ws._load(ws._inside(root, args.input)), args.expected_sha256)
+            elif command == "invoice-show":
+                result = invoicing.show(root, args.id, args.language)
+            elif command == "invoice-list":
+                result = invoicing.list_invoices(root, args.language)
+            else:
+                result = invoicing.export(root, args.id, args.language)
+        elif command == "accounting-template":
             result = accounting.template(args.kind)
         elif command in {"accounting-status", "accounting-configure", "entry-post", "entry-reverse", "period-report", "filing-create", "filing-show", "filing-check", "filing-action"}:
             root = ws._workspace(args.root)

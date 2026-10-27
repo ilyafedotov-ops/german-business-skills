@@ -97,7 +97,7 @@ function ViewTaskEvidencePath($record) {
         if ($null -eq $link -or -not [string]::IsNullOrEmpty([string]$link.Value)) { throw 'Use an independent preserved evidence file, not a linked file.' }
     }
     # Mutable registers cannot establish that a task's result was preserved.
-    foreach ($mutable in @('01_profile/business.json','00_admin/documents.json','09_audit/events.json','00_admin/workspace.json','00_admin/runtime.json','.workspace.lock','.workspace-layout.json','00_admin/tasks.json','00_admin/questions.json','00_admin/decisions.json','00_admin/casework.json','04_accounting/register.json')) {
+    foreach ($mutable in @('01_profile/business.json','00_admin/documents.json','09_audit/events.json','00_admin/workspace.json','00_admin/runtime.json','.workspace.lock','.workspace-layout.json','00_admin/tasks.json','00_admin/questions.json','00_admin/decisions.json','00_admin/casework.json','00_admin/invoicing.json','04_accounting/register.json')) {
         if ($path.Equals((WorkspacePath $mutable),[StringComparison]::OrdinalIgnoreCase)) { throw 'Use preserved task evidence, not a mutable register.' }
     }
     return $path
