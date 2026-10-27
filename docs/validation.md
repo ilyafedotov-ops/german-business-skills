@@ -10,6 +10,35 @@ browser integration works E2E. The accepted Office L zero-value invoice and manu
 correction scope is stated in [current status](project-status.md); this adds user
 acceptance of the observed runs, not a new provider/API test.
 
+## Published 0.11 release and marketplace activation — 2026-10-27
+
+[PR #18](https://github.com/ilyafedotov-ops/german-business-skills/pull/18) passed all
+**17 checks** at `dd068a9` and merged with all **19 commits** preserved. Immutable
+[release v0.11.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.11.0-preview.1)
+was published at **16:32:34 UTC**, from `9e2bc4c2dfd19ecac88b5433d40adbdb403d8547`.
+[Exact-tag run 40538907997](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40538907997)
+passed **16 jobs**; only PR-specific dependency review was skipped. This includes
+Windows/macOS Python, native PowerShell 5.1, Chromium/WebKit, all three GUI packages,
+artifact transfer, reproducible portable builds and publication. All three exact-tag
+CodeQL analyses recorded zero findings, no errors and zero open alerts.
+
+All **eight downloaded assets** passed checksums, immutable-release attestation and
+build provenance with GitHub CLI **2.103.2**, pinned to this repository,
+`.github/workflows/release.yml`, `refs/tags/v0.11.0-preview.1`, the full source commit
+above and GitHub-hosted runners. Both skill ZIPs, `release.json` and
+`release-notes.md` matched the exact-tag local rehearsal byte for byte. Native
+archive reproducibility is not claimed. The marketplace pin was advanced only
+after these checks; earlier tags and assets remain unchanged.
+
+Marketplace activation checks: **16 packaging tests passed**; package/version
+validation, **82 local Markdown links/anchors**, EN/RU parity and `git diff --check`
+passed. Runtime code is unchanged from the verified release.
+
+This is a verified skill/application distribution release. It adds no paid setup,
+API tariff upgrade, new live-provider acceptance, ordinary-user desktop acceptance,
+Windows Authenticode, Apple notarization or hosted production service. The accepted
+Lexware browser scope and the remaining limitations below still apply.
+
 ## 0.11 release preparation — 2026-10-27
 
 Release review of the 17 workflow commits after `085489d` found one blocking
@@ -25,9 +54,9 @@ Local candidate checks: full Python **453 run, 442 passed, 11 skipped** in
 162.869 s; invoicing **28 passed**; release tests **7 passed**; packaging **16 passed**;
 version/package/Markdown/diff checks passed. Initial release tests correctly refused
 the missing new Russian changelog section; that metadata error was corrected before
-these passing runs. Hosted exact-head PR/tag checks, asset provenance verification
-and marketplace activation are separate pending release gates. No published tag or
-asset was changed, and the marketplace remains on the previous verified release.
+these passing runs. At preparation time, hosted exact-head PR/tag checks, asset
+provenance verification and marketplace activation were still pending; their later
+completion is recorded above. Existing published tags and assets were preserved.
 
 ## Customer payment follow-up drafts — 2026-10-27
 
