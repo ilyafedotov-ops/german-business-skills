@@ -116,6 +116,13 @@ For a correction or partial payment, supply the earlier invoice and relevant pay
 
 For calculations, ask it to distinguish recorded amounts from tax treatment, verify applicable rules and inputs, run the arithmetic and show its checks. A cash total alone does not establish taxable profit or a complete return. [Detailed monthly workflow](../references/monthly-workflow.md).
 
+Select **de-business-accounting** and ask: “Prepare October from these receipts
+in my business folder. Save what belongs to this period, what belongs elsewhere
+and what is still missing.” You get preserved originals, draft proposals and a
+readable review separating payment/profit timing from VAT timing. Unknown private
+use or asset treatment stays open. Your selected accounting software remains
+authoritative; preparation does not itself post entries or complete the month.
+
 ## Taxes and letters
 
 > Use de-business-tax. For this question, first check the relevant period and facts already saved. Ask me for what is missing, research the applicable official rules, and explain the result and next step in plain language.
@@ -124,6 +131,17 @@ For calculations, ask it to distinguish recorded amounts from tax treatment, ver
 
 For work inside ELSTER or accounting software, see [assisted forms and services](assisted-services.en.md). You handle login and any final action you reserve for yourself. The assistant shows the concrete material before an external action and preserves the observed outcome afterwards.
 
+To prepare a prepayment adjustment, select **de-business-tax** and ask:
+
+> Help me reduce my income-tax prepayments using this notice and forecast. Save the German request and an English review in my business folder so we can continue later.
+
+**You get:** a saved draft, the proposed amount alongside the amount still due under
+the current notice, calculation/source evidence and a next step. The assistant asks
+only for missing facts that affect this work. In a new chat, give access to the same
+folder and ask it to continue with your corrected forecast. It should save a linked
+revision and preserve the earlier draft. A prepared or sent request does not itself
+change the Finanzamt's notice. [Workflow details](../references/tax-consultant.md#prepare-or-revise-an-income-tax-prepayment-request).
+
 ## Reports
 
 > Use de-business-kit. Save a readable result with the answer, open questions and next action. Link the file. Keep a document for a recipient separate from my private notes.
@@ -131,6 +149,14 @@ For work inside ELSTER or accounting software, see [assisted forms and services]
 **You get:** an ordinary readable document. HTML can open in your browser; PDF, Word or spreadsheet output depends on available tools. English and Russian report templates are included. German recipient documents can have a separate explanation in your language.
 
 ## Continue
+
+For a saved return, select **de-business-tax** and ask: “Continue this filing from
+my business folder. Check the saved version and changed evidence, and prepare the
+next step without submitting.” The assistant reads the actual filing state and
+shows its blockers. Authorized corrections create linked versions; an uncertain
+submission needs outcome evidence before any retry. Preparation reports retain
+their underlying evidence when frozen into a filing; a worksheet is supporting
+material, not a completed official return.
 
 Before finishing a substantial task, ask:
 

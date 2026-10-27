@@ -16,6 +16,25 @@ bounded calculations and explicit independent-check evidence; the consultation
 template records them without a new register or automated approval transition.
 The GUI remains an optional adapter to the same writers and records.
 
+The [prepayment request workflow](../skills/de-business-kit/references/tax-consultant.md#prepare-or-revise-an-income-tax-prepayment-request)
+uses versioned recipient drafts and private consultation/continuation notes. It
+resolves managed folder paths or uses the selected standalone private folder;
+existing protected task writers remain authoritative when present. A corrected
+forecast creates a linked revision without changing submission or authority state.
+Shared source recovery lives in `german-rules.md`; it adds no retrieval service,
+schema, ledger or tax engine.
+
+Receipt-to-period preparation reuses catalog/proposal writers and a versioned
+readable review; the proposal period is review scope, not a universal cash/VAT
+date. Filing creation expands recognized preparation/cash report dependencies into
+the existing frozen `sources` array. `workflows.filing_sources` validates the
+preparation envelope, embedded input, evidence fingerprints and readiness;
+preflight reuses it before review/authorization/attempt. Graph traversal is bounded
+and checks the captured digest against the expected one. Historical outcomes use
+frozen copies only. Unknown report kinds remain opaque evidence; no schema migration
+or automatic parsing of authored reports is added. Copying can leave preserved
+partial evidence on failure; it is not a multi-file transaction.
+
 ## Assisted external-service execution
 
 The services skill discovers an operation-specific route; the business-domain
@@ -241,3 +260,14 @@ reject stale tabs, and separate GUI drafts use expected hashes and completed aud
 checkpoints. The browser is not another accounting database. Platform bundles embed
 the engine so end users do not install Python; standalone PowerShell remains its
 existing narrower route. See [GUI scope, trust boundaries and delivery](gui.md).
+
+## Developer evaluation evidence
+
+`tools/run_evals.py` retains its ten bounded no-web cases. The separate opt-in
+`tools/run_research_evals.py` freezes observer inputs, runs public-source FAQ
+sessions with a read-only shell, indexes raw tool evidence and emits independently
+reviewed assessments bound to captured bytes. Follow-ups replay recorded context;
+they do not exercise workspace persistence. Evaluation artifacts live outside the
+checkout and private business workspaces; no business schema or installed runtime
+changes. See [evaluation procedure](../evals/README.md#faq-coverage-and-public-source-pilot)
+for permissions, failure states, integrity limits and reviewer ownership.

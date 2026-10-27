@@ -22,6 +22,18 @@ complete tax engine, guaranteed independent reviewer or new filing approval gate
 See [source-led calculations](../skills/de-business-kit/references/tax-estimates.md)
 and [validation](validation.md) for actual trials and remaining limits.
 
+Local implementation on **2026-10-27** adds primary-source recovery and a
+[saved income-tax prepayment request workflow](../skills/de-business-kit/references/tax-consultant.md#prepare-or-revise-an-income-tax-prepayment-request)
+to the product skills. It prepares a German recipient draft, separate EN/RU
+review, calculation evidence and a continuation point; corrected forecasts retain
+earlier versions. This is host-executed preparation, with no new tax engine,
+protected writer or ELSTER transport. Receipt-to-period preparation now also has
+an explicit saved workflow, separating payment/profit and VAT timing while keeping
+unknown treatment open. Filing continuation uses the existing writers with added
+preparation-source dependency freezing and freshness/readiness checks. These
+changes preserve the chosen accounting system and filing history. Further FAQ
+expansion is not the current priority; actual acceptance is in validation.
+
 ## Source and published release
 
 `VERSION` and the verified immutable [release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.10.0-preview.1) are **0.10.0-preview.1**, from `9a4f33dc2dc5c02fdf26edd9daaf2d97e1f7ba56`. Published on **2026-10-26**, it includes assistant-first guides, shared workflow checks, cash-entry VAT evidence and payment reconciliation, safe lock recovery and the Claude marketplace. All eight downloaded assets passed checksum, release-attestation and exact-source provenance checks. It provides Codex/Claude skill bundles and Windows x64/macOS arm64/macOS x86_64 application archives. See [validation](validation.md) for results and remaining limits. Earlier tags/assets are preserved. This repository distributes skills and local applications; it has no hosted production application.
@@ -57,6 +69,35 @@ P1–P7 are **partially accepted**, not a completed end-to-end lifecycle. This t
 | P5 — Change, hire, pause and close | Before/after plans, dependencies, first-hire preparation and history/access retention | Real selected service/authority outcomes; payroll and legal filings require their own supported tools |
 | P6 — Service access | Needs-led comparison, supplied-export inspection and capability/setup discovery | Real operation-scoped access/readback in selected products; account/edition permissions and source coverage. Lexware stays local until the user changes that choice |
 | P7 — Delivery and usability | Illustrated installation, complete-bundle packaging, local GUI and verified preview release | Nontechnical Windows/macOS first launch, install/update/continuation and error-recovery trials, starting with Cowork and Codex skill invocation, useful result and same-folder continuation; ambiguous requests, saved-fact reuse and calculation checks; other host routes; real installation screenshots/video after those journeys are observed |
+
+The [FAQ evaluation map](../evals/faq-coverage.json), reviewed on **2026-10-27**,
+links 60 external question numbers to task owners and existing cases. At baseline
+`085489d`, central-concern coverage is 2 covered, 29 partial, 24 missing dedicated
+cases and 5 complete outcomes outside current scope. Twenty-nine new synthetic cases
+and nine changed-fact follow-ups are defined; [validation](validation.md) owns their
+observed results. This does not expand legal, insurance or residence capabilities.
+The separate opt-in [research runner](../tools/run_research_evals.py) now captures
+visible arithmetic and source metadata, freezes complete review criteria and binds
+independent assessments to exact artifacts. Its twenty-nine-case/thirty-eight-session selection
+has fake-host regression coverage; live outcomes are recorded in validation.
+The second batch covers family cover, pension contribution options, parental and
+child benefits, work permission and startup support, with dated official sources.
+The third batch adds small-invoice boundaries, ordinary invoice fields and the
+2026 e-invoice transition, home-working expense arithmetic and quarterly VAT
+deadlines with an extension correction. The fourth batch adds GWG/computer
+asset treatment, mixed phone/car costs and ordinary EU consultancy with a consumer
+correction. The fifth batch covers US business/consumer advice, French property
+services and automated digital sales crossing the EU threshold, with a consumer
+location correction. The sixth batch covers no-sales VAT returns, annual loss/return
+duties and income-tax prepayment adjustment, with a private-expense correction.
+Those six FAQ batches left the original ten-case runner and product skills unchanged. Remaining FAQ
+priorities include record retention, business banking, contracts and other
+country/service variants; other expense and asset variants remain
+bounded gaps rather than inferred support.
+These bounded cases do not cover all benefit variants, residence titles or individual
+insurer/authority decisions. Specialized entity/residence outcomes remain preparation and
+routing tasks. Acceptance requires criterion-level source/action evidence and
+retests of demonstrated failures, not agreement with a secondary FAQ answer.
 
 Automatic reminders require a defined authorized scheduler and verified delivery; no such service exists. Additional connectors, statutory ledger features and e-invoice validation should be selected for a concrete journey, not required for every user. Do not replace the chosen accounting system just to complete the roadmap.
 

@@ -57,7 +57,7 @@ Legal form, activity classification, VAT regime and accounting method are separa
 | Operation | A proposed external action, its payload, authorization and result evidence | `assets/operation.json` template; no executable operation engine |
 | Accounting configuration | Explicit authoritative system and accounting method | `04_accounting/register.json` → `configuration`; evidence and fingerprint |
 | Cash entry | Reviewed cash movement with splits, line VAT as stated, optional links to approved proposals and preserved correction/reversal links | `register.json` → `entries`; stated VAT is evidence, not a VAT return; not a complete statutory ledger |
-| Filing version | Frozen payload/sources and review, authorization, receipt and response evidence | `register.json` → `filings`; state independent of real transmission |
+| Filing version | Frozen payload/sources, including recognized preparation-report dependencies, and review, authorization, receipt and response evidence | `register.json` → `filings`; current dependencies checked before attempts, frozen evidence afterwards; state independent of real transmission |
 | Full workspace backup | Complete portable recovery copy, distinct from a selected archive | External directory with `manifest.json` and `files/`; only root lock excluded |
 | Overview | A regenerable view of current records and open work | `00_admin/overview.*` or separate `native-overview.*`; projections, not canonical business state |
 | Records archive | A selected, verifiable package for the user’s review and retention; optional sharing | Export directory and ZIP with `manifest.json`, record snapshots, originals and evidence |

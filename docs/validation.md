@@ -2,12 +2,21 @@
 
 [English](validation.md) · [Русский](validation.ru.md) · [Technical documentation](index.md)
 
-Evidence index updated **2026-10-26**. Tests and public examples use synthetic data. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
+Evidence index updated **2026-10-27**. Tests and public examples use synthetic data. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
 ## Evidence by scope
 
 | Scope | Observed result | Limits and detailed record |
 | --- | --- | --- |
+| Receipt-to-period and filing continuation — local 2026-10-27 | 15 runtime regressions passed; full Python 362 passed / 11 skipped. PDF trial preserved 3 originals and 2 unapproved proposals; fresh legacy-filing continuation preserved 5 immutable files and created a blocked linked draft with 10 sources | [Acceptance and limits](#receipt-to-period-and-filing-continuation--2026-10-27); unsupported-text trials retained separately; no provider/official-form acceptance |
+| Saved prepayment workflow and source recovery — local 2026-10-27, changed product skills after `085489d` | Ordinary request saved German/English files; fresh-session corrected forecast saved German/Russian v02; 13/13 initial files preserved. Official full-act fallback observed. Independent content/instruction review clear; full Python 347 passed / 11 skipped | [Acceptance and limits](#saved-prepayment-workflow--2026-10-27); standalone private folder, synthetic facts, no authenticated ELSTER operation |
+| FAQ batch 6 — local 2026-10-27, unchanged skills `085489d` | Three cases plus one correction: 4/4 sessions and 27/27 criteria passed; no retests or rubric changes. Runner 18/18; full Python 347 passed / 11 skipped | No-sales VAT, annual loss/return request and prepayment adjustment; actual arithmetic and separate notice/request states checked. Whole 38-session selection tested with fake host |
+| FAQ batch 5 — local 2026-10-27, unchanged skills `085489d` | Four cases plus one follow-up: original 3 passed / 1 failed / 1 uncertain; 32 criteria passed / 1 failed / 1 uncertain. Clarified consumer retest: 2 sessions and 13 criteria passed. Runner 18/18; full Python 347 passed / 11 skipped | Original omission and Washington-source uncertainty preserved; all seven sessions mechanically passed. Whole 34-session selection tested with fake host; details below |
+| FAQ batch 4 — local 2026-10-27, unchanged skills `085489d` | Five cases plus two follow-ups: original 6 passed sessions / 1 uncertain; 45 criteria passed / 2 uncertain. One unchanged vehicle retest failed session integrity. Runner 18/18; full Python suite 347 passed / 11 skipped | Assets, mixed costs and ordinary EU consultancy; source-access uncertainty and unexpected retest `.DS_Store` preserved below. Whole 29-session selection tested with fake host |
+| FAQ batch 3 — local 2026-10-27, unchanged skills `085489d` | Four new cases plus two follow-ups: 6/6 sessions and 40/40 criteria passed independent review; no rubric changes or retests. Runner 18/18; full Python suite 347 passed / 11 skipped | Bounded invoice/expense/deadline cases; partial web payload retention and official-source fallback limits recorded below. Whole 22-session selection tested with fake host |
+| FAQ batch 2 — local 2026-10-27, unchanged skills `085489d` | Six new cases plus one follow-up; original strict review 5 pass / 2 fail. Three fresh retest sessions with explicit comparison requests passed, 20/20 criteria. Runner 17/17; full Python suite 346 passed / 11 skipped | Original missing-content failures retained; prompts clarified, no skill repair. All ten sessions captured successfully; only bounded synthetic/public-source acceptance, details below |
+| Research evaluation runner — local 2026-10-27, unchanged skills `085489d` | Three fresh targeted sessions passed independent review, 20/20 criteria; actual Decimal commands and outputs captured. New runner tests 16/16; full-suite recheck 355 run, 344 passed, 11 skipped | Historical pilot remains 7 pass / 2 uncertain. Earlier full suite had one PowerShell timeout; isolated 9/9 passed. New full nine-session selection tested with fake host, not rerun live; details below |
+| FAQ public-source pilot — local 2026-10-27, skill source `085489d` | All 60 question numbers mapped; 7 new cases plus 2 context-replay follow-ups. Nine fresh Codex CLI 0.164.0 sessions completed with public web search, requested GPT-6 Astra/high and read-only shell sandbox; unchanged skill copies and no unexpected session files | Criterion review and limits below; no all-pass certificate, product repair or provider/desktop acceptance |
 | Published `0.10.0-preview.1`, source `9a4f33dc2dc5c02fdf26edd9daaf2d97e1f7ba56` — 2026-10-26 | [PR #16](https://github.com/ilyafedotov-ops/german-business-skills/pull/16): all 17 checks passed. [Exact-tag run 40412289498](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40412289498): 16 jobs passed, PR-only dependency review skipped; all three CodeQL analyses registered with zero findings/errors and zero open alerts. All eight downloaded assets passed checksums, immutable-release attestation and repository/workflow/tag/commit provenance using GitHub CLI 2.103.2. Both skill ZIPs, metadata and notes matched the exact-tag local rehearsal byte for byte | Automated Windows/macOS, PowerShell 5.1, browser and package evidence; no ordinary-user desktop, live-service or complete-tax acceptance. Local full suite: 340 run, 329 passed, 11 platform skips; npm 8/8. Marketplace advanced only after asset verification; earlier tags/assets unchanged |
 | Optional browser/computer guidance — local 2026-10-26 | Official setup/limits checked; EN/RU and shared instructions aligned; independent review clear; three fresh read-only trials confirmed conditional activation, no research screen gate and no native bypass; package/link/diff passed | No live activation, account access or desktop acceptance. |
 | Folder coverage and readable destinations — local 2026-10-26 | Actual EN/RU/DE workspace creation/resume; baseline hidden report → visible revised output; old case preserved with versioned result. Localized 5/5, workspace 41/41, packaging 16/16; independent review clear | Instruction-level routing; no schema/path migration, new organizer or native Windows acceptance. |
@@ -24,6 +33,99 @@ Evidence index updated **2026-10-26**. Tests and public examples use synthetic d
 | Beginner onboarding at `325a04e824600b428f4f544881ecd1808b4f3daf` | Local Python: 277 tests, 272 passed/5 native skips; detached packaging: 14 passed. Codex CLI 0.164.0 EN/RU and constrained Claude Code 2.1.310 discovery/first-answer trials on macOS; initial Claude scope regression fixed and retested | Conversations are not desktop download/sign-in/install acceptance. |
 | Assisted-service source through `9f37d8106b64e961aadf181158b79704e1e2dea7` | Local Python: 277 tests, 272 passed/5 native skips; package checks/builds and synthetic browser-fixture smoke passed. Russian draft trial saved/reviewed known fields, final-send count 0. Fresh export retest generated once, lock count 0 | Agent-tool download retrieval remains unverified after timeout/policy block; fixture CSV success does not repair that gap. Claude unknown-field/formula regression fixed and retested; manual “done” without a receipt remained unconfirmed. |
 
+
+## Receipt-to-period and filing continuation — 2026-10-27
+
+Changed product routing, bookkeeping/monthly/filing references and EN/RU guides;
+`workflows.py` validates preparation evidence and `casefiles/accounting.py` freezes
+recognized report dependencies and checks them before advancement. No schema,
+new ledger or transport was added. Four public-API regressions failed against the
+frozen prior engine: stale receipt accepted, missing frozen dependencies, unresolved
+preparation accepted and preparation used as payload. Independent review found a
+capture race; a fifth red test reproduced it before the capture-once fix. All
+**15 focused tests** now pass, including each preflight gate, nested preparation/
+cash reports, other supported kinds, malformed evidence, depth limits and recording
+an uncertain attempt's outcome after working originals disappear. Frozen-copy
+damage still blocks historical actions. Independent final code review found no blocker.
+
+Five writable Codex CLI **0.164.0** sessions on macOS requested GPT-6 Astra/high.
+Evidence is outside Git in `.receipt-period-20261027`, with prompts, source hashes,
+event logs, seeded old-filing evidence and `final-verification.json`. The synthetic
+business cutoff was 10 November; actual retrieval/execution was 27 October.
+
+- Original text-fixture baseline saved a useful worksheet after unsupported `.txt`
+  intake. The first changed-skill run instead ingested labelled CSV transcripts;
+  originals were preserved, but this was **partial**, not original-intake acceptance.
+  Independent review identified the unmonitored original-to-derivative link. The
+  portable fallback was tightened; a fresh bounded document-preparation retest saved
+  the worksheet and next step with unchanged originals and no manufactured catalog
+  records/proposals. Its prompt omitted tax research; it was not a full period retest.
+- The supported-PDF trial preserved **3/3 incoming originals byte for byte**, saved
+  **2 draft proposals** and a sourced review separating the ordinary service's
+  October input VAT from November payment/EÜR timing. Laptop mixed-use/asset
+  treatment and period coverage remained unresolved. No local entries or filings;
+  the external accounting choice remained authoritative. A fixture reference to
+  `payments.txt` was explicitly distinguished from the supplied `payments.pdf`.
+- A fresh session resumed a **seeded legacy draft**, with the invoice-possession
+  date corrected to November. It cancelled only the unsubmitted old version and
+  created linked `october-v2` as draft, with **10 frozen sources**, no review/
+  authorization/attempt events and **5 blockers**. Only the €19 service component
+  moved to November; it was not treated as a zero October return. All **5 seeded
+  immutable files** and the old frozen metadata were preserved; the continuation
+  note and actual writer state were inspected independently.
+
+`python3 -B -m unittest discover -s tests -v`: **373 run, 362 passed, 11 native
+platform skips**, 147.517 s. Package, changed-Markdown file/anchor and diff checks
+passed. `npm run test:gui` and `npm run test:gui -- --browser=webkit` passed their
+existing lifecycle/security/stale-tab journeys, each with 54 localized route-width
+and 6 task-home checks. WebKit recorded 24 known screenshot-only CSP diagnostics.
+Authored trial bundle files stayed unchanged; each writable trial generated 13
+bytecode cache files, retained as evidence. This is not strict sealed-runner integrity.
+
+Limits: synthetic local preparation and state transitions; no real provider export,
+official field mapping, complete period/return calculation, transmission, authority
+decision, native Windows or Cowork acceptance. Unknown report kinds and authored
+Markdown remain opaque evidence and require explicit underlying sources. Capture
+can preserve partial files on failure; no multi-file transaction is claimed.
+
+## Saved prepayment workflow — 2026-10-27
+
+Product changes are in `de-business-tax/SKILL.md`, shared tax/source references
+and EN/RU guides. Three completed Codex CLI **0.164.0** sessions on macOS requested
+GPT-6 Astra/high: baseline, changed-skill ordinary request and fresh continuation
+without the earlier transcript. Each used a copied complete bundle and a private
+synthetic folder; final product bytes match the continuation bundle. Evidence is
+outside Git in `.implementation-prepayment-20261027` under the evaluation-evidence
+directory, with prompts, events, frozen bundle hashes and `final-verification.json`.
+
+The baseline already saved useful files, but recorded an unresolved full-text
+applicability check. The changed run recorded a failed individual provision fetch
+and successful official full-act recovery, including applicability sections.
+Root web metadata records URLs/opens, not complete returned text or every child
+tool call; independent source review supplies corroboration, not a retrieval audit.
+
+The first package proposed €200 from the €2,000 forecast and €1,800 credits. A
+fresh Russian request with a corrected €2,300 forecast produced a linked €500
+proposal while retaining the €600 current-notice obligation. German recipient
+drafts, separate EN/RU reviews, input snapshots, executed arithmetic and continuation
+were inspected. Both calculations reproduced saved output; all **13 initial files**
+remained byte-identical and **21 local artifact links** resolved. No new task registry
+or external action was created. Independent instruction and artifact reviews found
+no blocking issue; the suggested ELSTER help link was added before continuation.
+
+`python3 -B -m unittest discover -s tests -v`: **358 run, 347 passed, 11 native
+platform skips**, 141.707 s. Package and changed-Markdown file/anchor checks and
+`git diff --check` passed. The trial's direct Chrome preview failed (exit -6);
+separate repository Playwright Chromium checks rendered both versions' recipient
+and private HTML at 390/1100 px: **8 cases**, no horizontal overflow or page errors;
+screenshots inspected. A trial text-check assertion was corrected for inline-link
+whitespace; the saved document content was intact.
+
+Limits: instruction-level host execution, one bounded standalone-folder journey;
+no managed-register continuation trial, Windows/Cowork acceptance, PDF/print
+acceptance, authenticated form fields, transmission or authority decision. The
+supplied annual-tax forecast was not independently derived. Historical FAQ results
+remain unchanged; this evidence does not establish general tax correctness.
 
 ## Run the relevant checks
 
@@ -115,3 +217,349 @@ Local changes from `0450c97` add cross-period invoice payment allocation, readab
 - Ten fresh Codex CLI 0.164.0 scenarios ran. Eight initially passed deterministic checks; two failed because of added bytecode caches and passed on later-source repeats with bytecode disabled. Separate observer review evidenced 33/35 original criteria; retention inventory and actual official submission status remained uncertain. This is not an all-ten final-source pass or a legal certificate.
 - A separate available-host Chrome trial saved/reviewed a synthetic draft and verified the actual September payment-date CSV after a download-event timeout, without regenerating it. Server state: one export, zero locks, zero sends. Live provider acceptance remains open.
 - Package/version/link/diff checks passed. Signing preparation is documented in [release guidance](releases.md#desktop-signing-prepared-next-step); no signing credentials, notarization upload, publication, commit or push was performed.
+
+## FAQ pilot — 2026-10-27
+
+Source `085489d3773c1ac04d877951b6e06d21cedb5fb3`; unchanged skill-tree SHA256
+`b685dc0b903c2d3bd5951e1def90f981d40d6fc72ed4cbeb35c4c455f9a27c11`.
+The [60-question map](../evals/faq-coverage.json) and
+[evaluation protocol](../evals/README.md#faq-coverage-and-public-source-pilot) separate
+secondary question discovery from dated primary-source expectations. There are
+93 catalogue cases; the existing opt-in runner still selects its original ten.
+
+Nine ephemeral Codex CLI 0.164.0 sessions on macOS used existing host-managed
+authentication, ignored user configuration, native public web search and a
+read-only shell sandbox. GPT-6 Astra/high was requested; the event stream does not
+independently attest effective model identity. All nine completed within the
+240-second per-session bound (38–134 seconds, rounded), retained unchanged skill
+copies and created no unexpected files in their session directories. Observed
+commands read copied skills; no out-of-session read, account operation or rubric
+access was observed. This is not OS access isolation or a complete network audit.
+
+Independent criterion review found two rubric/fixture mismatches: the founding
+case already supplied qualifying turnover, and the GKV user requested a factual
+clarification draft rather than a separate checklist. Original strict assessments
+and exact criteria were retained; two criteria were calibrated to those requests
+and the same answers reassessed. This is **not a skill fix or a fresh retest**. Original strict grading was 6 pass,
+2 fail, 1 uncertain; calibrated grading is **7 pass, 0 fail, 2 uncertain**.
+
+| Trial | Reviewed result after calibration | Evidence and limitation |
+| --- | --- | --- |
+| Founding-year VAT | Uncertain overall; legal/task criteria passed | Correct threshold/crossing/earlier-transaction explanation; claimed executed/reverse-checked arithmetic is not established by aggregate CLI tool events |
+| Advised 2025 deadline | Pass | Correct deadline, applicable year and useful preparation step |
+| Incoming foreign SaaS | Uncertain overall; legal/task criteria passed | Correct bounded recipient-liability route; calculation-execution claim has the same evidence gap |
+| Classification | Pass | Actual work/qualification evidence, honest description and unresolved classification retained |
+| Voluntary GKV income | Pass | Rental income, provisional/final distinction and factual German clarification draft; no invented premium |
+| One-client pension/status | Pass | Separate assessments and useful fact checklist; direct DRV interpretation-page failure and indexed-fragment reliance explicitly disclosed |
+| KSK and trade registration | Pass | No automatic exclusion; mixed-activity evidence and individual assessment retained |
+| Two changed-fact follow-ups | Both pass | Corrected business history and tax year change the answer; explicit context replay, not host resume or workspace persistence |
+
+The calculation events do not establish execution or fabrication. These two
+cases remain uncertain rather than passed; a follow-up evaluation needs an
+observable calculation tool/expression/output trail and separately evidenced
+checking. No product instructions were changed to fit the answers. Broader
+coverage priorities remain in [project status](project-status.md).
+
+Local evidence is outside Git at `/private/tmp/gbk-faq-pilot-20261027`: raw JSONL,
+requests, frozen skills, source/request hashes, host invocations and durations,
+observed checks, original criteria, calibration record and independent review.
+Timestamps in the additional observation record come from filesystem metadata,
+not host events. The temporary evidence may not survive host cleanup; it is not a
+published or portable certification. No real accounts, applications, submissions,
+ordinary-user desktop trials or cross-host comparison were performed.
+
+Checks: `python3 -B -m unittest discover -s tests -p test_eval_runner.py -v`
+**15/15 passed**; package/JSON/local-link check and `git diff --check` passed.
+Mapping checks cover 60 unique numbers, resolvable owners/scenario/source IDs,
+93 unique scenario IDs and two follow-ups. EN/RU additions and changed Markdown
+links/anchors were inspected. Full runtime/native/browser suites were not rerun:
+only evaluation data/documentation changed, with no skill, application or runner
+implementation change. No commit, push or publication was performed.
+
+## Repeatable research evaluation and calculation evidence — 2026-10-27
+
+The new opt-in [research runner](../tools/run_research_evals.py) preserves frozen
+inputs, raw host events, command/output observations, review sheets and a validated
+assessment. The existing `tools/run_evals.py` and product skills are unchanged.
+This adds evaluation infrastructure, not business functionality.
+
+Three fresh Codex CLI 0.164.0 sessions on macOS, requesting GPT-6 Astra/high,
+covered founding-year VAT, its corrected-history follow-up and incoming foreign
+SaaS. They completed in 109, 64 and 110 seconds respectively (rounded), with
+unchanged session inputs. The new wrapper requests observable exact/decimal
+execution: both calculation cases captured Python 3.14.6 Decimal expressions,
+inputs, outputs and reverse checks. Answers honestly identified independent
+checking as unavailable at answer time. A separate reviewer derived expectations
+from official sources using rational arithmetic and integer cents before seeing
+the transcripts, then assessed all three cases: **20/20 criteria passed**.
+`--summarize` validated evidence/review bindings and produced **3/3 passed**.
+This later observer review is separate from the tested assistant's own work.
+
+The skill source/hash is the same as the pilot above. The new capture protocol
+closes the observability gap for these fresh runs; it does not establish whether
+the original hidden calculations ran. The original **7 pass / 2 uncertain**
+assessment remains unchanged. All seven bases plus two follow-ups are selectable;
+that nine-session route has fake-host integration coverage, not a new full live run.
+
+Validation: **16/16** new runner tests passed, including incomplete/duplicate
+streams, empty answers, timeout, mutation, unsafe paths, replay isolation, frozen
+criteria, review-byte binding and preservation of unrelated files. Independent
+read-only review found no remaining blocker. Full-suite recheck: **355 tests,
+344 passed, 11 skipped** in 147.163 s. The earlier full run had 343 passes,
+11 skips and one unchanged PowerShell overview timeout; the isolated module then
+passed **9/9**. Its intermittent cause remains unresolved. The final summary-only
+path guard was added after the full-suite recheck and passed the 16-test focused
+suite and independent review; unchanged live capture evidence was reused.
+Package, changed Markdown links/anchors and diff checks passed; EN/RU additions
+were inspected. No fresh native Windows, browser, desktop or hosted CI acceptance
+is claimed.
+
+Evidence is retained outside Git under
+`/Users/ilya/Developer/evaluation-evidence/german-business-kit/`:
+`research-20261027-acceptance/` contains the sealed run and attributed reviews;
+`research-independent-check-20261027.{json,md}` contains the blinded derivation;
+`research-runner-checks-20261027/` holds validation logs. The original temporary
+pilot was copied to `faq-pilot-20261027-original/`: **1,459 files verified with
+matching tree hashes**, with a separate preservation receipt. Original files were
+retained. Hashes establish consistency, not authenticity or reviewer identity;
+requested model identity, read-only shell sandbox and observed tool metadata do
+not establish OS read isolation or a complete network audit. No commit, push,
+publication or real-account operation was performed.
+
+## FAQ batch 2 — 2026-10-27
+
+Added six synthetic cases for FAQ 40, 44–46, 56 and 58: pension contribution
+options, family health cover, parental/child benefits, work permission and startup
+support. A changed-fact permission follow-up brings this batch to seven sessions.
+The catalogue contains **99 base cases**; the research runner selects **13 bases
+and 3 follow-ups**. Dated primary-source expectations are in the existing
+[coverage map](../evals/faq-coverage.json); historical baseline labels are unchanged.
+Source `085489d` and the skill-tree hash above remain unchanged.
+
+Ten fresh Codex CLI 0.164.0 sessions on macOS requested GPT-6 Astra/high: the
+original seven plus a child-benefit retest and a new permission base/replay pair.
+All completed within the 240-second bound, with unchanged session inputs and
+valid mechanical capture. The independent source expectations preceded the trial
+outputs. Captured income arithmetic, year/date checks and threshold comparisons
+were separately checked; the tested assistant's own reverse-checks were not
+relabelled independent verification.
+
+The original strict assessment is **5 cases passed, 2 failed; 46 criteria passed,
+2 failed**. The child-benefit answer omitted the rubric's Elterngeld comparison;
+the permission follow-up omitted explicit professional-authorisation discussion.
+Review found missing required content, not a materially wrong legal conclusion.
+The broad original prompts did not explicitly request those named comparisons.
+Both prompts were clarified and fresh trials run with **unchanged criteria and
+product skills**. Original failures and exact old/new prompts are retained; these
+retests do not establish a repair of the original broad-prompt behavior.
+
+All three retest sessions passed independent review: **20/20 criteria**. Across
+all ten observed sessions the retained record is **8 pass, 2 fail; 66 criteria
+passed, 2 failed**. All three `--summarize` operations validated their sealed
+evidence and review bindings: original assessment `failed`, both retest assessments
+`passed`. One retest cited archived 2021 employment guidance; its material claims
+were corroborated against the current BMAS brochure and that source limit was
+recorded. No criterion was waived or silently regraded.
+
+Checks: runner **17/17 passed**, including the new permission replay and the full
+16-session fake-host selection; independent runner review passed. Full Python
+suite: **357 run, 346 passed, 11 skipped**, 153.443 s, with no PowerShell timeout
+in this run; prior intermittent timeouts remain unexplained. Package, map/ID,
+Markdown links/anchors and diff checks passed; EN/RU changes were inspected.
+Prompt-only clarifications after that full run reused unchanged runtime checks
+and were exercised by fresh host sessions. No new whole-catalogue, desktop,
+native Windows, hosted CI, account or submission acceptance is claimed.
+
+Evidence under `/Users/ilya/Developer/evaluation-evidence/german-business-kit/`:
+`research-20261027-batch2/`, `research-20261027-batch2-child-explicit/` and
+`research-20261027-batch2-permission-explicit/` retain snapshots, raw events and
+attributed reviews; `research-batch2-checks-20261027/` retains test logs and the
+pre-trial source note. Separate source, arithmetic and fixture-refinement records
+retain access limits and exact prompt changes. Some source reads used targeted
+indexed official text after direct-page failures; this is not a complete archived
+page corpus or network audit. The full sixteen-session selection was not rerun
+live. No commit, push or publication was performed.
+
+## FAQ batch 3 — 2026-10-27
+
+Four new cases cover small-invoice particulars, the 2026 e-invoice transition,
+home-working expenses and Q3 VAT deadlines. Two follow-ups change the invoice
+gross total and the existing-extension fact. The catalogue now has **103 base
+cases**; the opt-in research runner selects **17 bases plus 5 follow-ups**.
+Expectations in [the source map](../evals/faq-coverage.json) were independently
+checked before launch, including prompt/rubric alignment and numeric/date results.
+
+**Six fresh sessions passed all 40 criteria**, without post-trial rubric changes
+or retests. The invoice answer changes at EUR 250.01; PDF transition and structured
+receipt duties stay separate; homeworking arithmetic yields EUR 1080 with no tax
+saving claim; the deadline changes from 12 October to 10 November and overdue
+status is retracted. Raw command/output evidence supports the calculations.
+Codex CLI 0.164.0 on macOS requested GPT-6 Astra/high; sessions took 70–187 seconds
+(rounded), all within 240 seconds, with unchanged session inputs. Skills remain
+at source `085489d` and the previously recorded tree hash. The independent review
+is subsequent observer work, not a claim that each tested assistant had a reviewer.
+`--summarize` verified the manifest/review bindings and produced `passed` for all six.
+
+Runner tests **18/18 passed**, including selection deduplication and case-specific
+replay isolation; independent code review also checked different prior answers.
+Full Python suite: **358 run, 347 passed, 11 skipped**, 181.435 s. Package, source-map
+references, local Markdown links/anchors and diff checks passed; EN/RU additions
+were inspected. Final pretrial wording clarifications were exercised live while
+unchanged runtime checks were reused. The full 22-session selection passed with
+a fake host, not a new whole-selection live run. Product skills and the original
+ten-case runner are unchanged; no native desktop, account or filing acceptance.
+
+Evidence remains outside Git in
+`/Users/ilya/Developer/evaluation-evidence/german-business-kit/research-20261027-batch3/`;
+`research-batch3-checks-20261027/` retains test logs and frozen pretrial source
+expectations. Web metadata is not a complete page archive. Some trial page reads
+failed and used alternative official sources or official indexed excerpts;
+independent review verified decisive text, and homeworking disclosed those limits.
+Earlier results are preserved. No commit, push or publication was performed.
+
+## FAQ batch 4 — 2026-10-27
+
+Five new cases cover GWG and computer depreciation, mixed phone and vehicle costs,
+and ordinary consultancy to an EU business. Two follow-ups change the asset price
+and customer status. The catalogue has **108 base cases**; the research runner
+selects **22 bases plus 7 follow-ups**. Primary-source expectations and numeric
+results were independently checked before launch; frozen criteria were not revised
+after seeing answers. Product skills remain at `085489d` with the previously
+recorded tree hash.
+
+Codex CLI 0.164.0 on macOS requested GPT-6 Astra/high. All seven original sessions
+completed mechanically in 115–234 seconds (rounded), within the unchanged
+240-second bound. The computer case came close to that bound. Raw commands and
+outputs retain the calculations; observer review is separate from any verification
+claimed by the tested assistant.
+
+**Original independent review: 6 passed sessions and 1 uncertain; 45 criteria
+passed and 2 uncertain, none failed.** Asset-price and customer-status corrections
+revise the answers appropriately. Phone shares reconcile to the supplied gross
+total, with paid input VAT kept separate; the car arithmetic is EUR 6000 private
+and EUR 4000 business. The original car answer explicitly left 2026 applicability
+unconfirmed after current-source retrieval failures, so its two source criteria
+remain uncertain. Later observer access cannot upgrade the tested host's evidence.
+`--summarize` verified original manifest/review bindings and returned `uncertain`.
+
+One unchanged-prompt vehicle retest completed in 142 seconds, but **failed the
+mechanical integrity gate**: `skills/.DS_Store` appeared in its session copy. All
+original skill-file bytes remained unchanged; the file's creator is unestablished.
+The file and failed run are preserved, with no bypass or further retry. This is
+not an accepted retest. Content-only review passed all seven criteria: current §6
+and an applicable BFH judgment were successfully retrieved, and Decimal execution
+was captured. `--summarize` still returned `failed`; improved source access does
+not repair session integrity or change the original uncertainty.
+
+Runner tests **18/18 passed** after a red/green selection-count check. Independent
+code review confirmed the five-case extension and exercised all 29 sessions with
+a fake host, including isolated context replay; the whole selection was not rerun
+live. Full Python suite: **358 run, 347 passed, 11 skipped**, 149.567 s. Package,
+source-map references, local Markdown links/anchors and diff checks passed; EN/RU
+additions were inspected. No product skills, original ten-case runner, accounting
+writers or platform contracts changed. No native desktop, account or submission
+acceptance is claimed.
+
+Evidence remains outside Git under
+`/Users/ilya/Developer/evaluation-evidence/german-business-kit/`: original
+`research-20261027-batch4/`, separate `research-20261027-batch4-vehicle-retest/`
+and `research-batch4-checks-20261027/`. Frozen manifests preserve the exact trial
+inputs; subsequent source-registry spacing cleanup changes no expectations.
+Official-source access failures and indexed-text fallbacks remain visible; web
+metadata is not a full page archive. No commit, push or publication was performed.
+
+## FAQ batch 5 — 2026-10-27
+
+Four cases cover US business/consumer technical advice, specific-site French
+architectural plans and automated software crossing the EU place-of-supply
+threshold. One follow-up moves the consumer to metropolitan France. The catalogue
+now has **112 base cases**; the research runner selects **26 bases and 8 follow-ups**.
+The previous 108 cases are unchanged. Independent primary-source and Decimal
+expectations preceded launch; criteria were frozen and withheld from tested hosts.
+
+**Original review: 3 passed sessions, 1 failed and 1 uncertain; 32 criteria passed,
+1 failed and 1 uncertain.** All five sessions completed mechanically, with
+unchanged session files, in 71–223 seconds (rounded) within the 240-second bound.
+Codex CLI 0.164.0 on macOS requested GPT-6 Astra/high; model identity is not
+independently attested. Skills remain at `085489d` with the previously recorded
+tree hash. `--summarize` verified the sealed manifest and review bindings and
+returned `failed`; the original outcomes are preserved.
+
+- US business: core German VAT/ZM conclusions and boundaries passed. The extra
+  Washington IT-tax/nexus example remains uncertain: official search metadata
+  lacks a supporting extract or successful page open, and reviewer access failed.
+- US consumer: correct tax treatment, sources and captured arithmetic; failed
+  only the criterion requesting evidence-retention guidance, which the original
+  prompt did not explicitly ask for. This is a prompt/rubric alignment issue,
+  not an established tax-rule defect.
+- France correction, property and digital cases: all criteria passed. Captured
+  Decimal results include EUR 190/1190 for the correction and EUR 10300 aggregate
+  turnover, EUR 100 VAT and EUR 600 gross for the entire crossing sale. French
+  liability branches remain conditional on the missing customer status.
+
+The consumer prompt now explicitly asks what service-description and residence
+evidence to retain. Facts, criteria, follow-up, skill instructions and runner
+controls are unchanged. The original failed answer is not relabelled.
+
+**Two fresh clarified-request sessions passed all 13 criteria**, including useful
+evidence-retention guidance and the unchanged France correction. They completed
+mechanically in 189 and 95 seconds (rounded), with unchanged session files;
+`--summarize` verified their separate manifest/review bindings and returned
+`passed`. This demonstrates the clarified request, not a retroactive pass or
+proof of a deterministic cause for model variability. The original business
+source uncertainty remains unresolved.
+
+Runner tests **18/18 passed** after the expected 22-versus-26 red check; independent
+code review found no issues and verified distinct-answer replay isolation with a
+fake host. Full Python suite: **358 run, 347 passed, 11 skipped**, 137.067 s.
+Package, 150 local Markdown links/anchors, source-map references and diff checks
+passed; EN/RU additions were inspected. Full-suite evidence precedes the final
+prompt-only clarification; unchanged runtime checks are reused. The whole
+34-session selection used a fake host, not a new whole-selection live run.
+
+Evidence outside Git under `/Users/ilya/Developer/evaluation-evidence/german-business-kit/`:
+`.research-20261027-batch5/`, `.research-20261027-batch5-consumer-explicit/` and
+`research-batch5-checks-20261027/`. New hidden run directories reduce incidental
+desktop interaction without weakening integrity checks; no general fix for the
+previous unexplained metadata-file creation is claimed. Full BMF PDF and official
+statutory/ELSTER/Commission fallbacks supported research where direct pages failed;
+web event metadata remains a partial capture, not a full page archive. Product
+skills are unchanged. No native desktop, account, complete foreign compliance or
+submission acceptance is claimed. No commit, push or publication was performed.
+
+## FAQ batch 6 — 2026-10-27
+
+Three new cases cover a no-sales VAT period with input tax, a requested annual
+return showing a business loss, and an income-tax prepayment adjustment. One
+follow-up changes the VAT invoice to wholly private use. The catalogue has
+**115 base cases**; the opt-in research selection has **29 bases and 9 follow-ups**.
+The previous 112 cases are unchanged. Exact prompt/rubric alignment, primary
+sources and independent Decimal expectations were checked before launch.
+
+**Four sessions passed all 27 criteria**, without retests or post-launch rubric
+changes. The VAT excess changes from EUR 19 to zero while the filing duty remains;
+EUR -1200 business loss does not establish zero personal tax; the draft requests
+EUR 200 while preserving EUR 600 due under the unchanged prepayment notice.
+All claimed calculations, including additional checks and comparisons, appear
+in executed Decimal output. No record, account, payment or submission action
+was performed. Observer review remains separate from the tested hosts' own checks.
+
+Codex CLI 0.164.0 on macOS requested GPT-6 Astra/high. Sessions completed in
+100–129 seconds (rounded), within 240 seconds, with unchanged session files.
+Skills remain at `085489d` and the previously recorded tree hash. `--summarize`
+verified the sealed manifest/review bindings and returned `passed`. Official
+complete-act/ELSTER/DRV fallbacks recovered individual-page failures; material
+extra source claims were independently corroborated. Web metadata remains a
+partial capture, not a complete page archive or proof of every host read.
+
+Runner tests **18/18 passed** after the expected 26-versus-29 red check; independent
+code review verified actual-answer replay isolation and unchanged integrity checks.
+Full Python suite: **358 run, 347 passed, 11 skipped**, 149.587 s. Package,
+150 local Markdown links/anchors, source-map references and diff checks passed;
+EN/RU additions were inspected. The whole 38-session selection used a fake host,
+not a new whole-selection live run. No product skill or original-runner change.
+
+Evidence outside Git under `/Users/ilya/Developer/evaluation-evidence/german-business-kit/`:
+`.research-20261027-batch6/` and `research-batch6-checks-20261027/`. Earlier failures
+and uncertainties remain unchanged. This does not establish complete tax-period,
+native desktop, account or filing acceptance. No commit, push or publication.
