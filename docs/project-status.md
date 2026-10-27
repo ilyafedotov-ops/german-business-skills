@@ -9,6 +9,11 @@ verify current-plan entitlement, explain added costs/unknowns before paid setup,
 and preserve no-upgrade decisions while continuing available work. This is a
 portable instruction safeguard, not a billing-enforcement mechanism.
 
+All seven also require a [screenshot privacy check](../skills/de-business-kit/references/privacy.md#check-screenshots-before-sharing)
+before sharing, including owner chat: minimized text by default, a separately
+redacted and verified image when needed, and private preservation of necessary
+original evidence. This is an instruction safeguard, not an automatic redactor.
+
 ## Primary user journey
 
 Use Claude Desktop/Cowork or Codex as the interface, and one private business
@@ -65,6 +70,9 @@ business company, not an isolated sandbox. A separate current-plan browser test
 also verified saving/reopening a zero-value draft, correcting its introduction and retaining its UUID, number, VAT setting
 and total while leaving it unissued/unsent. Live API adapter acceptance, nonzero
 invoices, issued corrections, native-only and GUI invoicing controls remain open.
+The current-plan browser route also exported a draft PDF using the explicit
+**Als Entwurf drucken** option and verified the same object remained a draft.
+The default **Fertigstellen + drucken** must not be used for draft-only export.
 
 ## Source and published release
 

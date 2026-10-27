@@ -31,8 +31,8 @@ browser for unsupported draft edits or UI export steps rather than demanding API
 setup. Confirm the observed edition, company, document and current UI controls.
 
 The current documented invoices API has no invoice-update operation, and a draft
-invoice has no downloadable invoice file. Do not infer editing support from a
-create/read endpoint or finalize an invoice to make a PDF download work. Use
+invoice has no downloadable invoice file through that API. Do not infer editing
+support from a create/read endpoint or finalize an invoice to make a PDF download work. Use
 supported browser draft editing/preview; explain an unavailable export precisely.
 `Abschließen und Speichern` finalizes the invoice; a number may already have been
 assigned when saving the draft and does not establish issue. Read back the resulting draft and
@@ -59,6 +59,24 @@ observation, not a price quote or proof of another account's entitlement. The us
 kept the existing plan. Continue included browser operations; do not request an
 upgrade or API key merely to run tests. Live API acceptance remains blocked for
 that route, independently of successful browser checks.
+
+### Download a draft PDF without issuing
+
+In the Office L browser UI checked **2026-10-27**, the saved draft's **Drucken**
+action opened a dialog whose default was **Fertigstellen + drucken**. That default
+would finalize the invoice. For an authorized draft-only download, select **Als
+Entwurf drucken** and verify that the action button changes to **Als Entwurf
+drucken** before clicking it. Inspect the current dialog rather than assuming
+these controls exist or that every print action is read-only. If the draft-only
+option is unavailable, hold the export; do not finalize to obtain a PDF.
+
+The bounded live test downloaded a one-page PDF with an **Entwurf** marker through
+the browser's PDF download control and then independently reloaded the same
+provider object, which remained **Entwurf**, unsent. This establishes the tested
+browser route only, not an API download or a final issued artifact. Preserve the
+original privately, check the downloaded file and its draft/reference/amount
+against the selected object, and apply the [screenshot privacy check](privacy.md#check-screenshots-before-sharing)
+to any visual proof. A local file or screenshot alone does not establish status.
 
 ## Provider invoice draft, readback and sending
 

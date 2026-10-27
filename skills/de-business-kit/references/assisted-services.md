@@ -189,6 +189,11 @@ hand only that step to the user. A bounded repeat is appropriate only after chec
 its actual side effects and why the existing result cannot be retrieved. If a
 retry occurs, record it rather than presenting multiple attempts as one.
 
+Before presenting screen evidence, apply the [screenshot privacy check](privacy.md#check-screenshots-before-sharing),
+including chat replies and linked artifacts. A successful live test does not make
+a raw account screenshot safe to share; use a minimized text result if a checked
+redacted copy is unavailable. Keep only necessary original evidence private.
+
 ## Hand control back precisely
 
 Before any final action, show a readable summary: service/account reference,

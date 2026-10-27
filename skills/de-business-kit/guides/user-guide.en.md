@@ -114,7 +114,9 @@ nonzero invoices/corrections remain open. It does not assign numbers itself or
 provide an email-send API.
 
 A separate current-plan test also checked draft-text correction, save/reopen and
-preview while leaving the zero-value invoice unissued and unsent.
+preview while leaving the zero-value invoice unissued and unsent. Draft PDF download
+was also checked: in the print dialog select **Als Entwurf drucken** and verify the
+button matches it. The default **Fertigstellen + drucken** would issue the invoice.
 
 ## Keep your work in one folder
 
@@ -334,6 +336,21 @@ You can ask before providing documents:
 The assistant should explain relevant limits when you first need them and when
 the processing route changes, without repeating a long warning on every request.
 
+
+## Screenshots and private evidence
+
+The assistant should normally report results in text. Before sharing any screenshot
+in chat, a report or an attachment, it checks the whole image and removes personal
+and confidential information from a separate copy. It checks the exported copy
+again, including its filename and metadata; blur alone is insufficient. A test
+invoice can still display your real account details around the test data.
+
+Necessary originals stay in your private folder outside Git. Permission to operate
+your account does not authorize embedding raw screenshots. If safe redaction cannot
+be verified, the assistant withholds the image and gives a text summary. It does not
+send the original to a new cloud redaction service without an appropriate authorized
+processing route. This does not change complete invoices or official documents
+prepared for a specifically authorized recipient.
 
 ## What to keep in mind
 

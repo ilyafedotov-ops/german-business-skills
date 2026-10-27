@@ -4,6 +4,47 @@
 
 Evidence index updated **2026-10-27**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## Screenshot privacy and draft PDF export — 2026-10-27
+
+Working source after `da50004` adds a sharing check to the contract used by all
+seven skills, with EN/RU guidance and operation-note fields. The observed regression
+was an account screenshot embedded in owner chat with personal data. The new rule
+covers capture/output minimization, separate irreversible redaction, inspection of
+the actual exported file and metadata, and withholding unsafe images in favor of
+text. It does not implement an automatic redactor or alter authorized complete
+recipient invoices.
+
+Four fresh read-only, ephemeral **Codex CLI 0.164.0** sessions passed manual review:
+raw test-account screenshot in chat, reversible SVG redaction with hidden data,
+separate invoice-recipient authorization, and draft-only PDF export. Sessions read
+copied skills without evaluation criteria and used synthetic observations. These
+checks establish the observed instruction-following responses, not effectiveness
+of image-redaction software. Independent read-only review found no material issues
+in the privacy boundaries or the added draft-only print route.
+
+Live continuation on the existing Office L account inspected the draft's **Drucken**
+dialog: its default **Fertigstellen + drucken** would finalize. Selecting **Als
+Entwurf drucken** changed the action button to that label before execution. The
+browser opened the draft PDF; download completed through Chrome/native Save into
+the private evidence folder. Local `pdfinfo`/`pdftotext` checks confirmed one page,
+PDF bytes, the draft marker, corrected test reference/text, VAT label and zero total.
+An independent provider reload showed the same object remained **Entwurf**, with
+no sent history. The protected local draft record/hash remained unchanged.
+
+No tariff change, paid setup, API access, new invoice, finalization or send occurred.
+Only a cropped PDF toolbar containing UI icons was displayed for tool navigation;
+account/invoice screenshots and the original PDF were not embedded in the report.
+Private PDF/readback evidence stays outside Git. No redacted image was produced or
+claimed. PDF checks establish header/text content and provider state, not a complete
+visual-layout review, statutory correctness or live API acceptance.
+
+`python3 -B -m unittest discover -s tests -p test_eval_runner.py -v` passed
+**15 tests**. Package/EN-RU/local-file checks, **168 changed-file Markdown
+links/anchors**, and `git diff --check` passed. Runtime code is unchanged; the
+preceding full-suite result and its two PowerShell timeout/rerun limits below
+are reused, not reported as a new clean run. No native Windows or release
+acceptance was added.
+
 ## Cost check and current-plan draft correction — 2026-10-27
 
 Working source after `ee26590` adds a shared cost check before paid setup, with
