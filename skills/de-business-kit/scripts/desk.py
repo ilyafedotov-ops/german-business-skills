@@ -1,18 +1,60 @@
 #!/usr/bin/env python3
-"""Offline document review desk. The assistant handles records behind the conversation."""
+"""Private document workflows; explicit Lexware actions can contact the provider."""
 import argparse
 from datetime import date
 import json
 import sys
 
 import workspace as ws
-from casefiles import accounting
+from casefiles import accounting, invoicing, invoice_payments, payment_followup, lexware
 from casefiles import bank, documents, archive, folders, invoice_xml, overview, reviews, storage
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("payment-followup-template")
+    for name in ("payment-followup-prepare", "payment-followup-check"):
+        followup = sub.add_parser(name)
+        followup.add_argument("--root", required=True)
+        if name == "payment-followup-prepare":
+            followup.add_argument("--input", required=True)
+            followup.add_argument("--expected-sha256", required=True)
+            followup.add_argument("--language", choices=["en", "ru"], default="en")
+        else:
+            followup.add_argument("--report", required=True)
+    sub.add_parser("invoice-payment-template")
+    for name in ("invoice-payment-prepare", "invoice-payment-check"):
+        payment = sub.add_parser(name)
+        payment.add_argument("--root", required=True)
+        if name == "invoice-payment-prepare":
+            payment.add_argument("--input", required=True)
+            payment.add_argument("--expected-sha256", required=True)
+            payment.add_argument("--language", choices=["en", "ru"], default="en")
+        else:
+            payment.add_argument("--report", required=True)
+    sub.add_parser("lexware-template")
+    lexware_action = sub.add_parser("lexware-action")
+    lexware_action.add_argument("--root", required=True)
+    lexware_action.add_argument("--input", required=True)
+    lexware_action.add_argument("--expected-sha256", required=True)
+    lexware_handoff = sub.add_parser("lexware-handoff")
+    lexware_handoff.add_argument("--root", required=True)
+    lexware_handoff.add_argument("--id", required=True)
+    lexware_handoff.add_argument("--kind", choices=["finalize", "send"], required=True)
+    invoice_template = sub.add_parser("invoice-template")
+    invoice_template.add_argument("--kind", choices=["invoice", "action"], required=True)
+    for name in ("invoice-create", "invoice-action", "invoice-show", "invoice-list", "invoice-report"):
+        part = sub.add_parser(name)
+        part.add_argument("--root", required=True)
+        if name in {"invoice-create", "invoice-action"}:
+            part.add_argument("--input", required=True)
+        else:
+            part.add_argument("--language", choices=["en", "ru"], default="en")
+        if name in {"invoice-show", "invoice-report"}:
+            part.add_argument("--id", required=True)
+        if name == "invoice-action":
+            part.add_argument("--expected-sha256", required=True)
     accounting_template = sub.add_parser("accounting-template")
     accounting_template.add_argument("--kind", choices=["configuration", "entry", "filing", "filing-action"], required=True)
     for name in ("accounting-status", "accounting-configure", "entry-post", "entry-reverse", "period-report", "filing-create", "filing-show", "filing-check", "filing-action"):
@@ -69,7 +111,40 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         command = args.command
-        if command == "accounting-template":
+        if command == "payment-followup-template":
+            result = payment_followup.template()
+        elif command == "payment-followup-prepare":
+            result = payment_followup.prepare(args.root, args.input, args.expected_sha256, args.language)
+        elif command == "payment-followup-check":
+            result = payment_followup.check(args.root, args.report)
+        elif command == "invoice-payment-template":
+            result = invoice_payments.template()
+        elif command == "invoice-payment-prepare":
+            result = invoice_payments.prepare(args.root, args.input, args.expected_sha256, args.language)
+        elif command == "invoice-payment-check":
+            result = invoice_payments.check(args.root, args.report)
+        elif command == "lexware-template":
+            result = lexware.template()
+        elif command == "lexware-action":
+            root = ws._workspace(args.root)
+            result = lexware.act(root, ws._load(ws._inside(root, args.input)), args.expected_sha256)
+        elif command == "lexware-handoff":
+            result = lexware.handoff(args.root, args.id, args.kind)
+        elif command == "invoice-template":
+            result = invoicing.template(args.kind)
+        elif command.startswith("invoice-"):
+            root = ws._workspace(args.root)
+            if command == "invoice-create":
+                result = invoicing.create(root, ws._load(ws._inside(root, args.input)))
+            elif command == "invoice-action":
+                result = invoicing.act(root, ws._load(ws._inside(root, args.input)), args.expected_sha256)
+            elif command == "invoice-show":
+                result = invoicing.show(root, args.id, args.language)
+            elif command == "invoice-list":
+                result = invoicing.list_invoices(root, args.language)
+            else:
+                result = invoicing.export(root, args.id, args.language)
+        elif command == "accounting-template":
             result = accounting.template(args.kind)
         elif command in {"accounting-status", "accounting-configure", "entry-post", "entry-reverse", "period-report", "filing-create", "filing-show", "filing-check", "filing-action"}:
             root = ws._workspace(args.root)

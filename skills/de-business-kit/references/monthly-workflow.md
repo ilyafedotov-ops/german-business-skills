@@ -34,6 +34,9 @@ silently install Python. See [native Windows](native-windows.md).
 2. **Organize and review.** Preserve original bytes; classify the documents,
    inspect extracted values against their source, and retain uncertain questions.
    Approval of a document or proposal does not post an accounting entry.
+   Use [receipt-to-period preparation](bookkeeping.md#prepare-receipts-for-the-requested-period)
+   to keep invoice, supply, receipt and payment dates separate and save the
+   proposed cash/profit and VAT timing before forming period totals.
 3. **Map payments.** Preview the original bank export; review date, sign, currency,
    account and transaction-ID mapping before accepting normalized records. Check
    fees, transfers and missing receipts explicitly.
@@ -73,6 +76,8 @@ closed or the return accepted without the required evidence.
 
 When interrupted, preserve completed records and exact draft versions. On resume,
 read their current state and recheck evidence; never restart a send from memory.
+Use the [filing continuation checks](accounting-workflow.md#check-before-advancing-a-filing)
+for changed preparation sources, linked replacements and uncertain outcomes.
 If a capability is unavailable, identify the saved artifact and the manual step
 that remains. A synthetic test of this recipe proves local state transitions,
 not tax correctness, user usability or a live ELSTER connection.

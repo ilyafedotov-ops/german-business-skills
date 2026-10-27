@@ -76,6 +76,35 @@ remain unresolved.
 
 ## Signs and acceptance boundary
 
+### Invoice-stated prepayments and rounding
+
+Additional check **2026-10-27**, for UBL 2.1 / Peppol BIS Billing 3.0 May 2026
+and the pinned CII D16B / EN16931 1.3.17 artifacts above:
+
+| Extracted field | UBL Invoice / CreditNote | CII, relative to `S/ram:SpecifiedTradeSettlementHeaderMonetarySummation` |
+| --- | --- | --- |
+| `prepaid_amount` | `cac:LegalMonetaryTotal/cbc:PrepaidAmount` | `ram:TotalPrepaidAmount` |
+| `rounding_amount` | `cac:LegalMonetaryTotal/cbc:PayableRoundingAmount` | `ram:RoundingAmount` |
+
+The [UBL prepaid binding](https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-LegalMonetaryTotal/cbc-PrepaidAmount/),
+[rounding binding](https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-LegalMonetaryTotal/cbc-PayableRoundingAmount/)
+and CreditNote totals binding above make these optional, at most once. The pinned
+CII rules CII-SR-481/484 also limit each to one; the generic D16B XSD allows repeated
+values. This inspector leaves duplicates unresolved and performs no profile validation.
+
+[BR-CO-16](https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-tc434/BR-CO-16/)
+compares due with gross minus paid plus rounding, with separate branches when
+optional fields are absent. Absence contributes zero for that formula only;
+extraction retains null/`optional_missing`. Explicit zero, supplied negative signs
+and decimal text remain unchanged. Empty, malformed or currency-conflicting
+fields remain unresolved. For example, `119.00 - 20.00 + (-0.01) = 98.99` is a
+document-total comparison, not proof of a current receivable or bank settlement.
+The utility does not run this profile rule or validate its two-decimal limits.
+See [customer payment continuation](operations.md#save-and-resume-a-customer-payment-reply)
+before comparing these amounts with later receipts or corrections.
+
+### Preserve economic meaning
+
 [Peppol BIS sections 5.6 and 11.4](https://docs.peppol.eu/poacc/billing/3.0/bis/)
 describe credit notes and negative invoices separately and permit negative grand
 totals, including in credit notes. Preserve each source amount's sign, decimal

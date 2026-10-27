@@ -27,11 +27,19 @@ confirmation instead of either refusing all assistance or submitting silently.
   invent formulas, rates, thresholds, official field mappings or results.
 - For cross-border facts read [international](../de-business-kit/references/international.md).
   Do not infer tax treatment merely from a bank location, currency or filename.
+  For EU goods use its before-order or received-invoice checks; distinguish
+  foreign invoice VAT, acquisition tax and Kleinunternehmer ID-use consequences.
+- For reducing income-tax prepayments use the [saved request workflow](../de-business-kit/references/tax-consultant.md#prepare-or-revise-an-income-tax-prepayment-request):
+  inspect the notice and forecast, compute the proposed adjustment, save the German
+  draft and separate private review, then preserve versions when facts change.
 - For monthly or annual returns use [annual workflow](../de-business-kit/references/annual-workflow.md),
   [forms](../de-business-kit/references/forms.md) and the existing
   [filing evidence lifecycle](../de-business-kit/references/accounting-workflow.md).
   Confirm the chosen calculation tool supports the form/year. Preserve actual
   inputs/results and distinguish manually entered, observed and not-run outputs.
+- To continue a saved filing, inspect its actual state and run the [filing continuation checks](../de-business-kit/references/accounting-workflow.md#check-before-advancing-a-filing).
+  Carry receipt/preparation evidence into the exact version; resolve changed
+  inputs with linked replacements and uncertain attempts with outcome evidence.
 - For authority correspondence prepare a chronology, source-backed deadline
   assessment, evidence list and recipient-language draft under
   [correspondence](../de-business-kit/references/correspondence.md) and

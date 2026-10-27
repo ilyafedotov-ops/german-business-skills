@@ -19,3 +19,8 @@ Every substantial result answers: what was done; which period and sources it cov
 Use short paragraphs, labelled tables and explanations next to difficult fields. Retain exact German form labels with a local-language explanation. Unknown is not zero; absent receipts are not matching transactions. Never translate `draft`, `reviewed`, `posted`, `submitted` or a receipt into legal correctness or authority acceptance. Do not add signatures, seals, official branding or visual status cues suggesting approval that did not happen.
 
 Generated views are snapshots of canonical records, not a second task register. Save decisions through the existing validated writers when available; a manually edited report cannot mutate them. Keep source fingerprints in canonical evidence and identify the reviewed version. Revisions preserve earlier reports and sent documents. For sensitive recipient material, keep the private explanation and machine records separate from the intended attachments.
+
+For screenshots and visual evidence, apply the [privacy check before sharing](privacy.md#check-screenshots-before-sharing).
+Prefer minimized text; inspect the exact redacted derivative and its filename,
+caption and link target before including it in chat or a readable report. Never
+embed a raw private screenshot merely because its local path is available.

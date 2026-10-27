@@ -53,6 +53,83 @@ Replace bracketed text with your own details. You do not have to fill out a full
 
 ![Fictional proposal workflow: request, targeted question, readable draft, continuation in a new chat](images/first-task.en.svg)
 
+## Continue a customer payment question
+
+> Use de-business-operations. Read the saved customer case, invoice and payment evidence. Prepare a German reply and a separate English review of the amount still payable. Save the next action. Do not send or post anything.
+
+The assistant compares the invoice’s gross, recorded prepayment, rounding and
+amount due with the actual linked receipts. A payment already included in the
+invoice must not be deducted twice. Missing allocation or correction evidence
+stays open. When new evidence arrives, ask it to continue the same case: it should
+save a new reply and review version while retaining earlier files and your chosen
+invoicing system. Preparing a reply does not issue a correction or send a message.
+
+## Check VAT before an EU goods purchase
+
+> Use de-business-operations. I want to order [goods] from [country] for my German business. The goods will travel from [country] to Germany. My VAT regime is [Regelbesteuerung / Kleinunternehmer / unknown]. Check what I should clarify before ordering, including whether to use my USt-IdNr. Do not buy or contact the seller.
+
+If the invoice has already arrived:
+
+> Use de-business-accounting. This EU goods invoice includes VAT, and I did not provide my USt-IdNr. Check whose VAT it is, whether it can be deducted, and what I should do next. If appropriate, prepare a request for the seller to check a correction. Do not send or post anything.
+
+The assistant should distinguish foreign invoice VAT, German acquisition tax and
+deduction eligibility. For Kleinunternehmer, using an ID can have consequences
+even when merely possessing it does not. A correction request is not a guaranteed
+refund. Bring the invoice, goods route and known VAT-regime facts; the assistant
+should ask only for missing details. See the [shared EU goods checks](../references/international.md#before-ordering-goods-from-another-eu-country).
+
+## Issue, correct and confirm delivery
+
+> Use de-business-operations. Continue this invoice in my chosen invoicing system. Prepare the exact invoice or correction, show its final files and recipient, and keep issue, sending and delivery confirmation separate. Save the current status and next step.
+
+The assistant can prepare the supported service operation and retain its observed
+result in your private folder. It keeps the original and correction, the reviewed
+draft and actual issued file, and each sending attempt. A send log means sent;
+delivery needs a receipt or customer acknowledgement. After a timeout it checks
+the existing result before retrying. If you already issued or sent a document,
+provide its actual file and status evidence: this is recorded as a past event,
+without inventing earlier authorization. Sending, cancellation and other external
+changes need authorization covering the concrete action and its effects.
+
+Before paid setup, the assistant checks what your current plan includes and explains
+additional charges, billing/trial terms and any unknown costs. It offers a usable
+current-plan or file/manual alternative before asking you to consider an upgrade.
+“Test the connection” does not authorize spending. If you decline an upgrade, it
+keeps that decision and continues the available work without repeated upgrade requests.
+
+For Lexware Office you can ask: “Prepare this draft in my existing Lexware company,
+read it back and save the result. Keep finalization and sending separate.” An
+opt-in adapter can create/read the draft with existing API access; creation already
+uses an invoice number. It then helps continue the same invoice in the browser
+for finalization and sending. No API access is required for the guided browser
+route. Never paste an API key into chat or a business document.
+
+The protected local commands and optional API adapter need an available Python runtime. The current GUI
+and standalone native Windows tools have no invoice lifecycle controls; without
+the writer, the assistant saves a readable continuation and helps with the chosen
+service. One authorized zero-value browser test completed creation, readback,
+finalization, sending and acknowledged receipt in an existing company. The API
+adapter still has synthetic coverage only; live API acceptance and ordinary
+nonzero invoices/corrections remain open. It does not assign numbers itself or
+provide an email-send API.
+
+A separate current-plan test also checked draft-text correction, save/reopen and
+preview while leaving the zero-value invoice unissued and unsent. Draft PDF download
+was also checked: in the print dialog select **Als Entwurf drucken** and verify the
+button matches it. The default **Fertigstellen + drucken** would issue the invoice.
+
+Correction testing also covered a separate zero-value manual correction draft:
+save/reopen, text correction with independent readback, preview and draft PDF.
+After explicit approval, the same correction was issued, independently read back
+and its final PDF checked; it remains unsent. The original was not cancelled.
+The original reference was entered as text; this did not prove a provider-linked
+correction or a refund. See the [correction route](../references/lexware.md#prepare-and-verify-a-correction)
+for status/menu checks and the boundary before issuing or cancelling.
+
+For payment follow-up, ask: **“Compare this issued invoice with the identified bank receipts and save a private payment report.”** The optional Python workflow preserves evidence, excludes prepayments already included in the invoice amount, and checks partial receipts/refunds across periods. Uncertain coverage, currency or corrections leave the comparison unresolved. It changes no provider payment status and sends nothing. Before reusing a report, the assistant checks source and invoice freshness. See the [receipt workflow](../references/invoicing-workflow.md#compare-an-issued-invoice-with-customer-receipts).
+
+After reconciliation, ask: **“Prepare a German message asking about the remaining difference, with a separate private review. Do not send it.”** The optional workflow creates the actual customer text and review. If the comparison is unresolved it can prepare an amount-free clarification; stale sources must be refreshed first. Recipient drafts support DE/EN/RU, private reviews EN/RU. See [customer follow-up](../references/invoicing-workflow.md#prepare-a-customer-payment-follow-up).
+
 ## Keep your work in one folder
 
 For ongoing work, choose a private permanent folder such as **My business**, separate from the downloaded kit, installed skills and any Git repository. Give your assistant access to that folder. In Codex, keep using the project where the skills are installed and also grant access to the business folder; opening a different project may hide project-local skills.
@@ -116,6 +193,13 @@ For a correction or partial payment, supply the earlier invoice and relevant pay
 
 For calculations, ask it to distinguish recorded amounts from tax treatment, verify applicable rules and inputs, run the arithmetic and show its checks. A cash total alone does not establish taxable profit or a complete return. [Detailed monthly workflow](../references/monthly-workflow.md).
 
+Select **de-business-accounting** and ask: “Prepare October from these receipts
+in my business folder. Save what belongs to this period, what belongs elsewhere
+and what is still missing.” You get preserved originals, draft proposals and a
+readable review separating payment/profit timing from VAT timing. Unknown private
+use or asset treatment stays open. Your selected accounting software remains
+authoritative; preparation does not itself post entries or complete the month.
+
 ## Taxes and letters
 
 > Use de-business-tax. For this question, first check the relevant period and facts already saved. Ask me for what is missing, research the applicable official rules, and explain the result and next step in plain language.
@@ -124,6 +208,17 @@ For calculations, ask it to distinguish recorded amounts from tax treatment, ver
 
 For work inside ELSTER or accounting software, see [assisted forms and services](assisted-services.en.md). You handle login and any final action you reserve for yourself. The assistant shows the concrete material before an external action and preserves the observed outcome afterwards.
 
+To prepare a prepayment adjustment, select **de-business-tax** and ask:
+
+> Help me reduce my income-tax prepayments using this notice and forecast. Save the German request and an English review in my business folder so we can continue later.
+
+**You get:** a saved draft, the proposed amount alongside the amount still due under
+the current notice, calculation/source evidence and a next step. The assistant asks
+only for missing facts that affect this work. In a new chat, give access to the same
+folder and ask it to continue with your corrected forecast. It should save a linked
+revision and preserve the earlier draft. A prepared or sent request does not itself
+change the Finanzamt's notice. [Workflow details](../references/tax-consultant.md#prepare-or-revise-an-income-tax-prepayment-request).
+
 ## Reports
 
 > Use de-business-kit. Save a readable result with the answer, open questions and next action. Link the file. Keep a document for a recipient separate from my private notes.
@@ -131,6 +226,14 @@ For work inside ELSTER or accounting software, see [assisted forms and services]
 **You get:** an ordinary readable document. HTML can open in your browser; PDF, Word or spreadsheet output depends on available tools. English and Russian report templates are included. German recipient documents can have a separate explanation in your language.
 
 ## Continue
+
+For a saved return, select **de-business-tax** and ask: “Continue this filing from
+my business folder. Check the saved version and changed evidence, and prepare the
+next step without submitting.” The assistant reads the actual filing state and
+shows its blockers. Authorized corrections create linked versions; an uncertain
+submission needs outcome evidence before any retry. Preparation reports retain
+their underlying evidence when frozen into a filing; a worksheet is supporting
+material, not a completed official return.
 
 Before finishing a substantial task, ask:
 
@@ -245,6 +348,21 @@ You can ask before providing documents:
 The assistant should explain relevant limits when you first need them and when
 the processing route changes, without repeating a long warning on every request.
 
+
+## Screenshots and private evidence
+
+The assistant should normally report results in text. Before sharing any screenshot
+in chat, a report or an attachment, it checks the whole image and removes personal
+and confidential information from a separate copy. It checks the exported copy
+again, including its filename and metadata; blur alone is insufficient. A test
+invoice can still display your real account details around the test data.
+
+Necessary originals stay in your private folder outside Git. Permission to operate
+your account does not authorize embedding raw screenshots. If safe redaction cannot
+be verified, the assistant withholds the image and gives a text summary. It does not
+send the original to a new cloud redaction service without an appropriate authorized
+processing route. This does not change complete invoices or official documents
+prepared for a specifically authorized recipient.
 
 ## What to keep in mind
 

@@ -16,6 +16,25 @@ bounded calculations and explicit independent-check evidence; the consultation
 template records them without a new register or automated approval transition.
 The GUI remains an optional adapter to the same writers and records.
 
+The [prepayment request workflow](../skills/de-business-kit/references/tax-consultant.md#prepare-or-revise-an-income-tax-prepayment-request)
+uses versioned recipient drafts and private consultation/continuation notes. It
+resolves managed folder paths or uses the selected standalone private folder;
+existing protected task writers remain authoritative when present. A corrected
+forecast creates a linked revision without changing submission or authority state.
+Shared source recovery lives in `german-rules.md`; it adds no retrieval service,
+schema, ledger or tax engine.
+
+Receipt-to-period preparation reuses catalog/proposal writers and a versioned
+readable review; the proposal period is review scope, not a universal cash/VAT
+date. Filing creation expands recognized preparation/cash report dependencies into
+the existing frozen `sources` array. `workflows.filing_sources` validates the
+preparation envelope, embedded input, evidence fingerprints and readiness;
+preflight reuses it before review/authorization/attempt. Graph traversal is bounded
+and checks the captured digest against the expected one. Historical outcomes use
+frozen copies only. Unknown report kinds remain opaque evidence; no schema migration
+or automatic parsing of authored reports is added. Copying can leave preserved
+partial evidence on failure; it is not a multi-file transaction.
+
 ## Assisted external-service execution
 
 The services skill discovers an operation-specific route; the business-domain
@@ -50,6 +69,38 @@ Local synthetic browser trials do not establish real ELSTER/Lexware acceptance.
 
 
 Invoice payment allocation is a derived projection, not a persisted paid flag: approved proposal amounts are compared with linked cash lines through the report end date, across periods. Reversals cancel their originals; corrected allocations retain history. Different currencies and ambiguous directions have no inferred balance. Reports include a settlement-basis fingerprint checked again by filing preflight. The GUI reuses filing checks only within one locked snapshot; mutations still recheck evidence. Native and Python unlock preserve exact lock bytes in audit history.
+
+XML inspection additionally exposes optional invoice-stated prepaid and rounding
+amounts with raw text, exact location and unresolved/absent states. Proposal fields
+accept these additive decimal candidates without inferring payment allocation.
+The operations skill uses versioned customer worksheets and recipient replies for
+continuation; the existing task register remains authoritative. Invoice-time
+amount due and current bank evidence are separate, and amount-due profile rules
+are not executed by the inspector or proposal arithmetic.
+
+Invoice workflow state is separate from accounting: optional
+`00_admin/invoicing.json` uses the shared workspace lock, expected record hashes,
+preimage history and an audit checkpoint/checksum. Existing workspace schemas are
+unchanged. Draft/source, final issued artifact and event evidence are frozen
+separately. Delivery scope binds final bytes, destination, attachments and the
+correction family; outcome recording targets an exact attempt. A readable status
+is a projection, while follow-up tasks stay in the existing register. The CLI
+records evidence; host/manual provider execution is a separate step. No GUI or
+native-only writer is implied. Mutable invoice state cannot itself be evidence.
+
+The optional Lexware adapter attaches provider request, attempt, UUID, readback
+and artifact evidence to that same invoice row. It commits intent before network
+creation, reserves account/object identity across cases, and preserves responses
+before parsing. Provider draft creation is distinct from issuance. Requests use a
+fixed HTTPS origin and process-held secret; no credentials enter records. Readback
+changes invalidate preparation authority; active-attempt scope changes block a
+new browser action. Downloads require matching readbacks around retrieval. Browser
+handoff carries the object/attempt and frozen delivery scope evidence, including
+the reviewed message envelope/text. It executes no browser action by itself.
+
+The optional `casefiles/invoice_payments.py` workflow compares an issued invoice with explicitly selected normalized bank movements. It takes reviewed invoice-stated due/inclusion facts, freezes inputs and source bytes under the workspace lock, and saves new JSON/EN-RU Markdown reports with audit checkpoints. Freshness checks bind the report to working sources and the complete active invoice/correction family. It changes no invoice/payment/ledger state and does not reconcile allocations across different invoices. The [portable workflow](../skills/de-business-kit/references/invoicing-workflow.md#compare-an-issued-invoice-with-customer-receipts) owns commands and limits.
+
+`casefiles/payment_followup.py` uses the payment comparison checker inside the same workspace lock, requiring its current fingerprint. It writes separately hashed recipient text, private review and input snapshots with an audit-bound manifest. Preparation supports no external sends; check detects changed sources/comparison/invoice context and fails on changed artifacts. Customer text is generated from a narrow field set, not from private report contents.
 
 ## Intended result
 
@@ -86,7 +137,7 @@ The bundle contains seven directly usable skills with one shared profile. `de-bu
 | Host capabilities | Model, file access, web research, browser tools and task permissions |
 | Accounting product / authority | Actual postings, transmissions, receipts and official responses |
 
-The skill cannot create browser tools, API access or permissions. Availability depends on the host and current session. Bundled scripts operate offline; the host's model can still process selected data remotely.
+The skill cannot create browser tools, API access or permissions. Availability depends on the host and current session. Local record utilities operate offline. The opt-in Lexware adapter sends the explicitly reviewed request to its fixed provider API; the host's model can also process selected data remotely.
 
 The lifecycle worksheets and continuation notes reuse existing tasks, decisions and evidence. They add no state schema or autonomous workflow runner; the assistant prepares and verifies each result through available tools.
 
@@ -128,6 +179,12 @@ Use the [beginner guide](../skills/de-business-kit/guides/install.en.md) and [di
 
 The current preview includes `workflows.py` for international transactions, activity classification and ELSTER worksheets, and `payments.py` for normalized payment events and strict Stripe activity CSVs. Both reuse private-workspace storage protections and write new JSON/Markdown reports with source fingerprints. Runtime dependencies remain Python standard library. Source checks record the exact applicable period; their content still requires human/agent review. Workspace schema stays version 1; no migration or separate entrepreneur profile is needed. See [workflow guide](../skills/de-business-kit/references/accounting-workflow.md).
 
+The [EU goods guardrails](../skills/de-business-kit/references/international.md#before-ordering-goods-from-another-eu-country)
+are shared host instructions reached from operations, accounting and tax skills.
+They distinguish pre-order advice from received-invoice review and reuse existing
+evidence/draft workflows. No automatic tax election, refund adapter or workspace
+schema is introduced.
+
 ## Component and deployment architecture
 
 The assistant/CLI route uses the seven-skill bundle and an offline filesystem backend. The host runs the conversation and invokes short-lived Python CLI processes; the utilities can generate a static overview. The optional [real GUI](gui.md) instead runs a session-protected loopback service while its launcher is open, using the same records and protected writers. Neither route adds a database service, queue worker or built-in model API client. The diagram below describes the assistant/CLI route; the GUI adapter is described separately below.
@@ -155,7 +212,7 @@ flowchart TB
     X -. inspected evidence saved through host workflow .-> FS
 ```
 
-The diagram shows execution and dependency boundaries, not network access supplied by the Python utilities. Public source and the installed skill are separate from the private business workspace. `tools/install.py` copies the complete self-contained skill bundle into host discovery directories; `tools/build_package.py` creates distribution bundles. Standalone CLI use requires an available Python runtime; the GUI application bundles its engine. No production Python dependency beyond the standard library is required.
+The diagram shows the local execution boundary; the optional Lexware adapter additionally connects to its fixed provider API when explicitly invoked. Public source and the installed skill are separate from the private business workspace. `tools/install.py` copies the complete self-contained skill bundle into host discovery directories; `tools/build_package.py` creates distribution bundles. Standalone CLI use requires an available Python runtime; the GUI application bundles its engine. No production Python dependency beyond the standard library is required.
 
 The host chooses a task module and supplies reviewed inputs. Python validates structures and performs deterministic operations. The host interprets business meaning and inspects external sources. This division keeps arithmetic and file operations reproducible while making semantic and authorization responsibilities explicit.
 
@@ -208,7 +265,7 @@ Recovery starts by inspecting failed-command outputs, current register hashes, o
 | Received content → records | Original hashes, size/type checks, explicit validators; content treated as evidence | File authenticity and business truth still require review |
 | Candidate → reviewed proposal | Field states, source fingerprints, arithmetic and reviewer metadata | Reviewer names are supplied text; no authenticated multi-user approval service |
 | Local files → model context | Host capability and processing assessment workflow | Offline utilities do not make host model inference local |
-| Local approval → provider state | Separate proposals, operation template and evidence observations | No bank, Lexware or ELSTER write/readback adapter |
+| Local approval → provider state | Protected attempts, exact scope, Lexware draft/readback adapter and browser handoff | No bank/ELSTER transport; no Lexware API finalize/send; operator authorization remains an attestation |
 | Records → overview | Escaped static HTML, restrictive CSP, no application JavaScript | Saved view can become stale; no live synchronization |
 | Workspace → records archive | Explicit selection, manifest, file hashes and verification | Integrity does not prove completeness, delivery or recipient acceptance |
 
@@ -241,3 +298,14 @@ reject stale tabs, and separate GUI drafts use expected hashes and completed aud
 checkpoints. The browser is not another accounting database. Platform bundles embed
 the engine so end users do not install Python; standalone PowerShell remains its
 existing narrower route. See [GUI scope, trust boundaries and delivery](gui.md).
+
+## Developer evaluation evidence
+
+`tools/run_evals.py` retains its ten bounded no-web cases. The separate opt-in
+`tools/run_research_evals.py` freezes observer inputs, runs public-source FAQ
+sessions with a read-only shell, indexes raw tool evidence and emits independently
+reviewed assessments bound to captured bytes. Follow-ups replay recorded context;
+they do not exercise workspace persistence. Evaluation artifacts live outside the
+checkout and private business workspaces; no business schema or installed runtime
+changes. See [evaluation procedure](../evals/README.md#faq-coverage-and-public-source-pilot)
+for permissions, failure states, integrity limits and reviewer ownership.

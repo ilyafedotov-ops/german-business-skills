@@ -24,15 +24,20 @@ PATHS = {
                     "currency": "cbc:DocumentCurrencyCode", "supplier_reference": "cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:RegistrationName",
                     "customer_reference": "cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:RegistrationName",
                     "net": "cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount", "tax": "cac:TaxTotal/cbc:TaxAmount",
-                    "gross": "cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount", "amount_due": "cac:LegalMonetaryTotal/cbc:PayableAmount"},
+                    "gross": "cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount", "amount_due": "cac:LegalMonetaryTotal/cbc:PayableAmount",
+                    "prepaid_amount": "cac:LegalMonetaryTotal/cbc:PrepaidAmount",
+                    "rounding_amount": "cac:LegalMonetaryTotal/cbc:PayableRoundingAmount"},
     "cii": {"invoice_number": "rsm:ExchangedDocument/ram:ID", "invoice_date": "rsm:ExchangedDocument/ram:IssueDateTime/udt:DateTimeString",
             "due_date": SETTLEMENT + "ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString",
             "currency": SETTLEMENT + "ram:InvoiceCurrencyCode", "supplier_reference": AGREEMENT + "ram:SellerTradeParty/ram:Name",
             "customer_reference": AGREEMENT + "ram:BuyerTradeParty/ram:Name", "net": TOTAL + "ram:TaxBasisTotalAmount",
-            "tax": TOTAL + "ram:TaxTotalAmount", "gross": TOTAL + "ram:GrandTotalAmount", "amount_due": TOTAL + "ram:DuePayableAmount"}}
+            "tax": TOTAL + "ram:TaxTotalAmount", "gross": TOTAL + "ram:GrandTotalAmount", "amount_due": TOTAL + "ram:DuePayableAmount",
+            "prepaid_amount": TOTAL + "ram:TotalPrepaidAmount", "rounding_amount": TOTAL + "ram:RoundingAmount"}}
 
 
 PATHS["ubl_credit_note"] = {**PATHS["ubl_invoice"], "due_date": "cac:PaymentMeans/cbc:PaymentDueDate"}
+OPTIONAL_AMOUNTS = {"prepaid_amount", "rounding_amount"}
+AMOUNTS = {"net", "tax", "gross", "amount_due"} | OPTIONAL_AMOUNTS
 
 
 def preceding_invoices(tree, syntax, issues):
@@ -147,12 +152,20 @@ def inspect(root, document_id):
             paths = PATHS[syntax]
             currency_nodes = tree.findall(paths["currency"], NS)
             currency = currency_nodes[0].text.strip() if len(currency_nodes) == 1 and currency_nodes[0].text else None
+            try:
+                ws._currency(currency or "")
+                if list(currency_nodes[0]):
+                    currency = None
+            except ws.WorkspaceError:
+                currency = None
             for name, path in paths.items():
                 nodes = tree.findall(path, NS)
                 if name == "tax":
                     nodes = [node for node in nodes if currency and node.get("currencyID") == currency]
                 field = {"raw": None, "value": None, "location": path, "status": "unavailable", "reviewer": None, "note": "missing"}
-                if len(nodes) != 1:
+                if not nodes and name in OPTIONAL_AMOUNTS:
+                    field["note"] = "optional_missing"
+                elif len(nodes) != 1:
                     issue = ("multiple_candidates:" if nodes else "missing:") + name
                     report["issues"].append(issue)
                     field["note"] = issue
@@ -164,9 +177,9 @@ def inspect(root, document_id):
                     try:
                         if list(node) or not value or len(value) > 20000:
                             raise ws.WorkspaceError("Unsupported empty, nested or oversized field.")
-                        if name in {"net", "tax", "gross", "amount_due"}:
+                        if name in AMOUNTS:
                             ws._amount(value)
-                            if node.get("currencyID") not in {None, currency} or syntax in {"ubl_invoice", "ubl_credit_note"} and not node.get("currencyID"):
+                            if not currency or node.get("currencyID") not in {None, currency} or syntax in {"ubl_invoice", "ubl_credit_note"} and not node.get("currencyID"):
                                 raise ws.WorkspaceError("Amount currency is unresolved.")
                         elif name in {"invoice_date", "due_date"}:
                             if syntax == "cii":

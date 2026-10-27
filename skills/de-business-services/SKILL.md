@@ -16,6 +16,8 @@ Start with the actual need and existing adequate services. Use
 [insurance](../de-business-kit/references/insurance.md) when relevant. Check current
 primary sources for country, product/edition, eligibility, costs and exclusions.
 Do not recommend migration or a subscription solely because another tool exists.
+Apply the shared [cost check before setup](../de-business-kit/references/assisted-services.md#check-costs-before-setup);
+warn before any paid setup flow and preserve a decision to stay on the current plan.
 
 For an existing service use [existing data](../de-business-kit/references/existing-data.md),
 [access map](../de-business-kit/references/data-source-access.md) and

@@ -42,7 +42,7 @@ Identify the exact product, tenant/business, year and current authoritative acco
 
 Use read/export operations first within the user's requested scope. Inspect documents, entries, payment links and available reporting/submission evidence as different object types. For Lexware Office use [the product-specific reference](lexware.md); do not apply its API to Lexware desktop. For sevdesk or WISO variants consult the [access map](data-source-access.md) and current official docs before choosing endpoints or export menus. Verify side effects, especially operations that may mark invoices sent or change status.
 
-For requested external writes, prepare the concrete payload and intended account/objects, match existing authorization to that action, then use the supported tool and inspect the resulting IDs/status. After a timeout, inspect current service state before retrying. Posting, payment, deletion, tax election and submission are separate actions; onboarding alone authorizes none of them. This repository supplies no production network adapters or ELSTER transmission integration.
+For requested external writes, prepare the concrete payload and intended account/objects, match existing authorization to that action, then use the supported tool and inspect the resulting IDs/status. After a timeout, inspect current service state before retrying. Posting, payment, deletion, tax election and submission are separate actions; onboarding alone authorizes none of them. The optional [Lexware invoice adapter](lexware.md#provider-invoice-draft-readback-and-sending) supports bounded draft creation/readback with separate authorization; live-account acceptance remains open. No ELSTER transmission integration is supplied.
 
 ## Mixed local or synchronized folders
 

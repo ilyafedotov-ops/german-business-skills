@@ -53,3 +53,121 @@ for recorded host versions, outcomes and limitations.
 use manual fresh sessions: check a short relevant introduction and a truthful
 user-held installation step when plugin controls are unavailable. These read-only
 trials do not install a plugin or prove discovery in a desktop app.
+
+## FAQ coverage and public-source pilot
+
+[FAQ coverage](faq-coverage.json) indexes all 60 numbered questions in the
+[Finber FAQ](https://finber.de/faq_freiberufler_germany/), reviewed on
+**2026-10-27**, against baseline source `085489d`. It stores short topic labels,
+skill owners and scenario IDs, not a copy of the article or an endorsed answer key.
+The baseline has 2 questions with central-concern coverage, 29 partial, 24 without
+a dedicated case and 5 whose complete specialized outcome is outside current
+scope. Coverage is not a passing trial or a promise to answer every subquestion.
+Outside-scope cases still need useful factual preparation and appropriate routing.
+
+Seven independent synthetic `faq-*` prompts in `scenarios.json` form the first
+pilot: founding-year VAT, advised filing deadlines, incoming foreign SaaS,
+classification evidence, voluntary GKV income, one-client pension/status questions
+and KSK. Two `follow_up` objects change material facts after the initial answer.
+The second batch adds six cases: family health cover, pension contribution options,
+Elterngeld, Kindergeld, work permission and startup support. A third follow-up
+corrects the residence document wording. The third batch adds small-invoice
+requirements, the 2026 e-invoice transition, home-working expenses and quarterly
+VAT deadlines, with invoice-total and deadline-extension follow-ups. The catalogue
+now includes a fourth batch for GWG/computer assets, mixed phone/car costs and
+ordinary EU consultancy, with asset-price and customer-status corrections. A fifth batch covers US business/consumer advice, French property services and
+automated digital sales crossing the EU threshold, with a consumer-location
+correction. The sixth batch covers no-sales VAT returns, annual loss/return duties
+and income-tax prepayment adjustment, with a private-expense correction. There
+are 118 base cases; the research runner selects 32 of them and eleven follow-ups
+(43 sessions).
+Three additional EU-goods cases repeat the missing-VAT-ID question, test advice
+before ordering and review an already paid Austrian-VAT invoice. Two corrections
+switch to Kleinunternehmer facts, including a German-VAT/OSS invoice. These are
+regressions for the product warning, separate from the 60-question FAQ map.
+Select `faq-eu-goods-warning-2026`, `faq-eu-goods-preorder-2026` and
+`faq-eu-goods-invoice-2026`; the latter two include their follow-ups. The original
+manual live trial found no explicit warning; subsequent outcomes and source
+snapshots belong in [validation](../docs/validation.md).
+
+The coverage file holds dated primary-source expectations for these bounded cases;
+remaining questions need their own source checks before an answer rubric is used.
+The secondary site's answer must not override a contrary applicable official source.
+
+The separate standard-library [research runner](../tools/run_research_evals.py)
+executes these cases on supported POSIX developer hosts. It leaves the original
+ten-case runner unchanged and does not add product connectors or permissions.
+The first manual pilot remains historical evidence in [validation](../docs/validation.md).
+
+```sh
+python3 -B tools/run_research_evals.py --list
+python3 -B tools/run_research_evals.py --all --model HOST_MODEL --output /absolute/new/persistent-evidence
+python3 -B tools/run_research_evals.py --case faq-founding-year-2026 --case faq-foreign-saas-2026 --model HOST_MODEL --output /absolute/new/calculation-evidence
+python3 -B tools/run_research_evals.py --summarize /absolute/existing/persistent-evidence
+```
+
+`--all` explicitly opts into thirty-two base sessions and eleven follow-ups, potentially
+billable. A selected case includes its follow-up when defined. `--model` is
+required; `--effort` defaults to `high`, `--timeout` to 240 seconds per session
+(maximum 3600), and `--codex` can select an installed executable. No installation
+or provider reconfiguration occurs. Codex CLI 0.164.0 is the locally checked host.
+Use the intended existing Codex/OpenAI authentication route, not a custom-provider
+configuration silently replaced by ignored user settings. Model identity is
+recorded as requested, not independently attested. Case dates remain the dates
+in their prompts; a new run date does not update historical legal assumptions.
+
+Use a **new absolute persistent directory outside the checkout**, not a temporary
+folder. Existing output, symlink ancestry and unsafe skill inputs are refused.
+The observer freezes skills, scenarios, coverage, runner/helper bytes, version,
+full review criteria and hashes. Each session gets only its skill copy and request;
+expected answers and rubrics stay outside it. The host uses existing authentication,
+`--ignore-user-config`, ephemeral sessions, a read-only shell sandbox and native
+public web search. No account connectors or external submissions are requested.
+Timeouts/failures retain partial evidence. Cleanup stops the host process group;
+it does not prove containment of deliberately detached processes or OS read isolation.
+
+The wrapper asks for exact/decimal local execution when arithmetic is performed,
+with inputs, expressions and outputs printed. This is a changed capture protocol,
+not proof that earlier hidden calculations ran or a repair of skill instructions.
+Raw JSONL and `observations/` retain completed command text/output/exit status,
+source-action/result metadata, final answer and line references. Web metadata is
+not a full page/calculator payload. No command-pattern heuristic or model claim
+certifies execution, numerical correctness or independent checking. Incomplete
+items, invalid/duplicate events, empty final answers or session changes fail
+mechanical capture. Follow-ups require a valid unchanged base and replay its
+recorded user request and final answer: **context replay, not persistent resume**.
+
+Run exit `0` means mechanical capture passed and quality is `pending_review`;
+`1` means capture/host failure; `2` means setup, launch or interruption error.
+Inspect `report.json`, including `incomplete` and blocked/not-run cases. A failed
+or incomplete run cannot become a passing assessment through reviewer edits.
+
+An independent reviewer fills each observer-only `reviews/<case>.json`: reviewer
+identity, `assessment` (`pass`, `fail`, `uncertain`, or `pending_review`), a concrete
+`note` and `evidence` such as `[ {"line": 12} ]` referring to that case's raw
+transcript. Inspect actual sources, applicable period, useful outcome and every
+execution/action claim. A self-report alone is insufficient. Preserve criterion
+text, bindings and original evidence. Checks that the tested host could not perform
+must be labelled honestly; an observer's later calculation is a separate check.
+
+`--summarize` makes no model calls. It verifies the captured manifest and exact
+review bindings/criteria, validates evidence references, and writes `assessment.json`
+with `passed`, `failed`, `uncertain`, `pending_review` or `incomplete`. Exit `0`
+means the summary is valid, **not that its status is passed**. Invalid/tampered
+input returns `2` and removes the stale generated assessment in a recognized run;
+an unrelated directory's files are preserved. It hashes the same
+review bytes it assessed; later edits require summarization again. Hashes detect
+changes relative to the manifest, not authenticity or a verified reviewer identity.
+The summary aggregates attributed judgments; it is not an automated tax certificate.
+
+Preserve raw runs and reviews in persistent storage before cleanup. Keep synthetic
+transcripts outside Git by default. Review errors separately from product failures;
+record rubric calibrations without silently relabelling old runs. Change skills
+only for demonstrated causes and rerun affected cases against a new snapshot.
+See [validation](../docs/validation.md) and [project status](../docs/project-status.md)
+for current outcomes and gaps. No desktop, provider, filing or cross-host acceptance
+follows from this bounded developer pilot.
+
+```sh
+python3 -B -m unittest discover -s tests -p test_research_eval_runner.py -v
+```

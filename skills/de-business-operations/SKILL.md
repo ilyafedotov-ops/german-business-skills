@@ -15,6 +15,19 @@ Use [daily operations](../de-business-kit/references/operations.md) for the
 customer-to-payment or purchasing journey. Identify which result is requested:
 a draft, review, payment follow-up, correction or reply. Do not turn it into a
 full month-close task.
+For actual issue, invoice corrections, sending and delivery confirmation, use the
+[invoicing workflow](../de-business-kit/references/invoicing-workflow.md). It combines
+the chosen service route with protected local attempts and outcome evidence.
+For payment follow-up after issue, use the same reference's
+[receipt comparison](../de-business-kit/references/invoicing-workflow.md#compare-an-issued-invoice-with-customer-receipts)
+to save a sourced balance comparison before preparing a customer reply.
+For Lexware Office, load the [actual provider route](../de-business-kit/references/lexware.md#provider-invoice-draft-readback-and-sending)
+for draft creation, independent readback and sending the same object in the browser.
+For an EU goods purchase, apply the [before-order and received-invoice VAT checks](../de-business-kit/references/international.md#before-ordering-goods-from-another-eu-country),
+including the Kleinunternehmer branch, before suggesting VAT-ID use or recovery.
+For an invoice/correction with a partial payment, use the
+[saved customer payment reply](../de-business-kit/references/operations.md#save-and-resume-a-customer-payment-reply)
+to distinguish invoice-stated prepayments from later receipts and save a resumable case.
 For entering or editing a customer document in the chosen software, use
 [assisted service operations](../de-business-kit/references/assisted-services.md).
 A supported browser draft route can complement a read-only connector; do not

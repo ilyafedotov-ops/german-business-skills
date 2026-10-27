@@ -11,6 +11,15 @@ A documented route or file import does not prove a live connection. Never includ
 - Actual available tool and access/permissions: [observed / unavailable]
 - Existing authorization for this exact action: [scope and reference / missing]
 
+## Cost check before setup (when relevant)
+
+- Current plan and operation entitlement: [included / excluded / unknown; source/date]
+- Additional cost: [one-off / recurring / usage; currency, VAT basis, period; unknowns]
+- Relevant minimum term / trial conversion / renewal: [verified terms or unknown]
+- Current-plan/file/manual alternative and limits: [usable route or unavailable]
+- User decision and existing spending authorization: [scope/limit or no extra cost; reference]
+- Setup boundary: [not entered / authorized scope; remaining choice]
+
 ## Selected route and control handoff
 
 | Candidate route | Actual capability/permission observed | Available for this operation? | Reason selected or remaining setup |
@@ -46,6 +55,14 @@ manual-only preferences; an entered/saved draft is not an issued or submitted it
 
 A file count or CSV row does not prove complete records, payment, posting or a
 live connection. Keep unsupported originals; do not silently exclude them.
+
+## Sharing review (when visual evidence is needed)
+
+- Intended audience and output: [chat / report / attachment; authorized scope]
+- Private original reference: [necessary retained evidence; never embed here]
+- Sharing copy: [verified redacted derivative / image withheld; minimized text instead]
+- Actual file inspected: [date; image, filename/link and metadata checked; no hidden values]
+- Remaining privacy limits: [unverified removal / tool processing / none found in reviewed scope]
 
 ## Failure or manual continuation
 

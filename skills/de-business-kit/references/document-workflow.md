@@ -46,7 +46,18 @@ For Gmail/accounting-service records or a mixed folder, start with [existing-dat
 
 A `lines` row is `{ "line_id": "line-1", "fields": { ... } }`; allowed field names are `description`, `quantity`, `unit_price`, `net`, `tax_rate`, `tax`, `gross`. A `tax_breakdown` row is `{ "tax_id": "rate-1", "fields": { ... } }` with `tax_rate`, `net`, `tax`. Every value in `fields` uses the full extracted-field contract. Header fields also allow `invoice_number`, `invoice_date`, `due_date`, `service_from`, `service_to`, `receipt_date`, `payment_date`, `supplier_reference`, `customer_reference`, `supplier_country`, `customer_country`, `currency`, `description`, `amount_due`. Decimal amounts and normalized dates remain strings. Do not attach provider payloads or unsupported keys to these records.
 
-For proposal details use the [input template](../assets/proposal.json), [field template](../assets/extracted-field.json) and runtime help. Approval requires reviewed core invoice fields and period-applicable source checks. Optional supplied lines/rate breakdowns are checked; missing breakdowns or unsupported allowances must remain a documented substantive review issue, not a claim of full invoice validation. Dates and `amount_due` remain distinct from gross and observed payment. All reviews require actual inspection; a text reviewer name is not authenticated identity.
+Header fields also accept optional `prepaid_amount` and `rounding_amount` from the
+bounded XML inspection, with the same extracted-field contract. Missing optional
+values remain null; these fields do not allocate bank payments or mark a document
+paid. Older inspections/proposals remain readable without them; reinspection saves
+a new report. The proposal writer accepts these additive fields; older package
+versions may reject new proposals containing them, so use the current complete bundle.
+The local journal's settlement projection still compares gross with explicitly
+allocated journal payments; it does not incorporate invoice-stated prepaid or
+rounding fields. Use the sourced customer comparison or authoritative system for
+that distinction, rather than treating this projection as a complete receivable.
+
+For proposal details use the [input template](../assets/proposal.json), [field template](../assets/extracted-field.json) and runtime help. Approval requires reviewed core invoice fields and period-applicable source checks. Optional supplied lines/rate breakdowns are checked; missing breakdowns or unsupported allowances must remain a documented substantive review issue, not a claim of full invoice validation. Dates, prepaid/rounding and `amount_due` remain distinct from gross and observed payment. The proposal arithmetic does not validate the amount-due equation. All reviews require actual inspection; a text reviewer name is not authenticated identity.
 
 ## Optional personal archive
 

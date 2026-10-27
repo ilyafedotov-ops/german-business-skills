@@ -25,6 +25,11 @@ Ask `de-business-services` for access setup when needed, preserving this task.
 1. Inspect the relevant period, originals and unresolved tasks through
    [document workflow](../de-business-kit/references/document-workflow.md) and
    [bookkeeping](../de-business-kit/references/bookkeeping.md).
+   For an EU goods invoice with VAT, use the [received-invoice checks](../de-business-kit/references/international.md#when-an-eu-goods-invoice-already-includes-vat)
+   before proposing deduction, correction or posting; revisit Kleinunternehmer status.
+   For a batch of receipts use [receipt-to-period preparation](../de-business-kit/references/bookkeeping.md#prepare-receipts-for-the-requested-period):
+   preserve originals, separate cash/profit and VAT timing, save draft proposals
+   and a readable review, and carry unresolved items into continuation.
 2. Separate extraction, proposals, user review, actual posting and reconciliation.
    Use existing validated writers, locks, expected hashes and evidence. External
    books remain authoritative; inspect actual service state before claiming posting.

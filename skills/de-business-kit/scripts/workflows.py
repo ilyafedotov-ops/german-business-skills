@@ -291,6 +291,43 @@ def verify(root, report_path):
             "scope": "Source bytes only; no authenticity, legal validity or report-tampering certification."}
 
 
+def filing_sources(root, report, require_ready=True):
+    """Validate a supported preparation and expose its evidence to filing writers.
+
+    Callers hold the workspace lock. None means an unrelated JSON document.
+    This checks saved structure/current bytes, never legal or official-form validity.
+    """
+    if not isinstance(report, dict) or not isinstance(report.get("kind"), str) or report["kind"] not in FIELDS:
+        return None
+    exact(report, {"kind", "period", "record_id", "status", "filing_status", "routes", "missing",
+                   "sources", "input", "scope", "schema_version", "created_at", "language"}, "preparation report")
+    if type(report["schema_version"]) is not int or report["schema_version"] != 1:
+        raise ws.WorkspaceError("Unsupported preparation report schema.")
+    missing, evidence = validate(root, report["kind"], report["input"])
+    expected_status = "needs_review" if missing else "ready_for_review"
+    if (report["period"] != report["input"]["period"]
+            or report["record_id"] != report["input"]["record_id"]
+            or report["missing"] != missing or report["status"] != expected_status
+            or report["filing_status"] != "not_submitted"
+            or report["routes"] != routes(report["kind"], report["input"]["facts"])
+            or not isinstance(report["language"], str) or report["language"] not in {"en", "ru"}):
+        raise ws.WorkspaceError("Inconsistent preparation report; prepare a new version from its evidence.")
+    text(report["created_at"], "preparation creation time")
+    text(report["scope"], "preparation scope")
+    if not isinstance(report["sources"], list) or not report["sources"]:
+        raise ws.WorkspaceError("Preparation report is missing its input fingerprint.")
+    first = report["sources"][0]
+    exact(first, {"path", "sha256"}, "preparation input fingerprint")
+    current = capture(root, text(first["path"], "preparation input path"))
+    if report["sources"] != [current, *evidence]:
+        raise ws.WorkspaceError("Preparation evidence changed or dependencies are incomplete; prepare a new version.")
+    if ws._load(ws._inside(root, current["path"])) != report["input"]:
+        raise ws.WorkspaceError("Preparation input does not match its saved source.")
+    if require_ready and missing:
+        raise ws.WorkspaceError("Preparation still needs review: " + ", ".join(missing))
+    return [{"path": item["path"], "sha256": item["sha256"]} for item in report["sources"]]
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)

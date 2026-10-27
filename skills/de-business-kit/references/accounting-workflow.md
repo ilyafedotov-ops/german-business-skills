@@ -67,6 +67,38 @@ Each action requires actor, preserved evidence and explanatory note. Use the not
 
 ### Check before advancing a filing
 
+For “continue my filing”, first read `accounting-status`, the actual saved filing
+with `filing-show`, and a fresh `filing-check`; follow `supersedes` links rather than
+choosing a filename or assuming the last chat's state. Preserve the chosen system,
+form, period, exact payload/source versions, authority and any uncertain attempt.
+Explain the current state, concrete blockers and next action in a readable saved
+review. A check-only request stays read-only; reuse existing authorization for
+preparation/revision, but never infer submission permission from it.
+
+Carry the receipt-period review's original evidence and applicable calculation
+output into the filing sources. Authored Markdown/HTML is not automatically parsed
+for dependencies: explicitly select its underlying receipts, inputs and rule/check
+evidence too. Supported `workflows.py` JSON preparations (`international`,
+`classification`, `elster`) and local cash reports have their known dependencies
+expanded and frozen by `filing-create`. The existing format/path restrictions
+apply to each dependency; unsupported or inconsistent evidence stops creation,
+not silent omission. The graph is bounded to 16 levels and 256 unique files.
+
+Before review, authorization or an attempt, preparation inputs/fingerprints and
+readiness are checked again. An unresolved preparation blocks advancement, and
+a preparation worksheet cannot serve as the completed return payload. These are
+structural/evidence checks, not validation of tax amounts or official fields.
+Older drafts whose preparation dependencies were not frozen need a linked
+replacement; do not repair their snapshots in place. After an attempted submission,
+only frozen evidence is checked so later working-file changes do not prevent
+recording the earlier outcome. Missing/corrupt frozen dependencies still block it.
+
+When a receipt or calculation changes, use the correction sequence below for an
+unsubmitted filing. For `submission_unconfirmed`, preserve the attempt and find
+actual outcome evidence before cancellation, replacement or retry. A user's “I
+clicked Send” without an observed receipt remains uncertain. Save the exact next
+evidence needed, rather than creating another filing to bypass that uncertainty.
+
 Use `filing-check` to answer “what is missing?” or “what is next?” without advancing state or saving approval. Summarize `issues` in the user's language, with the affected file/question and practical next action. It checks preserved payload/source/event evidence, and before an attempt also checks current originals, accounting-choice evidence, unresolved draft items and freshness of supported local cash reports. A damaged register/audit or unknown filing fails the command instead of returning a clean report.
 
 `next_step` is `review`, `authorize` or `begin` only for the corresponding pre-attempt state with no detected blockers. `allowed_preflight_actions` names locally eligible transitions, **not user permission**; each still requires its own actual evidence and current record hash. Review/authorization/begin rerun the same checks under the writer lock. A previous clean check is not reusable approval if a source changes. Resolve changed drafts in a new linked version; do not rewrite hashes or old evidence to clear an error.
@@ -85,4 +117,4 @@ Exit code zero means the check completed, even if `issues` is nonempty. Inspect 
 
 The Python engine is required for these validated commands. On the native Windows-only path, continue evidence gathering and supported existing-software work; do not substitute manual register edits or install dependencies implicitly.
 
-No banking/provider API adapter, ERiC library, certificate management, tax-form calculation engine or live submission is bundled. Official developer access, current SDK/interface/licence review and test-environment acceptance are still required for a future transport. This local workflow prepares and records work; it is not evidence that an external action occurred merely because a command returned success.
+No banking/filing API adapter, ERiC library, certificate management, tax-form calculation engine or live submission is bundled. The separate optional Lexware invoice adapter creates/reads provider drafts; it does not post this journal or submit tax returns. Official developer access, current SDK/interface/licence review and test-environment acceptance are still required for a future transport. This local workflow prepares and records work; it is not evidence that an external action occurred merely because a command returned success.

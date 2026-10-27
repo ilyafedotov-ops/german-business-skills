@@ -7,6 +7,9 @@ For a multi-step customer case use the private [EN worksheet](../assets/en/custo
 or [RU worksheet](../assets/ru/customer-case.md) alongside recipient documents.
 For an ordinary question or letter use [correspondence](correspondence.md).
 The worksheet links actual records; it neither issues invoices nor replaces books.
+For issue/correction and delivery execution, load the
+[invoicing workflow](invoicing-workflow.md): inspect existing cases, prepare the
+actual chosen-system operation, retain distinct attempts and record observed results.
 
 ## Customer request to payment
 
@@ -41,6 +44,11 @@ for disputed claims. Prepare a factual, reviewable reminder or clarification and
 its next action; do not threaten proceedings or send it without matching authority.
 
 ## Purchasing and expenses
+
+Before an EU goods order, apply the [pre-order VAT check](international.md#before-ordering-goods-from-another-eu-country),
+including the Kleinunternehmer ID-use election risk. If a VAT invoice has already
+arrived, use the [received-invoice route](international.md#when-an-eu-goods-invoice-already-includes-vat).
+Bring unresolved treatment to `de-business-tax` while continuing factual preparation.
 
 Keep order/contract, delivery, invoice, payment and potential refund distinct.
 Preserve original documents; prepare receipt proposals and explicit payment links.
@@ -78,3 +86,55 @@ cash refund, customer agreement or resolved dispute. Preserve earlier drafts,
 write a new readable case summary, and keep a sourced follow-up task for settlement
 or correction questions. Resume it using [continuation](continuation.md), with the
 chosen external system still authoritative and without local shadow postings.
+
+## Save and resume a customer payment reply
+
+For a saved issued-invoice comparison, use the
+[protected customer draft](invoicing-workflow.md#prepare-a-customer-payment-follow-up)
+to create separate recipient text and private review. It prepares a factual query,
+not an automatic reminder or send operation.
+
+For an issued invoice already in the protected register, first use the
+[saved receipt comparison](invoicing-workflow.md#compare-an-issued-invoice-with-customer-receipts)
+when supported by the available runtime. Inspect its readable result and freshness
+before using it in a reply; a comparison does not establish provider settlement.
+
+For a supplied invoice/correction and payment query, prepare the factual reply
+and a versioned private case worksheet in the existing customer correspondence
+folder. Resolve its physical path through `folders`; reuse the chosen case and
+authoritative system. Save useful local drafts under the existing authorization,
+even when a settlement question prevents a definitive payment request.
+
+1. Read the preserved originals and exact inspection reports. Keep gross,
+   invoice-stated prepaid amount, rounding and invoice-stated amount due in
+   separate rows with currency, source location and date. The inspector exposes
+   optional `prepaid_amount` and `rounding_amount`; absent fields remain unknown
+   source values, not observed zero payments. Old reports may lack these keys;
+   inspect the original again into a new report when needed, preserving the old one.
+2. Read explicit bank/payment references and distinguish receipts already included
+   in the invoice's prepaid total from later receipts. An invoice's amount due is
+   a document-time amount, not today's receivable. Do not subtract the same receipt
+   again from an amount due that already includes it. Never identify payments by
+   amount alone. If allocation or coverage is uncertain, show the alternatives as
+   conditional and ask for the decisive reference/system record.
+3. Treat a correction as a separate document with its own totals and relationship.
+   Preserve its sign; do not automatically net it against the original balance or
+   infer cash refund. Separate a proposed correction, an actually issued correction,
+   customer acceptance/dispute and observed money movement. Reuse the chosen
+   system's correction route; no new final number or shadow posting.
+4. Calculate only the supported factual comparison with independently checked
+   decimal arithmetic. Invoice total checks and a current settlement comparison
+   are separate. State included/excluded receipts and the as-of date. No claim of
+   complete balance, tax adjustment, default, fees or legal entitlement follows
+   from matching arithmetic or XML extraction.
+5. Save the recipient-language reply separately from the user's EN/RU private
+   review, with the actual source/version links and one concrete next action.
+   Inspect the saved output. Keep local paths, internal calculations and unresolved
+   alternatives out of the recipient message unless relevant and intentionally
+   expressed. A factual request for clarification can be prepared while the
+   payment demand remains unresolved; delivery is a separate action.
+6. On continuation, read the last worksheet and its sources before asking again.
+   New payment or corrected allocation evidence requires a linked new worksheet
+   and reply version. Preserve earlier reviewed/sent artifacts, reuse the existing
+   open task through its writer, and identify exactly which conclusion changed.
+   A Russian explanation or language switch does not change numbers or authority.

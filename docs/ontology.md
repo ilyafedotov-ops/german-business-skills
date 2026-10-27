@@ -32,6 +32,30 @@ All seven skills use these entities through the shared contract. Selecting a ski
 
 Legal form, activity classification, VAT regime and accounting method are separate dimensions. Changing the conversation mode or adding an activity does not itself change any of them. This is the product's modeling rule; applying tax rules to an actual case requires the source-review workflow.
 
+Invoice-stated `prepaid_amount`, `rounding_amount` and `amount_due` are extracted
+document facts, not observed receipts or a current receivable. Optional absence
+remains null. They can be retained in proposal fields without changing existing
+workspace schemas; older proposals need no migration.
+
+For [EU goods purchases](../skills/de-business-kit/references/international.md#when-an-eu-goods-invoice-already-includes-vat),
+invoice VAT country/amount, German acquisition tax, deduction eligibility and
+VAT-ID possession/use are distinct facts or reviewed conclusions. A request for
+correction, issued correction and observed refund remain separate evidence;
+none is inferred from another. These distinctions reuse existing records.
+
+An invoice workflow is a local evidence chain with a stable business-operation
+reference, issuing system/account, customer/currency, frozen draft and actual issued
+artifact. Draft replacement, issued correction, dispatch attempt and recipient
+receipt are distinct relationships/events. A correction retains its issued parent;
+no local state establishes payment, customer agreement, legal effect or provider
+execution. `00_admin/invoicing.json` owns this optional chain; the existing task
+register owns follow-up work.
+
+A provider draft is an external object, not a local draft or issued invoice. Its
+creation attempt, returned UUID, independent readback, review and final artifact
+remain separate evidence on the invoice row. Browser handoffs identify an existing
+object/attempt; they do not establish that finalization or sending occurred.
+
 | Concept | Meaning and relationships | Current representation |
 | --- | --- | --- |
 | Entrepreneur / business profile | Shared context for the person and their business activities | `01_profile/business.json`; `facts` keyed by field name |
@@ -57,7 +81,7 @@ Legal form, activity classification, VAT regime and accounting method are separa
 | Operation | A proposed external action, its payload, authorization and result evidence | `assets/operation.json` template; no executable operation engine |
 | Accounting configuration | Explicit authoritative system and accounting method | `04_accounting/register.json` → `configuration`; evidence and fingerprint |
 | Cash entry | Reviewed cash movement with splits, line VAT as stated, optional links to approved proposals and preserved correction/reversal links | `register.json` → `entries`; stated VAT is evidence, not a VAT return; not a complete statutory ledger |
-| Filing version | Frozen payload/sources and review, authorization, receipt and response evidence | `register.json` → `filings`; state independent of real transmission |
+| Filing version | Frozen payload/sources, including recognized preparation-report dependencies, and review, authorization, receipt and response evidence | `register.json` → `filings`; current dependencies checked before attempts, frozen evidence afterwards; state independent of real transmission |
 | Full workspace backup | Complete portable recovery copy, distinct from a selected archive | External directory with `manifest.json` and `files/`; only root lock excluded |
 | Overview | A regenerable view of current records and open work | `00_admin/overview.*` or separate `native-overview.*`; projections, not canonical business state |
 | Records archive | A selected, verifiable package for the user’s review and retention; optional sharing | Export directory and ZIP with `manifest.json`, record snapshots, originals and evidence |
@@ -167,6 +191,10 @@ Approval requires reviewed core invoice fields, acceptable states for all suppli
 ## Owning contracts
 
 The implementation owns the exact fields and validation rules: [workspace core](../skills/de-business-kit/scripts/workspace.py), [preparations](../skills/de-business-kit/scripts/workflows.py), [payment events](../skills/de-business-kit/scripts/payments.py), [casework storage](../skills/de-business-kit/scripts/casefiles/storage.py), [document catalog](../skills/de-business-kit/scripts/casefiles/documents.py), [proposal and source review](../skills/de-business-kit/scripts/casefiles/reviews.py), and [records archive](../skills/de-business-kit/scripts/casefiles/archive.py), [accounting and filing records](../skills/de-business-kit/scripts/casefiles/accounting.py), and [recovery](../skills/de-business-kit/scripts/recovery.py). The [architecture](architecture.md) explains how those contracts are executed and where their guarantees end.
+
+An **invoice payment comparison** is an immutable private report over reviewed invoice-stated due and explicit bank transaction references. It is distinct from cash-journal settlement, provider allocation and customer debt. Prepaid receipts already included in due are excluded from subtraction; ambiguous inputs/correction effects have no inferred remainder. Its audit checkpoint and source/invoice-family fingerprints support freshness checks; a current report is not proof of paid status.
+
+A **payment follow-up draft** binds recipient identity, language and wording mode to an immutable comparison fingerprint. Recipient text and private review are distinct artifacts. Its `not_sent` value describes this preparation-only workflow, not observed mailbox state; it grants no sending authority and is not invoice-delivery evidence.
 
 ## Filing states and recovery identity
 

@@ -536,13 +536,18 @@ def _check_snapshots(root, record):
         st.check_evidence(root, source)
 
 
-def _local_report_evidence(root, source, payload, state):
-    if Path(source["path"]).suffix != ".json":
-        return []
+def _local_report_evidence(root, source, payload, state, require_ready=True):
+    if Path(source["path"]).suffix.lower() != ".json":
+        return "other", []
     report = ws._load(ws._inside(root, source["path"]))
+    preparation = wf.filing_sources(root, report, require_ready=require_ready)
+    if preparation is not None:
+        if payload and require_ready:
+            raise ws.WorkspaceError("A preparation worksheet is supporting evidence, not a completed tax return payload.")
+        return "preparation", preparation
     if not isinstance(report, dict) or report.get("kind") != "cash_movement_report":
-        return []
-    if payload:
+        return "other", []
+    if payload and require_ready:
         raise ws.WorkspaceError("A cash-movement summary is supporting evidence, not a completed tax return payload.")
     wf.period(report.get("period"))
     entries = [entry for entry in state["entries"].values() if _in_period(entry["date"], report["period"])]
@@ -555,7 +560,36 @@ def _local_report_evidence(root, source, payload, state):
         if report["settlement_basis_sha256"] != st.digest(basis):
             raise ws.WorkspaceError("Source settlement report is stale; regenerate it and prepare a newly reviewed filing version.")
         entries = list({entry["entry_id"]: entry for entry in [*entries, *basis["entries"]]}.values())
-    return [entry["evidence"] for entry in entries]
+    return "cash", [entry["evidence"] for entry in entries]
+
+
+def _filing_dependencies(root, paths, state):
+    """Expand only known local reports, under the existing writer lock."""
+    visited, active = {}, set()
+
+    def visit(source, depth):
+        current = st.evidence(root, source["path"])
+        if current["sha256"] != source["sha256"]:
+            raise ws.WorkspaceError("Filing dependency changed during capture; preserve evidence and prepare again.")
+        key = current["path"]
+        if key in active:
+            raise ws.WorkspaceError("Cyclic filing evidence dependencies; inspect the selected reports.")
+        if key in visited:
+            if visited[key]["sha256"] != source["sha256"]:
+                raise ws.WorkspaceError("Conflicting filing evidence fingerprints.")
+            return
+        if depth > 16 or len(visited) >= 256:
+            raise ws.WorkspaceError("Filing evidence dependency limit exceeded (16 levels / 256 files).")
+        visited[key] = current
+        active.add(key)
+        _, dependencies = _local_report_evidence(root, current, False, state, require_ready=False)
+        for dependency in dependencies:
+            visit(dependency, depth + 1)
+        active.remove(key)
+
+    for path in paths:
+        visit(st.evidence(root, path), 0)
+    return list(visited.values())
 
 
 def _scope(record):
@@ -593,8 +627,19 @@ def create_filing(root, value):
             if row["state"] not in {"submitted", "cancelled"} or prior is None:
                 raise ws.WorkspaceError("A filing for this account/form/period already exists; resolve its outcome before any replacement.")
         year = value["period"][:4]
+        # Resolve and check the complete known dependency graph before copying.
+        dependencies = _filing_dependencies(root, [value["payload_file"], *value["source_files"]], state)
         payload = _snapshot(root, value["payload_file"], year)
-        sources = [_snapshot(root, path, year) for path in value["source_files"]]
+        sources = []
+        for dependency in dependencies:
+            if dependency["path"] == payload["source"]["path"]:
+                continue
+            snapshot = _snapshot(root, dependency["path"], year)
+            if snapshot["sha256"] != dependency["sha256"]:
+                raise ws.WorkspaceError("Evidence changed while freezing filing dependencies.")
+            sources.append(snapshot)
+        if payload["sha256"] != dependencies[0]["sha256"]:
+            raise ws.WorkspaceError("Payload changed while freezing filing evidence.")
         saved = {**candidate, "system": config["system"], "product": config["product"],
                  "configuration_sha256": st.digest(config), "payload": payload, "sources": sources,
                  "state": "draft", "events": [], "receipt": None, "responses": [], "created_at": ws._now()}
@@ -643,7 +688,11 @@ def _filing_issues(root, record, state, live):
             if source["path"] not in intact:
                 continue
             try:
-                evidence = _local_report_evidence(root, source, source is record["payload"], state)
+                kind, evidence = _local_report_evidence(root, source, source is record["payload"], state)
+                if kind == "preparation":
+                    frozen = {(item["source"]["path"], item["source"]["sha256"]) for item in sources}
+                    if any((item["path"], item["sha256"]) not in frozen for item in evidence):
+                        raise ws.WorkspaceError("Preparation dependencies were not frozen; create a linked replacement filing.")
             except (OSError, ws.WorkspaceError) as exc:
                 issues.append({"code": "local_report_invalid", "path": source["source"]["path"], "detail": str(exc)})
                 continue

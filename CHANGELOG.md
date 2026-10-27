@@ -8,6 +8,19 @@ milestones are first published on 2026-10-26; their original commits are retaine
 
 ## Unreleased
 
+## 0.11.0-preview.1
+
+- Add protected invoice issue/correction/delivery records, immutable evidence and exact-attempt continuation; keep provider actions, dispatch and recipient receipt distinct.
+- Add an opt-in Lexware Office draft/readback API adapter with explicit cost/access checks, durable creation intent, no automatic retry after uncertain outcomes, and same-object browser finalization/sending handoff. The Office L browser route is user-accepted E2E for zero-value test documents; live API and broader nonzero acceptance remain open.
+- Add saved invoice-to-receipt comparisons with prepayment exclusion, partial payments/refunds, correction/currency/coverage blockers and freshness checks. Prepare DE/EN/RU customer payment queries with separate EN/RU private reviews; no automated sending or provider payment allocation.
+- Bind filing continuation to receipt-preparation source evidence and preserve revised preparation versions. Add source-led income-tax prepayment request, EU goods purchasing and customer payment workflows; these do not introduce statutory calculation or ELSTER transport.
+- Preserve invoice-stated prepaid and rounding amounts in bounded UBL/CII inspection; distinguish document totals from current settlement.
+- Add shared cost checks before paid setup and screenshot privacy checks before sharing. Preserve no-upgrade decisions and keep real account evidence outside public artifacts.
+- Add source-grounded research/evaluation tooling and EN/RU guidance. Release/platform acceptance requires the exact tag checks and verified assets.
+- Fix nested correction-family preflight: uncertain original delivery, competing corrections and corrupt ancestor evidence block new attempts while preserving outcome recording for attempts already begun.
+
+No automatic private-workspace migration, complete statutory ledger, desktop signing or live ELSTER transmission is added. The API adapter requires existing supported access; browser operation does not require a tariff upgrade.
+
 ## 0.10.0-preview.1
 
 - Make the assistant and private business folder the primary route; add skill invocation, installation prompts, lifecycle examples and EN/RU visual guides. The GUI remains optional.
