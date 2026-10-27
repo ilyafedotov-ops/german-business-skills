@@ -126,6 +126,8 @@ The original reference was entered as text; this did not prove a provider-linked
 correction or a refund. See the [correction route](../references/lexware.md#prepare-and-verify-a-correction)
 for status/menu checks and the boundary before issuing or cancelling.
 
+For payment follow-up, ask: **“Compare this issued invoice with the identified bank receipts and save a private payment report.”** The optional Python workflow preserves evidence, excludes prepayments already included in the invoice amount, and checks partial receipts/refunds across periods. Uncertain coverage, currency or corrections leave the comparison unresolved. It changes no provider payment status and sends nothing. Before reusing a report, the assistant checks source and invoice freshness. See the [receipt workflow](../references/invoicing-workflow.md#compare-an-issued-invoice-with-customer-receipts).
+
 ## Keep your work in one folder
 
 For ongoing work, choose a private permanent folder such as **My business**, separate from the downloaded kit, installed skills and any Git repository. Give your assistant access to that folder. In Codex, keep using the project where the skills are installed and also grant access to the business folder; opening a different project may hide project-local skills.

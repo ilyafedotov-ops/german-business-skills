@@ -145,6 +145,62 @@ receipt/failure observations target that reference. It cannot replace an existin
 uncertain attempt; resolve that attempt instead. This records a past fact, never
 authorizes a new send or proves customer receipt.
 
+## Compare an issued invoice with customer receipts
+
+After issue/delivery, use the existing private bank export and invoice evidence
+to prepare a factual payment comparison. Keep Lexware or the user's other chosen
+system authoritative. This route saves an actual EN/RU report and frozen inputs;
+it does not allocate a payment, mark an invoice paid or send a reminder.
+
+The optional Python commands in `desk.py` are:
+
+| Command | Purpose |
+| --- | --- |
+| `invoice-payment-template` | Input contract for a comparison |
+| `invoice-payment-prepare --root <private> --input <relative-json> --expected-sha256 <invoice-hash> --language en` | Save a new immutable comparison and readable report |
+| `invoice-payment-check --root <private> --report <saved-json>` | Verify report/artifact integrity, working-source freshness and invoice/correction context before reuse |
+
+1. Reuse the issued record from `invoice-show`; inspect its frozen final document.
+   Record the **invoice-stated amount due**, already accounting for stated prepaid
+   amounts and rounding, as `amount_due`. This is a reviewed input, not an amount
+   the utility extracts or a provider's current balance. Save `review_file` naming
+   the exact document/field, account, receipt references, inclusion decisions and
+   coverage through `as_of`; record `reviewer` and `bank_account` without secrets.
+2. Supply one account's normalized CSV as `bank_file`, with
+   `transaction_id,booking_date,amount,currency` (ISO dates, signed dot decimals).
+   Reuse the existing reviewed bank-import route if normalization is needed.
+   Export dates may span periods. Never infer an invoice match from equal amounts.
+3. Each selected `payments` item contains `transaction_id`, signed `amount`,
+   `treatment` and `evidence_file` supporting the invoice allocation. A partial
+   amount must fit inside that bank movement. Duplicate/missing IDs and wrong
+   signs are refused. This is a comparison of selected amounts, not a reservation
+   of those funds against other invoices or a check of all account allocations.
+4. Use `included_prepaid` for receipts already included in the stated amount due;
+   they are not subtracted again. `later_receipt` and `later_refund` mean movements
+   **not included in that document amount**, not merely a booking-date ordering.
+   Refunds are signed negative. Use `uncertain` when the relationship is unresolved.
+   Set `coverage_confirmed=true` only after checking all relevant receipts and
+   refunds through `as_of`, including other accounts where applicable. A single
+   supplied CSV does not itself establish complete coverage.
+5. The calculation is stated due minus selected later receipts/refunds. Uncertain
+   allocation, currency mismatch, future selected transactions, unconfirmed
+   coverage, an as-of date before recorded issuance, or a noncancelled correction
+   in the invoice family leave the remainder
+   unresolved. Inspect the authoritative system to resolve correction effects;
+   never net correction totals automatically. A zero difference, including a
+   zero-value test invoice with no receipts, is not payment evidence.
+6. Inspect the actual saved Markdown and retain its JSON/evidence snapshots. Before
+   resuming, run `invoice-payment-check`: `current` means unchanged inputs/context,
+   not correct allocations or a settled invoice; inspect `comparison_issues` too.
+   Changed working inputs or invoice/correction history require a new report.
+   Preserve previous reports. Corrupted frozen evidence fails closed. Outputs are
+   private reviews; prepare any customer reply separately under
+   [payment follow-up](operations.md#save-and-resume-a-customer-payment-reply).
+
+If Python is unavailable, perform and save the same source-led comparison with
+available host tools; do not claim these protected checks were executed or require
+a runtime installation. This route needs no API key, provider upgrade or bank write.
+
 ## Save and resume
 
 Every action needs `actor`, `evidence_file`, `note`, `occurred_on` and the freshly

@@ -18,6 +18,9 @@ full month-close task.
 For actual issue, invoice corrections, sending and delivery confirmation, use the
 [invoicing workflow](../de-business-kit/references/invoicing-workflow.md). It combines
 the chosen service route with protected local attempts and outcome evidence.
+For payment follow-up after issue, use the same reference's
+[receipt comparison](../de-business-kit/references/invoicing-workflow.md#compare-an-issued-invoice-with-customer-receipts)
+to save a sourced balance comparison before preparing a customer reply.
 For Lexware Office, load the [actual provider route](../de-business-kit/references/lexware.md#provider-invoice-draft-readback-and-sending)
 for draft creation, independent readback and sending the same object in the browser.
 For an EU goods purchase, apply the [before-order and received-invoice VAT checks](../de-business-kit/references/international.md#before-ordering-goods-from-another-eu-country),

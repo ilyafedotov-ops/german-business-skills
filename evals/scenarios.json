@@ -1391,6 +1391,16 @@
         "Use bounded inspected edit/save completion/readback before success; no invented root cause for save timing",
         "Keep original artifacts/readbacks private and give minimized text; no whole screenshot or fabricated execution"
       ]
+    },
+    {
+      "id": "issued-invoice-receipt-comparison",
+      "prompt": "Use de-business-operations. In the supplied synthetic private workspace, compare issued invoice invoice-1 with the bank receipts through 2026-11-30 and save a private report in Russian. The final invoice states EUR 119 gross, EUR 30 prepaid and EUR 89 amount due. Review evidence confirms pre is already included, p1 is a later EUR 60 receipt, p2 is a later EUR 29 receipt, and refund is a later EUR -10 refund; all are for this invoice and coverage through that date is confirmed. Use the existing synthetic bank account and evidence files in Correspondence. Keep the invoice and provider status unchanged and do not send anything. Inspect the saved report before reporting the result.",
+      "criteria": [
+        "Execute the protected payment preparation and freshness check against the existing issued invoice, with exact current hash and source evidence",
+        "Save and inspect Russian Markdown plus frozen comparison with remainder EUR 10, excluding already included EUR 30 from subtraction",
+        "Preserve original invoice state and history; no provider write, payment allocation, refund operation, paid claim or sending",
+        "Keep evidence private and distinguish supplied reviewed allocation facts, local arithmetic and external settlement acceptance"
+      ]
     }
   ]
 }

@@ -6,13 +6,23 @@ import json
 import sys
 
 import workspace as ws
-from casefiles import accounting, invoicing, lexware
+from casefiles import accounting, invoicing, invoice_payments, lexware
 from casefiles import bank, documents, archive, folders, invoice_xml, overview, reviews, storage
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("invoice-payment-template")
+    for name in ("invoice-payment-prepare", "invoice-payment-check"):
+        payment = sub.add_parser(name)
+        payment.add_argument("--root", required=True)
+        if name == "invoice-payment-prepare":
+            payment.add_argument("--input", required=True)
+            payment.add_argument("--expected-sha256", required=True)
+            payment.add_argument("--language", choices=["en", "ru"], default="en")
+        else:
+            payment.add_argument("--report", required=True)
     sub.add_parser("lexware-template")
     lexware_action = sub.add_parser("lexware-action")
     lexware_action.add_argument("--root", required=True)
@@ -91,7 +101,13 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         command = args.command
-        if command == "lexware-template":
+        if command == "invoice-payment-template":
+            result = invoice_payments.template()
+        elif command == "invoice-payment-prepare":
+            result = invoice_payments.prepare(args.root, args.input, args.expected_sha256, args.language)
+        elif command == "invoice-payment-check":
+            result = invoice_payments.check(args.root, args.report)
+        elif command == "lexware-template":
             result = lexware.template()
         elif command == "lexware-action":
             root = ws._workspace(args.root)

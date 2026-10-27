@@ -88,6 +88,8 @@ finalization and final PDF retrieval with the correction deliberately unsent.
 This accepts the browser route; the API adapter and nonzero/provider-linked
 correction, refund and cancellation journeys remain outside this acceptance.
 
+Local customer-payment reconciliation now saves a protected, readable EN/RU comparison of an issued invoice with explicitly identified bank receipts. It excludes already-included prepayments, handles partial receipts/refunds across periods, preserves frozen sources and checks report freshness against invoice/correction history. Uncertain coverage, currency or correction effects leave the comparison unresolved. It performs no provider allocation, paid-status update or collection action; live nonzero settlement acceptance remains open.
+
 ## Source and published release
 
 `VERSION` and the verified immutable [release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.10.0-preview.1) are **0.10.0-preview.1**, from `9a4f33dc2dc5c02fdf26edd9daaf2d97e1f7ba56`. Published on **2026-10-26**, it includes assistant-first guides, shared workflow checks, cash-entry VAT evidence and payment reconciliation, safe lock recovery and the Claude marketplace. All eight downloaded assets passed checksum, release-attestation and exact-source provenance checks. It provides Codex/Claude skill bundles and Windows x64/macOS arm64/macOS x86_64 application archives. See [validation](validation.md) for results and remaining limits. Earlier tags/assets are preserved. This repository distributes skills and local applications; it has no hosted production application.
@@ -118,7 +120,7 @@ P1–P7 are **partially accepted**, not a completed end-to-end lifecycle. This t
 | --- | --- | --- |
 | P1 — Welcome and routing | Task-first onboarding, direct domain skills, shared continuation; fresh Codex/Claude trials | Ordinary-user first conversation and continuation across supported hosts; avoid forced setup |
 | P2 — Preparation and formation | Launch/classification research, form worksheets and assisted draft workflow | Verify selected authority/form/year, real authentication, field review and separately evidenced registration outcomes |
-| P3 — Daily work and questions | Proposals, invoices, letters, correction/partial-payment evidence and saved follow-up | Lexware browser issue/delivery/download accepted above; next: customer-payment reconciliation and representative nonzero/correction journeys |
+| P3 — Daily work and questions | Proposals, invoices, letters, saved receipt comparisons, correction/partial-payment evidence and follow-up | Lexware browser issue/delivery/download accepted above; next: live customer-payment allocation/readback and representative nonzero/correction journeys |
 | P4 — Accounting and reporting | Limited local cash journal, external-system route, monthly/annual preparation and filing evidence | Representative complete period through selected calculation/form tools and manual ELSTER; criteria below |
 | P5 — Change, hire, pause and close | Before/after plans, dependencies, first-hire preparation and history/access retention | Real selected service/authority outcomes; payroll and legal filings require their own supported tools |
 | P6 — Service access | Needs-led comparison, supplied-export inspection and capability/setup discovery | Real operation-scoped access/readback in selected products; account/edition permissions and source coverage. Lexware Office L browser E2E is user-accepted within the scope above; broader operations and live API acceptance remain open |

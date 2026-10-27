@@ -10,6 +10,41 @@ browser integration works E2E. The accepted Office L zero-value invoice and manu
 correction scope is stated in [current status](project-status.md); this adds user
 acceptance of the observed runs, not a new provider/API test.
 
+## Issued-invoice payment comparison — 2026-10-27
+
+Implementation after `c15d344` adds `invoice-payment-template`,
+`invoice-payment-prepare` and `invoice-payment-check`. It saves private, immutable
+JSON/EN-RU Markdown comparisons from reviewed invoice-stated due and explicit
+normalized bank references. Evidence snapshots, current invoice hash, correction
+family fingerprint and audit checkpoints protect preparation and reuse. It makes
+no bank/provider/ledger mutation, payment demand or paid-status claim.
+
+TDD first failed for the missing module; later targeted regressions failed for
+malformed treatment, overwritten repeated-source fingerprints and an as-of date
+before issue. Independent review identified the latter two; fixes preserve the
+first capture, verify the exact parsed bytes and leave pre-issue dates unresolved.
+Initial fixture inheritance also re-ran unrelated invoice tests against an already
+issued fixture; fixture reuse was corrected without changing production behavior.
+Final independent review found no remaining material issue in the reviewed scope.
+
+`python3 -B -m unittest discover -s tests -p test_invoice_payments.py -v` passed
+**12 tests**, including CLI execution, prepayment exclusion, cross-period partial
+receipts/refunds, wrong signs/unknown/duplicate IDs, bounded partial amounts,
+currency/coverage/date/correction blockers, stale context, corruption and EN/RU
+reports. Full `python3 -B -m unittest discover -s tests -v` passed: **439 run,
+428 passed, 11 skipped**, in 178.140 s. Package validation, changed-file Markdown
+links/anchors and `git diff --check` passed. No native Windows acceptance added.
+
+A fresh ephemeral **Codex CLI 0.164.0** session used copied skills, a synthetic
+workspace and the scenario prompt without criteria. It executed preparation and
+freshness checking, inspected the actual Russian report, and independently checked
+**89 - 60 - 29 + 10 = EUR 10.00**, excluding the already-included EUR 30 prepaid
+receipt. All four criteria passed; parent inspection confirmed the saved remainder,
+current evidence and unchanged invoice hash. Evidence remains outside Git. This
+is local workflow execution with supplied reviewed inclusion/coverage facts, not
+live bank/provider settlement or tax acceptance. The host invoked Python without
+`-B` inside its disposable copy; no source checkout mutation was observed.
+
 ## Manual correction on the current plan — 2026-10-27
 
 Working source after `475d418` adds the observed manual correction route and

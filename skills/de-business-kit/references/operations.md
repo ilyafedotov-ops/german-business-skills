@@ -89,6 +89,11 @@ chosen external system still authoritative and without local shadow postings.
 
 ## Save and resume a customer payment reply
 
+For an issued invoice already in the protected register, first use the
+[saved receipt comparison](invoicing-workflow.md#compare-an-issued-invoice-with-customer-receipts)
+when supported by the available runtime. Inspect its readable result and freshness
+before using it in a reply; a comparison does not establish provider settlement.
+
 For a supplied invoice/correction and payment query, prepare the factual reply
 and a versioned private case worksheet in the existing customer correspondence
 folder. Resolve its physical path through `folders`; reuse the chosen case and
