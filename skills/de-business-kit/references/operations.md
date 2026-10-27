@@ -42,6 +42,11 @@ its next action; do not threaten proceedings or send it without matching authori
 
 ## Purchasing and expenses
 
+Before an EU goods order, apply the [pre-order VAT check](international.md#before-ordering-goods-from-another-eu-country),
+including the Kleinunternehmer ID-use election risk. If a VAT invoice has already
+arrived, use the [received-invoice route](international.md#when-an-eu-goods-invoice-already-includes-vat).
+Bring unresolved treatment to `de-business-tax` while continuing factual preparation.
+
 Keep order/contract, delivery, invoice, payment and potential refund distinct.
 Preserve original documents; prepare receipt proposals and explicit payment links.
 Question missing business purpose, mixed use, currencies or tax treatment rather

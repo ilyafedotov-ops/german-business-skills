@@ -79,8 +79,17 @@ ordinary EU consultancy, with asset-price and customer-status corrections. A fif
 automated digital sales crossing the EU threshold, with a consumer-location
 correction. The sixth batch covers no-sales VAT returns, annual loss/return duties
 and income-tax prepayment adjustment, with a private-expense correction. There
-are 115 base cases; the research runner selects 29 of them and nine follow-ups
-(38 sessions).
+are 118 base cases; the research runner selects 32 of them and eleven follow-ups
+(43 sessions).
+Three additional EU-goods cases repeat the missing-VAT-ID question, test advice
+before ordering and review an already paid Austrian-VAT invoice. Two corrections
+switch to Kleinunternehmer facts, including a German-VAT/OSS invoice. These are
+regressions for the product warning, separate from the 60-question FAQ map.
+Select `faq-eu-goods-warning-2026`, `faq-eu-goods-preorder-2026` and
+`faq-eu-goods-invoice-2026`; the latter two include their follow-ups. The original
+manual live trial found no explicit warning; subsequent outcomes and source
+snapshots belong in [validation](../docs/validation.md).
+
 The coverage file holds dated primary-source expectations for these bounded cases;
 remaining questions need their own source checks before an answer rubric is used.
 The secondary site's answer must not override a contrary applicable official source.
@@ -97,7 +106,7 @@ python3 -B tools/run_research_evals.py --case faq-founding-year-2026 --case faq-
 python3 -B tools/run_research_evals.py --summarize /absolute/existing/persistent-evidence
 ```
 
-`--all` explicitly opts into twenty-nine base sessions and nine follow-ups, potentially
+`--all` explicitly opts into thirty-two base sessions and eleven follow-ups, potentially
 billable. A selected case includes its follow-up when defined. `--model` is
 required; `--effort` defaults to `high`, `--timeout` to 240 seconds per session
 (maximum 3600), and `--codex` can select an installed executable. No installation

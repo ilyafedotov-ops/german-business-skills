@@ -15,6 +15,8 @@ Use [daily operations](../de-business-kit/references/operations.md) for the
 customer-to-payment or purchasing journey. Identify which result is requested:
 a draft, review, payment follow-up, correction or reply. Do not turn it into a
 full month-close task.
+For an EU goods purchase, apply the [before-order and received-invoice VAT checks](../de-business-kit/references/international.md#before-ordering-goods-from-another-eu-country),
+including the Kleinunternehmer branch, before suggesting VAT-ID use or recovery.
 For an invoice/correction with a partial payment, use the
 [saved customer payment reply](../de-business-kit/references/operations.md#save-and-resume-a-customer-payment-reply)
 to distinguish invoice-stated prepayments from later receipts and save a resumable case.

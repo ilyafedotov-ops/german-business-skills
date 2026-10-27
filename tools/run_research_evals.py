@@ -35,6 +35,8 @@ CASES = (
     'faq-property-service-place-2026', 'faq-digital-service-threshold-2026',
     'faq-zero-sales-vat-2026', 'faq-zero-receipts-annual-2025',
     'faq-income-tax-prepayment-2026',
+    'faq-eu-goods-warning-2026', 'faq-eu-goods-preorder-2026',
+    'faq-eu-goods-invoice-2026',
 )
 COMMON_CRITERIA = (
     'Sources: inspected primary evidence supports material claims for the stated period; inaccessible decisive evidence remains uncertain.',
@@ -349,7 +351,7 @@ def main(argv=None):
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument('--list', action='store_true')
     mode.add_argument('--case', choices=CASES, action='append', default=[])
-    mode.add_argument('--all', action='store_true', help='Opt in to twenty-nine base and nine replay sessions; may use billable inference')
+    mode.add_argument('--all', action='store_true', help='Opt in to thirty-two base and eleven replay sessions; may use billable inference')
     mode.add_argument('--summarize', metavar='EVIDENCE', help='Validate evidence and aggregate independent review sheets; no model calls')
     parser.add_argument('--output', help='New absolute persistent directory outside checkout')
     parser.add_argument('--codex', default='codex')

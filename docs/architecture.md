@@ -155,6 +155,12 @@ Use the [beginner guide](../skills/de-business-kit/guides/install.en.md) and [di
 
 The current preview includes `workflows.py` for international transactions, activity classification and ELSTER worksheets, and `payments.py` for normalized payment events and strict Stripe activity CSVs. Both reuse private-workspace storage protections and write new JSON/Markdown reports with source fingerprints. Runtime dependencies remain Python standard library. Source checks record the exact applicable period; their content still requires human/agent review. Workspace schema stays version 1; no migration or separate entrepreneur profile is needed. See [workflow guide](../skills/de-business-kit/references/accounting-workflow.md).
 
+The [EU goods guardrails](../skills/de-business-kit/references/international.md#before-ordering-goods-from-another-eu-country)
+are shared host instructions reached from operations, accounting and tax skills.
+They distinguish pre-order advice from received-invoice review and reuse existing
+evidence/draft workflows. No automatic tax election, refund adapter or workspace
+schema is introduced.
+
 ## Component and deployment architecture
 
 The assistant/CLI route uses the seven-skill bundle and an offline filesystem backend. The host runs the conversation and invokes short-lived Python CLI processes; the utilities can generate a static overview. The optional [real GUI](gui.md) instead runs a session-protected loopback service while its launcher is open, using the same records and protected writers. Neither route adds a database service, queue worker or built-in model API client. The diagram below describes the assistant/CLI route; the GUI adapter is described separately below.

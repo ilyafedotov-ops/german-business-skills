@@ -64,6 +64,20 @@ stays open. When new evidence arrives, ask it to continue the same case: it shou
 save a new reply and review version while retaining earlier files and your chosen
 invoicing system. Preparing a reply does not issue a correction or send a message.
 
+## Check VAT before an EU goods purchase
+
+> Use de-business-operations. I want to order [goods] from [country] for my German business. The goods will travel from [country] to Germany. My VAT regime is [Regelbesteuerung / Kleinunternehmer / unknown]. Check what I should clarify before ordering, including whether to use my USt-IdNr. Do not buy or contact the seller.
+
+If the invoice has already arrived:
+
+> Use de-business-accounting. This EU goods invoice includes VAT, and I did not provide my USt-IdNr. Check whose VAT it is, whether it can be deducted, and what I should do next. If appropriate, prepare a request for the seller to check a correction. Do not send or post anything.
+
+The assistant should distinguish foreign invoice VAT, German acquisition tax and
+deduction eligibility. For Kleinunternehmer, using an ID can have consequences
+even when merely possessing it does not. A correction request is not a guaranteed
+refund. Bring the invoice, goods route and known VAT-regime facts; the assistant
+should ask only for missing details. See the [shared EU goods checks](../references/international.md#before-ordering-goods-from-another-eu-country).
+
 ## Keep your work in one folder
 
 For ongoing work, choose a private permanent folder such as **My business**, separate from the downloaded kit, installed skills and any Git repository. Give your assistant access to that folder. In Codex, keep using the project where the skills are installed and also grant access to the business folder; opening a different project may hide project-local skills.

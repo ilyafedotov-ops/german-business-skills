@@ -40,6 +40,12 @@ separate recipient replies and private comparisons, distinguishing already inclu
 receipts from later payments and retaining revised versions. This adds no invoice
 issuance, settlement engine, payment allocation or technical e-invoice validation.
 
+Local EU goods guidance now includes [checks before ordering and after a VAT invoice arrives](../skills/de-business-kit/references/international.md#before-ordering-goods-from-another-eu-country),
+including Kleinunternehmer ID-use consequences, conditional supplier correction
+and the distinction between foreign VAT and German acquisition/destination VAT.
+Operations, accounting and tax skills share this source. It adds no tax engine,
+election, refund or filing operation; [validation](validation.md) records live acceptance.
+
 ## Source and published release
 
 `VERSION` and the verified immutable [release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.10.0-preview.1) are **0.10.0-preview.1**, from `9a4f33dc2dc5c02fdf26edd9daaf2d97e1f7ba56`. Published on **2026-10-26**, it includes assistant-first guides, shared workflow checks, cash-entry VAT evidence and payment reconciliation, safe lock recovery and the Claude marketplace. All eight downloaded assets passed checksum, release-attestation and exact-source provenance checks. It provides Codex/Claude skill bundles and Windows x64/macOS arm64/macOS x86_64 application archives. See [validation](validation.md) for results and remaining limits. Earlier tags/assets are preserved. This repository distributes skills and local applications; it has no hosted production application.
@@ -84,7 +90,7 @@ and nine changed-fact follow-ups are defined; [validation](validation.md) owns t
 observed results. This does not expand legal, insurance or residence capabilities.
 The separate opt-in [research runner](../tools/run_research_evals.py) now captures
 visible arithmetic and source metadata, freezes complete review criteria and binds
-independent assessments to exact artifacts. Its twenty-nine-case/thirty-eight-session selection
+independent assessments to exact artifacts. Its thirty-two-case/forty-three-session selection
 has fake-host regression coverage; live outcomes are recorded in validation.
 The second batch covers family cover, pension contribution options, parental and
 child benefits, work permission and startup support, with dated official sources.

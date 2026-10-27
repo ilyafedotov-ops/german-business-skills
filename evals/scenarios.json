@@ -1219,6 +1219,55 @@
         "Provide a concise German draft requesting adjustment of the remaining December prepayment to EUR 200, using placeholders and the supplied annual-tax/credited-payment facts, plus concrete forecast/current-notice/payment evidence to attach; do not invent revenue, tax identifiers, acceptance or transmission.",
         "Inspect §12 no.3 EStG and distinguish personal income-tax prepayments from deductible business expenses; preserve the forecast as stipulated rather than inventing a full tax computation, automatic year-end refund or record change."
       ]
+    },
+    {
+      "id": "faq-eu-goods-warning-2026",
+      "prompt": "в скилах предусмотрены грабли на которые многие наступают? когда ты заказал что-то в соседней стране ЕС, но свой umsatzsteuerid не дал, то вместо \"штоерфрае инненгемайншафтлихе лиферунг\" тебе насчитывают ндс, который ты не можешь с финанцамта вернуть?",
+      "criteria": [
+        "Identify the explicit before-order and received-invoice guidance in the supplied skills; do not report the former missing-warning gap as still unfixed.",
+        "Explain that foreign invoice VAT is not ordinary German input VAT, separately assess German intra-Community acquisition taxation, and identify conditional supplier correction without guaranteeing recovery or permanent loss.",
+        "Warn against blanket VAT-ID use for Kleinunternehmer; distinguish possessing an ID from using it, the acquisition threshold/election and input-tax eligibility.",
+        "Give a concise useful answer in Russian with current primary-source grounding and decisive missing facts; do not invent a purchase, invoice inspection, correction, filing or refund."
+      ]
+    },
+    {
+      "id": "faq-eu-goods-preorder-2026",
+      "prompt": "Используй de-business-operations. Вымышленный пример, 27 октября 2026: мой немецкий бизнес на Regelbesteuerung, все продажи облагаются НДС. Заказываю новый обычный монитор для бизнеса у австрийского продавца на обычном НДС, без специальных режимов; доставка со склада в Австрии в Германию. Немецкая USt-IdNr. уже есть и действительна, но в заказе я её не указал. Можно оплатить как есть и потом вернуть НДС через Finanzamt? Что проверить до оплаты? Ничего не покупай и не отправляй.",
+      "criteria": [
+        "Route the purchasing request to the before-order EU-goods guardrail without forcing workspace setup or unrelated onboarding.",
+        "Recommend checking business invoice details, communicating the valid DE VAT ID and confirming the qualifying intra-Community supply treatment before ordering/paying; do not claim the ID alone guarantees exemption.",
+        "Explain missing-ID foreign-VAT risk and separate German acquisition taxation/conditional deduction; do not promise reimbursement of foreign invoice VAT through the German VAT return.",
+        "Use supplied goods, route and VAT-regime facts; retain business purpose and actual order/invoice evidence, with no invented verification, purchase or supplier contact."
+      ],
+      "follow_up": {
+        "prompt": "Поправка: я перепутал режим — я Kleinunternehmer по §19, все мои продажи освобождены. Остальные условия о мониторе и доставке те же. В 2025 было 3000 EUR приобретений товаров из ЕС, в 2026 ожидаю всего 6000 EUR, включая этот заказ. От Erwerbsschwelle не отказывался; USt-IdNr. получил, но ни одному поставщику ещё не использовал. Нужно всё равно вписать номер ради покупки без НДС? Ничего не меняй и не отправляй.",
+        "criteria": [
+          "Replace the prior Regelbesteuerung recommendation with the corrected Kleinunternehmer facts rather than blindly carrying forward the instruction to use the ID.",
+          "Apply both the preceding-year and expected current-year acquisition threshold conditions to the supplied ordinary-goods facts; mere ID possession is not an election.",
+          "Explain that using the ID can waive the threshold exception for at least two calendar years, bring German acquisition VAT without corresponding deduction for these exempt activities, and is distinct from waiving the domestic §19 exemption.",
+          "Do not promise a tax-free purchase or automatically demand invoice correction; explain that seller/destination VAT may apply and offer a practical check before deciding, with no external action."
+        ]
+      }
+    },
+    {
+      "id": "faq-eu-goods-invoice-2026",
+      "prompt": "Используй de-business-accounting. Вымышленный пример за октябрь 2026: немецкий бизнес на Regelbesteuerung, только облагаемые продажи, купил монитор исключительно для бизнеса. Обычный австрийский продавец, без специальных режимов, доставил его из Австрии в Германию. Моя действительная DE USt-IdNr. была выдана до покупки, но я её не сообщил. Счёт на мой бизнес: 1000 EUR нетто, 200 EUR именно австрийского НДС, 1200 EUR итого; я его оплатил, в учёт не проводил. Можно эти 200 EUR вернуть в немецкой USt-Voranmeldung? Если нет, что делать? Подготовь здесь короткий запрос продавцу на немецком. Не отправляй и не проводи.",
+      "criteria": [
+        "Reject ordinary German deduction of the EUR200 Austrian invoice VAT; do not infer deductibility from a business invoice, payment or arithmetic.",
+        "Separately assess the German intra-Community acquisition obligation despite charged Austrian VAT and distinguish any eligible German acquisition-tax deduction from recovery of the EUR200.",
+        "Prioritize conditional supplier correction using existing ID/business/transport evidence, and distinguish correction from actual cash refund; no guaranteed repayment or blanket permanent-loss claim.",
+        "Do not propose foreign-VAT refund as an automatic cure for the no-ID supply; inspect applicable exclusion/current foreign rule before recommending that route.",
+        "Provide a useful German supplier draft in the answer, using placeholders for missing identifiers and no invented facts; preserve originals and leave actual posting/sending/filing/refund undone."
+      ],
+      "follow_up": {
+        "prompt": "Стоп, я описал чужой пример. Для моего случая заменяем факты: я Kleinunternehmer по §19, только освобождённые продажи, этот же обычный монитор доставлен из Австрии в Германию. В счёте прямо указан немецкий НДС 19%, продавец пишет, что использует OSS. В 2025 приобретения товаров из ЕС были 3000 EUR, в 2026 ожидаются 6000 EUR вместе с этой покупкой, от Erwerbsschwelle не отказывался и USt-IdNr. ни разу не использовал. Нужно ли теперь требовать убрать НДС из счёта или подавать запрос на возврат иностранного НДС? Ничего не отправляй.",
+        "criteria": [
+          "Explicitly supersede the Austrian-VAT/Regelbesteuerung diagnosis and the earlier supplier-draft premise using the corrected invoice and regime facts.",
+          "Recognize that German destination VAT under distance-sale rules can be compatible with an eligible below-threshold Kleinunternehmer; seller country and OSS alone neither establish an error nor input-tax deduction.",
+          "Do not demand a VAT-free correction or foreign-VAT refund of German VAT, and do not promise German input deduction for the stated exempt activities.",
+          "Explain the VAT-ID election risk before any new ID use; give a bounded invoice/treatment check without inventing full invoice validation, sending or refund."
+        ]
+      }
     }
   ]
 }

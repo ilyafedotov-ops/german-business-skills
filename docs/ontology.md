@@ -37,6 +37,12 @@ document facts, not observed receipts or a current receivable. Optional absence
 remains null. They can be retained in proposal fields without changing existing
 workspace schemas; older proposals need no migration.
 
+For [EU goods purchases](../skills/de-business-kit/references/international.md#when-an-eu-goods-invoice-already-includes-vat),
+invoice VAT country/amount, German acquisition tax, deduction eligibility and
+VAT-ID possession/use are distinct facts or reviewed conclusions. A request for
+correction, issued correction and observed refund remain separate evidence;
+none is inferred from another. These distinctions reuse existing records.
+
 | Concept | Meaning and relationships | Current representation |
 | --- | --- | --- |
 | Entrepreneur / business profile | Shared context for the person and their business activities | `01_profile/business.json`; `facts` keyed by field name |

@@ -27,6 +27,8 @@ confirmation instead of either refusing all assistance or submitting silently.
   invent formulas, rates, thresholds, official field mappings or results.
 - For cross-border facts read [international](../de-business-kit/references/international.md).
   Do not infer tax treatment merely from a bank location, currency or filename.
+  For EU goods use its before-order or received-invoice checks; distinguish
+  foreign invoice VAT, acquisition tax and Kleinunternehmer ID-use consequences.
 - For reducing income-tax prepayments use the [saved request workflow](../de-business-kit/references/tax-consultant.md#prepare-or-revise-an-income-tax-prepayment-request):
   inspect the notice and forecast, compute the proposed adjustment, save the German
   draft and separate private review, then preserve versions when facts change.

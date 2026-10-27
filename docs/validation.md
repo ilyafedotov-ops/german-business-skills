@@ -4,6 +4,41 @@
 
 Evidence index updated **2026-10-27**. Tests and public examples use synthetic data. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## EU goods VAT warnings — 2026-10-27
+
+Local changes after `3066d5a` add shared pre-order and received-invoice checks,
+including Kleinunternehmer and German destination-VAT/OSS branches. The earlier
+manual live trial on `e7544e3` found no explicit warning. Three new catalogue
+cases plus two changed-fact follow-ups now exercise these instructions.
+
+Five fresh Codex CLI **0.164.0** sessions completed with unchanged session files
+on snapshot `bc5feaf1fbe7` (skill-tree SHA-256 prefix). Independent review found
+**4 cases passed / 1 failed; 35/36 criteria passed**: the general answer omitted
+the Kleinunternehmer acquisition-tax-without-deduction consequence despite reading
+it. A narrow instruction refinement requires that consequence even in a short
+warning. The same question and unchanged criteria then passed **7/7** in a fresh
+session on final snapshot `cbf168bc8087`, which matches the final skill tree.
+The original failed assessment remains failed; no rubric was weakened.
+
+The other four outcomes retain their original evidence: ordinary pre-order
+advice, corrected Kleinunternehmer advice, paid Austrian-VAT invoice with German
+supplier draft, and replacement German-VAT/OSS facts. Later changes were the short
+warning requirement and EN/RU usage-help paragraphs. Two threshold comparisons
+were executed visibly and independently checked. Six new sessions captured
+**42 passed / 1 failed** criteria including the preserved failure; follow-ups
+replay conversation context rather than resume a saved business workspace.
+
+Full Python: **379 run, 368 passed, 11 platform skips**. Research-runner tests:
+**18/18**, including fake-host execution of the expanded 43-session selection.
+Package/local Markdown links and anchors, EN/RU parity and `git diff --check`
+passed. Independent source/diff review found no blockers. Sealed manifests and
+review bindings passed aggregation. Evidence remains outside Git under
+`.gbk-eu-goods-20261027-245bd9c1` and its `-warning-retest` sibling; requested model
+and effort are recorded there, not independently attested. No live purchase,
+supplier contact, posting, refund, filing, installed-bundle update, native desktop
+or hosted CI acceptance is claimed. Source applicability is in the
+[portable reference](../skills/de-business-kit/references/international.md#eu-goods-sources-and-applicability).
+
 ## Customer payment continuation — 2026-10-27
 
 Local implementation after `e7544e3` adds invoice-stated prepaid/rounding fields

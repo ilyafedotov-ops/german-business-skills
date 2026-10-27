@@ -69,8 +69,8 @@ if 'incomplete' not in mode: print(json.dumps({'type':'turn.completed'}))
     def test_opt_in_list_and_no_launch_without_selection(self):
         listed = self.cli('--list')
         self.assertEqual(listed.returncode, 0, listed.stderr)
-        self.assertEqual(len(json.loads(listed.stdout)['cases']), 29)
-        self.assertEqual(len(json.loads(listed.stdout)['followups']), 9)
+        self.assertEqual(len(json.loads(listed.stdout)['cases']), 32)
+        self.assertEqual(len(json.loads(listed.stdout)['followups']), 11)
         r = self.cli('--output', self.base / 'unused', '--codex', self.host)
         self.assertNotEqual(r.returncode, 0)
         self.assertFalse((self.base / 'unused').exists())
@@ -180,13 +180,13 @@ if 'incomplete' not in mode: print(json.dumps({'type':'turn.completed'}))
                 self.assertEqual(rows[0]['mechanical_status'], 'failed')
                 self.assertEqual(rows[1]['host_status'], 'blocked')
 
-    def test_full_pilot_runs_all_twenty_nine_bases_and_nine_replays(self):
+    def test_full_pilot_runs_all_thirty_two_bases_and_eleven_replays(self):
         out = self.base / 'all-evidence'
         r = self.cli('--all', '--output', out, '--codex', self.host, '--model', 'fixture')
         self.assertEqual(r.returncode, 0, r.stderr)
         rows = self.load(out)['cases']
-        self.assertEqual(len(rows), 38)
-        self.assertEqual(sum(c['variant'] == 'context_replay' for c in rows), 9)
+        self.assertEqual(len(rows), 43)
+        self.assertEqual(sum(c['variant'] == 'context_replay' for c in rows), 11)
         self.assertTrue(all(c['mechanical_status'] == 'passed' for c in rows))
 
     def test_selected_invoice_and_deadline_replays_keep_their_own_facts(self):
