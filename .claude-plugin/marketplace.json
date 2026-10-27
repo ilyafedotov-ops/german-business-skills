@@ -15,8 +15,8 @@
       "source": {
         "source": "github",
         "repo": "ilyafedotov-ops/german-business-skills",
-        "ref": "v0.10.0-preview.1",
-        "sha": "9a4f33dc2dc5c02fdf26edd9daaf2d97e1f7ba56"
+        "ref": "v0.11.0-preview.1",
+        "sha": "9e2bc4c2dfd19ecac88b5433d40adbdb403d8547"
       }
     }
   ]
