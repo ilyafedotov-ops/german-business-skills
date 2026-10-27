@@ -140,6 +140,14 @@ with their existing triggers and policies.
   gate step. Matching the PR head SHA alone is insufficient. Missing, stale,
   ambiguous or inaccessible evidence falls back to full checks; fork PRs do not reuse.
 
+Production branch protection requires **Checks gate** from GitHub Actions,
+plus the existing app-bound CodeQL language checks, dependency review and CodeQL
+result. Strict up-to-date enforcement and the other branch protections remain in
+place. Replace individual runtime check names only after the reviewed gate has
+passed and its workflow is merged; preserve security check identities and retain
+a rollback copy of the prior settings. Outdated PRs must update from `main` to
+emit the new gate.
+
 The final gate rejects failed planners/quick checks, missing matrix results and
 unexpected skips before recording evidence. Reuse skips only duplicate runtime
 matrices; quick checks and current security scans still run. A CI-only deployment
