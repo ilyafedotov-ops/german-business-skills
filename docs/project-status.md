@@ -4,6 +4,10 @@
 
 Reviewed against source on **2026-10-26**. German Business Kit is a seven-skill system for a natural-person entrepreneur in Germany: preparation, formation, everyday work, accounting, reporting, changes and closure. Users can ask a question before creating a workspace or choosing accounting software. Self-managed accounting remains a supported goal; consultation and sharing with an accountant are optional.
 
+All seven skills now share a [cost check before setup](../skills/de-business-kit/references/assisted-services.md#check-costs-before-setup):
+verify current-plan entitlement, explain added costs/unknowns before paid setup,
+and preserve no-upgrade decisions while continuing available work. This is a
+portable instruction safeguard, not a billing-enforcement mechanism.
 
 ## Primary user journey
 
@@ -57,8 +61,10 @@ invented; those actions require the actual authorized host/browser/manual route.
 One authorized live browser journey now covers zero-value draft creation/readback,
 same-object finalization, PDF inspection, sending and recipient acknowledgement.
 The sent-history PDF matched the reviewed file byte-for-byte. This used an existing
-business company, not an isolated sandbox. Live API adapter acceptance, nonzero
-invoice/correction coverage, native-only and GUI invoicing controls remain open.
+business company, not an isolated sandbox. A separate current-plan browser test
+also verified saving/reopening a zero-value draft, correcting its introduction and retaining its UUID, number, VAT setting
+and total while leaving it unissued/unsent. Live API adapter acceptance, nonzero
+invoices, issued corrections, native-only and GUI invoicing controls remain open.
 
 ## Source and published release
 

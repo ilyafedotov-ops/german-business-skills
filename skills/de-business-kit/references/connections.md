@@ -21,6 +21,9 @@ provider observations distinct from user-supplied files and simulated test outco
    including suitability limits and a useful manual/file alternative.
 3. Read the provider's current official operation/format documentation. Establish
    authentication, permission scope, supported versions, limits and output format.
+   Apply the [cost check before setup](assisted-services.md#check-costs-before-setup)
+   before asking for API keys or opening upgrade/trial/checkout flows. Record current
+   entitlement, added charges or unknowns, and the chosen included alternative.
    Use official user-controlled login; never store passwords, TANs, tokens or
    certificate contents in profile files or conversational notes.
 4. For read-only access within the requested scope, perform the smallest useful

@@ -4,6 +4,45 @@
 
 Evidence index updated **2026-10-27**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## Cost check and current-plan draft correction — 2026-10-27
+
+Working source after `ee26590` adds a shared cost check before paid setup, with
+EN/RU guidance and operation-note fields. The observed defect was upgrade-flow
+navigation before a cost warning; no purchase occurred. All seven direct skill
+entries now require the shared check. Three fresh-session cases in
+`evals/scenarios.json` passed manual review on **Codex CLI 0.164.0**: paid trial and
+incremental cost, declined upgrade with draft continuation, and unknown usage
+charges despite bounded spending approval. Each used a separate read-only,
+ephemeral session and a copied skill bundle without criteria; prices/account
+observations were supplied synthetic facts. They prove instruction-following in
+these scenarios, not enforcement by tools or actual billing behavior.
+
+In the same authorized existing-company browser test environment described below,
+a separate zero-value draft was saved, reopened from the list, corrected only in
+its introduction, saved and independently reloaded. The provider UUID/number,
+quantity, VAT setting and zero total matched; the rendered preview showed the
+correction. **Entwurf speichern** left it visibly **Entwurf**, unissued and unsent.
+The earlier issued invoice was not edited or resent. Private before/after evidence,
+a protected local `draft` / `not_prepared` record and EN/RU reports remain outside
+Git. This proves draft-text correction on the current plan, not correction or
+cancellation of an issued invoice, nonzero tax correctness or API acceptance.
+
+The account's API settings had disabled key creation and stated XL was required
+on the tested L plan. The user's no-upgrade decision was retained; no plan change,
+trial, new key or API request was made. Independent read-only review found no
+blockers in the portable cost workflow and scenario coverage; it did not inspect
+private account evidence. Runtime code is unchanged.
+
+Validation commands: `python3 -B tools/check_package.py`, a changed-file check of
+**174 local Markdown links/anchors**, and `git diff --check` passed. The full
+`python3 -B -m unittest discover -s tests -v` run completed **427 tests: 414 passed,
+11 skipped, 2 errors**. Both errors were 40-second PowerShell subprocess timeouts
+in `test_native_task_overview` (accounting corruption and cyclic/unsafe evidence).
+Both cases passed a focused rerun without code changes (**2 tests, 11.460 s**).
+A standalone PowerShell startup probe also exceeded 8 seconds; the underlying
+host timing cause remains unresolved. The initial full run is not reported as
+clean, and macOS PowerShell does not establish native Windows acceptance.
+
 ## Lexware live browser acceptance — 2026-10-27
 
 Against source `7a3ad48`, the connected Chrome browser on macOS completed one

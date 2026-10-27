@@ -91,6 +91,12 @@ provide its actual file and status evidence: this is recorded as a past event,
 without inventing earlier authorization. Sending, cancellation and other external
 changes need authorization covering the concrete action and its effects.
 
+Before paid setup, the assistant checks what your current plan includes and explains
+additional charges, billing/trial terms and any unknown costs. It offers a usable
+current-plan or file/manual alternative before asking you to consider an upgrade.
+“Test the connection” does not authorize spending. If you decline an upgrade, it
+keeps that decision and continues the available work without repeated upgrade requests.
+
 For Lexware Office you can ask: “Prepare this draft in my existing Lexware company,
 read it back and save the result. Keep finalization and sending separate.” An
 opt-in adapter can create/read the draft with existing API access; creation already
@@ -106,6 +112,9 @@ finalization, sending and acknowledged receipt in an existing company. The API
 adapter still has synthetic coverage only; live API acceptance and ordinary
 nonzero invoices/corrections remain open. It does not assign numbers itself or
 provide an email-send API.
+
+A separate current-plan test also checked draft-text correction, save/reopen and
+preview while leaving the zero-value invoice unissued and unsent.
 
 ## Keep your work in one folder
 

@@ -42,9 +42,43 @@ API links or advice to hire a professional. Keep the chosen accounting system.
 A missing connector is not a reason to require migration, a paid API plan or an
 accountant. New host integrations, extensions, permissions, API keys or subscriptions
 are configuration changes: prepare the exact need, permissions and supported setup
-path first; use existing authorization or ask for the missing decision. Do not
+path first, applying the [cost check](#check-costs-before-setup) before setup;
+use existing authorization or ask for the missing decision. Do not
 install or purchase them merely to discover whether an easier UI route works.
 Keep credential creation/entry in the official UI or supported secret store.
+
+## Check costs before setup
+
+Apply this check to software, API access, integrations, model/tool plans, add-ons,
+trials and other service setup, across all business skills. Authorization to test
+or connect a service does not authorize additional spending.
+
+1. Reuse the user's chosen service, current plan, budget and saved decisions.
+   Check whether the exact operation is included using current official material
+   and, where accessible, read-only account/entitlement information. A missing key
+   does not prove that buying API access is necessary. Public pricing and ordinary
+   read-only subscription details may be inspected without entering plan-change,
+   upgrade or checkout screens.
+2. Before requesting paid-access credentials or starting potentially paid setup,
+   explain what is included, why extra access would help, and the additional cost:
+   one-off, recurring and usage charges as applicable, currency, VAT basis, billing
+   period, relevant minimum term and trial conversion/renewal. Identify the source
+   and check date. Distinguish a total plan price from the increase over the current
+   plan; do not invent a quote or treat a free trial as cost-free ongoing access.
+   Unknown entitlement or cost stays unknown; hold the paid setup and explain what
+   remains to verify. Do not enter upgrade/checkout merely to discover the price.
+3. Offer an available current-plan, local-file or guided-manual route for the
+   requested outcome, with its actual limits. Explain and resolve only the missing
+   choice before entering a paid setup flow. Reuse existing authorization when it
+   covers the service, charge/limit and commitment; do not ask again for included
+   work or unchanged authorized spending. Selecting a route never expands payment,
+   permission or final-action authority under the host's rules.
+4. If the user declines extra cost, preserve that decision in the existing task
+   context/readable operation note and continue authorized current-plan work.
+   Do not repeatedly propose upgrades, create keys or enable trials as a workaround.
+   Record the inaccessible operation separately from the usable alternative; browser
+   success is not API acceptance. Revisit only if the user changes the constraint or
+   new evidence shows an included route, without re-entering a paid flow.
 
 ## Recommend interaction tools only when useful
 

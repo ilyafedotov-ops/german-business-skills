@@ -46,7 +46,19 @@ business company completed draft creation/readback, finalization, PDF inspection
 sending and recipient acknowledgement. This was not a provider sandbox. The sent
 PDF matched the reviewed final file byte-for-byte. The API adapter remains tested
 with synthetic transport only; broader invoices, corrections and unattended
-operation are not established by this bounded run.
+operation are not established by this bounded run. A separate browser check on
+the same date saved/reopened a zero-value draft, corrected its introduction,
+verified the same UUID/number, VAT setting and total, and left it unissued/unsent.
+This establishes draft-text editing only, not correction of an issued invoice.
+
+Before preparing API access, apply the shared [cost check](assisted-services.md#check-costs-before-setup).
+In the authenticated [Public API settings](https://app.lexware.de/addons/public-api)
+checked **2026-10-27**, key creation was disabled on the tested Office L account;
+the UI stated that Public API requires Office XL. This is a dated account
+observation, not a price quote or proof of another account's entitlement. The user
+kept the existing plan. Continue included browser operations; do not request an
+upgrade or API key merely to run tests. Live API acceptance remains blocked for
+that route, independently of successful browser checks.
 
 ## Provider invoice draft, readback and sending
 

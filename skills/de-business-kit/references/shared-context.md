@@ -84,6 +84,11 @@ relevant prerequisites, not a full onboarding questionnaire.
    planning scenario but still need evidence for a posting or official form. Missing
    values remain unknown. A proposed default is not a user decision. Inspect available
    tools rather than asking the user technical capability questions the host can answer.
+   Before any potentially paid setup, apply the shared
+   [cost check](assisted-services.md#check-costs-before-setup): verify current-plan
+   entitlement, explain additional costs or unknowns and an included alternative
+   before requesting credentials or entering an upgrade/trial/checkout flow. Reuse
+   spending limits and no-upgrade decisions; ordinary included work can continue.
 4. **Ask targeted follow-ups.** Reuse an unanswered saved question and ask at most
    three related questions at a time, explaining briefly why they matter. Never ask
    for a full financial history for a narrow question. When the user cannot answer,
