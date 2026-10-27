@@ -34,6 +34,12 @@ preparation-source dependency freezing and freshness/readiness checks. These
 changes preserve the chosen accounting system and filing history. Further FAQ
 expansion is not the current priority; actual acceptance is in validation.
 
+Customer payment continuation now preserves invoice-stated prepaid and rounding
+amounts in UBL/CII inspection and draft proposals. The operations skill saves
+separate recipient replies and private comparisons, distinguishing already included
+receipts from later payments and retaining revised versions. This adds no invoice
+issuance, settlement engine, payment allocation or technical e-invoice validation.
+
 ## Source and published release
 
 `VERSION` and the verified immutable [release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.10.0-preview.1) are **0.10.0-preview.1**, from `9a4f33dc2dc5c02fdf26edd9daaf2d97e1f7ba56`. Published on **2026-10-26**, it includes assistant-first guides, shared workflow checks, cash-entry VAT evidence and payment reconciliation, safe lock recovery and the Claude marketplace. All eight downloaded assets passed checksum, release-attestation and exact-source provenance checks. It provides Codex/Claude skill bundles and Windows x64/macOS arm64/macOS x86_64 application archives. See [validation](validation.md) for results and remaining limits. Earlier tags/assets are preserved. This repository distributes skills and local applications; it has no hosted production application.

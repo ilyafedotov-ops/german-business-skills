@@ -15,6 +15,9 @@ Use [daily operations](../de-business-kit/references/operations.md) for the
 customer-to-payment or purchasing journey. Identify which result is requested:
 a draft, review, payment follow-up, correction or reply. Do not turn it into a
 full month-close task.
+For an invoice/correction with a partial payment, use the
+[saved customer payment reply](../de-business-kit/references/operations.md#save-and-resume-a-customer-payment-reply)
+to distinguish invoice-stated prepayments from later receipts and save a resumable case.
 For entering or editing a customer document in the chosen software, use
 [assisted service operations](../de-business-kit/references/assisted-services.md).
 A supported browser draft route can complement a read-only connector; do not

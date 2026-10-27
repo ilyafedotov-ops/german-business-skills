@@ -32,6 +32,11 @@ All seven skills use these entities through the shared contract. Selecting a ski
 
 Legal form, activity classification, VAT regime and accounting method are separate dimensions. Changing the conversation mode or adding an activity does not itself change any of them. This is the product's modeling rule; applying tax rules to an actual case requires the source-review workflow.
 
+Invoice-stated `prepaid_amount`, `rounding_amount` and `amount_due` are extracted
+document facts, not observed receipts or a current receivable. Optional absence
+remains null. They can be retained in proposal fields without changing existing
+workspace schemas; older proposals need no migration.
+
 | Concept | Meaning and relationships | Current representation |
 | --- | --- | --- |
 | Entrepreneur / business profile | Shared context for the person and their business activities | `01_profile/business.json`; `facts` keyed by field name |

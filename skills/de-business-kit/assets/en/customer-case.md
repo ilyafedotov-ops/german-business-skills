@@ -21,6 +21,14 @@ Not a customer attachment, issued invoice, payment receipt or accounting entry.
 | Payment / refund / fee | [Bank/payment evidence and explicit link] | [Observed amount/currency/date / unknown] | [Partial, disputed or unmatched items] |
 | Correction / query | [Earlier version and supported correction route] | [Draft / actual system outcome] | [No replacement of issued history] |
 
+## Payment comparison as of [date]
+
+- Invoice-stated gross / prepaid / rounding / amount due: [separate source values and currency; absent is not an observed zero]
+- Receipt allocation: [explicit evidence for already included versus later payments; unresolved links remain open]
+- Correction effect: [proposed / issued evidence; sign and relationship; no inferred refund]
+- Current comparison: [supported arithmetic, coverage and excluded/disputed items; no complete balance claim without evidence]
+- Previous worksheet/reply and changed conclusion: [exact versions; retain earlier artifacts]
+
 ## Recipient output and private review
 
 - Exact recipient artifact(s): [actual files; no private notes or local paths inside]

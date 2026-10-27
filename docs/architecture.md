@@ -70,6 +70,14 @@ Local synthetic browser trials do not establish real ELSTER/Lexware acceptance.
 
 Invoice payment allocation is a derived projection, not a persisted paid flag: approved proposal amounts are compared with linked cash lines through the report end date, across periods. Reversals cancel their originals; corrected allocations retain history. Different currencies and ambiguous directions have no inferred balance. Reports include a settlement-basis fingerprint checked again by filing preflight. The GUI reuses filing checks only within one locked snapshot; mutations still recheck evidence. Native and Python unlock preserve exact lock bytes in audit history.
 
+XML inspection additionally exposes optional invoice-stated prepaid and rounding
+amounts with raw text, exact location and unresolved/absent states. Proposal fields
+accept these additive decimal candidates without inferring payment allocation.
+The operations skill uses versioned customer worksheets and recipient replies for
+continuation; the existing task register remains authoritative. Invoice-time
+amount due and current bank evidence are separate, and amount-due profile rules
+are not executed by the inspector or proposal arithmetic.
+
 ## Intended result
 
 An entrepreneur brings a task at any stage: prepare to start, register an activity, choose a service, fill in a form, answer a question, manage daily work or prepare reporting. Changes and closure have journey instructions; real execution needs separate acceptance. The [lifecycle map](../skills/de-business-kit/references/lifecycle.md) defines coverage and priorities. The router or a directly selected domain skill loads relevant modules and available tools; shared facts and decisions support continuation. Local utilities, the GUI and integrations serve these outcomes. Self-managed accounting and filing use the chosen system; a proprietary complete ledger and ELSTER connector are not prerequisites for every route. Consultation and exports remain optional.

@@ -158,6 +158,83 @@ class InvoiceXMLTests(CaseFixture):
         self.assertEqual(report["fields"]["tax"]["value"], "19.00")
         self.assertEqual(report["fields"]["invoice_date"]["value"], "2026-10-01")
 
+    def test_ubl_prepayment_and_rounding_are_source_values_not_new_payments(self):
+        from casefiles import documents
+        for name, raw in (("invoice", self.xml()), ("credit", self.credit_note())):
+            with self.subTest(syntax=name):
+                payload = raw.replace(b'</a:LegalMonetaryTotal>', b'<b:PrepaidAmount currencyID="EUR">50.00</b:PrepaidAmount><b:PayableRoundingAmount currencyID="EUR">-0.01</b:PayableRoundingAmount></a:LegalMonetaryTotal>')
+                received, report = self.inspect_report(name + "-prepaid.xml", payload)
+                self.assertEqual(report["fields"]["prepaid_amount"]["value"], "50.00")
+                self.assertEqual(report["fields"]["rounding_amount"]["raw"], "-0.01")
+                self.assertEqual(report["fields"]["rounding_amount"]["value"], "-0.01")
+                self.assertEqual(report["fields"]["amount_due"]["value"], "69.00")
+                self.assertEqual(report["business_rule_validation"], "not_performed")
+                self.assertIsNone(documents.get(self.root, received["document_id"])["dates"]["paid"])
+
+    def test_optional_payment_totals_distinguish_absence_zero_and_wrong_location(self):
+        _, report = self.inspect_report("missing-totals.xml", self.xml('<b:PrepaidAmount currencyID="EUR">99.00</b:PrepaidAmount><a:InvoiceLine><a:LegalMonetaryTotal><b:PayableRoundingAmount currencyID="EUR">9.00</b:PayableRoundingAmount></a:LegalMonetaryTotal></a:InvoiceLine>'))
+        for name in ("prepaid_amount", "rounding_amount"):
+            self.assertIsNone(report["fields"][name]["value"])
+            self.assertEqual(report["fields"][name]["note"], "optional_missing")
+            self.assertNotIn("missing:" + name, report["issues"])
+        payload = self.xml().replace(b'</a:LegalMonetaryTotal>', b'<b:PrepaidAmount currencyID="EUR">0.00</b:PrepaidAmount></a:LegalMonetaryTotal>')
+        _, report = self.inspect_report("zero-prepaid.xml", payload)
+        self.assertEqual(report["fields"]["prepaid_amount"]["value"], "0.00")
+
+    def test_ubl_ambiguous_or_invalid_payment_totals_remain_unresolved(self):
+        variants = [
+            '<b:PrepaidAmount currencyID="EUR">50.00</b:PrepaidAmount>' * 2,
+            '<b:PrepaidAmount currencyID="USD">50.00</b:PrepaidAmount>',
+            '<b:PrepaidAmount>50.00</b:PrepaidAmount>',
+            '<b:PrepaidAmount currencyID="EUR">1e2</b:PrepaidAmount>',
+            '<b:PrepaidAmount currencyID="EUR"></b:PrepaidAmount>',
+            '<b:PrepaidAmount currencyID="EUR"><b:Note>50.00</b:Note></b:PrepaidAmount>',
+        ]
+        for index, fragment in enumerate(variants):
+            with self.subTest(fragment=fragment):
+                payload = self.xml().replace(b'</a:LegalMonetaryTotal>', fragment.encode() + b'</a:LegalMonetaryTotal>')
+                _, report = self.inspect_report(f"invalid-prepaid-{index}.xml", payload)
+                self.assertIsNone(report["fields"]["prepaid_amount"]["value"])
+                self.assertTrue(any(issue.endswith(":prepaid_amount") for issue in report["issues"]))
+
+    def cii_payment_totals(self, currency="EUR", fragment=""):
+        return f'''<r:CrossIndustryInvoice xmlns:r="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" xmlns:a="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100">
+<r:SupplyChainTradeTransaction><a:ApplicableHeaderTradeSettlement><a:InvoiceCurrencyCode>{currency}</a:InvoiceCurrencyCode>
+<a:SpecifiedTradeSettlementHeaderMonetarySummation>{fragment}</a:SpecifiedTradeSettlementHeaderMonetarySummation>
+</a:ApplicableHeaderTradeSettlement></r:SupplyChainTradeTransaction></r:CrossIndustryInvoice>'''.encode()
+
+    def test_cii_payment_totals_preserve_signs_and_optional_currency(self):
+        _, report = self.inspect_report("cii-payment.xml", self.cii_payment_totals(fragment='<a:TotalPrepaidAmount>-50.00</a:TotalPrepaidAmount><a:RoundingAmount currencyID="EUR">0.01</a:RoundingAmount>'))
+        self.assertEqual(report["fields"]["prepaid_amount"]["value"], "-50.00")
+        self.assertEqual(report["fields"]["rounding_amount"]["value"], "0.01")
+        self.assertIn("SpecifiedTradeSettlementHeaderMonetarySummation", report["fields"]["prepaid_amount"]["location"])
+
+    def test_cii_payment_totals_require_unambiguous_valid_document_currency(self):
+        for index, (currency, fragment) in enumerate([
+            ("EUR", '<a:TotalPrepaidAmount currencyID="USD">50.00</a:TotalPrepaidAmount>'),
+            ("", '<a:TotalPrepaidAmount>50.00</a:TotalPrepaidAmount>'),
+            ("invalid", '<a:TotalPrepaidAmount>50.00</a:TotalPrepaidAmount>'),
+            ("EUR</a:InvoiceCurrencyCode><a:InvoiceCurrencyCode>EUR", '<a:TotalPrepaidAmount>50.00</a:TotalPrepaidAmount>'),
+            ("EUR", '<a:TotalPrepaidAmount>50.00</a:TotalPrepaidAmount>' * 2),
+        ]):
+            with self.subTest(currency=currency, fragment=fragment):
+                _, report = self.inspect_report(f"cii-invalid-payment-{index}.xml", self.cii_payment_totals(currency, fragment))
+                self.assertIsNone(report["fields"]["prepaid_amount"]["value"])
+                self.assertTrue(any(issue.endswith(":prepaid_amount") for issue in report["issues"]))
+
+    def test_inspected_payment_totals_survive_draft_proposal_without_payment_inference(self):
+        from casefiles import documents, reviews, storage
+        payload = self.xml().replace(b'</a:LegalMonetaryTotal>', b'<b:PrepaidAmount currencyID="EUR">50.00</b:PrepaidAmount></a:LegalMonetaryTotal>')
+        received, report = self.inspect_report("proposal-prepaid.xml", payload)
+        draft = reviews.proposal_template()
+        draft.update(proposal_id="payment-review", document_id=received["document_id"], period="2026-10", activity_id="consulting", fields=report["fields"])
+        reviews.save_proposal(self.root, draft)
+        saved = storage.load(self.root)["proposals"]["payment-review"]
+        self.assertEqual(saved["fields"]["prepaid_amount"], report["fields"]["prepaid_amount"])
+        self.assertIsNone(saved["fields"]["rounding_amount"]["value"])
+        self.assertEqual(saved["review"]["status"], "draft")
+        self.assertIsNone(documents.get(self.root, received["document_id"])["dates"]["paid"])
+
 
 if __name__ == "__main__":
     unittest.main()

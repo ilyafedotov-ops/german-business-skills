@@ -53,6 +53,17 @@ Replace bracketed text with your own details. You do not have to fill out a full
 
 ![Fictional proposal workflow: request, targeted question, readable draft, continuation in a new chat](images/first-task.en.svg)
 
+## Continue a customer payment question
+
+> Use de-business-operations. Read the saved customer case, invoice and payment evidence. Prepare a German reply and a separate English review of the amount still payable. Save the next action. Do not send or post anything.
+
+The assistant compares the invoice’s gross, recorded prepayment, rounding and
+amount due with the actual linked receipts. A payment already included in the
+invoice must not be deducted twice. Missing allocation or correction evidence
+stays open. When new evidence arrives, ask it to continue the same case: it should
+save a new reply and review version while retaining earlier files and your chosen
+invoicing system. Preparing a reply does not issue a correction or send a message.
+
 ## Keep your work in one folder
 
 For ongoing work, choose a private permanent folder such as **My business**, separate from the downloaded kit, installed skills and any Git repository. Give your assistant access to that folder. In Codex, keep using the project where the skills are installed and also grant access to the business folder; opening a different project may hide project-local skills.

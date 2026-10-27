@@ -4,6 +4,42 @@
 
 Evidence index updated **2026-10-27**. Tests and public examples use synthetic data. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## Customer payment continuation — 2026-10-27
+
+Local implementation after `e7544e3` adds invoice-stated prepaid/rounding fields
+and a saved customer-reply workflow. Six new regressions were observed failing
+before their fixes; the final XML/proposal module passed **17 tests**. Full
+`python3 -B -m unittest discover -s tests -v`: **379 run, 368 passed, 11 platform
+skips**. Package, local links and `git diff --check` passed. `npm run test:gui` and
+its `-- --browser=webkit` variant passed; WebKit retained 24 known screenshot-only
+CSP diagnostics. Independent code review and malformed-input/approval probes found
+no blockers. The journal settlement projection remains gross minus explicitly
+allocated journal payments; the new fields do not change that projection.
+
+Two fresh Codex CLI **0.164.0** sessions requested `gpt-6-astra` / high and exited
+zero. The first saved German reply + English review at **EUR 68.99**, retaining
+an already included EUR 50 advance once. A new session read the saved case,
+added the explicitly allocated EUR 20 receipt and saved German/Russian v02 at
+**EUR 48.99**. The unissued EUR 23.80 correction stayed separate; EUR 25.19 was
+conditional only. All **10** initial immutable evidence/result files remained
+byte-identical, 32 local Markdown links resolved, the same task stayed open with
+new evidence, external accounting configuration stayed unchanged, and no paid
+dates, journal entries or filings were inferred. Independent saved-content and
+provenance reviews of both versions found no blockers.
+
+Each session preserved authored skill files but generated 13 bytecode-cache extras;
+these writable trials are not sealed-runner integrity acceptance. Skill copies,
+prompts, events, file hashes and checks are outside Git under the synthetic
+`.customer-payment-20261027` evidence directory. Runtime and operations instructions
+were unchanged between trials; guides and the documented journal boundary were
+finished between copies. Parent Chromium render checks covered four saved HTML
+files at 390/1100 px: eight renders without document overflow or page errors;
+representative German/Russian screenshots were inspected separately from the
+host's text-only checks. No PDF/print, live provider, issue/send, technical
+XML-profile validation, statutory correctness, hosted CI or new native Windows
+acceptance is claimed. Primary format sources are dated in
+[the portable source map](../skills/de-business-kit/references/correction-xml-sources.md#invoice-stated-prepayments-and-rounding).
+
 ## Evidence by scope
 
 | Scope | Observed result | Limits and detailed record |

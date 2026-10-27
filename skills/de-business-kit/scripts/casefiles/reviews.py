@@ -9,7 +9,7 @@ import workflows as wf
 from . import documents as docs
 from . import storage as st
 
-AMOUNTS = {"net", "tax", "gross", "amount_due", "quantity", "unit_price", "tax_rate"}
+AMOUNTS = {"net", "tax", "gross", "amount_due", "prepaid_amount", "rounding_amount", "quantity", "unit_price", "tax_rate"}
 DATE_FIELDS = {"invoice_date", "due_date", "service_from", "service_to", "receipt_date", "payment_date"}
 FIELDS = AMOUNTS | DATE_FIELDS | {"invoice_number", "supplier_reference", "customer_reference", "supplier_country", "customer_country", "currency", "description"}
 CORE = {"invoice_number", "invoice_date", "currency", "net", "tax", "gross"}
