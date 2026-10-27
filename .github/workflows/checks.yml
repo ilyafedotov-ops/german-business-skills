@@ -5,6 +5,11 @@ on:
     branches: [main]
   pull_request:
   workflow_call:
+    inputs:
+      force_full:
+        type: boolean
+        default: true
+        description: Reusable release checks build and validate every platform.
 
 permissions:
   contents: read
@@ -14,8 +19,61 @@ concurrency:
   cancel-in-progress: ${{ github.ref_type != 'tag' }}
 
 jobs:
+  plan:
+    name: Select checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    outputs:
+      full: ${{ steps.plan.outputs.full }}
+      mode: ${{ steps.plan.outputs.mode }}
+      tree: ${{ steps.plan.outputs.tree }}
+      pr: ${{ steps.plan.outputs.pr }}
+      reused_run: ${{ steps.plan.outputs.reused_run }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: plan
+        name: Select coverage or verify prior PR tree
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CI_FORCE_FULL: ${{ inputs.force_full || github.ref_type == 'tag' }}
+        run: python3 -B tools/ci_plan.py plan
+
+  quick:
+    name: Package, metadata and documentation
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Validate selection guards, portable packages and release metadata
+        run: |
+          python -B -m unittest discover -s tests -p test_ci_plan.py -v
+          python -B -m unittest discover -s tests -p test_doc_links.py -v
+          python -B -m unittest discover -s tests -p test_packaging.py -v
+          python -B -m unittest discover -s tests -p 'test_releas*.py' -v
+          python -B tools/release.py check
+          python -B tools/ci_plan.py pin
+          python -B tools/check_package.py
+          python -B tools/check_doc_links.py
+          git show --format= --check HEAD
+
   prototype:
     name: Prototype / ${{ matrix.os }} / ${{ matrix.browser }}
+    needs: plan
+    if: needs.plan.outputs.full == 'true'
     timeout-minutes: 30
     runs-on: ${{ matrix.os }}
     strategy:
@@ -58,6 +116,8 @@ jobs:
 
   native-utilities:
     name: ${{ matrix.os }} / Python ${{ matrix.python }}
+    needs: plan
+    if: needs.plan.outputs.full == 'true'
     timeout-minutes: 30
     runs-on: ${{ matrix.os }}
     strategy:
@@ -92,6 +152,8 @@ jobs:
 
   windows-without-python:
     name: Windows PowerShell 5.1 / no Python setup
+    needs: plan
+    if: needs.plan.outputs.full == 'true'
     timeout-minutes: 15
     runs-on: windows-latest
     steps:
@@ -109,6 +171,8 @@ jobs:
 
   gui-package:
     name: GUI package / ${{ matrix.os }}
+    needs: plan
+    if: needs.plan.outputs.full == 'true'
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     strategy:
@@ -174,3 +238,22 @@ jobs:
             [[ ${record:66} == "$file" ]] || exit 1
             printf '%s\n' "$record" | sha256sum --check --strict -
           done
+
+  gate:
+    name: Checks gate
+    if: always()
+    needs: [plan, quick, prototype, native-utilities, windows-without-python, gui-package, artifact-transfer]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Validate required results
+        env:
+          CI_NEEDS: ${{ toJSON(needs) }}
+        run: python3 -B tools/ci_plan.py gate
+      # This successful step is the evidence consumed by a later main push.
+      # Never emit it before all required results have passed the gate above.
+      - name: Validated PR / ${{ needs.plan.outputs.pr }} / ${{ needs.plan.outputs.mode }} / ${{ needs.plan.outputs.tree }}
+        run: echo 'Required checks passed for the selected checkout tree.'
