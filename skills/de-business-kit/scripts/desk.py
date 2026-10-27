@@ -1,18 +1,27 @@
 #!/usr/bin/env python3
-"""Offline document review desk. The assistant handles records behind the conversation."""
+"""Private document workflows; explicit Lexware actions can contact the provider."""
 import argparse
 from datetime import date
 import json
 import sys
 
 import workspace as ws
-from casefiles import accounting, invoicing
+from casefiles import accounting, invoicing, lexware
 from casefiles import bank, documents, archive, folders, invoice_xml, overview, reviews, storage
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("lexware-template")
+    lexware_action = sub.add_parser("lexware-action")
+    lexware_action.add_argument("--root", required=True)
+    lexware_action.add_argument("--input", required=True)
+    lexware_action.add_argument("--expected-sha256", required=True)
+    lexware_handoff = sub.add_parser("lexware-handoff")
+    lexware_handoff.add_argument("--root", required=True)
+    lexware_handoff.add_argument("--id", required=True)
+    lexware_handoff.add_argument("--kind", choices=["finalize", "send"], required=True)
     invoice_template = sub.add_parser("invoice-template")
     invoice_template.add_argument("--kind", choices=["invoice", "action"], required=True)
     for name in ("invoice-create", "invoice-action", "invoice-show", "invoice-list", "invoice-report"):
@@ -82,7 +91,14 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         command = args.command
-        if command == "invoice-template":
+        if command == "lexware-template":
+            result = lexware.template()
+        elif command == "lexware-action":
+            root = ws._workspace(args.root)
+            result = lexware.act(root, ws._load(ws._inside(root, args.input)), args.expected_sha256)
+        elif command == "lexware-handoff":
+            result = lexware.handoff(args.root, args.id, args.kind)
+        elif command == "invoice-template":
             result = invoicing.template(args.kind)
         elif command.startswith("invoice-"):
             root = ws._workspace(args.root)

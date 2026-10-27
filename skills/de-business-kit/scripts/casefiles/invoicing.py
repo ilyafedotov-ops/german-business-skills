@@ -104,14 +104,43 @@ def _scope(row):
     return (*_authority(row), row["business_reference"], row["customer_reference"], row["currency"], row["corrects"], row["correction_kind"])
 
 
+def _issue_scope(row):
+    return {"scope": _scope(row), "draft": row["draft"], "sources": row["sources"], "parent": row["parent_issued_sha256"],
+            "provider_request": row.get("provider", {}).get("request"),
+            "provider_readback": row.get("provider", {}).get("readback")}
+
+
 def _snapshots(row):
     result = [row["draft"], *row["sources"]]
+    provider = row.get("provider")
+    if provider:
+        result.append(provider["request"])
+        for event in provider["events"]:
+            result.extend(event[k] for k in ("evidence", "response") if k in event)
     for event in row["events"]:
         result.append(event["evidence"])
         if event.get("document"):
             result.append(event["document"])
         result.extend(event.get("attachments", []))
     return result
+
+
+def _provider_issue(row, action, value=None, root=None):
+    provider = row.get("provider")
+    if not provider:
+        return
+    if action == "cancel" and provider["state"] not in {"prepared", "authorized"}:
+        raise ws.WorkspaceError("A provider draft/attempt exists; reconcile it without locally cancelling or recreating the operation.")
+    if action in LIVE and (provider["state"] != "reviewed" or provider["remote_status"] != "draft"):
+        raise ws.WorkspaceError("Read back and review the existing provider draft before issue; unresolved creation cannot be bypassed.")
+    if action in ISSUED:
+        if provider["state"] != "reviewed" or provider["remote_status"] not in {"open", "paid", "paidoff"} or not provider["document"]:
+            raise ws.WorkspaceError("Read back the finalized provider object, download and review its actual artifact first.")
+        if value:
+            readback = ws._load(ws._inside(root, provider["readback"]["path"]))
+            if (value["external_id"] != provider["external_id"] or value["invoice_number"] != readback.get("voucherNumber")
+                    or st.evidence(root, value["document_file"])["sha256"] != provider["document"]["sha256"]):
+                raise ws.WorkspaceError("Issued result differs from the linked provider ID, number or downloaded artifact.")
 
 
 def _check(root, row, state, live=False):
@@ -132,6 +161,11 @@ def _check(root, row, state, live=False):
 
 
 def _delivery_context(root, row, state):
+    provider = row.get("provider")
+    if provider:
+        _provider_issue(row, "confirm-issued")
+        if provider["document"]["sha256"] != row["issued"]["document"]["sha256"]:
+            raise ws.WorkspaceError("Provider artifact changed; reconcile the issued document before delivery.")
     def family(record):
         seen = set()
         while record["corrects"]:
@@ -148,7 +182,10 @@ def _delivery_context(root, row, state):
         raise ws.WorkspaceError("The original has a recorded cancellation/replacement; inspect the resulting document instead of sending it.")
     for related_row in related:
         _check(root, related_row, state)
-    return st.digest([{k: r[k] for k in ("invoice_id", "correction_kind", "issued")} for r in related])
+    context = [{k: r[k] for k in ("invoice_id", "correction_kind", "issued")} for r in related]
+    if provider:
+        context.append({"provider_readback_sha256": provider["readback"]["sha256"]})
+    return st.digest(context)
 
 
 def _check_delivery(root, row, state, review=False):
@@ -240,6 +277,7 @@ def act(root, value, expected):
             raise ws.WorkspaceError("Invoice not found.")
         st.version(row, expected)
         _check(root, row, state, live=action in LIVE)
+        _provider_issue(row, action, value, root)
         delivery = row["delivery"]
         is_delivery = action in DELIVERY
         allowed, next_state = (DELIVERY if is_delivery else ISSUE)[action]
@@ -307,6 +345,7 @@ def act(root, value, expected):
         if action in {"review-delivery", "adopt-dispatched"}:
             event["attachments"] = [_snapshot(root, p) for p in value["attachment_files"]]
             delivery.update(package={"recipient": copy.deepcopy(value["recipient"]), "document": row["issued"]["document"],
+                                     "scope_evidence": event["evidence"],
                                      "attachments": event["attachments"],
                                      "corrections_sha256": _delivery_context(root, row, state) if action == "review-delivery" else None}, attempt_id=None, external_id=None)
         if action in {"begin-issue", "begin-delivery", "adopt-dispatched"}:
@@ -315,8 +354,7 @@ def act(root, value, expected):
                 delivery["attempt_id"] = event["attempt_id"]
             else:
                 row["issue_attempt"] = event["attempt_id"]
-        event["scope_sha256"] = st.digest(delivery["package"] if is_delivery else {
-            "scope": _scope(row), "draft": row["draft"], "sources": row["sources"], "parent": row["parent_issued_sha256"]})
+        event["scope_sha256"] = st.digest(delivery["package"] if is_delivery else _issue_scope(row))
         if is_delivery:
             delivery["state"] = next_state
             if action in OUTCOMES or action == "adopt-dispatched":
@@ -353,6 +391,13 @@ def _view(root, row, state, language):
             except (OSError, ws.WorkspaceError) as exc:
                 issues.append(str(exc))
                 actions = [a for a in actions if a not in LIVE]
+        for action in list(actions):
+            try:
+                _provider_issue(row, action)
+            except ws.WorkspaceError as exc:
+                if str(exc) not in issues:
+                    issues.append(str(exc))
+                actions.remove(action)
     return {"record": copy.deepcopy(row), "sha256": st.digest(row), "allowed_actions": actions,
             "issues": issues, "markdown": render(row, actions, issues, language)}
 
@@ -372,6 +417,7 @@ def list_invoices(root, language="en"):
         state = _load(root)
         views = [_view(root, row, state, language) for row in state["invoices"].values()]
         return {"invoices": [{"invoice_id": v["record"]["invoice_id"], "state": v["record"]["state"],
+                              "provider_state": v["record"].get("provider", {}).get("state"),
                               "delivery_state": v["record"]["delivery"]["state"], "period": v["record"]["period"],
                               "allowed_actions": v["allowed_actions"], "issues": v["issues"]} for v in views],
                 "markdown": "\n\n".join(v["markdown"] for v in views)}
@@ -422,6 +468,21 @@ def render(row, actions, issues, language):
                   ("Выставленный файл: " if ru else "Issued file: ") + safe(row["issued"]["document"]["path"])]
     if row["corrects"]:
         lines += [("Связанное исправление: " if ru else "Correction of: ") + safe(row["corrects"]) + " / " + safe(row["correction_kind"])]
+    if row.get("provider"):
+        p = row["provider"]
+        provider_labels = {
+            "prepared": ("Draft request prepared", "Запрос черновика подготовлен"),
+            "authorized": ("Provider draft creation authorized; consumes a number", "Создание черновика разрешено; расходует номер"),
+            "create_unconfirmed": ("Creation outcome unknown; do not repeat", "Результат создания неизвестен; не повторять"),
+            "read_unconfirmed": ("Readback unconfirmed; inspect existing object", "Повторное чтение не подтверждено; проверить существующий объект"),
+            "read_back": ("Readback awaiting review", "Данные провайдера ожидают проверки"),
+            "reviewed": ("Provider readback reviewed", "Данные провайдера проверены"),
+            "discrepancy": ("Provider discrepancy; investigate before continuing", "Расхождение с провайдером; разобраться до продолжения")}
+        lines += [("Маршрут Lexware: " if ru else "Lexware route: ") + provider_labels[p["state"]][ru],
+                  ("Объект провайдера: " if ru else "Provider object: ") + safe(p["external_id"] or "—"),
+                  ("Отличия от запроса (проверить также значения по умолчанию): " if ru else "Differences from request (also inspect provider defaults): ") + "; ".join(safe(x) for x in p["differences"])]
+        if p["readback"]:
+            lines += [("Сохранённые данные провайдера: " if ru else "Preserved provider readback: ") + safe(p["readback"]["path"])]
     if row["delivery"]["package"]:
         recipient = row["delivery"]["package"]["recipient"]
         lines += [("Получатель: " if ru else "Destination: ") + safe(recipient["channel"]) + " / " + safe(recipient["address"])]
