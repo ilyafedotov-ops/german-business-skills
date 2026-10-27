@@ -78,6 +78,60 @@ original privately, check the downloaded file and its draft/reference/amount
 against the selected object, and apply the [screenshot privacy check](privacy.md#check-screenshots-before-sharing)
 to any visual proof. A local file or screenshot alone does not establish status.
 
+### Prepare and verify a correction
+
+First identify the intended effect: text/particulars amendment, amount credit,
+cancellation or replacement. Lexware's [current correction help](https://help.lexware.de/de-form/articles/640615-rechnung-korrigieren-oder-rechnungsbetrag-korrigieren-so-gehst-du-vor)
+(checked **2026-10-27**) treats **Rechnungskorrektur** as an amount-credit route,
+not a general text-edit operation, and distinguishes sent/unpaid, fully paid and
+partly paid cases. Check actual delivery, payment allocations, role and object
+state before choosing that route. Do not unlink payments or cancel an original
+merely to make a missing correction action appear.
+
+In the tested Office L account, the already-sent zero-value technical invoice
+showed **bezahlt** automatically and had no linked correction action in **Weitere
+Aktionen**. This does not establish a bank payment or refund owed. The document
+list's **Neuer Beleg > Rechnungskorrektur** opened a manual draft; the global
+navigation's shorter new-document menu did not expose that option. Observe the
+current menus instead of concluding that the tariff lacks corrections.
+
+For an authorized technical test, use the agreed synthetic customer and amount;
+never invent a nonzero refund just to exercise settlement. For real work, use
+verified business facts and the appropriate correction effect. A reference typed
+into **Einleitungstext** is a readable original reference, not proof of a provider
+link. Preserve the original, its identifier and actual relationship evidence in
+the [protected local correction](invoicing-workflow.md#protected-local-records).
+A local `corrects` relationship does not create that link in Lexware.
+
+Save the correction as a draft, then independently reopen the same UUID and read
+back its number, original reference, customer, quantity, tax setting and total.
+After an edit, inspect the changed field, save, establish that saving finished and
+reload again. The live test caught a footer edit that had not persisted; a later
+separate edit/save/readback succeeded. The exact UI timing cause was not established.
+If readback differs, retain both observations and correct the existing draft;
+do not duplicate it or claim the editor value was saved.
+
+Preview and draft-PDF download use the explicit **Als Entwurf drucken** choice;
+the default still finalizes. Inspect the actual downloaded PDF and provider state.
+The tested correction's **Entwurf** band was graphical, absent from extracted
+text; a cropped visual check confirmed it without exposing account information.
+Wrapped reference text also needed whitespace-aware comparison. Text extraction
+alone cannot establish the presence/absence of a visual draft marker.
+For preparation-only or simulated work, give the same-ID save/reopen, field
+readback, preview and explicit draft-only print steps as pending actions; do not
+stop at the proposed correction text or imply those checks were executed.
+
+Before finalization/cancellation use the reviewed scope and authority under
+[invoicing](invoicing-workflow.md#issue-or-record-an-existing-result), then record
+actual readback and final artifacts separately from the draft. In the authorized
+zero-value test, finalization produced **offen**, not **Entwurf**; the final PDF
+was downloaded and independently checked, and the correction was left unsent.
+The first readback timed out: inspecting the existing object established success
+without repeating finalization. **Offen** does not prove a refund or cash movement.
+This zero-value check does not validate nonzero credits, payment reallocation, refunds, cancellation,
+statutory correction requirements or sending. Keep all personal evidence private
+and use the [sharing check](privacy.md#check-screenshots-before-sharing).
+
 ## Provider invoice draft, readback and sending
 
 Pair this route with [protected invoicing](invoicing-workflow.md). It targets

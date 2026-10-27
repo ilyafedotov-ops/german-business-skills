@@ -4,6 +4,48 @@
 
 Evidence index updated **2026-10-27**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## Manual correction on the current plan — 2026-10-27
+
+Working source after `475d418` adds the observed manual correction route and
+same-object persistence/PDF checks to the portable Lexware reference, with EN/RU
+guidance. In the authorized existing Office L company, one synthetic zero-value
+manual correction was saved, independently reopened, edited, previewed and
+exported as a draft PDF. A footer edit initially did not survive reload; a separate
+edit/save/completion/readback succeeded. The timing cause remains unknown. The
+original reference is textual; local `corrects` does not prove provider linkage.
+
+After the user's explicit finalization approval, the same correction was finalized
+once and left unsent. A readback timeout was resolved by inspecting the existing
+object without repeating the write. Independent reload showed **offen**, not
+**Entwurf**, with no sent history. The downloaded final PDF passed header,
+one-page, number/original-reference, zero-amount and approved-footer checks.
+Layout-preserving extraction plus whitespace normalization recovered a wrapped
+reference that default extraction missed. A minimal corner render distinguished
+the draft's graphical **Entwurf** band from the final PDF; this is not a complete
+layout or statutory review. Initial failed checks remain in the private evidence.
+
+The protected writer recorded `confirm-issued` as `issued` / `not_prepared`, with
+no reported issues; EN/RU status reports were exported. The original stayed sent,
+not cancelled, and its local record hash was unchanged. No refund, payment
+reallocation, correction delivery, tariff change, paid setup or API call occurred.
+Account readbacks/PDFs remain private outside Git; no personal screenshots are
+included here. Zero-value issue does not validate nonzero credits, provider-native
+linkage, cancellation, refund settlement, correction delivery or API acceptance.
+
+Two synthetic fresh-session cases used read-only, ephemeral **Codex CLI 0.164.0**,
+copied skills and prompts without criteria. The readback-disagreement case passed
+all four criteria. The first manual-route response passed three of four, but omitted
+the full pending verification sequence. An explicit preparation/simulation instruction
+was added; a fresh same-prompt retest passed all four. The retest recovered from an
+initial relative-path miss and read the copied reference. These are response checks,
+not live-provider proof. Independent read-only review found no material issues in
+the route, finalization boundaries or EN/RU scope; it did not inspect private evidence.
+
+`python3 -B -m unittest discover -s tests -p test_eval_runner.py -v` passed **15 tests**.
+Package, changed-file Markdown links/anchors and `git diff --check` passed.
+Runtime code is unchanged; the prior full-suite result, including its PowerShell
+timeout/rerun limits below, is reused rather than claimed as a new clean run.
+
 ## Screenshot privacy and draft PDF export — 2026-10-27
 
 Working source after `da50004` adds a sharing check to the contract used by all

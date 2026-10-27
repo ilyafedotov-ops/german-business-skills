@@ -69,10 +69,16 @@ The sent-history PDF matched the reviewed file byte-for-byte. This used an exist
 business company, not an isolated sandbox. A separate current-plan browser test
 also verified saving/reopening a zero-value draft, correcting its introduction and retaining its UUID, number, VAT setting
 and total while leaving it unissued/unsent. Live API adapter acceptance, nonzero
-invoices, issued corrections, native-only and GUI invoicing controls remain open.
+invoices, provider-linked/nonzero corrections, native-only and GUI invoicing controls remain open.
 The current-plan browser route also exported a draft PDF using the explicit
 **Als Entwurf drucken** option and verified the same object remained a draft.
 The default **Fertigstellen + drucken** must not be used for draft-only export.
+A separate manual zero-value correction draft now has live save/reopen, persisted
+text-edit, preview and draft-PDF checks. Its original reference is textual; local
+linkage does not establish provider linkage. With explicit authorization, the same
+correction was finalized, independently read back as **offen**, and its final PDF
+verified; it remains unsent. The original stayed sent and not cancelled. Nonzero
+credit/refund, provider-linked correction and cancellation acceptance remain open.
 
 ## Source and published release
 

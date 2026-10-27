@@ -118,6 +118,14 @@ preview while leaving the zero-value invoice unissued and unsent. Draft PDF down
 was also checked: in the print dialog select **Als Entwurf drucken** and verify the
 button matches it. The default **Fertigstellen + drucken** would issue the invoice.
 
+Correction testing also covered a separate zero-value manual correction draft:
+save/reopen, text correction with independent readback, preview and draft PDF.
+After explicit approval, the same correction was issued, independently read back
+and its final PDF checked; it remains unsent. The original was not cancelled.
+The original reference was entered as text; this did not prove a provider-linked
+correction or a refund. See the [correction route](../references/lexware.md#prepare-and-verify-a-correction)
+for status/menu checks and the boundary before issuing or cancelling.
+
 ## Keep your work in one folder
 
 For ongoing work, choose a private permanent folder such as **My business**, separate from the downloaded kit, installed skills and any Git repository. Give your assistant access to that folder. In Codex, keep using the project where the skills are installed and also grant access to the business folder; opening a different project may hide project-local skills.
