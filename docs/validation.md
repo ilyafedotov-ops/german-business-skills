@@ -10,6 +10,28 @@ browser integration works E2E. The accepted Office L zero-value invoice and manu
 correction scope is stated in [current status](project-status.md); this adds user
 acceptance of the observed runs, not a new provider/API test.
 
+## Test-data privacy audit — 2026-10-27
+
+At source `87859b7`, all **294 tracked files**, including **75 test/evaluation
+files**, were checked for known private account identifiers and live-test markers.
+The only matches were **12 local home-directory references** in these EN/RU
+validation notes; they now use `<private-evidence>` as a location placeholder.
+No private account identifiers were found in the inspected tests or fixtures.
+
+All five artifacts from full CI run **40550000915** were downloaded and inspected:
+**1,247 file/archive entries**, **118 screenshots** using local OCR, and **three
+PDFs** using text extraction. The two tracked guide images and fixture PDF were
+also checked. No known private account identifiers were found. Browser fixtures
+use fresh temporary workspaces and synthetic records; independent review confirmed
+reserved example/test/invalid domains in test/evaluation email examples.
+
+The scan of **1,661 reachable historical blobs** found the earlier home-directory
+references only in these two validation pages. History was not rewritten. This is
+a bounded identifier/OCR/source audit, not a guarantee about uninspected historical
+artifacts or arbitrary future data. Local agent evaluations are not an OS-level
+read-confidentiality boundary; their raw transcripts remain private and require
+review/redaction before sharing. Public repository attribution is retained.
+
 ## Selective CI deployed: full and reuse paths — 2026-10-27
 
 [PR #20](https://github.com/ilyafedotov-ops/german-business-skills/pull/20) passed all
@@ -825,7 +847,7 @@ were inspected. No fresh native Windows, browser, desktop or hosted CI acceptanc
 is claimed.
 
 Evidence is retained outside Git under
-`/Users/ilya/Developer/evaluation-evidence/german-business-kit/`:
+`<private-evidence>/german-business-kit/`:
 `research-20261027-acceptance/` contains the sealed run and attributed reviews;
 `research-independent-check-20261027.{json,md}` contains the blinded derivation;
 `research-runner-checks-20261027/` holds validation logs. The original temporary
@@ -880,7 +902,7 @@ Prompt-only clarifications after that full run reused unchanged runtime checks
 and were exercised by fresh host sessions. No new whole-catalogue, desktop,
 native Windows, hosted CI, account or submission acceptance is claimed.
 
-Evidence under `/Users/ilya/Developer/evaluation-evidence/german-business-kit/`:
+Evidence under `<private-evidence>/german-business-kit/`:
 `research-20261027-batch2/`, `research-20261027-batch2-child-explicit/` and
 `research-20261027-batch2-permission-explicit/` retain snapshots, raw events and
 attributed reviews; `research-batch2-checks-20261027/` retains test logs and the
@@ -920,7 +942,7 @@ a fake host, not a new whole-selection live run. Product skills and the original
 ten-case runner are unchanged; no native desktop, account or filing acceptance.
 
 Evidence remains outside Git in
-`/Users/ilya/Developer/evaluation-evidence/german-business-kit/research-20261027-batch3/`;
+`<private-evidence>/german-business-kit/research-20261027-batch3/`;
 `research-batch3-checks-20261027/` retains test logs and frozen pretrial source
 expectations. Web metadata is not a complete page archive. Some trial page reads
 failed and used alternative official sources or official indexed excerpts;
@@ -971,7 +993,7 @@ writers or platform contracts changed. No native desktop, account or submission
 acceptance is claimed.
 
 Evidence remains outside Git under
-`/Users/ilya/Developer/evaluation-evidence/german-business-kit/`: original
+`<private-evidence>/german-business-kit/`: original
 `research-20261027-batch4/`, separate `research-20261027-batch4-vehicle-retest/`
 and `research-batch4-checks-20261027/`. Frozen manifests preserve the exact trial
 inputs; subsequent source-registry spacing cleanup changes no expectations.
@@ -1027,7 +1049,7 @@ passed; EN/RU additions were inspected. Full-suite evidence precedes the final
 prompt-only clarification; unchanged runtime checks are reused. The whole
 34-session selection used a fake host, not a new whole-selection live run.
 
-Evidence outside Git under `/Users/ilya/Developer/evaluation-evidence/german-business-kit/`:
+Evidence outside Git under `<private-evidence>/german-business-kit/`:
 `.research-20261027-batch5/`, `.research-20261027-batch5-consumer-explicit/` and
 `research-batch5-checks-20261027/`. New hidden run directories reduce incidental
 desktop interaction without weakening integrity checks; no general fix for the
@@ -1069,7 +1091,7 @@ Full Python suite: **358 run, 347 passed, 11 skipped**, 149.587 s. Package,
 EN/RU additions were inspected. The whole 38-session selection used a fake host,
 not a new whole-selection live run. No product skill or original-runner change.
 
-Evidence outside Git under `/Users/ilya/Developer/evaluation-evidence/german-business-kit/`:
+Evidence outside Git under `<private-evidence>/german-business-kit/`:
 `.research-20261027-batch6/` and `research-batch6-checks-20261027/`. Earlier failures
 and uncertainties remain unchanged. This does not establish complete tax-period,
 native desktop, account or filing acceptance. No commit, push or publication.
