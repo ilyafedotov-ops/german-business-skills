@@ -151,8 +151,8 @@ def _check(root, row, state, live=False):
         if not parent or not parent["issued"] or st.digest(parent["issued"]) != row["parent_issued_sha256"]:
             raise ws.WorkspaceError("Correction's issued parent changed or is missing.")
         st.check_evidence(root, parent["issued"]["document"])
-        if live and parent["delivery"]["state"] == "delivery_unconfirmed":
-            raise ws.WorkspaceError("Resolve the original invoice's delivery attempt before correcting it.")
+        if live:
+            _check_correction_family(root, row, state)
     if live:
         if row["unresolved_items"]:
             raise ws.WorkspaceError("Resolve draft issues through a cancelled/linked replacement before issue.")
@@ -160,12 +160,8 @@ def _check(root, row, state, live=False):
             st.check_evidence(root, source["source"])
 
 
-def _delivery_context(root, row, state):
-    provider = row.get("provider")
-    if provider:
-        _provider_issue(row, "confirm-issued")
-        if provider["document"]["sha256"] != row["issued"]["document"]["sha256"]:
-            raise ws.WorkspaceError("Provider artifact changed; reconcile the issued document before delivery.")
+def _family(row, state):
+    """All active records sharing the original, including nested corrections."""
     def family(record):
         seen = set()
         while record["corrects"]:
@@ -175,7 +171,25 @@ def _delivery_context(root, row, state):
             record = state["invoices"][record["corrects"]]
         return record["invoice_id"]
     family_id = family(row)
-    related = sorted((r for r in state["invoices"].values() if r["invoice_id"] != row["invoice_id"] and r["state"] != "cancelled" and family(r) == family_id), key=lambda r: r["invoice_id"])
+    return sorted((r for r in state["invoices"].values() if r["state"] != "cancelled" and family(r) == family_id), key=lambda r: r["invoice_id"])
+
+
+def _check_correction_family(root, row, state):
+    for member in _family(row, state):
+        if member["invoice_id"] == row["invoice_id"]:
+            continue
+        _check(root, member, state)
+        if member["state"] != "issued" or member["delivery"]["state"] == "delivery_unconfirmed":
+            raise ws.WorkspaceError("Resolve the existing correction or uncertain delivery in the invoice family first.")
+
+
+def _delivery_context(root, row, state):
+    provider = row.get("provider")
+    if provider:
+        _provider_issue(row, "confirm-issued")
+        if provider["document"]["sha256"] != row["issued"]["document"]["sha256"]:
+            raise ws.WorkspaceError("Provider artifact changed; reconcile the issued document before delivery.")
+    related = [r for r in _family(row, state) if r["invoice_id"] != row["invoice_id"]]
     if any(r["state"] != "issued" for r in related):
         raise ws.WorkspaceError("Resolve the pending correction before preparing or starting delivery of the original.")
     if any(r["corrects"] == row["invoice_id"] and r["correction_kind"] in {"cancellation", "replacement"} for r in related):
@@ -231,8 +245,7 @@ def create(root, value):
             if not parent or parent["state"] != "issued" or (_authority(parent), parent["customer_reference"], parent["currency"]) != (_authority(value), value["customer_reference"], value["currency"]):
                 raise ws.WorkspaceError("Correction requires the issued parent in the same system/account, customer and currency.")
             _check(root, parent, state)
-            if parent["delivery"]["state"] == "delivery_unconfirmed" or any(r["corrects"] == value["corrects"] and (r["state"] not in {"issued", "cancelled"} or r["delivery"]["state"] == "delivery_unconfirmed") for r in rows.values()):
-                raise ws.WorkspaceError("Resolve the existing correction or uncertain delivery first.")
+            _check_correction_family(root, value, state)
         saved = {**copy.deepcopy(value), "draft": _snapshot(root, value["document_file"]),
                  "sources": [_snapshot(root, p) for p in value["source_files"]],
                  "parent_issued_sha256": st.digest(parent["issued"]) if parent else None,

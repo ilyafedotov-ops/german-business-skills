@@ -73,7 +73,10 @@ An issued correction uses `corrects=<issued-id>` and `correction_kind`:
 `amendment`, `amount_credit`, `cancellation` or `replacement`. This bounded writer
 requires the same system/account, customer and currency; wrong-recipient/currency
 corrections need the actual provider's separately reviewed process. Competing
-unfinished corrections and uncertain original delivery block new correction work.
+unfinished corrections and uncertain delivery anywhere in the active correction
+family block new correction work, including corrections of earlier corrections.
+Creation and issue preflight check that whole family and its frozen evidence;
+recording an observed outcome for an already-started attempt remains available.
 The original record stays preserved; the correction does not silently rewrite it.
 
 ## Issue or record an existing result

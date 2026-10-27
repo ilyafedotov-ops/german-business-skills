@@ -1,6 +1,7 @@
 """Synthetic provider outcomes; never a live invoice or delivery certification."""
 import json
 import os
+from unittest.mock import patch
 from test_casework import CaseFixture
 import workspace as ws
 from casefiles import invoicing as inv
@@ -230,6 +231,52 @@ class InvoicingTests(CaseFixture):
         ws._inside(self.root, path).write_text("broken")
         with self.assertRaises(ws.WorkspaceError):
             self.action("review-delivery", recipient={"channel": "email", "address": "buyer@example.invalid"})
+
+    def test_nested_correction_cannot_bypass_uncertain_original_delivery(self):
+        self.issued()
+        self.issued("amend", business_reference="amend", corrects="invoice-1", correction_kind="amendment")
+        self.begin_delivery()
+        with self.assertRaises(ws.WorkspaceError):
+            self.create("nested", business_reference="nested", corrects="amend", correction_kind="amendment")
+
+    def test_nested_correction_cannot_fork_around_pending_family_member(self):
+        self.issued()
+        self.issued("amend", business_reference="amend", corrects="invoice-1", correction_kind="amendment")
+        self.create("sibling", business_reference="sibling", corrects="invoice-1", correction_kind="amount_credit")
+        with self.assertRaises(ws.WorkspaceError):
+            self.create("nested", business_reference="nested", corrects="amend", correction_kind="amendment")
+
+    def test_legacy_nested_draft_rechecks_family_before_issue(self):
+        self.issued()
+        self.issued("amend", business_reference="amend", corrects="invoice-1", correction_kind="amendment")
+        self.begin_delivery()
+        # Model a draft saved by the previous writer's direct-parent-only guard.
+        with patch.object(inv, "_check_correction_family"):
+            self.create("nested", business_reference="nested", corrects="amend", correction_kind="amendment")
+        with self.assertRaises(ws.WorkspaceError):
+            self.action("review-issue", "nested")
+        self.assertNotIn("review-issue", inv.show(self.root, "nested")["allowed_actions"])
+
+    def test_started_legacy_nested_attempt_can_still_record_observed_result(self):
+        self.issued()
+        self.issued("amend", business_reference="amend", corrects="invoice-1", correction_kind="amendment")
+        self.begin_delivery()
+        with patch.object(inv, "_check_correction_family"):
+            self.create("nested", business_reference="nested", corrects="amend", correction_kind="amendment")
+            attempt = self.begin_issue("nested")
+        self.action("confirm-issued", "nested", attempt_id=attempt, external_id="nested-result",
+                    invoice_number="NESTED", document_file=self.final_file)
+        self.assertEqual(inv.show(self.root, "nested")["record"]["state"], "issued")
+
+    def test_nested_issue_checks_original_frozen_evidence(self):
+        self.issued()
+        self.issued("amend", business_reference="amend", corrects="invoice-1", correction_kind="amendment")
+        self.create("nested", business_reference="nested", corrects="amend", correction_kind="amendment")
+        self.action("review-issue", "nested"); self.action("authorize-issue", "nested")
+        original = inv.show(self.root, "invoice-1")["record"]["issued"]["document"]["path"]
+        ws._inside(self.root, original).write_text("Corrupt ancestor")
+        with self.assertRaises(ws.WorkspaceError):
+            self.action("begin-issue", "nested")
 
     def test_cli_uses_protected_writers_and_exports_a_readable_russian_status(self):
         from synthetic_journey import command
