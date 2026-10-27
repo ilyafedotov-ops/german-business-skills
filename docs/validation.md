@@ -4,6 +4,12 @@
 
 Evidence index updated **2026-10-27**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+
+User acceptance recorded **2026-10-27**: the user confirmed that the Lexware
+browser integration works E2E. The accepted Office L zero-value invoice and manual
+correction scope is stated in [current status](project-status.md); this adds user
+acceptance of the observed runs, not a new provider/API test.
+
 ## Manual correction on the current plan — 2026-10-27
 
 Working source after `475d418` adds the observed manual correction route and

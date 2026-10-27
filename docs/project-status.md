@@ -80,6 +80,14 @@ correction was finalized, independently read back as **offen**, and its final PD
 verified; it remains unsent. The original stayed sent and not cancelled. Nonzero
 credit/refund, provider-linked correction and cancellation acceptance remain open.
 
+**Lexware browser integration: E2E validated and accepted by the user on
+2026-10-27**, on the existing Office L tariff with zero-value test documents.
+Accepted scope: draft creation/readback, finalization, final PDF retrieval, sending
+and acknowledged email/PDF receipt; draft correction/export; manual correction
+finalization and final PDF retrieval with the correction deliberately unsent.
+This accepts the browser route; the API adapter and nonzero/provider-linked
+correction, refund and cancellation journeys remain outside this acceptance.
+
 ## Source and published release
 
 `VERSION` and the verified immutable [release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.10.0-preview.1) are **0.10.0-preview.1**, from `9a4f33dc2dc5c02fdf26edd9daaf2d97e1f7ba56`. Published on **2026-10-26**, it includes assistant-first guides, shared workflow checks, cash-entry VAT evidence and payment reconciliation, safe lock recovery and the Claude marketplace. All eight downloaded assets passed checksum, release-attestation and exact-source provenance checks. It provides Codex/Claude skill bundles and Windows x64/macOS arm64/macOS x86_64 application archives. See [validation](validation.md) for results and remaining limits. Earlier tags/assets are preserved. This repository distributes skills and local applications; it has no hosted production application.
@@ -89,7 +97,7 @@ credit/refund, provider-linked correction and cancellation acceptance remain ope
 | Area | Available now | Boundary |
 | --- | --- | --- |
 | Skills and lifecycle | Optional router plus six directly usable domain skills; shared profile, EN/RU worksheets and continuation | Guidance/preparation does not establish registration, contract, hire or closure |
-| Access and assisted services | Host connector/browser/manual discovery; bounded opt-in Lexware draft/readback API and exact-object browser handoff; authorized draft entry and export checks | Lexware browser zero-value journey through acknowledged receipt checked live; API adapter remains synthetic-only. Nonzero invoices/corrections and ELSTER acceptance remain open |
+| Access and assisted services | Host connector/browser/manual discovery; bounded opt-in Lexware draft/readback API and exact-object browser handoff; authorized draft entry and export checks | Lexware Office L browser integration E2E validated and user-accepted (2026-10-27), within the scope above; API adapter remains synthetic-only. Nonzero invoices/corrections and ELSTER acceptance remain open |
 | Intake and documents | Preserved originals, hashes, catalog, reviewed proposals, bank mapping/reconciliation and bounded standalone UBL Invoice/CreditNote/CII inspection | No complete OCR, embedded-PDF XML or technical e-invoice validation pipeline |
 | Accounting | Explicit local/external choice; limited reviewed EÜR cash entries, splits, line VAT as stated with links to approved proposals, reversals/corrections, period reports and account CSVs | Existing software stays authoritative when selected. No complete statutory ledger or bundled tax formulas; stated-VAT sums are not a Voranmeldung; eligibility is not inferred |
 | Filing evidence | Frozen versions, preflight, review/authorization, uncertain attempts, observed receipts and authority responses | Tracks local evidence; calculates no statutory return and sends nothing to ELSTER |
@@ -100,7 +108,7 @@ credit/refund, provider-linked correction and cancellation acceptance remain ope
 
 Physical folder names support EN/RU/DE; full user manuals and report templates cover EN/RU. German navigation and the short German guide do not imply complete German reporting. Users need neither JSON editing nor development dependencies. Native applications, assistant tools and standalone scripts have different capability sets; see [architecture](architecture.md) and [GUI](gui.md).
 
-Current local source additionally projects invoice payment allocations across periods, exposes discrepancies in the GUI/report and checks settlement-basis freshness before filing actions. Native PowerShell supports lock diagnosis/recovery, including exact raw evidence. An opt-in [evaluation runner](../evals/README.md) executes ten selected fresh-session cases on supported POSIX developer hosts; it does not certify behavior from a passing utility test. The repository root is now a Claude plugin [marketplace](distribution.md#github-marketplace-for-claude) that installs the published preview pinned by tag and commit; the README and installation guides lead with that three-step Cowork route. It works by address only after merge to the default branch, and a Cowork desktop installation has not been observed. These changes are not in the published preview. Desktop signing and live provider acceptance remain open.
+Current local source additionally projects invoice payment allocations across periods, exposes discrepancies in the GUI/report and checks settlement-basis freshness before filing actions. Native PowerShell supports lock diagnosis/recovery, including exact raw evidence. An opt-in [evaluation runner](../evals/README.md) executes ten selected fresh-session cases on supported POSIX developer hosts; it does not certify behavior from a passing utility test. The repository root is now a Claude plugin [marketplace](distribution.md#github-marketplace-for-claude) that installs the published preview pinned by tag and commit; the README and installation guides lead with that three-step Cowork route. It works by address only after merge to the default branch, and a Cowork desktop installation has not been observed. These changes are not in the published preview. Desktop signing and provider journeys outside the accepted Lexware browser scope remain open.
 
 ## Roadmap
 
@@ -110,10 +118,10 @@ P1–P7 are **partially accepted**, not a completed end-to-end lifecycle. This t
 | --- | --- | --- |
 | P1 — Welcome and routing | Task-first onboarding, direct domain skills, shared continuation; fresh Codex/Claude trials | Ordinary-user first conversation and continuation across supported hosts; avoid forced setup |
 | P2 — Preparation and formation | Launch/classification research, form worksheets and assisted draft workflow | Verify selected authority/form/year, real authentication, field review and separately evidenced registration outcomes |
-| P3 — Daily work and questions | Proposals, invoices, letters, correction/partial-payment evidence and saved follow-up | Representative customer journeys in chosen software, actual document issue/delivery/payment evidence; complete download retrieval in the tested browser route |
+| P3 — Daily work and questions | Proposals, invoices, letters, correction/partial-payment evidence and saved follow-up | Lexware browser issue/delivery/download accepted above; next: customer-payment reconciliation and representative nonzero/correction journeys |
 | P4 — Accounting and reporting | Limited local cash journal, external-system route, monthly/annual preparation and filing evidence | Representative complete period through selected calculation/form tools and manual ELSTER; criteria below |
 | P5 — Change, hire, pause and close | Before/after plans, dependencies, first-hire preparation and history/access retention | Real selected service/authority outcomes; payroll and legal filings require their own supported tools |
-| P6 — Service access | Needs-led comparison, supplied-export inspection and capability/setup discovery | Real operation-scoped access/readback in selected products; account/edition permissions and source coverage. Lexware has one authorized zero-value browser journey; broader operations and live API acceptance remain open |
+| P6 — Service access | Needs-led comparison, supplied-export inspection and capability/setup discovery | Real operation-scoped access/readback in selected products; account/edition permissions and source coverage. Lexware Office L browser E2E is user-accepted within the scope above; broader operations and live API acceptance remain open |
 | P7 — Delivery and usability | Illustrated installation, complete-bundle packaging, local GUI and verified preview release | Nontechnical Windows/macOS first launch, install/update/continuation and error-recovery trials, starting with Cowork and Codex skill invocation, useful result and same-folder continuation; ambiguous requests, saved-fact reuse and calculation checks; other host routes; real installation screenshots/video after those journeys are observed |
 
 The [FAQ evaluation map](../evals/faq-coverage.json), reviewed on **2026-10-27**,
