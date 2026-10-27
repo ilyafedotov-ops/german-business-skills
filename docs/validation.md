@@ -36,8 +36,12 @@ Git. No published product asset or marketplace version changed; the verified
 immutable release remains `v0.11.0-preview.1`. Tag/reusable calls are configured to
 force full validation; no new release-tag run is claimed by this CI-only deployment.
 
-The separate documentation-only path is exercised by the validation-record update;
-its hosted result is distinct from the full/reuse evidence above.
+[PR #21](https://github.com/ilyafedotov-ops/german-business-skills/pull/21) at `4bb511d`
+then exercised the documentation-only path. [Checks run 40553701420](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/40553701420)
+selected `docs` and passed in **39 s**, with three successful jobs and five
+intentionally skipped runtime groups. Independent security checks passed with
+three zero-result/error analyses and zero open alerts on that exact PR merge ref.
+This is hosted lightweight-path evidence, separate from the full runtime run above.
 
 ## Selective CI preparation — 2026-10-27
 
