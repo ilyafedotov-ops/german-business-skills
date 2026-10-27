@@ -70,6 +70,73 @@ For existing accounting software, guide the user through that authoritative syst
 
 ## Reconcile and close a month
 
+### Prepare receipts for the requested period
+
+Use this sequence for “prepare October from these receipts”, including when the
+actual books remain in external software. A receipt folder, invoice month or bank
+date alone does not determine every accounting/tax period.
+
+1. **Reuse the chosen system and scope.** Read the saved accounting choice and
+   existing proposals, sources and open questions. Identify the requested month,
+   quarter or year and known EÜR/balance-sheet and VAT facts. Ask only for missing
+   facts that affect this work. Preparing receipts does not authorize posting,
+   approving proposals or filing a return.
+2. **Preserve and identify.** Use `receive` and inspect actual originals. Keep
+   exact-file duplicates separate from possible duplicate transactions. Retrieve
+   existing catalog/proposal records before creating more; a corrected document
+   needs a preserved relationship, not overwriting the first invoice. For each
+   receipt retain invoice, supply/delivery, invoice-possession and payment dates
+   separately, with the source or explicit unknown for each.
+   If intake rejects the original format, keep its bytes and a source-linked
+   worksheet. Do not rename, transcode or wrap it in CSV merely to satisfy intake:
+   a registered derivative does not give the original canonical coverage or stale
+   checks. State which intake/proposal records remain unsaved and the next supported
+   step; do not change the allowlist or install a runtime during ordinary preparation.
+3. **Make separate period decisions.** Prepare a readable table with document ID,
+   evidence reference, stated amounts/currency, business purpose, relevant dates,
+   proposed cash/profit timing, proposed VAT timing and the rule/assumption for each.
+   Use [source-led calculations](tax-estimates.md) for derived amounts and
+   [tax preparation](tax-consultant.md) for treatment. The proposal's single
+   `period` is its review scope; record separate timing conclusions and their
+   sources in its reason/linked consultation rather than inventing schema fields.
+   Unknown payment does not mean paid or zero; unknown business share does not
+   mean fully deductible. Assets, mixed use, financing, advances, corrections and
+   foreign supplies need their own treatment. Continue clear receipts independently.
+4. **Save drafts through the supported writers.** Use the catalog/proposal templates
+   and current hashes. Keep unreviewed treatment and extracted fields visibly
+   provisional. Link period-applicable source checks where needed; do not invent
+   user approval to satisfy a writer. Ordinary authoring tools can save a versioned
+   readable period review at the resolved accounting/tax destination; they cannot
+   replace protected JSON writers. On an unsupported runtime, save the worksheet
+   and state exactly which canonical records were not updated.
+5. **Separate preparation from completed books.** Report receipts proposed for this
+   period, other periods and unresolved timing/treatment separately. Identify account
+   and statement coverage, missing originals, payment evidence and authoritative
+   ledger/export gaps. A subset of receipts is not a completed period. For external
+   books keep `not posted`/`unknown` unless actual provider evidence says otherwise;
+   for local cash records posting still needs the established review and writer.
+6. **Leave a usable continuation.** Save the period, system, document/proposal IDs,
+   exact report/source versions, open questions and one next action in the review
+   and existing task where available. Before reporting success, reopen the files
+   and compare dates, amounts and unresolved items. On correction preserve originals
+   and prepare linked new proposals/reports. Hand tax preparation the saved paths,
+   coverage limits and separate timing decisions; never just a chat total.
+
+Primary sources checked **2026-10-27** for the bounded ordinary-purchase example:
+[UStG §15](https://www.gesetze-im-internet.de/ustg_1980/__15.html),
+[EStG §11](https://www.gesetze-im-internet.de/estg/__11.html) and
+[§4](https://www.gesetze-im-internet.de/estg/__4.html). Recheck the actual period.
+For an ordinary fully business service completed in September 2026, a valid invoice
+first received in October and paid in November, input VAT can belong to October
+(or Q4) when its conditions are met, while the ordinary EÜR expense follows the
+November payment within annual 2026. Invoice issue date does not establish invoice
+possession; the buyer's cash method or own Ist/Soll choice does not determine this
+purchase deduction. This example does not settle asset/private-use adjustments,
+year-end exceptions or later-year rules. A future payment date is only a scenario
+until observed; never mark it paid from a forecast.
+
+### Reconcile the prepared scope
+
 1. Establish coverage of every relevant bank/payment account and statement period. Preserve statement originals and identify opening/closing balances where available.
 2. Match transactions and documents by currency, amount, references and dates. Treat partial payments, refunds, fees, batched settlements, transfers between own accounts and private movements explicitly. A matching amount alone is not proof.
 3. Produce separate lists of missing receipts, unmatched payments, unpaid invoices, possible duplicates, discrepancies and unresolved tax treatment. Reconcile totals using deterministic utilities; describe the matching assumptions and remaining gaps. The bundled CSV tool compares explicit transaction IDs and currencies; establish those links from evidence before running it. Read its report status, not only its exit code. Empty inputs do not establish a completed match.
