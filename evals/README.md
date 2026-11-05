@@ -54,6 +54,20 @@ use manual fresh sessions: check a short relevant introduction and a truthful
 user-held installation step when plugin controls are unavailable. These read-only
 trials do not install a plugin or prove discovery in a desktop app.
 
+## Filed-return uncertainty and crypto-income trials
+
+Three additional manual public-source cases in `scenarios.json` cover
+`tax-anonymous-usdt-income` (with a changed-fact follow-up),
+`tax-filed-return-uncertain` and `tax-filed-return-recognized-error`.
+Give fresh sessions only the portable skills and synthetic prompt, keeping the
+criteria with the observer. For the follow-up, replay the actual base answer;
+this is conversation-context replay, not saved-workspace continuation.
+Check both directions of AO §153: uncertainty alone must not establish a duty,
+and a recognized error with possible shortfall must not wait for full calculation
+or annual filing. Preserve source/answer evidence and failed or uncertain results.
+These four sessions are not added to either CLI runner's predefined selection;
+[validation](../docs/validation.md) records the actual host and bounded outcomes.
+
 ## FAQ coverage and public-source pilot
 
 [FAQ coverage](faq-coverage.json) indexes all 60 numbered questions in the
@@ -79,7 +93,7 @@ ordinary EU consultancy, with asset-price and customer-status corrections. A fif
 automated digital sales crossing the EU threshold, with a consumer-location
 correction. The sixth batch covers no-sales VAT returns, annual loss/return duties
 and income-tax prepayment adjustment, with a private-expense correction. There
-are 118 base cases; the research runner selects 32 of them and eleven follow-ups
+are 137 base cases; the research runner selects 32 of them and eleven follow-ups
 (43 sessions).
 Three additional EU-goods cases repeat the missing-VAT-ID question, test advice
 before ordering and review an already paid Austrian-VAT invoice. Two corrections

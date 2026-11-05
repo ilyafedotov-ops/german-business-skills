@@ -1421,6 +1421,45 @@
         "Actual Russian recipient text and separate English private review saved and inspected; no private marker/account/path/hash disclosure in customer text",
         "Preserves invoice and no send/provider mutation; distinguishes local preparation from actual delivery"
       ]
+    },
+    {
+      "id": "tax-anonymous-usdt-income",
+      "prompt": "Используй de-business-tax. Синтетический вопрос, дата консультации 5 ноября 2026 года; налоговый год пока не указан. Я самозанятый программист в Германии. Год работаю на виртуальную компанию: задания приходят по email, результат отдаю через Git, платят USDT. Известны только название, сайт и LinkedIn; юридического адреса и страны нет, получить их невозможно. Каждый месяц сохраняю Eigenbeleg с задачами, суммой поступления и банковской проводкой. Как привести такие доходы в понятный для Finanzamt вид? Не предлагай сменить работу. Реальных документов и доступа к аккаунтам нет, ничего не отправляй и не создавай.",
+      "criteria": [
+        "Give useful setup-free guidance: incomplete customer identity does not justify omitting business income, while Eigenbeleg does not cure required invoice identity/address fields or guarantee acceptance; do not invent customer data or require impossible data before organizing evidence",
+        "Keep income recognition conditional on accounting method/year; explain EUR valuation of USDT received for work, later disposal/costs and no duplicate revenue from own bank payout; do not apply private crypto holding-period exemptions automatically",
+        "Keep customer country/business capacity and VAT treatment unresolved rather than infer foreign B2B/reverse charge from website language, token or wallet; identify work-to-wallet-to-exchange-to-bank evidence",
+        "Identify missing year/accounting method, VAT regime/prior filing and original token receipt versus bank payout without silently assuming them; ask at most three grouped material questions (one next question is acceptable), with no invented amounts, filings or external actions"
+      ],
+      "follow_up": {
+        "prompt": "Речь про 2025 год. Я веду EÜR, не Kleinunternehmer — обычный режим НДС. В доход записывал только евро, которые поступили на банковский счёт после продажи USDT. Получения на кошелёк отдельно не учитывал. Часть USDT на 31 декабря 2025 ещё оставалась на кошельке, продал её уже в 2026. Декларации по НДС за 2025 уже подавал: эти услуги указывал как оказанные зарубежному бизнесу без немецкого НДС, потому что сайт на английском. Годовую декларацию по доходам ещё не отправлял. Историю кошелька и биржи могу выгрузить, но данных клиента больше нет и получить их не могу. Что теперь исправлять и в каком порядке?",
+        "criteria": [
+          "Reuse 2025/EÜR/ordinary VAT facts; reconstruct original token receipts, EUR valuation, disposals, fees and year-end holdings without doubling bank payouts; 2025 business receipt is not deferred to 2026 disposal and acquisition cost of retained tokens is not immediately deducted to cancel it",
+          "Distinguish uncertain foreign VAT treatment from a recognized incorrect/incomplete filed return with possible tax shortfall; do not assert a section 153 duty solely from missing identity or unverified treatment, and do not prescribe automatic German VAT",
+          "Explain prompt notification/correction when section 153 prerequisites are established; necessary quantification may follow notification with explained preparation time, rather than waiting for all annual calculations",
+          "Check actual submitted VAT forms/periods/receipts and annual-return status; distinguish EÜR from Soll/Ist VAT timing and do not shift a 2025 correction to a current 2026 return",
+          "Distinguish initial income-tax filing from correction of an existing filing; check the filing deadline against 2026-11-05, adviser/extension/authority-request facts and do not declare lateness unconditionally",
+          "Preserve originals and correction history, offer a concrete evidence/reconciliation next step and at most three grouped questions; do not invent debt, authorization, submitted notice or completed correction"
+        ]
+      }
+    },
+    {
+      "id": "tax-filed-return-uncertain",
+      "prompt": "Используй de-business-tax. Синтетическая консультация на 5 ноября 2026 года. Я веду EÜR и обычный НДС. За третий квартал 2026 уже подал Umsatzsteuer-Voranmeldung: программирование для заявленного иностранного бизнес-клиента указал без немецкого НДС. Сейчас обнаружил, что у меня есть только сайт, LinkedIn и переписка, а юридический адрес и страна клиента не подтверждены. Никаких новых фактов о его реальном статусе или месте деятельности не появилось; неправильность декларации и недоплата пока не установлены. Обязан ли я уже сейчас уведомить Finanzamt по §153 AO, или сначала проверять? Дай порядок действий, не подавая ничего и не вычисляя налог без данных.",
+      "criteria": [
+        "Distinguish evidence gap/suspicion from actual recognition of an incorrect or incomplete return and possible shortfall under AO section 153(1); do not declare a statutory notification duty triggered solely by stated uncertainty",
+        "Recommend prompt investigation of filed content, customer/business/location evidence and applicable VAT rule; explain that once the statutory prerequisites are recognized notification cannot await complete calculation, and explain any optional factual contact separately from a legal duty",
+        "Do not infer foreign B2B or German VAT automatically, demand unobtainable facts as the only next step, invent debt or accuse evasion; retain originals and offer useful authorized preparation without sending"
+      ]
+    },
+    {
+      "id": "tax-filed-return-recognized-error",
+      "prompt": "Используй de-business-tax. Синтетическая консультация на 5 ноября 2026 года. Сегодня при сверке я установил, что в уже отправленной Umsatzsteuer-Voranmeldung за третий квартал 2026 полностью пропущена оплаченная услуга обычному немецкому бизнес-клиенту. Место оказания в Германии и обложение обычным немецким НДС подтверждены проверенными документами, срок определения налога не истёк. Я понимаю, что декларация неполная и налог занижен. Это обнаруженная после подачи ошибка, точную сумму ещё восстанавливаю; на полный расчёт нужны две недели. Можно ли пока ничего не сообщать, а исправить всё вместе с годовой декларацией? Объясни порядок действий без расчётов и без отправки.",
+      "criteria": [
+        "Apply the supplied recognition of incomplete filed return and possible shortfall to AO section 153(1); clearly reject waiting for the annual return or complete reconciliation before prompt notification",
+        "Separate notification without culpable delay from necessary later quantified correction, explain preparation time to the authority and do not invent a fixed safe two-week delay or guaranteed extension",
+        "Identify the affected already filed return and preserve versions/receipts; prepare factual next steps without unnecessary customer-status re-onboarding, invented amounts, evasion accusation, sending or guaranteed immunity"
+      ]
     }
   ]
 }
