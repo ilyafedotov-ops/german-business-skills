@@ -14,6 +14,43 @@ locally); the work is session copies, integrity digests and host processes, with
 no sleep or poll. That call now has a 120 s guard; its assertions are unchanged.
 A hosted 50 MiB read there costs 14–23 µs, so the Windows read fix does not apply.
 
+## Guided setup data and AI-risk step — 2026-11-20
+
+Local branch work based on `4407107` adds a **Data & risks** step and usability
+changes to the [guided setup page](gui.md#guided-setup-page), after a review of every
+screen at 1280 and 390 px found the risk notice reduced to one welcome card, no
+prompt to check the provider's training setting, no overall progress count, a phone
+layout that pushed each heading about 410 px down and an unreadable marketplace
+screenshot. Provider privacy and AI Act claims were checked on official pages the
+same day; sources and consequences are in the [GUI scope](gui.md#guided-setup-page).
+Checks ran on macOS arm64 with Playwright 1.63.0 and Python 3.15.2:
+
+- `tests/test_installer.py` (6 tests) passed, including identical EN/RU/DE structure
+  for the new step, the six practice-check cards matching the answer table in
+  `installer/app.js`, the data request calling `de-business-kit` and the added
+  official hosts.
+- `npm run test:installer` passed in **Chromium** and **WebKit**. In each of the six
+  journeys it ticks the provider's data settings, answers the practice check by
+  keyboard (focus stays on the answer), corrects a wrong answer, keeps answers after
+  a reload, copies the data request, opens, zooms and closes the screenshot dialog
+  with Escape (focus returns), and checks the 7-of-7 count and bar. Without a chosen
+  assistant the step shows both providers' settings. At 390 px the app-step heading
+  starts within the top 300 px. No form or text inputs, console errors or non-file requests
+  were found. WebKit reported 42 screenshot-injection CSP diagnostics;
+  the page CSP was not relaxed.
+- The first WebKit run failed "answering keeps focus": WebKit, like Safari, does not
+  focus a button on a mouse click. The test now answers with the keyboard, which is
+  the case where losing focus would matter.
+- The full unit suite passed (495 tests; 11 skipped because they require Windows
+  PowerShell). `tools/check_package.py`, `tools/check_doc_links.py` (499 links/anchors)
+  and `git diff --check` passed.
+
+Limits: the page cannot see or verify account settings; menu labels are shown in
+English because localized labels were not checked. The GDPR and AI Act text is general
+information, not a legal review, and the six practice cards simplify (health data is
+covered in the text, not as a card). No screen-reader check, nontechnical-user trial or
+hosted CI run exists for this change yet.
+
 ## Windows Checks wall time — 2026-11-20
 
 [PR #30](https://github.com/ilyafedotov-ops/german-business-skills/pull/30) shortens

@@ -18,6 +18,11 @@ window.INSTALLER_LINKS = {
     "macIntel": "https://persistent.oaistatic.com/codex-app-prod/Codex-latest-x64.dmg",
     "windows": "https://get.microsoft.com/installer/download/9PLM9XGG6VKS?cid=website_cta_psi"
   },
+  "privacy": {
+    "claude": "https://privacy.claude.com/en/articles/12109829-how-do-i-change-my-model-improvement-privacy-settings",
+    "openai": "https://help.openai.com/en/articles/7730893-data-controls-in-chatgpt",
+    "aiAct": "https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers"
+  },
   "release": {
     "page": "https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.11.0-preview.1",
     "codexZip": "https://github.com/ilyafedotov-ops/german-business-skills/releases/download/v0.11.0-preview.1/de-business-kit-0.11.0-preview.1-codex.zip",
