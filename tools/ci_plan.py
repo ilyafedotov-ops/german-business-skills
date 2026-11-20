@@ -20,18 +20,17 @@ TEST_SELECTION = re.compile(r'([1-9][0-9]*)/([1-9][0-9]*)')
 WORKFLOW = '.github/workflows/checks.yml'
 REQUIRED_JOBS = ('plan', 'quick', 'prototype', 'native-utilities',
                  'windows-without-python', 'gui-package', 'artifact-transfer')
-# Windows Python 3.14 seconds per test module (Checks run 44806269174), used only
+# Windows Python 3.9 seconds per test module (Checks run 44815442989), used only
 # to balance shards. Unlisted modules weigh 1; every module still runs exactly once.
 WINDOWS_TEST_SECONDS = {
-    'test_invoicing': 137, 'test_lexware': 136, 'test_gui_server': 126,
-    'test_monthly_accounting': 120, 'test_journey': 119, 'test_customer_journey': 68,
-    'test_accounting_lifecycle': 60, 'test_payment_followup': 60, 'test_invoice_payments': 52,
-    'test_packaging': 44, 'test_preparation_filing': 43, 'test_recovery': 34,
-    'test_settlements': 26, 'test_localized_workspace': 24, 'test_invoice_xml': 23,
-    'test_native_lock_recovery': 22, 'test_cash_vat': 18, 'test_native_windows': 17,
-    'test_native_task_overview': 17, 'test_skill_bundle': 15, 'test_overview': 15,
-    'test_release': 12, 'test_workspace': 12, 'test_archive': 11, 'test_casebank': 9,
-    'test_casework': 8, 'test_ci_plan': 8, 'test_workflows': 8, 'test_onboarding': 7,
+    'test_invoicing': 42, 'test_payment_followup': 36, 'test_lexware': 31, 'test_packaging': 29,
+    'test_skill_bundle': 21, 'test_native_task_overview': 20, 'test_recovery': 17,
+    'test_native_windows': 15, 'test_accounting_lifecycle': 14, 'test_release': 13,
+    'test_native_lock_recovery': 13, 'test_journey': 12, 'test_invoice_payments': 12,
+    'test_customer_journey': 10, 'test_preparation_filing': 10, 'test_ci_plan': 8,
+    'test_settlements': 8, 'test_gui_server': 7, 'test_workspace': 7, 'test_invoice_xml': 6,
+    'test_overview': 6, 'test_cash_vat': 6, 'test_workflows': 4, 'test_archive': 4,
+    'test_casework': 3, 'test_casebank': 3, 'test_onboarding': 3, 'test_records': 3,
 }
 
 

@@ -4,6 +4,51 @@
 
 Evidence index updated **2026-11-20**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## Windows Checks wall time — 2026-11-20
+
+[PR #30](https://github.com/ilyafedotov-ops/german-business-skills/pull/30) shortens
+the Windows jobs that set `Checks` wall time. Nothing waited or timed out. The cause
+was `workspace._read_regular()` requesting `limit + 1` (50 MiB + 1) bytes per read:
+on hosted Windows runners that buffer cost **7.5–7.7 ms (Python 3.9) and
+13.6–13.9 ms (3.14)** for a small file, versus 25–34 µs for a size-bounded read.
+Path handling multiplied it: each evidence check reread the layout record and
+shipped folder catalog about 24 times. The earlier suspect tests came from
+misreading log timestamps, which mark when a `unittest -v` line finishes.
+Defender real-time protection was already off on the runners; no OS setting changed.
+
+Changes: evidence checks read the layout once and `stat` each protected record
+once; the shipped catalog bytes are read once per process; reads are sized from
+`fstat` and still refuse growth past the limit. Each Windows Python version runs
+two `unittest -k` shards of the unchanged discover command, and a selector test
+proves every discovered test runs exactly once. Symlink chain checks, the
+workspace layout record, locks, `Checks gate` and Windows Python 3.9 coverage are
+unchanged.
+
+Temporary same-VM diagnostics ([44812573163](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/44812573163),
+[44815333060](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/44815333060);
+changed code first, so warm caches favoured the baseline) ran four heavy modules
+(41 tests): Windows 3.9 **305 s → 49.5 s**, 3.14 **434 s → 29.8 s**.
+
+| Hosted `Checks` run | Commit | Selector start → gate end | Windows 3.9 jobs | Windows 3.14 jobs | Prototype Windows |
+| --- | --- | --- | --- | --- | --- |
+| [44799353738](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/44799353738) (PR #28, attempt 1) | `9c3e5e9` | 15 min 26 s, failed gate | 881 s | 911 s | 383 s |
+| [44806269174](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/44806269174) (PR #29) | `89e67c5` | 21 min 43 s | 799 s | 1,287 s | 658 s |
+| [44815442989](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/44815442989) (PR #30) | `bb82e2c` | **5 min 30 s** | 272 s + 229 s | 134 s + 146 s | 135 s |
+
+In that PR #30 run the unit-test steps took 210 s + 164 s (Python 3.9) and
+122 s + 133 s (3.14), and Prototype `test:gui` took 31 s (294 s in the PR #29 run).
+Shard weights were then updated from those logs; the predicted Python 3.9 split is
+190 s/189 s, not yet measured. Locally on macOS arm64, Python 3.15.2 ran
+**494 tests with 11 Windows-only skips** in 72.9 s, and Python 3.9.6 ran the two
+shards as 255 + 239 tests with the same skips. Package, release-version, Markdown
+link and diff checks passed.
+
+Limits: one hosted run per configuration, and runner allocation varies (the PR #29
+Prototype job included a 205 s checkout stall). Remaining Windows-specific costs:
+`fsync` on the runners' C: drive (where `%TEMP%` is) takes 4–13.5 ms per call
+versus about 0.4 ms on D:. One `test_native_lock_recovery` PowerShell call exceeded
+its 45 s timeout in PR #28 attempt 1; that is unrelated to this change and unresolved.
+
 ## Guided setup page — 2026-11-20
 
 Local branch work based on `d89f796` adds the static [guided setup page](gui.md#guided-setup-page).
