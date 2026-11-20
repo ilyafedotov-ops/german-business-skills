@@ -59,6 +59,8 @@ function start(root) {
     sessionToken = token;
     browser = await playwright[browserName].launch();
     const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, locale: 'en-GB', timezoneId: 'Europe/Berlin' });
+    // The GUI defaults its working month to today after each reload; fixtures are dated October 2026.
+    await context.clock.setFixedTime(new Date('2026-10-27T12:00:00+01:00'));
     context.on('request', request => {
       const target = new URL(request.url());
       if (request.method() === 'GET' && target.origin === new URL(url).origin && ['/', '/app.js', '/i18n.js', '/style.css'].includes(target.pathname)) {
