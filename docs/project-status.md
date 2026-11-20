@@ -14,6 +14,13 @@ before sharing, including owner chat: minimized text by default, a separately
 redacted and verified image when needed, and private preservation of necessary
 original evidence. This is an instruction safeguard, not an automatic redactor.
 
+The **2026-11-05** filed-return guidance update separates missing evidence,
+uncertain treatment and recognized errors with possible tax shortfalls. It checks
+filing state/deadlines and separates prompt notification from later quantification
+when required; it adds no tax calculator or submission capability. See the
+[portable rule](../skills/de-business-kit/references/tax-consultant.md#check-a-possible-error-in-a-filed-return)
+and [validation](validation.md) for bounded trial evidence.
+
 ## Primary user journey
 
 Use Claude Desktop/Cowork or Codex as the interface, and one private business

@@ -2,13 +2,68 @@
 
 [English](validation.md) · [Русский](validation.ru.md) · [Technical documentation](index.md)
 
-Evidence index updated **2026-10-27**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
+Evidence index updated **2026-11-05**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
 
 User acceptance recorded **2026-10-27**: the user confirmed that the Lexware
 browser integration works E2E. The accepted Office L zero-value invoice and manual
 correction scope is stated in [current status](project-status.md); this adds user
 acceptance of the observed runs, not a new provider/API test.
+
+## Filed-return correction threshold — 2026-11-05
+
+The shared tax reference now distinguishes missing evidence, uncertain treatment
+and a subsequently recognized incorrect/incomplete return with possible tax
+shortfall. It checks filing state/deadlines and separates prompt notification from
+necessary later quantification. Three new catalogue cases provide four sessions:
+anonymous USDT income, its 2025/2026 continuation, unresolved VAT treatment and a
+recognized omitted taxable sale. No runtime, calculator or filing transport changed.
+
+Independent read-only review found no blocking issues in the rule, routing,
+EN/RU guides or scenarios. AO §153 and AEAO nos. 2.4/5.1 were checked against
+actual official 2025 and 2026 text; the BMF crypto guidance was also inspected.
+This observer verification does not retroactively establish tested-host access.
+
+Eight fresh Codex CLI **0.166.0** sessions on macOS requested **gpt-6-astra/high**:
+two baseline, four updated and two calibrated repeats. All completed within the
+360-second limit with unchanged session files and valid mechanical capture.
+The existing research runner's `run()` function was invoked by a private explicit
+case adapter; neither predefined CLI selection nor runner implementation changed.
+Follow-ups replayed the actual preceding answer, not a persistent host session.
+
+- Baseline: **12 criteria pass, 2 fail, 2 uncertain**. One failure was an overly
+  strict requirement to ask every intake question immediately; the other omitted
+  individual authority-deadline facts. Notification-threshold clarity and source
+  completeness remained uncertain. The earlier conversational concern was not
+  reproduced as an unambiguous premature statutory-duty assertion.
+- Updated: **23 pass, 1 fail, 4 uncertain**. The sole failure preserves the old
+  question rubric. The continuation and both §153 branches passed their behavior
+  criteria, including deadline qualifications and no delay for full calculation.
+  All four source checks remain uncertain: full current BMF/AEAO access was
+  incomplete; one session used official 2023 AEAO with an explicit currency limit.
+- The intake rubric now permits one next question while requiring identification
+  of missing material facts. Two fresh repeats yield **14 pass, 0 fail, 2 uncertain**:
+  all non-source behavior criteria pass. The follow-up recovered the full BMF
+  crypto PDF, but full AEAO access remained unresolved. Earlier frozen criteria,
+  answers and assessments are preserved.
+
+Baseline and updated `--summarize` returned valid **failed** assessments; the
+calibrated pair returned **uncertain**, not all-green certification. This is
+bounded instruction hardening with observed model
+variability, not proof of deterministic causation or universal tax correctness.
+
+`python3 -B -m unittest discover -s tests -v`: **481 run, 470 passed, 11 skipped**,
+135.565 s; skips require native Windows/PowerShell acceptance. Package/JSON,
+167 local Markdown file/anchor targets and diff checks passed. Runtime tests preceded the question-rubric-only
+calibration and final evidence notes; unchanged runtime evidence is reused.
+EN/RU additions were inspected. No desktop, provider or submission acceptance.
+
+Private evidence: `<private-evidence>/german-business-kit/tax-correction-20261105/`
+(`baseline`, `updated`, `calibrated`, adapter and unit log). Source base `d89f796`;
+updated portable-skill SHA-256:
+`830210863b053385f6d79bff8fb30e235f31045f93642e692e34fcd2f6098bdd`.
+Raw transcripts stay outside Git. No notification, return, release or installation
+was sent or performed by these trials.
 
 ## Test-data privacy audit — 2026-10-27
 

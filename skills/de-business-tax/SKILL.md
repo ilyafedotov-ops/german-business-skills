@@ -40,6 +40,10 @@ confirmation instead of either refusing all assistance or submitting silently.
 - To continue a saved filing, inspect its actual state and run the [filing continuation checks](../de-business-kit/references/accounting-workflow.md#check-before-advancing-a-filing).
   Carry receipt/preparation evidence into the exact version; resolve changed
   inputs with linked replacements and uncertain attempts with outcome evidence.
+- For a possible error in a submitted return, use the [filed-return checks](../de-business-kit/references/tax-consultant.md#check-a-possible-error-in-a-filed-return):
+  distinguish missing evidence, uncertain treatment and a recognized error with
+  possible tax shortfall; check filing state/deadlines and notification timing
+  separately from the time needed to quantify a correction.
 - For authority correspondence prepare a chronology, source-backed deadline
   assessment, evidence list and recipient-language draft under
   [correspondence](../de-business-kit/references/correspondence.md) and
