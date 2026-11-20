@@ -130,6 +130,8 @@ with their existing triggers and policies.
   version/build changes and unknown paths retain Windows/macOS Python, browsers,
   native PowerShell, GUI builds and artifact-transfer checks. Tags and reusable
   release calls always select this mode and produce fresh release artifacts.
+  Each Windows Python version runs the unit suite as two parallel shards; a
+  selector test proves that every discovered test belongs to exactly one shard.
 - **Documentation:** only regular root Markdown, Markdown below `docs/` or
   `packaging/`, and the root marketplace manifest may take the short path. Changes
   to portable skill guides/templates still require full checks. Renames are checked

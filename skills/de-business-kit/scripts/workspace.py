@@ -13,6 +13,7 @@ from contextlib import contextmanager
 import csv
 from datetime import date, datetime, timezone
 from decimal import Decimal, localcontext
+import functools
 import hashlib
 import io
 import json
@@ -89,6 +90,16 @@ def _check_chain(path: Path, final_file: bool = False) -> None:
             raise WorkspaceError("A directory path contains a non-directory.")
 
 
+@functools.lru_cache(maxsize=1)
+def _folder_catalog_bytes() -> bytes:
+    # Shipped program data: read once per process, like the code beside it.
+    return _read_regular(Path(__file__).resolve().parents[1] / 'assets/folder-layouts.json')
+
+
+def _folder_words(language: str) -> Dict[str, Any]:
+    return _json_bytes(_folder_catalog_bytes())['languages'][language]
+
+
 def _layout(root: Path):
     descriptor = root / LAYOUT
     if not descriptor.exists() and not descriptor.is_symlink():
@@ -100,7 +111,7 @@ def _layout(root: Path):
             or type(record['schema_version']) is not int or record['schema_version'] != 1
             or not isinstance(record['language'], str) or record['language'] not in LANGUAGES):
         raise WorkspaceError('Unsupported folder layout; no automatic migration performed.')
-    words = _load(Path(__file__).resolve().parents[1] / 'assets/folder-layouts.json')['languages'][record['language']]
+    words = _folder_words(record['language'])
     if any((root / prefix.split('/')[0]).exists() for prefix in words['paths']):
         raise WorkspaceError('Conflicting legacy and localized directories; preserve both for review.')
     return record, words
@@ -119,6 +130,11 @@ def _mapped(relative: str, words, reverse=False) -> str:
     return relative
 
 
+def _layout_path(root: Path, relative: Path, layout) -> Path:
+    """Physical location of a relative logical path under an already-read layout."""
+    return root / (_mapped(relative.as_posix(), layout[1]) if layout else relative)
+
+
 def _path(root: Path, value: PathInput) -> Path:
     """Resolve stable record paths and physical user paths through a fixed layout."""
     supplied = Path(value).expanduser()
@@ -127,8 +143,7 @@ def _path(root: Path, value: PathInput) -> Path:
     if supplied.is_absolute():
         path = _absolute(supplied)
     else:
-        layout = _layout(root)
-        path = root / (_mapped(supplied.as_posix(), layout[1]) if layout else supplied)
+        path = _layout_path(root, supplied, _layout(root))
     if path == root or root not in path.parents:
         raise WorkspaceError("This input/output must be inside the private workspace.")
     return path
@@ -193,7 +208,16 @@ def _read_regular(path: Path, limit: int = MAX_BYTES) -> bytes:
         info = os.fstat(stream.fileno())
         if not stat.S_ISREG(info.st_mode) or info.st_size > limit:
             raise WorkspaceError("Input must be a regular file no larger than 50 MiB.")
-        data = stream.read(limit + 1)
+        # Size each request from fstat: Windows pays for a whole-limit buffer on
+        # every read. Read on to EOF so growth after fstat still hits the limit.
+        chunks, size = [], 0
+        while size <= limit:
+            chunk = stream.read(min(limit + 1 - size, max(info.st_size - size, 0) + 65536))
+            if not chunk:
+                break
+            chunks.append(chunk)
+            size += len(chunk)
+        data = b"".join(chunks)
     if len(data) > limit:
         raise WorkspaceError("Input exceeds the 50 MiB limit.")
     return data
@@ -449,9 +473,20 @@ def _evidence_path(root: Path, value: str) -> Path:
     mutable = {PROFILE, DOCUMENTS, EVENTS, MARKER, RUNTIME, LOCK, LAYOUT,
                "00_admin/tasks.json", "00_admin/questions.json", "00_admin/decisions.json", "00_admin/casework.json",
                "04_accounting/register.json", "00_admin/invoicing.json"}
-    if (_logical(root, path) in mutable
-            or path.exists() and any(_path(root, item).exists() and path.samefile(_path(root, item)) for item in mutable)):
-        raise WorkspaceError("Use a preserved evidence document or history snapshot, not a mutable administrative file.")
+    refusal = "Use a preserved evidence document or history snapshot, not a mutable administrative file."
+    if _logical(root, path) in mutable:
+        raise WorkspaceError(refusal)
+    if path.exists():
+        # Read the layout once: each lookup rereads layout files through full-path checks.
+        layout = _layout(root)
+        identity = path.stat()
+        for item in mutable:
+            try:
+                record = _layout_path(root, Path(item), layout).stat()
+            except (FileNotFoundError, NotADirectoryError):
+                continue  # An absent record cannot be the evidence; other errors fail closed.
+            if os.path.samestat(identity, record):
+                raise WorkspaceError(refusal)  # Includes hard links to a mutable record.
     return path
 
 
@@ -1298,7 +1333,7 @@ def start_workspace(root: PathInput, year: Optional[int] = None, language: str =
 def workspace_folders(root: PathInput) -> Dict[str, Any]:
     location = _workspace(root)
     layout = _layout(location)
-    words = _load(Path(__file__).resolve().parents[1] / 'assets/folder-layouts.json')['languages']['en']
+    words = _folder_words('en')
     return {'layout': 'localized' if layout else 'legacy',
             'folder_language': layout[0]['language'] if layout else None,
             'paths': {key: _physical(location, key) for key in words['paths']},
