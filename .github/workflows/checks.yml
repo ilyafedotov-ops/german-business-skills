@@ -117,7 +117,7 @@ jobs:
             output/overview/
 
   native-utilities:
-    name: ${{ matrix.os }} / Python ${{ matrix.python }}
+    name: ${{ matrix.os }} / Python ${{ matrix.python }}${{ matrix.shard && format(' / tests {0}', matrix.shard) || '' }}
     needs: plan
     if: needs.plan.outputs.full == 'true'
     timeout-minutes: 30
@@ -131,10 +131,19 @@ jobs:
             python: '3.10'
           - os: macos-latest
             python: '3.14'
+          # Windows filesystem calls are slow; split each version's tests in two.
           - os: windows-latest
             python: '3.9'
+            shard: '1/2'
+          - os: windows-latest
+            python: '3.9'
+            shard: '2/2'
           - os: windows-latest
             python: '3.14'
+            shard: '1/2'
+          - os: windows-latest
+            python: '3.14'
+            shard: '2/2'
     env:
       PYTHONUTF8: '1'
       PYTHONDONTWRITEBYTECODE: '1'
@@ -146,7 +155,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: Test offline workspace, installer and extracted packages
-        run: python -B -m unittest discover -s tests -v
+        run: python -B tools/ci_plan.py tests ${{ matrix.shard || 'all' }}
       - name: Check release version contract
         run: python -B tools/release.py check
       - name: Validate package structure and local references

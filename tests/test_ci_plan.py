@@ -4,6 +4,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -256,6 +257,61 @@ class EvidenceTests(unittest.TestCase):
         needs['plan']['outputs']['full'] = 'true'
         with self.assertRaises(ValueError):
             ci.validate_gate(needs)
+
+
+class ShardTests(unittest.TestCase):
+    @staticmethod
+    def discovered(patterns=None):
+        loader = unittest.TestLoader()
+        loader.testNamePatterns = patterns
+        tests = str(ROOT / 'tests')
+        pending, found = [loader.discover(tests, top_level_dir=tests)], []
+        while pending:
+            item = pending.pop()
+            if isinstance(item, unittest.TestSuite):
+                pending.extend(item)
+            else:
+                found.append(item.id())
+        return found
+
+    def test_shards_partition_every_discovered_test_exactly_once(self):
+        everything = self.discovered()
+        self.assertFalse([name for name in everything if name.startswith('unittest.loader.')])
+        for count in (1, 2, 3):
+            selected = [self.discovered(ci.shard_patterns(ROOT, f'{index}/{count}'))
+                        for index in range(1, count + 1)]
+            self.assertTrue(all(selected))
+            self.assertEqual(sorted(name for group in selected for name in group), sorted(everything))
+
+    def test_longest_first_balance_stays_within_one_module(self):
+        weights = {'a': 9, 'b': 7, 'c': 5, 'd': 4, 'e': 3, 'f': 1}
+        loads = [sum(weights[m] for m in ci.shard(weights, index, 2, weights)) for index in (1, 2)]
+        self.assertLessEqual(abs(loads[0] - loads[1]), max(weights.values()))
+        self.assertEqual(ci.shard(weights, 1, 2, weights), ci.shard(list(reversed(list(weights))), 1, 2, weights))
+
+    def test_selection_is_all_or_valid_index_of_count(self):
+        full = ['-B', '-m', 'unittest', 'discover', '-s', 'tests', '-v']
+        self.assertEqual(ci.unit_command(ROOT, 'all')[1:], full)
+        command = ci.unit_command(ROOT, '2/2')
+        self.assertEqual(command[1:8], full)
+        self.assertEqual(command[8::2], ['-k'] * len(ci.shard(ci.test_modules(ROOT), 2, 2)))
+        self.assertEqual(command[9::2], [m + '.*' for m in ci.shard(ci.test_modules(ROOT), 2, 2)])
+        for bad in ('0/2', '3/2', '1/0', '01/2', '1/2/3', 'x', ''):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                ci.unit_command(ROOT, bad)
+
+    def test_windows_unit_jobs_run_every_shard_and_macos_runs_all(self):
+        workflow = (ROOT / '.github/workflows/checks.yml').read_text(encoding='utf-8')
+        job = workflow.split('\n  native-utilities:\n', 1)[1]
+        job = re.split(r'\n  [a-zA-Z0-9_-]+:\n', job, maxsplit=1)[0]
+        entries = re.findall(r"- os: (\S+)\n\s+python: '([0-9.]+)'(?:\n\s+shard: '([0-9/]+)')?", job)
+        found = {}
+        for os_name, python, selection in entries:
+            found.setdefault((os_name, python), set()).add(selection)
+        self.assertEqual(found, {('macos-latest', '3.10'): {''}, ('macos-latest', '3.14'): {''},
+                                 ('windows-latest', '3.9'): {'1/2', '2/2'},
+                                 ('windows-latest', '3.14'): {'1/2', '2/2'}})
+        self.assertIn("run: python -B tools/ci_plan.py tests ${{ matrix.shard || 'all' }}", job)
 
 
 if __name__ == '__main__':
