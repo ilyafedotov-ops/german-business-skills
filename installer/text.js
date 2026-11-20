@@ -25,9 +25,15 @@ window.INSTALLER_TEXT = {
       "illustration": "Illustration. Real screens may look different.",
       "chooseFirst": "Choose your assistant first.",
       "mobile": "Setup needs a Windows PC or a Mac. Open this guide on your computer to install the app.",
-      "footer": "German Business Kit is AI-assisted self-help software, not tax advice. This page sends nothing; links open official websites only when you select them."
+      "progressSummary": "{done} of {total} steps done",
+      "ticked": "{done} of {total} ticked",
+      "allTicked": "All {total} ticked. Continue with Next.",
+      "enlarge": "Enlarge screenshot",
+      "zoom": "Zoom in",
+      "close": "Close",
+      "footer": "German Business Kit is AI-assisted self-help software, not tax or legal advice. This page sends nothing; links open official websites only when you select them."
     },
-    "steps": {"welcome": "Welcome", "assistant": "Assistant", "account": "Account", "app": "App", "skills": "Skills", "demos": "First tasks"},
+    "steps": {"welcome": "Welcome", "assistant": "Assistant", "account": "Account", "app": "App", "safety": "Data & risks", "skills": "Skills", "demos": "First tasks"},
     "welcome": {
       "eyebrow": "Guided setup · about 30 minutes",
       "title": "Set up your AI business assistant, step by step",
@@ -43,10 +49,12 @@ window.INSTALLER_TEXT = {
       ],
       "aiTitle": "Good to know before you start",
       "ai": "German Business Kit is AI-assisted self-help software, not a tax adviser (Steuerberater). AI can make mistakes, including in amounts and deadlines. Files the assistant reads are processed by Anthropic or OpenAI. Use made-up examples until you have read the data guidance.",
-      "aiLink": "Read about AI limits and your data"
+      "aiLink": "Read about AI limits and your data",
+      "aiStep": "The “{name}” step shows what to check before real work"
     },
     "assistant": {
       "title": "Choose your assistant",
+      "business": "Will you work with customers' or employees' data? Personal plans, such as Claude Pro or ChatGPT Plus, do not include a business data processing agreement (DPA); business plans such as Claude Team or ChatGPT Business offer one. The “{name}” step explains this.",
       "lead": "German Business Kit works inside one of two AI apps. Both can do the tasks in this guide. Pick the one you prefer; you can set up the other one later.",
       "choose": "Choose {name}",
       "chosen": "Selected",
@@ -163,6 +171,77 @@ window.INSTALLER_TEXT = {
         "doneWhen": "**Done when:** the ChatGPT app is open, you are signed in and you can choose **Codex**.",
         "diagram": ["Download", "Install", "Sign in"]
       }
+    },
+    "safety": {
+      "title": "Before real work: AI risks and your data",
+      "lead": "Read this once before the assistant sees real documents. It takes about five minutes. It is general information, not legal advice.",
+      "risksTitle": "What AI can get wrong",
+      "risks": [
+        {"title": "Confident mistakes", "text": "It can misread a document, use the wrong year's rules or cite a source that does not exist, and still sound sure."},
+        {"title": "Numbers and deadlines", "text": "Amounts, VAT and deadlines can be wrong. Compare them with the original document and an official source."},
+        {"title": "Not a tax adviser", "text": "German Business Kit is self-help software, not a Steuerberater or lawyer. Using it creates no adviser–client relationship."},
+        {"title": "You decide", "text": "The assistant prepares drafts. Check them before you send, sign, pay or file anything. A neat draft is not proof that anything was submitted."}
+      ],
+      "flowTitle": "Where your data goes",
+      "flow": ["Your files", "AI app", "Provider's servers", "Saved in your account"],
+      "flowText": [
+        "When the assistant reads a file, its content can be sent to {provider} to be processed. A folder on your computer does not mean the AI works only on your computer.",
+        "Tasks, chats and their content can stay saved in your account. Deleting a file on your computer does not delete them.",
+        "Connected services, such as cloud storage or email, process data under their own terms."
+      ],
+      "either": "Anthropic or OpenAI",
+      "gdprTitle": "Data protection (GDPR) in plain words",
+      "gdpr": [
+        "**Your own papers**, such as your receipts or tax letters, are mostly about you. Still check the data settings below before the assistant reads them.",
+        "**Other people's data**, for example customers, contact persons or employees, is personal data under the GDPR. Use it only for a clear business purpose and share only what the task needs.",
+        "**Personal plans are not business contracts.** Plans such as Claude Pro or ChatGPT Plus do not include a data processing agreement (DPA, Article 28 GDPR). Business plans such as Claude Team or Enterprise and ChatGPT Business or Enterprise offer one. Check this before the assistant processes customers' or employees' data.",
+        "**Health information**, such as a sick note, is a special category of data (Article 9 GDPR). Use a made-up example or only the few details the task needs.",
+        "**Remove details first.** Black out names, addresses and ID numbers in a copy on your computer before the assistant reads it. Asking the AI to do this is too late: it has already read them.",
+        "**If others work for you**, explain these rules to them. The EU AI Act asks businesses that use AI to support their staff's AI literacy (Article 4)."
+      ],
+      "gdprNote": "This page is not legal advice and not a GDPR compliance certificate.",
+      "aiActLink": "European Commission: AI literacy questions and answers",
+      "fullLink": "Read the full guidance: AI limits and your data",
+      "settingsTitle": "Check your data settings",
+      "settingsLead": "Do this once in the app or on the website. Menu names are shown in English and can differ in another app language. This guide cannot see or change your settings.",
+      "claude": {
+        "name": "Claude",
+        "steps": [
+          "Open **Settings → Privacy** in the Claude app or on claude.ai.",
+          "Find **Help improve our AI models**. While it is on, Anthropic may use your chats and coding sessions to train its models. Decide whether to switch it off.",
+          "Do not use the thumbs up/down buttons in chats with real data: feedback sends the whole conversation to Anthropic, where it can be kept for up to five years."
+        ],
+        "link": "Anthropic: change the model-improvement setting",
+        "business": "Using Claude Team or Enterprise? Your organization's commercial terms apply, and by default that content is not used for training."
+      },
+      "openai": {
+        "name": "ChatGPT",
+        "steps": [
+          "Open **Settings → Data controls** in the ChatGPT app or on chatgpt.com.",
+          "Find **Improve the model for everyone**. On Free, Plus and Pro it is on by default, and it also covers your Codex tasks. Decide whether to switch it off.",
+          "Switching it off does not delete saved chats. Delete chats with real data that you no longer need."
+        ],
+        "link": "OpenAI: data controls in ChatGPT",
+        "business": "Using ChatGPT Business or Enterprise? Your workspace settings apply, and by default OpenAI does not train on that content."
+      },
+      "quizTitle": "Quick check: would you share this?",
+      "quizLead": "Choose an answer for each card. Nothing is sent anywhere; this is only practice.",
+      "quizChoices": {"ok": "Fine to try", "check": "Check first", "never": "Never"},
+      "quizRight": "Right.",
+      "quizWrong": "Not quite. Better: {answer}.",
+      "quizScore": "{answered} of {total} answered, {right} right",
+      "quiz": {
+        "demo": {"item": "The made-up receipts from this guide's demos", "why": "Fictional data is the safest way to learn how the assistant works."},
+        "question": {"item": "A general question: “What is the Kleinunternehmer rule?”", "why": "General questions without personal details are fine. Still check the answer against an official source."},
+        "customer": {"item": "An invoice with your customer's name and address", "why": "That is another person's data under the GDPR. Check your plan and settings, and share only what the task needs."},
+        "letter": {"item": "A letter from the tax office (Finanzamt) about you", "why": "It contains your tax number and personal details. Check your data settings first and black out what the task does not need."},
+        "elster": {"item": "Your ELSTER certificate file and its password", "why": "Logins, certificates, TANs and recovery codes never belong in a chat. Sign in on the official website yourself."},
+        "banking": {"item": "Your online-banking login, so the AI can check payments itself", "why": "Never hand over banking access. Download a statement yourself and share only the lines the task needs."}
+      },
+      "askTitle": "Before your first real document",
+      "askLead": "Ask the assistant to explain the data route for your setup:",
+      "askLabel": "Question about your data",
+      "ask": "Use de-business-kit. Before reading my real documents, explain which data would go to which provider or connected service, what account settings matter, and what I can remove locally. If you cannot verify a setting, say so. Start with a fictional example."
     },
     "skills": {
       "listTitle": "The seven skills you get",
@@ -336,9 +415,15 @@ window.INSTALLER_TEXT = {
       "illustration": "Схема. Настоящие экраны могут выглядеть иначе.",
       "chooseFirst": "Сначала выберите ассистента.",
       "mobile": "Для установки нужен компьютер с Windows или Mac. Откройте эту инструкцию на компьютере, чтобы установить приложение.",
-      "footer": "German Business Kit — программа для самостоятельной работы с помощью AI, а не налоговая консультация. Эта страница ничего не отправляет; ссылки открывают официальные сайты, только когда вы их выбираете."
+      "progressSummary": "Выполнено шагов: {done} из {total}",
+      "ticked": "Отмечено: {done} из {total}",
+      "allTicked": "Отмечены все {total}. Нажмите «Далее».",
+      "enlarge": "Увеличить снимок экрана",
+      "zoom": "Приблизить",
+      "close": "Закрыть",
+      "footer": "German Business Kit — программа для самостоятельной работы с помощью AI, а не налоговая или юридическая консультация. Эта страница ничего не отправляет; ссылки открывают официальные сайты, только когда вы их выбираете."
     },
-    "steps": {"welcome": "Начало", "assistant": "Ассистент", "account": "Аккаунт", "app": "Приложение", "skills": "Скиллы", "demos": "Первые задачи"},
+    "steps": {"welcome": "Начало", "assistant": "Ассистент", "account": "Аккаунт", "app": "Приложение", "safety": "Данные и риски", "skills": "Скиллы", "demos": "Первые задачи"},
     "welcome": {
       "eyebrow": "Пошаговая установка · около 30 минут",
       "title": "Настройте AI-ассистента для бизнеса шаг за шагом",
@@ -354,10 +439,12 @@ window.INSTALLER_TEXT = {
       ],
       "aiTitle": "Важно знать до начала",
       "ai": "German Business Kit — программа для самостоятельной работы с помощью AI, а не налоговый консультант (Steuerberater). AI может ошибаться, в том числе в суммах и сроках. Файлы, которые читает ассистент, обрабатываются Anthropic или OpenAI. Используйте вымышленные примеры, пока не прочитаете рекомендации о данных.",
-      "aiLink": "Ограничения AI и ваши данные"
+      "aiLink": "Ограничения AI и ваши данные",
+      "aiStep": "Шаг «{name}» покажет, что проверить до настоящей работы"
     },
     "assistant": {
       "title": "Выберите ассистента",
+      "business": "Будете работать с данными клиентов или сотрудников? Личные тарифы, например Claude Pro или ChatGPT Plus, не включают договор об обработке данных для бизнеса (DPA); его предлагают бизнес-тарифы, например Claude Team или ChatGPT Business. Подробнее — на шаге «{name}».",
       "lead": "German Business Kit работает внутри одного из двух AI-приложений. Оба справляются с задачами из этой инструкции. Выберите удобное; второе можно настроить позже.",
       "choose": "Выбрать {name}",
       "chosen": "Выбрано",
@@ -474,6 +561,77 @@ window.INSTALLER_TEXT = {
         "doneWhen": "**Готово, когда:** приложение ChatGPT открыто, вы вошли в аккаунт и можете выбрать **Codex**.",
         "diagram": ["Скачать", "Установить", "Войти"]
       }
+    },
+    "safety": {
+      "title": "До настоящей работы: риски AI и ваши данные",
+      "lead": "Прочитайте это один раз, прежде чем ассистент увидит настоящие документы. Это займёт около пяти минут. Здесь общая информация, а не юридическая консультация.",
+      "risksTitle": "В чём AI может ошибиться",
+      "risks": [
+        {"title": "Уверенные ошибки", "text": "AI может неверно прочитать документ, применить правила не того года или сослаться на несуществующий источник — и при этом звучать уверенно."},
+        {"title": "Суммы и сроки", "text": "Суммы, НДС и сроки могут быть неверными. Сверяйте их с оригиналом документа и официальным источником."},
+        {"title": "Не налоговый консультант", "text": "German Business Kit — программа для самостоятельной работы, а не Steuerberater или юрист. Её использование не создаёт отношений консультанта и клиента."},
+        {"title": "Решаете вы", "text": "Ассистент готовит черновики. Проверяйте их, прежде чем что-либо отправить, подписать, оплатить или подать. Аккуратный черновик не доказывает, что что-то подано."}
+      ],
+      "flowTitle": "Куда попадают ваши данные",
+      "flow": ["Ваши файлы", "AI-приложение", "Серверы сервиса", "Сохранено в аккаунте"],
+      "flowText": [
+        "Когда ассистент читает файл, его содержимое может отправляться в {provider} для обработки. Папка на вашем компьютере не означает, что AI работает только на вашем компьютере.",
+        "Задачи, разговоры и их содержимое могут оставаться сохранёнными в вашем аккаунте. Удаление файла на компьютере их не удаляет.",
+        "Подключённые сервисы, например облачное хранилище или почта, обрабатывают данные по своим условиям."
+      ],
+      "either": "Anthropic или OpenAI",
+      "gdprTitle": "Защита данных (GDPR) простыми словами",
+      "gdpr": [
+        "**Ваши собственные бумаги**, например ваши чеки или налоговые письма, касаются в основном вас. Всё равно проверьте настройки данных ниже, прежде чем ассистент их прочитает.",
+        "**Данные других людей**, например клиентов, контактных лиц или сотрудников, — это персональные данные по GDPR. Используйте их только для понятной деловой цели и передавайте только то, что нужно для задачи.",
+        "**Личный тариф — не договор для бизнеса.** Тарифы вроде Claude Pro или ChatGPT Plus не включают договор об обработке данных (DPA, статья 28 GDPR). Бизнес-тарифы, например Claude Team или Enterprise и ChatGPT Business или Enterprise, его предлагают. Проверьте это, прежде чем ассистент будет обрабатывать данные клиентов или сотрудников.",
+        "**Сведения о здоровье**, например больничный лист, — особая категория данных (статья 9 GDPR). Используйте вымышленный пример или только те немногие сведения, которые нужны для задачи.",
+        "**Сначала уберите лишнее.** Закройте имена, адреса и идентификационные номера в копии на своём компьютере, прежде чем ассистент её прочитает. Просить об этом AI уже поздно: он их уже прочитал.",
+        "**Если на вас работают другие люди**, объясните им эти правила. Закон ЕС об AI (AI Act) требует от компаний, использующих AI, поддерживать грамотность сотрудников в области AI (статья 4)."
+      ],
+      "gdprNote": "Эта страница — не юридическая консультация и не сертификат соответствия GDPR.",
+      "aiActLink": "Европейская комиссия: вопросы и ответы о грамотности в области AI (на английском)",
+      "fullLink": "Полные рекомендации: ограничения AI и ваши данные",
+      "settingsTitle": "Проверьте настройки данных",
+      "settingsLead": "Сделайте это один раз в приложении или на сайте. Названия меню даны на английском; на другом языке приложения они могут отличаться. Эта инструкция не видит и не меняет ваши настройки.",
+      "claude": {
+        "name": "Claude",
+        "steps": [
+          "Откройте **Settings → Privacy** в приложении Claude или на claude.ai.",
+          "Найдите **Help improve our AI models**. Пока переключатель включён, Anthropic может использовать ваши разговоры и сессии программирования для обучения моделей. Решите, выключить ли его.",
+          "Не нажимайте «палец вверх/вниз» в разговорах с настоящими данными: отзыв отправляет в Anthropic весь разговор, и там он может храниться до пяти лет."
+        ],
+        "link": "Anthropic: как изменить настройку улучшения моделей (на английском)",
+        "business": "Используете Claude Team или Enterprise? Действуют коммерческие условия вашей организации, и по умолчанию это содержимое не используется для обучения."
+      },
+      "openai": {
+        "name": "ChatGPT",
+        "steps": [
+          "Откройте **Settings → Data controls** в приложении ChatGPT или на chatgpt.com.",
+          "Найдите **Improve the model for everyone**. На тарифах Free, Plus и Pro он включён по умолчанию и распространяется на ваши задачи в Codex. Решите, выключить ли его.",
+          "Выключение не удаляет сохранённые разговоры. Удалите разговоры с настоящими данными, которые вам больше не нужны."
+        ],
+        "link": "OpenAI: управление данными в ChatGPT (на английском)",
+        "business": "Используете ChatGPT Business или Enterprise? Действуют настройки вашего рабочего пространства, и по умолчанию OpenAI не обучает модели на этом содержимом."
+      },
+      "quizTitle": "Быстрая проверка: вы бы этим поделились?",
+      "quizLead": "Выберите ответ для каждой карточки. Ничего никуда не отправляется — это только тренировка.",
+      "quizChoices": {"ok": "Можно пробовать", "check": "Сначала проверить", "never": "Никогда"},
+      "quizRight": "Верно.",
+      "quizWrong": "Не совсем. Лучше: {answer}.",
+      "quizScore": "Отвечено: {answered} из {total}, верно: {right}",
+      "quiz": {
+        "demo": {"item": "Вымышленные чеки из примеров этой инструкции", "why": "Вымышленные данные — самый безопасный способ понять, как работает ассистент."},
+        "question": {"item": "Общий вопрос: «Что такое правило Kleinunternehmer?»", "why": "Общие вопросы без личных данных — это нормально. Всё равно сверяйте ответ с официальным источником."},
+        "customer": {"item": "Счёт с именем и адресом вашего клиента", "why": "Это данные другого человека по GDPR. Проверьте тариф и настройки и передавайте только то, что нужно для задачи."},
+        "letter": {"item": "Письмо из налоговой (Finanzamt) о вас", "why": "В нём ваш налоговый номер и личные сведения. Сначала проверьте настройки данных и закройте то, что не нужно для задачи."},
+        "elster": {"item": "Файл сертификата ELSTER и его пароль", "why": "Логины, сертификаты, TAN и коды восстановления никогда не должны попадать в разговор. Входите на официальный сайт сами."},
+        "banking": {"item": "Логин от онлайн-банка, чтобы AI сам проверил платежи", "why": "Никогда не передавайте доступ к банку. Скачайте выписку сами и передайте только нужные для задачи строки."}
+      },
+      "askTitle": "Перед первым настоящим документом",
+      "askLead": "Попросите ассистента объяснить путь данных для вашей настройки:",
+      "askLabel": "Вопрос о ваших данных",
+      "ask": "Используй de-business-kit. Перед чтением настоящих документов объясни, какие данные получит какой провайдер или подключённый сервис, какие настройки аккаунта важны и что можно удалить локально. Если настройку нельзя проверить, скажи об этом. Начни с вымышленного примера."
     },
     "skills": {
       "listTitle": "Семь скиллов, которые вы получите",
@@ -647,9 +805,15 @@ window.INSTALLER_TEXT = {
       "illustration": "Schema. Echte Bildschirme können anders aussehen.",
       "chooseFirst": "Wählen Sie zuerst Ihren Assistenten.",
       "mobile": "Für die Einrichtung brauchen Sie einen Windows-PC oder einen Mac. Öffnen Sie diese Anleitung auf Ihrem Computer, um die App zu installieren.",
-      "footer": "German Business Kit ist KI-gestützte Selbsthilfe-Software und keine Steuerberatung. Diese Seite sendet nichts; Links öffnen offizielle Websites nur, wenn Sie sie auswählen."
+      "progressSummary": "{done} von {total} Schritten erledigt",
+      "ticked": "{done} von {total} abgehakt",
+      "allTicked": "Alle {total} abgehakt. Weiter mit „Weiter“.",
+      "enlarge": "Screenshot vergrößern",
+      "zoom": "Hineinzoomen",
+      "close": "Schließen",
+      "footer": "German Business Kit ist KI-gestützte Selbsthilfe-Software und keine Steuer- oder Rechtsberatung. Diese Seite sendet nichts; Links öffnen offizielle Websites nur, wenn Sie sie auswählen."
     },
-    "steps": {"welcome": "Start", "assistant": "Assistent", "account": "Konto", "app": "App", "skills": "Skills", "demos": "Erste Aufgaben"},
+    "steps": {"welcome": "Start", "assistant": "Assistent", "account": "Konto", "app": "App", "safety": "Daten & Risiken", "skills": "Skills", "demos": "Erste Aufgaben"},
     "welcome": {
       "eyebrow": "Geführte Einrichtung · etwa 30 Minuten",
       "title": "Richten Sie Ihren KI-Assistenten für Ihr Unternehmen Schritt für Schritt ein",
@@ -665,10 +829,12 @@ window.INSTALLER_TEXT = {
       ],
       "aiTitle": "Gut zu wissen vor dem Start",
       "ai": "German Business Kit ist KI-gestützte Selbsthilfe-Software und kein Steuerberater. KI kann sich irren, auch bei Beträgen und Fristen. Dateien, die der Assistent liest, werden von Anthropic oder OpenAI verarbeitet. Verwenden Sie erfundene Beispiele, bis Sie die Hinweise zu Ihren Daten gelesen haben.",
-      "aiLink": "KI-Grenzen und Ihre Daten (auf Englisch)"
+      "aiLink": "KI-Grenzen und Ihre Daten (auf Englisch)",
+      "aiStep": "Der Schritt „{name}“ zeigt, was Sie vor echter Arbeit prüfen sollten"
     },
     "assistant": {
       "title": "Wählen Sie Ihren Assistenten",
+      "business": "Arbeiten Sie mit Daten von Kundinnen, Kunden oder Beschäftigten? Private Tarife wie Claude Pro oder ChatGPT Plus enthalten keinen Auftragsverarbeitungsvertrag (AVV) für Unternehmen; Business-Tarife wie Claude Team oder ChatGPT Business bieten einen an. Mehr dazu im Schritt „{name}“.",
       "lead": "German Business Kit arbeitet in einer von zwei KI-Apps. Beide schaffen die Aufgaben in dieser Anleitung. Wählen Sie, was Ihnen lieber ist; die andere App können Sie später einrichten.",
       "choose": "{name} wählen",
       "chosen": "Ausgewählt",
@@ -785,6 +951,77 @@ window.INSTALLER_TEXT = {
         "doneWhen": "**Fertig, wenn:** die ChatGPT-App geöffnet ist, Sie angemeldet sind und **Codex** wählen können.",
         "diagram": ["Herunterladen", "Installieren", "Anmelden"]
       }
+    },
+    "safety": {
+      "title": "Vor echter Arbeit: KI-Risiken und Ihre Daten",
+      "lead": "Lesen Sie das einmal, bevor der Assistent echte Unterlagen sieht. Es dauert etwa fünf Minuten. Es sind allgemeine Hinweise, keine Rechtsberatung.",
+      "risksTitle": "Was KI falsch machen kann",
+      "risks": [
+        {"title": "Selbstsichere Fehler", "text": "Sie kann ein Dokument falsch lesen, Regeln des falschen Jahres anwenden oder eine Quelle nennen, die es nicht gibt – und trotzdem überzeugt klingen."},
+        {"title": "Beträge und Fristen", "text": "Beträge, Umsatzsteuer und Fristen können falsch sein. Vergleichen Sie sie mit dem Originaldokument und einer offiziellen Quelle."},
+        {"title": "Kein Steuerberater", "text": "German Business Kit ist Selbsthilfe-Software, kein Steuerberater und keine Anwaltskanzlei. Durch die Nutzung entsteht kein Beratungsverhältnis."},
+        {"title": "Sie entscheiden", "text": "Der Assistent bereitet Entwürfe vor. Prüfen Sie sie, bevor Sie etwas senden, unterschreiben, bezahlen oder einreichen. Ein sauberer Entwurf beweist nicht, dass etwas eingereicht wurde."}
+      ],
+      "flowTitle": "Wohin Ihre Daten gehen",
+      "flow": ["Ihre Dateien", "KI-App", "Server des Anbieters", "Im Konto gespeichert"],
+      "flowText": [
+        "Wenn der Assistent eine Datei liest, kann ihr Inhalt zur Verarbeitung an {provider} gesendet werden. Ein Ordner auf Ihrem Computer bedeutet nicht, dass die KI nur auf Ihrem Computer arbeitet.",
+        "Aufgaben, Chats und ihr Inhalt können in Ihrem Konto gespeichert bleiben. Wenn Sie eine Datei auf Ihrem Computer löschen, werden sie nicht gelöscht.",
+        "Verbundene Dienste wie Cloud-Speicher oder E-Mail verarbeiten Daten nach ihren eigenen Bedingungen."
+      ],
+      "either": "Anthropic oder OpenAI",
+      "gdprTitle": "Datenschutz (DSGVO) in einfachen Worten",
+      "gdpr": [
+        "**Ihre eigenen Unterlagen**, etwa Ihre Belege oder Steuerbriefe, betreffen vor allem Sie. Prüfen Sie trotzdem die Datenschutz-Einstellungen unten, bevor der Assistent sie liest.",
+        "**Daten anderer Menschen**, zum Beispiel von Kundschaft, Ansprechpersonen oder Beschäftigten, sind personenbezogene Daten im Sinne der DSGVO. Nutzen Sie sie nur für einen klaren geschäftlichen Zweck und geben Sie nur weiter, was die Aufgabe braucht.",
+        "**Private Tarife sind keine Geschäftsverträge.** Tarife wie Claude Pro oder ChatGPT Plus enthalten keinen Auftragsverarbeitungsvertrag (AVV, Art. 28 DSGVO). Business-Tarife wie Claude Team oder Enterprise und ChatGPT Business oder Enterprise bieten einen an. Prüfen Sie das, bevor der Assistent Daten von Kundschaft oder Beschäftigten verarbeitet.",
+        "**Gesundheitsdaten**, etwa eine Krankmeldung, sind eine besondere Kategorie (Art. 9 DSGVO). Verwenden Sie ein erfundenes Beispiel oder nur die wenigen Angaben, die die Aufgabe braucht.",
+        "**Entfernen Sie Angaben vorher.** Schwärzen Sie Namen, Adressen und Ausweis- oder Steuernummern in einer Kopie auf Ihrem Computer, bevor der Assistent sie liest. Die KI darum zu bitten, ist zu spät: Sie hat sie dann schon gelesen.",
+        "**Wenn andere für Sie arbeiten**, erklären Sie ihnen diese Regeln. Die EU-KI-Verordnung (AI Act) verlangt von Unternehmen, die KI einsetzen, die KI-Kompetenz ihrer Beschäftigten zu fördern (Art. 4)."
+      ],
+      "gdprNote": "Diese Seite ist keine Rechtsberatung und keine DSGVO-Konformitätsbescheinigung.",
+      "aiActLink": "EU-Kommission: Fragen und Antworten zur KI-Kompetenz (auf Englisch)",
+      "fullLink": "Ausführliche Hinweise: KI-Grenzen und Ihre Daten (auf Englisch)",
+      "settingsTitle": "Prüfen Sie Ihre Datenschutz-Einstellungen",
+      "settingsLead": "Tun Sie das einmal in der App oder auf der Website. Menünamen stehen hier auf Englisch und können in einer anderen App-Sprache anders heißen. Diese Anleitung kann Ihre Einstellungen weder sehen noch ändern.",
+      "claude": {
+        "name": "Claude",
+        "steps": [
+          "Öffnen Sie **Settings → Privacy** in der Claude-App oder auf claude.ai.",
+          "Suchen Sie **Help improve our AI models**. Solange der Schalter an ist, darf Anthropic Ihre Chats und Coding-Sitzungen zum Training seiner Modelle nutzen. Entscheiden Sie, ob Sie ihn ausschalten.",
+          "Nutzen Sie in Chats mit echten Daten nicht die Daumen-hoch/runter-Tasten: Feedback sendet das ganze Gespräch an Anthropic, wo es bis zu fünf Jahre gespeichert werden kann."
+        ],
+        "link": "Anthropic: Einstellung zur Modellverbesserung ändern (auf Englisch)",
+        "business": "Sie nutzen Claude Team oder Enterprise? Dann gelten die gewerblichen Bedingungen Ihrer Organisation, und standardmäßig werden diese Inhalte nicht zum Training genutzt."
+      },
+      "openai": {
+        "name": "ChatGPT",
+        "steps": [
+          "Öffnen Sie **Settings → Data controls** in der ChatGPT-App oder auf chatgpt.com.",
+          "Suchen Sie **Improve the model for everyone**. Bei Free, Plus und Pro ist die Option standardmäßig an und gilt auch für Ihre Codex-Aufgaben. Entscheiden Sie, ob Sie sie ausschalten.",
+          "Das Ausschalten löscht keine gespeicherten Chats. Löschen Sie Chats mit echten Daten, die Sie nicht mehr brauchen."
+        ],
+        "link": "OpenAI: Datenkontrollen in ChatGPT (auf Englisch)",
+        "business": "Sie nutzen ChatGPT Business oder Enterprise? Dann gelten die Einstellungen Ihres Workspace, und standardmäßig trainiert OpenAI nicht mit diesen Inhalten."
+      },
+      "quizTitle": "Kurzer Check: Würden Sie das teilen?",
+      "quizLead": "Wählen Sie für jede Karte eine Antwort. Es wird nichts gesendet; das ist nur eine Übung.",
+      "quizChoices": {"ok": "Ausprobieren", "check": "Erst prüfen", "never": "Niemals"},
+      "quizRight": "Richtig.",
+      "quizWrong": "Nicht ganz. Besser: {answer}.",
+      "quizScore": "{answered} von {total} beantwortet, {right} richtig",
+      "quiz": {
+        "demo": {"item": "Die erfundenen Belege aus den Beispielen dieser Anleitung", "why": "Erfundene Daten sind der sicherste Weg, den Assistenten kennenzulernen."},
+        "question": {"item": "Eine allgemeine Frage: „Was ist die Kleinunternehmerregelung?“", "why": "Allgemeine Fragen ohne persönliche Angaben sind in Ordnung. Prüfen Sie die Antwort trotzdem an einer offiziellen Quelle."},
+        "customer": {"item": "Eine Rechnung mit Name und Adresse Ihrer Kundin oder Ihres Kunden", "why": "Das sind Daten einer anderen Person im Sinne der DSGVO. Prüfen Sie Tarif und Einstellungen und geben Sie nur weiter, was die Aufgabe braucht."},
+        "letter": {"item": "Ein Brief des Finanzamts an Sie", "why": "Er enthält Ihre Steuernummer und persönliche Angaben. Prüfen Sie zuerst Ihre Datenschutz-Einstellungen und schwärzen Sie, was die Aufgabe nicht braucht."},
+        "elster": {"item": "Ihre ELSTER-Zertifikatsdatei mit Passwort", "why": "Zugangsdaten, Zertifikate, TANs und Wiederherstellungscodes gehören nie in einen Chat. Melden Sie sich selbst auf der offiziellen Website an."},
+        "banking": {"item": "Ihr Online-Banking-Login, damit die KI Zahlungen selbst prüft", "why": "Geben Sie nie Zugang zu Ihrem Bankkonto. Laden Sie selbst einen Kontoauszug herunter und geben Sie nur die nötigen Zeilen weiter."}
+      },
+      "askTitle": "Vor Ihrem ersten echten Dokument",
+      "askLead": "Bitten Sie den Assistenten, den Datenweg für Ihre Einrichtung zu erklären:",
+      "askLabel": "Frage zu Ihren Daten",
+      "ask": "Nutze de-business-kit. Erkläre mir, bevor du meine echten Dokumente liest, welche Daten an welchen Anbieter oder verbundenen Dienst gehen, welche Kontoeinstellungen wichtig sind und was ich vorher lokal entfernen kann. Wenn du eine Einstellung nicht prüfen kannst, sag das. Beginne mit einem erfundenen Beispiel."
     },
     "skills": {
       "listTitle": "Die sieben Skills, die Sie erhalten",

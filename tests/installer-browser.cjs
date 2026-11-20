@@ -23,8 +23,10 @@ const AGENTS = {
   iphone: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1',
 };
 const LOCALES = { en: 'en-GB', ru: 'ru-RU', de: 'de-DE' };
-const ROUTES = ['welcome', 'assistant', 'account', 'app', 'skills', 'demos',
+const ROUTES = ['welcome', 'assistant', 'account', 'app', 'safety', 'skills', 'demos',
   ...Object.keys(TEXT.en.demos.items).map(id => `demo-${id}`)];
+// Expected answers to the "would you share this?" check.
+const QUIZ = { demo: 'ok', question: 'ok', customer: 'check', letter: 'check', elster: 'never', banking: 'never' };
 const fill = (text, values) => text.replace(/\{(\w+)\}/g, (_, key) => values[key]);
 const plain = text => text.replace(/\*\*/g, '');
 // Each language exercises both assistants; Windows and Mac alternate so all four
@@ -80,6 +82,10 @@ async function external(page, href) {
   assert.match(await link.getAttribute('rel'), /noopener/);
   assert.match(await link.getAttribute('rel'), /noreferrer/);
 }
+async function allTicked(page, t, count) {
+  for (const box of await page.locator('main .checklist input[type=checkbox]').all()) await box.check();
+  await page.locator('main .check-count').filter({ hasText: fill(t.ui.allTicked, { total: count }) }).waitFor();
+}
 async function copies(page, t, label, expected) {
   const box = page.locator('.copy', { has: page.getByLabel(label, { exact: true }) });
   assert.equal(await box.getByLabel(label, { exact: true }).inputValue(), expected);
@@ -122,7 +128,8 @@ async function journey(browser, language, assistant, os) {
     assert.equal(await heading(page).innerText(), t.account[assistant].title);
     await external(page, LINKS[assistant].signup);
     assert.equal(await page.locator('main input[type=checkbox]').count(), t.account[assistant].steps.length);
-    for (const box of await page.locator('main input[type=checkbox]').all()) await box.check();
+    await page.locator('main .check-count').filter({ hasText: fill(t.ui.ticked, { done: 0, total: t.account[assistant].steps.length }) }).waitFor();
+    await allTicked(page, t, t.account[assistant].steps.length);
     await noCredentialFields(page);
     await next(page, t);
 
@@ -139,6 +146,35 @@ async function journey(browser, language, assistant, os) {
     assert.equal(await page.locator('main input[type=checkbox]:checked').count(), t.app[assistant][os].length, 'Ticks survive a reload');
     await next(page, t);
 
+    // Data and AI risks: plain explanations, the provider's own settings and a practice check.
+    assert.equal(await heading(page).innerText(), t.safety.title);
+    for (const risk of t.safety.risks) await page.locator('main').getByText(risk.title, { exact: true }).waitFor();
+    for (const key of [assistant, 'aiAct']) await external(page, LINKS.privacy[key]);
+    await external(page, LINKS.docs[language].risks);
+    assert.equal(await page.locator('main input[type=checkbox]').count(), t.safety[assistant].steps.length);
+    await allTicked(page, t, t.safety[assistant].steps.length);
+    const card = id => page.locator('.quiz-item', { has: page.getByText(t.safety.quiz[id].item, { exact: true }) });
+    const verdict = (id, answer) => card(id).getByRole('button', { name: t.safety.quizChoices[answer], exact: true });
+    const feedback = (id, text) => card(id).getByRole('status').filter({ hasText: text }).waitFor();
+    // Answer with the keyboard: WebKit, like Safari, does not focus buttons on a mouse click.
+    await verdict('banking', 'ok').focus();
+    await page.keyboard.press('Space');
+    assert.equal(await verdict('banking', 'ok').getAttribute('aria-pressed'), 'true');
+    await feedback('banking', fill(t.safety.quizWrong, { answer: t.safety.quizChoices.never }));
+    assert.equal(await verdict('banking', 'ok').evaluate(e => e === document.activeElement), true, 'Answering keeps keyboard focus');
+    for (const [id, answer] of Object.entries(QUIZ)) await verdict(id, answer).click();
+    for (const id of Object.keys(QUIZ)) await feedback(id, t.safety.quizRight);
+    assert.equal(await verdict('banking', 'ok').getAttribute('aria-pressed'), 'false', 'A changed answer replaces the first one');
+    const total = Object.keys(QUIZ).length;
+    await page.locator('main').getByText(fill(t.safety.quizScore, { answered: total, total, right: total }), { exact: true }).waitFor();
+    await copies(page, t, t.safety.askLabel, t.safety.ask);
+    await noCredentialFields(page);
+    await page.reload();
+    await route(page, 'safety');
+    assert.equal(await verdict('elster', 'never').getAttribute('aria-pressed'), 'true', 'Answers survive a reload');
+    await shot('safety');
+    await next(page, t);
+
     assert.equal(await heading(page).innerText(), t.skills[assistant].title);
     for (const [name, description] of Object.entries(t.skills.list)) {
       await page.locator('main').getByText(name, { exact: true }).waitFor();
@@ -148,6 +184,17 @@ async function journey(browser, language, assistant, os) {
       await copies(page, t, t.skills.claude.addressLabel, LINKS.marketplace);
       const screenshot = page.getByRole('img', { name: t.skills.claude.shotAlt });
       assert.equal(await screenshot.evaluate(img => img.decode().then(() => img.naturalWidth > 0, () => false)), true, 'Actual marketplace screenshot loads');
+      // The screenshot opens larger in a dialog; Escape closes it and returns focus.
+      const enlarge = page.getByRole('button', { name: t.ui.enlarge, exact: true });
+      await enlarge.click();
+      const dialog = page.getByRole('dialog', { name: t.skills.claude.shotAlt });
+      await dialog.waitFor();
+      const zoom = dialog.getByRole('button', { name: t.ui.zoom, exact: true });
+      await zoom.click();
+      assert.equal(await zoom.getAttribute('aria-pressed'), 'true');
+      await page.keyboard.press('Escape');
+      await dialog.waitFor({ state: 'hidden' });
+      assert.equal(await enlarge.evaluate(e => e === document.activeElement), true, 'Closing returns focus');
     } else {
       await copies(page, t, t.skills.openai.promptLabel, t.skills.openai.prompt);
       for (const key of ['codexZip', 'checksums', 'page']) await external(page, LINKS.release[key]);
@@ -184,6 +231,9 @@ async function journey(browser, language, assistant, os) {
     for (const step of Object.values(t.steps)) {
       await progress.getByRole('link', { name: `${step} (${t.ui.done})`, exact: true }).waitFor();
     }
+    const steps = Object.keys(t.steps).length;
+    await progress.getByText(fill(t.ui.progressSummary, { done: steps, total: steps }), { exact: true }).waitFor();
+    assert.deepEqual(await progress.locator('progress').evaluate(e => [e.value, e.max]), [steps, steps]);
 
     // Switching language mid-flow keeps the place, choices and ticks.
     const other = language === 'en' ? 'de' : 'en';
@@ -210,7 +260,15 @@ async function journey(browser, language, assistant, os) {
       }
       await page.goto(`${url}#app`);
       await route(page, 'app');
+      if (width === 390) {
+        // On a phone the step list stays compact, so the step itself starts near the top.
+        const top = await heading(page).evaluate(e => e.getBoundingClientRect().top + window.scrollY);
+        assert.ok(top < 300, `Heading starts at ${top}px on a phone`);
+      }
       await shot(`app-${width}`);
+      await page.goto(`${url}#safety`);
+      await route(page, 'safety');
+      await shot(`safety-${width}`);
     }
     assert.deepEqual(issues, []);
   } catch (error) {
@@ -237,6 +295,11 @@ async function edgeCases(browser) {
   await page.goto(`${url}#demos`);
   await route(page, 'demos');
   for (const provider of ['claude', 'openai']) await page.locator('main').getByText(plain(TEXT.de.demos.call[provider]), { exact: true }).waitFor();
+  // The data step is readable before choosing; it shows both providers' settings.
+  await page.goto(`${url}#safety`);
+  await route(page, 'safety');
+  for (const provider of ['claude', 'openai']) await page.locator(`main a[href="${LINKS.privacy[provider]}"]`).waitFor();
+  assert.equal(await page.locator('main input[type=checkbox]').count(), TEXT.de.safety.claude.steps.length + TEXT.de.safety.openai.steps.length);
   // Keyboard users can skip to the step content.
   await page.getByRole('link', { name: TEXT.de.ui.skip, exact: true }).focus();
   await page.keyboard.press('Enter');
@@ -275,7 +338,7 @@ async function edgeCases(browser) {
   try {
     for (const [language, assistant, os] of JOURNEYS) await journey(browser, language, assistant, os);
     await edgeCases(browser);
-    console.log(`${browserName}: ${JOURNEYS.length} EN/RU/DE journeys (Claude/ChatGPT, Windows/Mac), language switch, reload, storage refusal, phone and fallback routes, 1280/390/320px, file opening without network requests — passed`);
+    console.log(`${browserName}: ${JOURNEYS.length} EN/RU/DE journeys (Claude/ChatGPT, Windows/Mac), data-and-risks step with settings checklist and share check, screenshot dialog, progress meter, language switch, reload, storage refusal, phone and fallback routes, 1280/390/320px, file opening without network requests — passed`);
     if (captureDiagnostics) console.log(`${captureDiagnostics} WebKit screenshot-injection CSP diagnostics identified separately; the page CSP was not relaxed.`);
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });
