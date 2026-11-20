@@ -1,9 +1,11 @@
 """Physical folder names, stable record identities and legacy compatibility."""
 import importlib.util
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 import sys
 
 SCRIPT = Path(__file__).resolve().parents[1] / 'skills/de-business-kit/scripts/workspace.py'
@@ -43,6 +45,41 @@ class LocalizedWorkspaceTests(unittest.TestCase):
         for source in [ws.DOCUMENTS, '.business-kit/admin/documents.json', '.workspace-layout.json']:
             with self.assertRaises(ws.WorkspaceError):
                 ws._evidence_path(self.root, source)
+
+    def test_evidence_check_finds_hardlinked_localized_record_with_one_layout_lookup(self):
+        ws.init_workspace(self.root, 2026, 'ru', layout='localized')
+        profile = ws._inside(self.root, ws.PROFILE)
+        self.assertEqual(profile, self.root / '.business-kit/profile/business.json')
+        alias = ws._inside(self.root, '08_correspondence/profile-copy.json')
+        os.link(profile, alias)
+        review = ws._inside(self.root, '08_correspondence/review.md')
+        review.write_text('Synthetic review.', encoding='utf-8')
+        lookups = []
+        original = ws._layout
+        def counted(root):
+            lookups.append(root)
+            return original(root)
+        with patch.object(ws, '_layout', counted):
+            with self.assertRaises(ws.WorkspaceError):
+                ws._evidence_path(self.root, '05 Бизнес/Переписка/profile-copy.json')
+            refused = len(lookups)
+            self.assertEqual(ws._evidence_path(self.root, '08_correspondence/review.md'), review)
+        # Each lookup rereads layout files; it must not repeat per protected record.
+        self.assertLessEqual(refused, 3)
+
+    def test_shipped_folder_catalog_is_not_reread_for_each_path(self):
+        ws.init_workspace(self.root, 2026, 'de', layout='localized')
+        reads = []
+        original = ws._read_regular
+        def counted(path, *args):
+            reads.append(Path(path).name)
+            return original(path, *args)
+        with patch.object(ws, '_read_regular', counted):
+            for _ in range(5):
+                self.assertEqual(ws._path(self.root, '03_banking'), self.root / '03 Buchhaltung/Bank')
+        # The workspace's own layout record is still checked on every lookup.
+        self.assertEqual(reads.count(ws.LAYOUT), 5)
+        self.assertLessEqual(reads.count('folder-layouts.json'), 1)
 
     def test_german_folders_and_canonical_references_resolve_to_the_same_file(self):
         ws.init_workspace(self.root, 2026, 'de', layout='localized')
