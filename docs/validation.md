@@ -37,8 +37,11 @@ changed code first, so warm caches favoured the baseline) ran four heavy modules
 
 In that PR #30 run the unit-test steps took 210 s + 164 s (Python 3.9) and
 122 s + 133 s (3.14), and Prototype `test:gui` took 31 s (294 s in the PR #29 run).
-Shard weights were then updated from those logs; the predicted Python 3.9 split is
-190 s/189 s, not yet measured. Locally on macOS arm64, Python 3.15.2 ran
+Shard weights were then updated from those logs (predicted Python 3.9 split
+190 s/189 s). The next PR #30 run, [44818005665](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/44818005665)
+at `a2678c5`, passed from selector start to gate end in **4 min 14 s**, with
+unit-test steps of 127 s + 120 s (Python 3.9) and 121 s + 153 s (3.14) on faster
+runners. Locally on macOS arm64, Python 3.15.2 ran
 **494 tests with 11 Windows-only skips** in 72.9 s, and Python 3.9.6 ran the two
 shards as 255 + 239 tests with the same skips. Package, release-version, Markdown
 link and diff checks passed.
