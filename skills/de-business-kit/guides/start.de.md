@@ -20,6 +20,8 @@ Prüfen Sie Konto, Datenkontrollen und benötigte Inhalte vor echten Dokumenten.
 
 ## Ihr erster Schritt
 
+**Lieber Schritt für Schritt?** Eine geführte Einrichtungsseite auf Deutsch, Englisch und Russisch führt von der Wahl zwischen Claude und ChatGPT/Codex über Konto und App-Installation auf den offiziellen Seiten bis zum Kit und zu ersten Aufgaben mit erfundenen Daten. Wählen Sie auf der [Projektseite](https://github.com/ilyafedotov-ops/german-business-skills) **Code → Download ZIP**, entpacken Sie die Datei und öffnen Sie `installer/index.html` im Browser. Diese Kopie dient nur der Anleitung; installieren Sie das Kit mit den Schritten auf der Seite. Die Seite selbst sendet nichts und fragt nie nach Passwörtern, Zahlungsdaten oder Codes.
+
 Installation in der Claude-App (kostenpflichtiger Tarif): **Cowork → Customize → Plugins → Add → Add marketplace**, `ilyafedotov-ops/german-business-skills` eingeben und **German Business Kit** installieren. Die ausführliche [Installationsanleitung](install.en.md) gibt es auf Englisch und Russisch, auch für Codex. Starten Sie danach eine neue Aufgabe in Cowork oder öffnen Sie Ihr Codex-Projekt mit den installierten Skills. Ist im Codex-Projekt nur der Ordner vorhanden, bitten Sie den Assistenten, die lokale Installation zu prüfen und die vorgesehenen Dateien und Ziele zu erklären. Ein heruntergeladenes ZIP installiert noch nichts. Python und geänderte Sicherheitseinstellungen sind keine Voraussetzung für den Einstieg.
 
 Rufen Sie den Skill zuerst auf: In **Claude** geben Sie **/** ein oder öffnen

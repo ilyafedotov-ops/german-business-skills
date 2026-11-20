@@ -40,6 +40,7 @@ protected journal/filing writers or full filing preflight.
 | Readable documents and recipient materials | [Document authoring](skills/de-business-kit/references/document-authoring.md), [readable-output rules](skills/de-business-kit/references/readable-output.md) |
 | Real local GUI and packaged runtime | [GUI](gui/), [scope/security](docs/gui.md), [build](tools/build_gui.py), [adapter tests](tests/test_gui_server.py); use canonical writers, workspace identity and draft version checks |
 | Interactive demonstration | [prototype](prototype/), [prototype scope](docs/gui.md#fictional-prototype); fictional data, not a connected accounting application |
+| Beginner guided setup | [installer](installer/), [scope and provider sources](docs/gui.md#guided-setup-page), [content tests](tests/test_installer.py); static page with official links only, no downloads, host changes or credentials |
 | Installation and packaging | [tools](tools/), [distribution](docs/distribution.md), [package readmes](packaging/) |
 | Verification and known gaps | [tests](tests/), [behavioral scenarios](evals/scenarios.json), [validation record](docs/validation.md), [CI](.github/workflows/) |
 
@@ -140,6 +141,7 @@ an instruction to install Python on users' machines.
 | Full backup/restore | `python3 -B -m unittest discover -s tests -p test_recovery.py -v`, native `tests/native/recovery-smoke.ps1`, and cross-runtime verification. Test refusal to overwrite, unsafe paths, corruption, manifest identity and concurrent writers. |
 | Real GUI behavior or packaging | `npm run test:gui` in Chromium/WebKit, `tests/test_gui_server.py`, packaged smoke with empty PATH, native Windows/macOS CI. Never expose the workspace as a static web directory or bypass protected writers. |
 | Prototype behavior or appearance | `npm test` and `npm run test:browser`; inspect affected journeys, screenshots and console/network errors. Use existing development dependencies. |
+| Guided setup page | `tests/test_installer.py`, `npm run test:installer -- --browser=chromium` and `--browser=webkit`; inspect EN/RU/DE screenshots. Recheck changed provider links/plans on official pages and record the new date. |
 | Printable HTML template | `npm run test:documents`; inspect actual rendered/exported artifacts, including long tables and language coverage. |
 | Skill workflow or routing | Relevant fresh-session trials from `evals/scenarios.json`, using synthetic inputs without revealing evaluation criteria; record actual host/version and outcomes. |
 | Packaging or resource layout | Detached-package tests and, when needed, `tools/build_package.py --output` with a new absolute directory outside the checkout. Building is not installation or publishing. |

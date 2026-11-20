@@ -112,3 +112,21 @@ npm run test:browser -- --browser=webkit
 ```
 
 Tests open the HTML file directly; synthetic screenshots go to ignored `output/prototype/`. No production dependency or network request is added. See the [validation summary](validation.md) for evidence limits and the dated [design research](research/gui-ux-recommendation.md). The real GUI above is implemented separately; ordinary-user usability acceptance remains open.
+
+## Guided setup page
+
+[installer/index.html](../installer/index.html) is a static English/Russian/German setup wizard for people who have never used Claude or ChatGPT/Codex. Keep the `installer` folder together and open the HTML file in a desktop browser; the page itself needs no installation, runtime or account. Its steps are: language; assistant choice with plan requirements; account creation on the provider's official page; app download for Windows or Mac; German Business Kit installation; four first-task demos with fictional data and copyable requests. The language can be changed on every step.
+
+It reuses the existing routes from the [installation guide](../skills/de-business-kit/guides/install.en.md): the Claude plugin marketplace address, and the Codex project-skill copy from the published release ZIP with `SHA256SUMS`. The page never downloads or runs installers, changes host settings, reads files, or collects passwords, payment details, codes or keys. It has no text inputs. Its CSP forbids network connections; official sites open in a new tab only when the user selects a link. Language, assistant, computer type and ticked steps stay in that browser's local storage. If storage is refused, the page keeps working and says that progress is not saved.
+
+Wording lives in `installer/text.js` (one strict-JSON object per language); official destinations and their check date live in `installer/links.js`. On **2026-11-20** the sign-up, plan, download and skill-location facts were checked against [Claude download](https://claude.com/download), [Claude plans](https://claude.com/pricing), [Claude plugins](https://claude.com/docs/plugins/overview), [Claude login](https://support.claude.com/en/articles/13189465), [Claude phone verification](https://support.claude.com/en/articles/8287232), [ChatGPT desktop app](https://learn.chatgpt.com/docs/app), [ChatGPT for Windows](https://learn.chatgpt.com/docs/windows/windows-app), [Codex with a ChatGPT plan](https://help.openai.com/en/articles/11369540), [ChatGPT plans](https://chatgpt.com/pricing) and [Codex skill locations](https://learn.chatgpt.com/docs/build-skills). Practical consequence on that date: Cowork and plugins need Claude **Pro or higher**, while Codex is included in every ChatGPT plan, **Free and Go included**, with plan-dependent limits; a user who does not want to pay is therefore shown the ChatGPT/Codex route instead of an upgrade. Recheck these pages and record a new date when links or plan rules change. `tests/test_installer.py` checks EN/RU/DE structure, skill names, official HTTPS hosts, documentation anchors and that release links match the tag pinned in `.claude-plugin/marketplace.json`.
+
+The page is not yet published at a web address or as a release asset; users reach it from a downloaded copy of the repository. It cannot detect whether an app is installed or verify a plugin installation, and it does not replace observing a real first run.
+
+```sh
+python3 -B -m unittest discover -s tests -p test_installer.py -v
+npm run test:installer -- --browser=chromium
+npm run test:installer -- --browser=webkit
+```
+
+The browser test opens the file directly in EN/RU/DE for both assistants with Windows and Mac user agents, at 1280, 390 and 320 px. Synthetic screenshots go to ignored `output/installer/`.

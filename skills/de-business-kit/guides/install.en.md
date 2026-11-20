@@ -14,6 +14,8 @@ This guide takes you from installing the kit to your first useful answer in abou
 
 [Install in Claude](#install-in-claude) · [First task](#try-your-first-task) · [Private folder](#keep-your-work-in-a-private-folder) · [Updates](#updates) · [Codex](#install-in-codex) · [Help](#if-you-get-stuck)
 
+**Prefer a click-through guide?** A guided setup page in English, Russian and German takes you from choosing Claude or ChatGPT/Codex, through creating the account and installing the app on the official pages, to adding the kit and trying fictional first tasks. On the [project page](https://github.com/ilyafedotov-ops/german-business-skills) choose **Code → Download ZIP**, extract the ZIP and open `installer/index.html` in your browser. That copy only shows the guide; install the kit with the steps the page shows. The page itself sends nothing and never asks for passwords, payment details or codes.
+
 ## Ask your assistant to help install
 
 In Codex or Claude, paste:
@@ -40,7 +42,7 @@ skill can explain relevant tasks, invocation and saved-folder continuation.
 ## What you need
 
 - A Windows PC or Mac with internet access.
-- The **Claude desktop app** with a paid plan: Pro, Max, Team or Enterprise. The free plan does not include Cowork or plugins.
+- The **Claude desktop app** with a paid plan: Pro, Max, Ultra, Team or Enterprise. The free plan does not include Cowork or plugins.
 - Using **Codex** (OpenAI) instead? Go to [Install in Codex](#install-in-codex).
 
 **Cowork** is the part of the Claude app that works on tasks with files in a folder you choose. A **plugin** adds ready-made instructions to Claude. German Business Kit is one plugin with seven connected skills: a general helper plus specialists for starting, daily work, accounting, tax, services and changes.
@@ -252,4 +254,4 @@ Business Assistant/
 
 ## Sources and checks
 
-The Claude route follows Anthropic's [Cowork plugin guide](https://claude.com/docs/cowork/guide/plugins) and [plugins overview](https://claude.com/docs/plugins/overview), checked **2026-10-26**. On that date the same marketplace installed the exact 0.9.0-preview.1 release with all seven skills through Claude Code 2.1.310; installation inside the Cowork app itself has not been observed yet. The Codex route follows [OpenAI app instructions](https://learn.chatgpt.com/docs/app) and [OpenAI local skills](https://learn.chatgpt.com/docs/build-skills). Menu names can change between app versions. See the [validation record](https://github.com/ilyafedotov-ops/german-business-skills/blob/main/docs/validation.md).
+The Claude route follows Anthropic's [Cowork plugin guide](https://claude.com/docs/cowork/guide/plugins) and [plugins overview](https://claude.com/docs/plugins/overview), checked **2026-10-26**. On that date the same marketplace installed the exact 0.9.0-preview.1 release with all seven skills through Claude Code 2.1.310; installation inside the Cowork app itself has not been observed yet. Claude plan names and the guided setup page's provider links were rechecked on **2026-11-20**. The Codex route follows [OpenAI app instructions](https://learn.chatgpt.com/docs/app) and [OpenAI local skills](https://learn.chatgpt.com/docs/build-skills). Menu names can change between app versions. See the [validation record](https://github.com/ilyafedotov-ops/german-business-skills/blob/main/docs/validation.md).
