@@ -208,6 +208,14 @@ authoritative; preparation does not itself post entries or complete the month.
 
 For work inside ELSTER or accounting software, see [assisted forms and services](assisted-services.en.md). You handle login and any final action you reserve for yourself. The assistant shows the concrete material before an external action and preserves the observed outcome afterwards.
 
+For a possible mistake in a submitted return, ask: **“Check what was actually
+filed, distinguish missing evidence from a confirmed error, and explain what to
+check or correct first.”** The assistant should check the period, filing state
+and deadlines. It distinguishes a possible issue from an established duty to
+notify Finanzamt; when that duty exists, completing every calculation must not
+delay notification. Preparation does not send a notice or corrected return.
+[Workflow details](../references/tax-consultant.md#check-a-possible-error-in-a-filed-return).
+
 To prepare a prepayment adjustment, select **de-business-tax** and ask:
 
 > Help me reduce my income-tax prepayments using this notice and forecast. Save the German request and an English review in my business folder so we can continue later.

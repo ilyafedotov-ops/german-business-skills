@@ -57,6 +57,57 @@ For a receipt, link the consultation ID, source checks and necessary factual con
 
 For a form, hand over to `forms.md` with proposed field values and evidence. Preserve exact German field labels. Check the scope of existing authorization for the concrete recipient, period, action and payload before any external mutation. Finish the reviewable draft first; resolve only missing authorization at the action boundary. Do not repeat a confirmation already supplied for that exact operation. Record transmission evidence separately from substantive authority acceptance.
 
+## Check a possible error in a filed return
+
+Before recommending a correction, establish the tax, period, exact form and
+actual filing state: draft, observed submission/receipt, uncertain attempt or
+authority decision. For VAT distinguish Voranmeldungen from the Jahreserklärung;
+an unfiled income-tax return still needs an initial filing. Reuse supplied facts
+and inspect available versions/receipts without treating an absent receipt as
+proof of non-submission. Check applicable filing/correction deadlines against the
+current date, including adviser involvement, extensions and authority requests.
+
+Separate three findings and state which is supported:
+
+- **Missing evidence:** a document or customer detail is absent. Identify what
+  can still be established and continue organizing records; the gap alone does
+  not prove an incorrect return or a notification duty.
+- **Uncertain treatment:** the previous tax classification needs prompt research
+  or review. Explain the deciding facts and sources. Do not infer foreign B2B or
+  domestic VAT solely from a website, payment asset or missing customer address.
+- **Recognized error/incompleteness:** under AO §153(1), assess actual subsequent
+  recognition that a filed declaration is incorrect/incomplete and that this may
+  have caused or may cause a tax shortfall, before the assessment period expires.
+  A final debt calculation is not required for that recognition. Do not turn
+  suspicion alone into this finding, or downgrade an established finding to mere
+  uncertainty because the exact amount is still being reconstructed.
+
+When those §153(1) prerequisites are established, explain notification and
+correction **without culpable delay**. Do not advise waiting for the annual return,
+all customer documents or the complete reconciliation before notifying Finanzamt.
+If quantification needs preparation time, distinguish prompt notification from
+the subsequent quantified correction; explain the needed time to the authority.
+Do not invent a fixed safe delay, a granted extension, immunity or tax evasion.
+For uncertainty alone, recommend prompt investigation and distinguish any proposed
+factual contact from an established statutory duty. Other correction/notification
+grounds need their own applicable-rule check; this is not an exhaustive AO test.
+
+Prepare the affected-period comparison (filed facts/amounts, proposed changes,
+evidence and unresolved items), preserving originals and linked versions. Keep
+profit timing separate from VAT timing; EÜR does not establish permission for
+Istbesteuerung. Do not move an earlier-period error into the current return merely
+for convenience. Continue unaffected preparation while any focused professional
+review is pending. A recommendation or legal duty does not authorize the assistant
+to send: reuse the existing concrete external-action authorization rules.
+
+Primary sources checked **2026-11-05**, including application to the synthetic
+2025-return review: [AO §153(1)](https://www.gesetze-im-internet.de/ao_1977/__153.html)
+and [AEAO 2025 to §153, nos. 2.4 and 5.1](https://ao.bundesfinanzministerium.de/ao/2025/Abgabenordnung/Vierter-Teil/Zweiter-Abschnitt/Zweiter-Unterabschnitt/Paragraf-153/ae-153.html).
+Recheck for the actual period and correction date. Practical contrast: an
+unverified customer location requires prompt investigation; a subsequently
+recognized omitted taxable sale with a possible shortfall triggers the above
+notification/correction route even while its amount is being reconstructed.
+
 ## Prepare or revise an income-tax prepayment request
 
 For “reduce my tax prepayments”, first identify the tax and year. This route covers
