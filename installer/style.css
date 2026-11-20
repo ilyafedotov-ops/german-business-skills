@@ -25,6 +25,11 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
 select{min-height:40px;padding:6px 10px;border:1px solid #bac8be;border-radius:8px;background:#fff;color:inherit}
 
 .layout{flex:1;display:grid;grid-template-columns:230px minmax(0,1fr);gap:clamp(20px,4vw,48px);width:100%;max-width:1160px;margin:0 auto;padding:32px clamp(16px,4vw,40px) 40px}
+.progress-summary{margin:0 0 6px;color:var(--muted);font-size:.85rem;font-weight:700}
+.progress progress{display:block;width:100%;height:8px;margin:0 0 14px;border:0;border-radius:99px;background:#e3e9df;overflow:hidden;-webkit-appearance:none;appearance:none}
+.progress progress::-webkit-progress-bar{background:#e3e9df;border-radius:99px}
+.progress progress::-webkit-progress-value{background:var(--green);border-radius:99px}
+.progress progress::-moz-progress-bar{background:var(--green);border-radius:99px}
 .progress ol{display:grid;gap:6px;list-style:none;margin:0 0 14px;padding:0}
 .progress a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;color:#435349;font-size:.95rem;font-weight:600;text-decoration:none}
 .progress a:hover{background:#eef2ea}
@@ -70,6 +75,8 @@ button:hover,.button-link:hover{background:#edf3ec}
 
 .flow{margin:0 0 18px}
 .flow ol{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,118px),1fr));gap:10px;list-style:none;margin:0;padding:0}
+.flow.n3 ol{grid-template-columns:repeat(3,minmax(0,1fr))}
+.flow.n4 ol{grid-template-columns:repeat(4,minmax(0,1fr))}
 .flow li{position:relative;display:grid;justify-items:center;gap:6px;padding:16px 8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--soft);font-size:.88rem;font-weight:600;text-align:center}
 .flow-number{position:absolute;top:6px;left:9px;color:var(--muted);font-size:.75rem}
 .flow-icon svg{width:30px;height:30px;fill:none;stroke:var(--green);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -83,6 +90,30 @@ button:hover,.button-link:hover{background:#edf3ec}
 .check-row label{cursor:pointer}
 .checklist .check-row label::before{content:counter(step) ". ";font-weight:700}
 .tried{margin-top:8px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.check-count{margin:-4px 0 16px;color:var(--muted);font-size:.9rem;font-weight:600}
+.check-count.complete{display:inline-block;padding:4px 10px;border-radius:7px;background:#e3ece0;color:#184f38}
+
+h3{margin:0 0 6px;font-size:1.02rem;line-height:1.35}
+.risks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:12px;list-style:none;margin:0 0 18px;padding:0}
+.risk{display:flex;align-items:flex-start;gap:12px;padding:16px;border:1px solid #ecd6ad;border-radius:12px;background:#fffaf1}
+.risk p{margin:0;font-size:.95rem}
+.risk-icon{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:10px;background:#fbefd8}
+.risk-icon svg{width:26px;height:26px;fill:none;stroke:var(--amber);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+.quiz-list{display:grid;gap:12px;list-style:none;margin:0 0 14px;padding:0}
+.quiz-item{padding:14px 16px;border:1px solid var(--line);border-left-width:5px;border-radius:12px;background:#fff;transition:border-color .2s,background-color .2s}
+.quiz-item.right{border-color:var(--green);background:#f3f8f1}
+.quiz-item.wrong{border-color:#c98a2b;background:#fffaf1}
+.quiz-question{margin-bottom:10px;font-weight:650}
+.verdicts{display:flex;flex-wrap:wrap;gap:8px}
+.verdict{min-height:40px;padding:8px 14px;border-radius:99px}
+.verdict-ok[aria-pressed=true]{background:var(--green);border-color:var(--green);color:#fff}
+.verdict-check[aria-pressed=true]{background:#8a560f;border-color:#8a560f;color:#fff}
+.verdict-never[aria-pressed=true]{background:#9b2c22;border-color:#9b2c22;color:#fff}
+.verdict[aria-pressed=true]:hover{filter:brightness(.92)}
+.quiz-feedback{margin:10px 0 0}
+.quiz-feedback:empty{display:none}
+.quiz-score{margin:0;font-weight:700}
 
 .copy{display:grid;gap:8px;margin:0}
 .copy label{font-size:.9rem;font-weight:700}
@@ -92,8 +123,15 @@ textarea{width:100%;padding:10px 12px;border:1px solid #c5d0c8;border-radius:10p
 .copy-status.warn{color:var(--amber)}
 
 .shot{margin:0 0 14px}
-.shot img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:10px}
+.shot img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:10px;cursor:zoom-in}
 .shot figcaption{margin-top:6px}
+.lightbox{width:min(96vw,1600px);max-width:none;max-height:92vh;padding:0;border:0;border-radius:12px;background:#fff;color:inherit}
+.lightbox[open]{display:flex;flex-direction:column}
+.lightbox::backdrop{background:rgba(18,30,24,.72)}
+.lightbox-bar{display:flex;justify-content:flex-end;gap:8px;padding:10px;border-bottom:1px solid var(--line);background:#fcfcf9}
+.lightbox-body{flex:1;min-height:0;overflow:auto}
+.lightbox-body img{display:block;width:100%;height:auto;border:0;border-radius:0;cursor:auto}
+.lightbox-body.zoomed img{width:200%;max-width:none}
 .skill-list{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin:0}
 .skill-list dd{margin:0}
 
@@ -102,13 +140,22 @@ footer p{max-width:1080px;margin:0 auto 6px}
 
 @media (max-width:780px){
   .layout{grid-template-columns:1fr;gap:18px;padding-top:18px}
-  .progress ol{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-  .progress a{flex-direction:column;gap:4px;padding:8px 4px;font-size:.8rem;text-align:center;overflow-wrap:anywhere}
+  /* One compact row of step numbers; names stay available to screen readers and in each step's heading. */
+  .progress ol{grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-bottom:8px}
+  .progress a{justify-content:center;padding:6px 0;border-radius:8px}
+  .progress-label{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .progress .hint{margin:0;font-size:.78rem}
   .checklist>li>:not(.check-row){margin-left:0}
 }
 @media (max-width:520px){
   body{hyphens:auto}
+  .language label{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .flow.n4 ol{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .flow li{padding:14px 4px 10px}
   .skill-list{grid-template-columns:1fr;gap:2px}
   .skill-list dd{margin-bottom:10px}
   .step-nav button,.downloads .button-link{flex:1 1 100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important}
 }

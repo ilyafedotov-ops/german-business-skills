@@ -5,8 +5,12 @@
   const TEXT = window.INSTALLER_TEXT;
   const LINKS = window.INSTALLER_LINKS;
   const LANGUAGES = ['en', 'ru', 'de'];
-  const STEPS = ['welcome', 'assistant', 'account', 'app', 'skills', 'demos'];
+  const STEPS = ['welcome', 'assistant', 'account', 'app', 'safety', 'skills', 'demos'];
   const PROVIDERS = ['claude', 'openai'];
+  const MAKERS = { claude: 'Anthropic', openai: 'OpenAI' };
+  // Practice answers for "would you share this?"; tests/test_installer.py reads this table.
+  const QUIZ = { demo: 'ok', question: 'ok', customer: 'check', letter: 'check', elster: 'never', banking: 'never' };
+  const VERDICTS = ['ok', 'check', 'never'];
   const SYSTEMS = ['windows', 'mac'];
   const DEMOS = Object.keys(TEXT.en.demos.items);
   // Routes are compared with this fixed list, never looked up as object properties.
@@ -27,12 +31,18 @@
     check: 'M5 12l5 5 9-10',
     folder: 'M3 6h6l2 2h10v11H3z',
     chat: 'M4 5h16v11H9l-5 4z',
+    cloud: 'M7 18h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.2 8.6 4.7 4.7 0 0 0 7 18z',
+    archive: 'M3 4h18v4H3zM5 8v12h14V8M10 12h4',
+    alert: 'M12 3l9.5 17h-19zM12 10v4M12 17h.01',
+    calc: 'M6 3h12v18H6zM9 7h6M9 11h.01M12 11h.01M15 11h.01M9 14h.01M12 14h.01M15 14h.01M9 17h.01M12 17h.01M15 17h.01',
   };
   const DIAGRAMS = {
     account: ['page', 'mail', 'phone', 'card'],
     app: ['download', 'box', 'person'],
     claude: ['sliders', 'puzzle', 'plus', 'check'],
     openai: ['folder', 'download', 'chat', 'check'],
+    safety: ['folder', 'chat', 'cloud', 'archive'],
+    risks: ['alert', 'calc', 'person', 'check'],
   };
 
   const $ = id => document.getElementById(id);
@@ -72,7 +82,7 @@
   }
 
   function load() {
-    const fresh = { lang: initialLanguage(), started: false, assistant: null, os: system.os, done: {}, route: 'welcome' };
+    const fresh = { lang: initialLanguage(), started: false, assistant: null, os: system.os, done: {}, quiz: {}, route: 'welcome' };
     let saved = null;
     try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (error) { saved = null; }
     if (!saved || typeof saved !== 'object') return fresh;
@@ -85,6 +95,10 @@
       for (const [key, value] of Object.entries(saved.done)) {
         if (value === true && /^[a-z]+(?::[a-z0-9]+){1,3}$/.test(key)) fresh.done[key] = true;
       }
+    }
+    if (saved.quiz && typeof saved.quiz === 'object') {
+      // Read only the fixed card ids, never arbitrary saved keys.
+      for (const id of Object.keys(QUIZ)) if (VERDICTS.includes(saved.quiz[id])) fresh.quiz[id] = saved.quiz[id];
     }
     return fresh;
   }
@@ -130,27 +144,38 @@
     return svg;
   }
 
-  function diagram(labels, icons) {
-    return h('figure', { class: 'flow' },
+  function diagram(labels, icons, caption = t.ui.illustration) {
+    // The class sets one row per diagram on wide screens and avoids a lone tile on phones.
+    return h('figure', { class: `flow n${labels.length}` },
       h('ol', {}, labels.map((label, index) => h('li', {},
         h('span', { class: 'flow-number', 'aria-hidden': 'true' }, String(index + 1)),
         h('span', { class: 'flow-icon', 'aria-hidden': 'true' }, icon(icons[index])),
         h('span', {}, label)))),
-      h('figcaption', { class: 'hint' }, t.ui.illustration));
+      caption ? h('figcaption', { class: 'hint' }, caption) : null);
   }
 
   function checklist(prefix, items, extras = {}) {
-    return h('ol', { class: 'checklist' }, items.map((item, index) => {
+    const status = h('p', { class: 'check-count', role: 'status' });
+    const count = () => {
+      const done = items.filter((_, index) => state.done[`${prefix}:${index}`] === true).length;
+      const all = done === items.length;
+      status.textContent = fill(all ? t.ui.allTicked : t.ui.ticked, { done, total: items.length });
+      status.classList.toggle('complete', all);
+    };
+    const list = h('ol', { class: 'checklist' }, items.map((item, index) => {
       const key = `${prefix}:${index}`;
       const id = `check-${key.replace(/:/g, '-')}`;
       const box = h('input', { type: 'checkbox', id, onchange: event => {
         if (event.target.checked) state.done[key] = true; else delete state.done[key];
         save();
+        count();
         progress();
       } });
       box.checked = state.done[key] === true;
       return h('li', {}, h('div', { class: 'check-row' }, box, h('label', { for: id }, rich(item))), extras[index] || null);
     }));
+    count();
+    return [list, status];
   }
 
   async function copyText(value, area) {
@@ -214,7 +239,9 @@
         h('p', { class: 'hint' }, w.languageHint)),
       h('div', { class: 'grid two' },
         h('section', { class: 'card' }, h('h2', {}, w.needTitle), h('ul', { class: 'ticks' }, w.need.map(item => h('li', {}, rich(item))))),
-        h('section', { class: 'card note' }, h('h2', {}, w.aiTitle), h('p', {}, rich(w.ai)), h('p', {}, external(LINKS.docs[state.lang].risks, w.aiLink)))),
+        h('section', { class: 'card note' }, h('h2', {}, w.aiTitle), h('p', {}, rich(w.ai)),
+          h('p', {}, h('a', { href: '#safety' }, fill(w.aiStep, { name: t.steps.safety }))),
+          h('p', {}, external(LINKS.docs[state.lang].risks, w.aiLink)))),
       h('p', { class: 'safety' }, t.ui.safety),
       h('div', { class: 'step-nav' }, h('button', { type: 'button', class: 'primary', onclick: () => { state.started = true; save(); go('assistant'); } }, t.ui.start)),
     ];
@@ -243,6 +270,7 @@
       h('p', { class: 'lead' }, a.lead),
       h('div', { class: 'grid two' }, PROVIDERS.map(providerCard)),
       h('p', { class: 'hint' }, rich(a.unsure)),
+      h('p', { class: 'hint' }, fill(a.business, { name: t.steps.safety })),
       h('p', { class: 'hint' }, a.work),
       stepNav('assistant'),
     ];
@@ -307,9 +335,109 @@
     ];
   }
 
+  function riskCards() {
+    const s = t.safety;
+    return h('section', { 'aria-labelledby': 'risks-title' },
+      h('h2', { id: 'risks-title' }, s.risksTitle),
+      h('ul', { class: 'risks' }, s.risks.map((risk, index) => h('li', { class: 'risk' },
+        h('span', { class: 'risk-icon', 'aria-hidden': 'true' }, icon(DIAGRAMS.risks[index])),
+        h('div', {}, h('h3', {}, risk.title), h('p', {}, risk.text))))));
+  }
+
+  function quizView() {
+    const s = t.safety;
+    const ids = Object.keys(QUIZ);
+    const score = h('p', { class: 'quiz-score' });
+    const updateScore = () => {
+      const answered = ids.filter(id => state.quiz[id]);
+      const right = answered.filter(id => state.quiz[id] === QUIZ[id]).length;
+      score.textContent = answered.length ? fill(s.quizScore, { answered: answered.length, total: ids.length, right }) : '';
+    };
+    const cards = ids.map(id => {
+      const item = s.quiz[id];
+      const labelId = `quiz-${id}`;
+      const feedback = h('p', { class: 'quiz-feedback', role: 'status' });
+      const card = h('li', { class: 'quiz-item' });
+      const show = () => {
+        const answer = state.quiz[id];
+        const right = answer === QUIZ[id];
+        buttons.forEach((button, index) => button.setAttribute('aria-pressed', String(VERDICTS[index] === answer)));
+        card.classList.toggle('right', Boolean(answer) && right);
+        card.classList.toggle('wrong', Boolean(answer) && !right);
+        feedback.replaceChildren(...(answer ? [h('strong', {}, right ? s.quizRight : fill(s.quizWrong, { answer: s.quizChoices[QUIZ[id]] })), ` ${item.why}`] : []));
+      };
+      // Answers update in place so focus stays on the chosen button.
+      const buttons = VERDICTS.map(verdict => h('button', { type: 'button', class: `verdict verdict-${verdict}`, onclick: () => {
+        state.quiz[id] = verdict;
+        save();
+        show();
+        updateScore();
+        progress();
+      } }, s.quizChoices[verdict]));
+      show();
+      card.append(h('p', { class: 'quiz-question', id: labelId }, item.item),
+        h('div', { class: 'verdicts', role: 'group', 'aria-labelledby': labelId }, buttons), feedback);
+      return card;
+    });
+    updateScore();
+    return h('section', { class: 'card quiz', 'aria-labelledby': 'quiz-title' },
+      h('h2', { id: 'quiz-title' }, s.quizTitle), h('p', { class: 'hint' }, s.quizLead),
+      h('ol', { class: 'quiz-list' }, cards), score);
+  }
+
+  function safetyView() {
+    const s = t.safety;
+    const providers = state.assistant ? [state.assistant] : PROVIDERS;
+    const who = state.assistant ? MAKERS[state.assistant] : s.either;
+    return [
+      ...heading(s.title, eyebrow('safety')),
+      h('p', { class: 'lead' }, s.lead),
+      riskCards(),
+      h('section', { class: 'card', 'aria-labelledby': 'flow-title' },
+        h('h2', { id: 'flow-title' }, s.flowTitle),
+        diagram(s.flow, DIAGRAMS.safety, null),
+        h('ul', { class: 'ticks' }, s.flowText.map(text => h('li', {}, fill(text, { provider: who }))))),
+      h('section', { class: 'card note', 'aria-labelledby': 'gdpr-title' },
+        h('h2', { id: 'gdpr-title' }, s.gdprTitle),
+        h('ul', { class: 'ticks' }, s.gdpr.map(item => h('li', {}, rich(item)))),
+        h('p', { class: 'hint' }, s.gdprNote),
+        h('p', { class: 'small' }, external(LINKS.privacy.aiAct, s.aiActLink)),
+        h('p', { class: 'small' }, external(LINKS.docs[state.lang].risks, s.fullLink))),
+      h('section', { 'aria-labelledby': 'settings-title' },
+        h('h2', { id: 'settings-title' }, s.settingsTitle),
+        h('p', { class: 'hint' }, s.settingsLead),
+        providers.map(provider => [
+          providers.length > 1 ? h('h3', {}, s[provider].name) : null,
+          checklist(`${provider}:safety`, s[provider].steps),
+          h('p', {}, external(LINKS.privacy[provider], s[provider].link)),
+          h('p', { class: 'hint' }, s[provider].business),
+        ])),
+      quizView(),
+      h('section', { class: 'card', 'aria-labelledby': 'ask-title' },
+        h('h2', { id: 'ask-title' }, s.askTitle), h('p', {}, s.askLead), copyBox(s.askLabel, s.ask)),
+      stepNav('safety'),
+    ];
+  }
+
   function screenshot(info) {
-    const image = h('img', { src: LINKS.local.screenshot, alt: info.shotAlt, width: '4096', height: '2076', decoding: 'async' });
-    const figure = h('figure', { class: 'shot' }, image, h('figcaption', { class: 'hint' }, info.shotCaption));
+    const source = LINKS.local.screenshot;
+    const image = h('img', { src: source, alt: info.shotAlt, width: '4096', height: '2076', decoding: 'async' });
+    const large = h('img', { src: source, alt: info.shotAlt, width: '4096', height: '2076', decoding: 'async' });
+    const body = h('div', { class: 'lightbox-body' }, large);
+    const zoom = h('button', { type: 'button', 'aria-pressed': 'false', onclick: () => {
+      const zoomed = zoom.getAttribute('aria-pressed') !== 'true';
+      zoom.setAttribute('aria-pressed', String(zoomed));
+      body.classList.toggle('zoomed', zoomed);
+    } }, t.ui.zoom);
+    const dialog = h('dialog', { class: 'lightbox', 'aria-label': info.shotAlt },
+      h('div', { class: 'lightbox-bar' }, zoom, h('button', { type: 'button', class: 'primary', onclick: () => dialog.close() }, t.ui.close)),
+      body);
+    const enlarge = h('button', { type: 'button', class: 'shot-enlarge', 'aria-haspopup': 'dialog', onclick: () => dialog.showModal() }, t.ui.enlarge);
+    image.addEventListener('click', () => dialog.showModal());
+    // A click on the dimmed backdrop closes; closing always returns focus to the button.
+    dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
+    dialog.addEventListener('close', () => enlarge.focus());
+    const figure = h('figure', { class: 'shot' }, image, h('figcaption', { class: 'hint' }, info.shotCaption), enlarge, dialog);
     // A copied installer folder may not include the repository image; hide only the figure.
     image.addEventListener('error', () => { figure.hidden = true; });
     return figure;
@@ -407,6 +535,7 @@
       case 'assistant': return assistantView();
       case 'account': return accountView();
       case 'app': return appView();
+      case 'safety': return safetyView();
       case 'skills': return skillsView();
       case 'demos': return demosView();
       default: return demoView(route.slice('demo-'.length));
@@ -423,6 +552,8 @@
       case 'assistant': return Boolean(provider);
       case 'account': return Boolean(provider) && all(`${provider}:account`, TEXT.en.account[provider].steps.length);
       case 'app': return Boolean(provider && state.os) && all(`${provider}:app:${state.os}`, TEXT.en.app[provider][state.os].length);
+      case 'safety': return Boolean(provider) && all(`${provider}:safety`, TEXT.en.safety[provider].steps.length)
+        && Object.keys(QUIZ).every(id => Boolean(state.quiz[id]));
       case 'skills': return Boolean(provider) && all(`${provider}:skills`, TEXT.en.skills[provider].steps.length);
       default: return DEMOS.some(id => state.done[`demo:${id}`] === true);
     }
@@ -430,11 +561,17 @@
 
   function progress() {
     const step = stepFor(current);
+    const finished = STEPS.map(complete);
+    const count = finished.filter(Boolean).length;
+    $('progress-summary').textContent = fill(t.ui.progressSummary, { done: count, total: STEPS.length });
+    const meter = $('progress-meter');
+    meter.max = STEPS.length;
+    meter.value = count;
     $('progress-list').replaceChildren(...STEPS.map((id, index) => {
-      const done = complete(id);
+      const done = finished[index];
       return h('li', {}, h('a', { href: `#${id}`, class: done ? 'done' : null, 'aria-current': id === step ? 'step' : null },
         h('span', { class: 'progress-mark', 'aria-hidden': 'true' }, done ? '✓' : String(index + 1)),
-        h('span', {}, t.steps[id]),
+        h('span', { class: 'progress-label' }, t.steps[id]),
         done ? h('span', { class: 'visually-hidden' }, ` (${t.ui.done})`) : null));
     }));
   }

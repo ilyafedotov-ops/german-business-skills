@@ -15,10 +15,14 @@ LANGUAGES = ("en", "ru", "de")
 REPOSITORY = "ilyafedotov-ops/german-business-skills"
 # Provider hosts checked on the date recorded in links.js, plus this project on GitHub.
 OFFICIAL_HOSTS = {
-    "claude.ai", "claude.com", "support.claude.com",
+    "claude.ai", "claude.com", "support.claude.com", "privacy.claude.com",
     "chatgpt.com", "learn.chatgpt.com", "help.openai.com",
     "persistent.oaistatic.com", "get.microsoft.com", "github.com",
+    "digital-strategy.ec.europa.eu",
 }
+# Answers to the "would you share this?" check; the wording lives in text.js.
+QUIZ = {"demo": "ok", "question": "ok", "customer": "check", "letter": "check",
+        "elster": "never", "banking": "never"}
 
 
 def data(name, variable):
@@ -82,6 +86,23 @@ class InstallerContentTests(unittest.TestCase):
                     self.assertTrue(invoked, f"{name} request must call a skill")
                     self.assertTrue(set(invoked) <= set(self.skills), invoked)
                 self.assertIn("[", locale["skills"]["openai"]["prompt"])
+                self.assertEqual(re.findall(r"de-business-[a-z]+", locale["safety"]["ask"]), ["de-business-kit"])
+
+    def test_data_and_risk_step_covers_both_providers_and_the_share_check(self):
+        app = (INSTALLER / "app.js").read_text(encoding="utf-8")
+        table = re.search(r"const QUIZ = \{([^}]*)\};", app)
+        if table is None:
+            self.fail("app.js must define the QUIZ answer table")
+        self.assertEqual(dict(re.findall(r"(\w+): '(\w+)'", table[1])), QUIZ)
+        for language in LANGUAGES:
+            with self.subTest(language=language):
+                safety = self.text[language]["safety"]
+                self.assertEqual(list(safety["quiz"]), list(QUIZ))
+                self.assertEqual(set(safety["quizChoices"]), set(QUIZ.values()))
+                for provider in ("claude", "openai"):
+                    self.assertGreaterEqual(len(safety[provider]["steps"]), 2)
+        privacy = self.links["privacy"]
+        self.assertEqual(set(privacy), {"claude", "openai", "aiAct"})
 
     def test_links_are_official_https_and_match_the_published_release(self):
         self.assertRegex(self.links["checked"], r"^20[0-9]{2}-[01][0-9]-[0-3][0-9]$")
