@@ -8,6 +8,8 @@ milestones are first published on 2026-10-26; their original commits are retaine
 
 ## Unreleased
 
+- Add an offline EN/RU/DE guided setup page (`installer/`) for beginners: assistant choice with plan requirements, official sign-up and per-system download links, the existing Claude marketplace and Codex project-skill routes with copyable text, and four fictional first-task demos. It never downloads or runs installers and never collects credentials; provider links and plans were checked on 2026-11-20. It is not yet published at a web address or as a release asset.
+
 ## 0.11.0-preview.1
 
 - Add protected invoice issue/correction/delivery records, immutable evidence and exact-attempt continuation; keep provider actions, dispatch and recipient receipt distinct.

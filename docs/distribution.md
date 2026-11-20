@@ -1,6 +1,6 @@
 # Local plugin distribution — v0.11.0-preview.1
 
-**New users:** follow the [illustrated setup](../skills/de-business-kit/guides/install.en.md). It covers the Claude plugin marketplace (Cowork, chat and Claude Code) and a project-local Codex copy, without terminal commands. This page covers the marketplace contract and advanced source, plugin and update routes.
+**New users:** follow the [illustrated setup](../skills/de-business-kit/guides/install.en.md). It covers the Claude plugin marketplace (Cowork, chat and Claude Code) and a project-local Codex copy, without terminal commands. The offline EN/RU/DE [guided setup page](gui.md#guided-setup-page) leads beginners through the same two routes, from account creation to first tasks. This page covers the marketplace contract and advanced source, plugin and update routes.
 
 The [local GUI application](gui.md) bundles its engine for document review, cash entries, filing evidence and recovery on Windows/macOS; users do not install Python. Download availability requires publication and verification of the matching platform archive. Optional [standalone Windows tools](../skills/de-business-kit/guides/user-guide.en.md#check-your-own-environment) cover installation, start/resume, preview, intake, integrity, real overview and full backup/restore; their advanced protected writers still require an existing supported engine.
 

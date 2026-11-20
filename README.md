@@ -29,6 +29,11 @@ through that step. **Done when:** the seven skills are available in a fresh task
 or chat and you can try the example below. A chat response alone does not verify
 installation. [Detailed setup and troubleshooting](skills/de-business-kit/guides/install.en.md).
 
+New to Claude and ChatGPT? The offline [guided setup page](docs/gui.md#guided-setup-page)
+in English, Russian and German explains accounts, app downloads, kit installation and
+first demos with fictional data. Choose **Code → Download ZIP**, extract it and open
+`installer/index.html` in your browser.
+
 ### Recommended model
 
 For these skills, especially research, forms, accounting and tax work, we recommend

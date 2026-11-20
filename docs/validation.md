@@ -2,7 +2,40 @@
 
 [English](validation.md) · [Русский](validation.ru.md) · [Technical documentation](index.md)
 
-Evidence index updated **2026-10-27**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
+Evidence index updated **2026-11-20**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
+
+## Guided setup page — 2026-11-20
+
+Local branch work based on `d89f796` adds the static [guided setup page](gui.md#guided-setup-page).
+Checks ran on macOS arm64 with the existing Playwright 1.63.0 development dependency:
+
+- `tests/test_installer.py` (5 tests) passed: identical EN/RU/DE structure with no
+  untranslated sentences, unchanged skill names, official HTTPS hosts, release links
+  matching the marketplace pin, and existing documentation anchors.
+- `npm run test:installer` passed in **Chromium** and **WebKit**. Each run covers six
+  journeys (EN/RU/DE × Claude/ChatGPT with alternating Windows/Mac user agents),
+  official link targets, ticking and reload, a language switch that keeps the step
+  and choices, refused storage, a phone user agent, unknown and inherited-property
+  routes, and 1280/390/320 px without horizontal overflow. It found no form or text
+  input fields, no console errors and no non-file network requests. Chromium checked
+  copied clipboard text; WebKit automation cannot grant clipboard access, so only the
+  displayed copy outcome was checked there. WebKit reported 24 CSP diagnostics, one
+  per screenshot, from Playwright's injected screenshot stylesheet (as in the
+  prototype tests); the page CSP was not relaxed.
+- The full unit suite passed (486 tests; 11 skipped because they require Windows
+  PowerShell). `tools/check_package.py`, `tools/check_doc_links.py` (489 links/anchors)
+  and `git diff --check` passed.
+- Official links on 2026-11-20: OpenAI, Microsoft Store and GitHub release URLs
+  answered a one-byte range request with disk-image, installer or ZIP content.
+  `claude.ai` refuses command-line requests (403), so the Claude sign-up page and its
+  three download endpoints were checked in a desktop browser session: all three
+  returned redirects. Nothing was downloaded or installed.
+
+Limits: no account was created, no plan bought, no provider installer run and no
+plugin or skill installed through the page. There is no nontechnical-user trial,
+screen-reader or native Windows run, and no hosted CI run of the new browser suite
+yet. The page is not published at a web address. Provider pages, labels and plans can
+change after the check date.
 
 
 User acceptance recorded **2026-10-27**: the user confirmed that the Lexware
