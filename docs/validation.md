@@ -25,6 +25,10 @@ Checks ran on macOS arm64 with the existing Playwright 1.63.0 development depend
 - The full unit suite passed (486 tests; 11 skipped because they require Windows
   PowerShell). `tools/check_package.py`, `tools/check_doc_links.py` (489 links/anchors)
   and `git diff --check` passed.
+- Hosted CI: [Checks run 44806269174](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/44806269174) at PR head `89e67c5`
+  (after merging `main`) passed all 20 checks. `npm run test:installer` passed in headless
+  Chromium on `windows-latest` and WebKit on `macos-latest`; the Windows Python 3.9 job
+  ran 486 tests, including the five installer content tests (43 POSIX-only tests skipped).
 - Official links on 2026-11-20: OpenAI, Microsoft Store and GitHub release URLs
   answered a one-byte range request with disk-image, installer or ZIP content.
   `claude.ai` refuses command-line requests (403), so the Claude sign-up page and its
@@ -33,8 +37,8 @@ Checks ran on macOS arm64 with the existing Playwright 1.63.0 development depend
 
 Limits: no account was created, no plan bought, no provider installer run and no
 plugin or skill installed through the page. There is no nontechnical-user trial,
-screen-reader or native Windows run, and no hosted CI run of the new browser suite
-yet. The page is not published at a web address. Provider pages, labels and plans can
+screen-reader check or interactive Windows/macOS desktop check; the hosted runs are
+headless automation. The page is not published at a web address. Provider pages, labels and plans can
 change after the check date.
 
 
