@@ -519,6 +519,29 @@ class WorkspaceTests(unittest.TestCase):
             workspace.ingest_document(self.root, source, "2026-10")
         self.assertEqual(self.load(workspace.DOCUMENTS)["documents"], [])
 
+    def test_small_reads_request_about_the_file_size_not_the_whole_limit(self):
+        path = self.source("small.json", b"{}\n")
+        requested = []
+        class Recording(io.BufferedReader):
+            def read(self, size=None):
+                requested.append(size)
+                return super().read(size)
+        with patch.object(workspace.os, "fdopen", lambda descriptor, mode: Recording(io.FileIO(descriptor, "r"))):
+            self.assertEqual(workspace._read_regular(path), b"{}\n")
+        # Windows pays for each oversized read buffer even when the file is tiny.
+        self.assertLess(max(requested), 1024 * 1024)
+
+    def test_bounded_read_refuses_growth_past_the_limit_after_fstat(self):
+        path = self.source("growing.bin", b"x" * 200_000)
+        self.assertEqual(len(workspace._read_regular(path, 200_000)), 200_000)
+        actual = os.fstat
+        def understated(descriptor):
+            info = list(actual(descriptor))
+            info[stat.ST_SIZE] = 1  # The file grew after its size was observed.
+            return os.stat_result(info)
+        with patch.object(workspace.os, "fstat", understated), self.assertRaises(workspace.WorkspaceError):
+            workspace._read_regular(path, 199_999)
+
     def test_reconcile_supports_fee_groups_precise_decimals_and_multiple_currencies(self):
         bank, ledger = self.csvs("sale,2026-10-03,97.00,EUR\nsmall,2026-10-04,0.30,USD\n",
                                 "revenue,sale,100.00,EUR\nfee,sale,-3.00,EUR\n"

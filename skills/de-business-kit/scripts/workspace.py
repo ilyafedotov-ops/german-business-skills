@@ -208,7 +208,16 @@ def _read_regular(path: Path, limit: int = MAX_BYTES) -> bytes:
         info = os.fstat(stream.fileno())
         if not stat.S_ISREG(info.st_mode) or info.st_size > limit:
             raise WorkspaceError("Input must be a regular file no larger than 50 MiB.")
-        data = stream.read(limit + 1)
+        # Size each request from fstat: Windows pays for a whole-limit buffer on
+        # every read. Read on to EOF so growth after fstat still hits the limit.
+        chunks, size = [], 0
+        while size <= limit:
+            chunk = stream.read(min(limit + 1 - size, max(info.st_size - size, 0) + 65536))
+            if not chunk:
+                break
+            chunks.append(chunk)
+            size += len(chunk)
+        data = b"".join(chunks)
     if len(data) > limit:
         raise WorkspaceError("Input exceeds the 50 MiB limit.")
     return data
