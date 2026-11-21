@@ -2,8 +2,8 @@
 import json
 import os
 from pathlib import Path
+import unittest
 from unittest.mock import patch
-from pathlib import Path
 
 from test_casework import CaseFixture
 import test_casebank
@@ -191,15 +191,23 @@ class NumberedOriginalTests(CaseFixture):
         self.assertEqual(len(ws._documents(self.root)["documents"]), 3)
         self.assertEqual(ws.verify_workspace(self.root)["status"], "ok")
 
-    def test_unsafe_long_or_empty_names_become_portable(self):
-        cases = (('bad<>:"|?*name.pdf', "2026-00001_bad-------name.pdf"),
-                 ("x" * 120 + ".pdf", "2026-00002_" + "x" * 60 + ".pdf"),
-                 ("***.pdf", "2026-00003_document.pdf"))
-        for number, (name, expected) in enumerate(cases):
+    def assert_portable_names(self, cases):
+        for number, (name, expected) in enumerate(cases, start=1):
             with self.subTest(name=name):
                 result = self.ingest(name, str(number).encode(), "2026-10")
-                self.assertEqual(result["path"].rsplit("/", 1)[1], expected)
+                self.assertEqual(result["path"].rsplit("/", 1)[1], f"2026-{number:05d}_{expected}")
+                self.assertEqual(ws._documents(self.root)["documents"][-1]["original_name"], name)
         self.assertEqual(ws.verify_workspace(self.root)["status"], "ok")
+
+    def test_long_padded_or_empty_names_become_portable(self):
+        self.assert_portable_names((("  report . .pdf", "report.pdf"),
+                                    ("x" * 120 + ".pdf", "x" * 60 + ".pdf"),
+                                    ("---.pdf", "document.pdf")))
+
+    @unittest.skipIf(os.name == "nt", "Windows cannot create these names; they arrive from macOS or Linux folders.")
+    def test_characters_reserved_on_windows_are_replaced(self):
+        self.assert_portable_names((('bad<>:"|?*name.pdf', "bad-------name.pdf"),
+                                    ("***.pdf", "document.pdf")))
 
     def test_verify_flags_renamed_or_hash_named_originals(self):
         result = self.ingest("invoice.pdf", b"synthetic", "2026-10")
@@ -263,7 +271,8 @@ class RootOverviewTests(CaseFixture):
 
     def test_native_page_is_refreshed_but_a_user_file_is_preserved(self):
         page = self.root / "OVERVIEW.html"
-        page.write_text(NATIVE_MARK + "<p>native</p>", encoding="utf-8")
+        # Exact bytes, as the native writer saves them; text mode would add CR on Windows.
+        page.write_bytes((NATIVE_MARK + "<p>native</p>").encode("utf-8"))
         overview.generate(self.root, "2026-10", language="en")
         self.assertTrue(page.read_text(encoding="utf-8").startswith(overview.MARK))
         page.write_text("USER OWNED FILE", encoding="utf-8")
