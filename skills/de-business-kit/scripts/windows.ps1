@@ -10,7 +10,7 @@ param(
     [string]$Source,
     [ValidateRange(1900,9999)][int]$Year = (Get-Date).Year,
     [ValidateSet('en','ru','de')][string]$Language = 'en',
-    [ValidateSet('localized','legacy')][string]$Layout = 'localized',
+    [ValidateSet('localized','legacy','v2')][string]$Layout = 'localized',
     [ValidateSet('general','bookkeeping','tax-consultant')][string]$Mode = 'general',
     [string]$Period,
     [ValidateSet('codex','claude','both')][string]$Target = 'both',
@@ -91,26 +91,31 @@ function FolderLayout {
         return $null
     }
     $record = ReadJson $descriptor
-    if ($record -isnot [pscustomobject] -or (@($record.PSObject.Properties.Name | Sort-Object) -join ',') -ne 'language,schema_version' -or $record.schema_version -isnot [int] -and $record.schema_version -isnot [long] -or $record.schema_version -ne 1 -or $record.language -cnotin @('en','ru','de')) { throw 'Unsupported folder layout.' }
+    if ($record -isnot [pscustomobject] -or (@($record.PSObject.Properties.Name | Sort-Object) -join ',') -ne 'language,schema_version' -or $record.schema_version -isnot [int] -and $record.schema_version -isnot [long] -or $record.schema_version -notin @(1,2) -or $record.language -cnotin @('en','ru','de')) { throw 'Unsupported folder layout.' }
     $catalog = ReadJson (Join-Path $kitRoot 'assets/folder-layouts.json')
     $words = $catalog.languages.PSObject.Properties[$record.language].Value
-    foreach ($prefix in $words.paths.PSObject.Properties.Name) {
+    # v2 adds file-level entries; longest-prefix matching lets them override their folder.
+    $paths = [ordered]@{}
+    foreach ($property in $words.paths.PSObject.Properties) { $paths[$property.Name] = $property.Value }
+    if ($record.schema_version -eq 2) { foreach ($property in $words.v2_paths.PSObject.Properties) { $paths[$property.Name] = $property.Value } }
+    foreach ($prefix in $paths.Keys) {
         if (Test-Path -LiteralPath (Join-Path $rootPath $prefix.Split('/')[0])) { throw 'Conflicting legacy and localized folders; preserve both.' }
     }
-    return @{record=$record; words=$words}
+    return @{record=$record; words=$words; paths=$paths}
 }
 function WorkspacePath([string]$relative) {
     if ([IO.Path]::IsPathRooted($relative) -or $relative -match '(^|[\\/])\.\.([\\/]|$)') { throw 'Expected a relative workspace path.' }
     $info = FolderLayout
     if ($null -ne $info) {
-        foreach ($property in @($info.words.paths.PSObject.Properties | Sort-Object { $_.Name.Length } -Descending)) {
-            if ($relative -ceq $property.Name -or $relative.StartsWith($property.Name + '/', [StringComparison]::Ordinal)) {
-                $suffix = $relative.Substring($property.Name.Length).TrimStart('/').Split('/')
-                if ($property.Name -ceq '06_bookkeeping' -and $suffix.Count -ge 3) {
+        foreach ($entry in @($info.paths.GetEnumerator() | Sort-Object { ([string]$_.Key).Length } -Descending)) {
+            $name = [string]$entry.Key
+            if ($relative -ceq $name -or $relative.StartsWith($name + '/', [StringComparison]::Ordinal)) {
+                $suffix = $relative.Substring($name.Length).TrimStart('/').Split('/')
+                if ($name -ceq '06_bookkeeping' -and $suffix.Count -ge 3) {
                     $part = $info.words.parts.PSObject.Properties[$suffix[2]]
                     if ($null -ne $part) { $suffix[2] = $part.Value }
                 }
-                $relative = $property.Value
+                $relative = [string]$entry.Value
                 if ($suffix[0]) { $relative += '/' + ($suffix -join '/') }
                 break
             }
@@ -159,7 +164,7 @@ function Workspace {
     if (-not [guid]::TryParse($marker.workspace_id, [ref]$id)) { throw 'Invalid workspace identity.' }
     if ($marker.language -notin @('en','ru','de') -or $marker.mode -notin @('general','bookkeeping','tax-consultant')) { throw 'Invalid saved preferences.' }
     $info = FolderLayout
-    if ($null -ne $info -and ($null -eq $marker.PSObject.Properties['folder_layout'] -or $marker.folder_layout.schema_version -ne 1 -or $marker.folder_layout.language -cne $info.record.language)) { throw 'Folder layout does not match workspace identity.' }
+    if ($null -ne $info -and ($null -eq $marker.PSObject.Properties['folder_layout'] -or $marker.folder_layout.schema_version -ne $info.record.schema_version -or $marker.folder_layout.language -cne $info.record.language)) { throw 'Folder layout does not match workspace identity.' }
     if ($null -eq $info -and $null -ne $marker.PSObject.Properties['folder_layout']) { throw 'Localized marker has no layout descriptor.' }
     return $marker
 }
@@ -411,14 +416,14 @@ try {
     $result = $null
     if ($Action -eq 'start' -and -not (Test-Path -LiteralPath (WorkspacePath $markerName))) {
         if (@(Get-ChildItem -LiteralPath $rootPath -Force | Where-Object { $_.Name -ne '.workspace.lock' }).Count) { throw 'Folder changed; preserve it.' }
-        if ($Layout -eq 'localized') { WriteNew (Join-Path $rootPath '.workspace-layout.json') (BytesJson @{schema_version=1; language=$Language}) }
+        if ($Layout -ne 'legacy') { WriteNew (Join-Path $rootPath '.workspace-layout.json') (BytesJson @{schema_version=$(if ($Layout -eq 'v2') { 2 } else { 1 }); language=$Language}) }
         $seed = ReadJson (Join-Path $kitRoot 'assets/workspace-seed.json')
         foreach ($property in $seed.PSObject.Properties) { WriteNew (WorkspacePath $property.Name) (BytesJson $property.Value) }
         foreach ($dir in @('00_admin/inbox','00_admin/work','02_registration','03_banking','04_accounting',"05_tax/$Year",'06_bookkeeping','07_exports','08_correspondence','09_audit/history')) { [void][IO.Directory]::CreateDirectory((WorkspacePath $dir)) }
         WriteNew (WorkspacePath '09_audit/events.json') (BytesJson @((Event 'workspace_initialized' @{year=$Year; language=$Language; mode=$Mode; runtime='powershell'})))
         # Marker last: interrupted initialization must never look complete.
         $newMarker = @{schema='german-business-workspace'; schema_version=1; workspace_id=[guid]::NewGuid().ToString(); created_at=(Now); initial_year=$Year; language=$Language; mode=$Mode}
-        if ($Layout -eq 'localized') {
+        if ($Layout -ne 'legacy') {
             $info = FolderLayout
             $newMarker.folder_layout = $info.record
             WriteNew (Join-Path $rootPath $info.words.guide_name) ($utf8.GetBytes($info.words.guide))
@@ -447,11 +452,12 @@ try {
                 $info = FolderLayout
                 $paths = @{}
                 $catalog = ReadJson (Join-Path $kitRoot 'assets/folder-layouts.json')
-                foreach ($key in $catalog.languages.en.paths.PSObject.Properties.Name) {
+                $keys = if ($null -ne $info) { @($info.paths.Keys) } else { @($catalog.languages.en.paths.PSObject.Properties.Name) }
+                foreach ($key in $keys) {
                     $paths[$key] = (WorkspacePath $key).Substring($rootPath.TrimEnd([char[]]'\/').Length + 1).Replace('\','/')
                 }
-                $result = @{layout='legacy'; folder_language=$null; paths=$paths; guide=$null}
-                if ($null -ne $info) { $result.layout='localized'; $result.folder_language=$info.record.language; $result.guide=$info.words.guide_name }
+                $result = @{layout='legacy'; layout_version=$null; folder_language=$null; paths=$paths; guide=$null}
+                if ($null -ne $info) { $result.layout='localized'; $result.layout_version=$info.record.schema_version; $result.folder_language=$info.record.language; $result.guide=$info.words.guide_name }
             }
             'ingest' {
                 if ($Period -notmatch '^[1-9][0-9]{3}-(0[1-9]|1[0-2])$' -or [int]$Period.Substring(0,4) -lt 1900) { throw 'Storage period must be YYYY-MM, year 1900-9999.' }

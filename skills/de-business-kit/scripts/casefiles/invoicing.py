@@ -1,6 +1,7 @@
 """Versioned invoice issue/correction/delivery evidence; no external transport."""
 from contextlib import contextmanager
 import copy
+from datetime import date
 import hashlib
 from pathlib import Path
 import re
@@ -517,7 +518,7 @@ def export(root, identifier, language="en"):
         if identifier not in state["invoices"]:
             raise ws.WorkspaceError("Invoice not found.")
         view = _view(root, state["invoices"][identifier], state, language)
-        relative = "08_correspondence/invoice-status-" + uuid.uuid4().hex + ".md"
+        relative = ws._dated(root, "08_correspondence", str(date.today().year), "invoice-status-" + uuid.uuid4().hex + ".md")
         target = ws._inside(root, relative)
         ws._mkdir(target.parent)
         ws._write_exclusive(target, view["markdown"].encode("utf-8"))

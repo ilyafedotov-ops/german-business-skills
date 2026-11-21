@@ -54,6 +54,15 @@ try {
     $verify = & $kit -Action verify -Root $root | ConvertFrom-Json
     Assert ($verify.status -eq 'ok' -and $verify.indexed_documents -eq 1) 'Integrity check failed'
     Assert ((Get-FileHash -LiteralPath $invoice).Hash -eq $original) 'Source changed'
+    $v2Root = Join-Path $base 'v2 workspace'
+    $v2 = & $kit -Action start -Layout v2 -Root $v2Root -Year 2026 -Language en | ConvertFrom-Json
+    Assert ($v2.status -eq 'initialized') 'v2 start failed'
+    $descriptor = [IO.File]::ReadAllText((Join-Path $v2Root '.workspace-layout.json')) | ConvertFrom-Json
+    Assert ($descriptor.schema_version -eq 2 -and $descriptor.language -eq 'en') 'v2 descriptor not recorded'
+    $v2Folders = & $kit -Action folders -Root $v2Root | ConvertFrom-Json
+    Assert ($v2Folders.layout_version -eq 2 -and $v2Folders.paths.'00_admin/overview.html' -eq 'OVERVIEW.html' -and $v2Folders.paths.'04_accounting/register.json' -eq '.business-kit/admin/accounting-register.json' -and $v2Folders.paths.'00_admin/work' -eq '.business-kit/admin/work') 'v2 mapping missing'
+    $v2Resume = & $kit -Action start -Root $v2Root | ConvertFrom-Json
+    Assert ($v2Resume.status -eq 'resumed' -and $v2Resume.integrity.status -eq 'ok') 'v2 resume failed'
     Reject { & $kit -Action start -Layout legacy -Root $source }
     Reject { & $kit -Action scan -Root $root -Source $base }
     Reject { & $kit -Action ingest -Root $root -Source (Join-Path $source 'certificate.pfx') -Period '2026-10' }

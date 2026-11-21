@@ -23,6 +23,7 @@ class BankMappingTests(CaseFixture):
         report = json.loads((self.root / preview["path"]).read_text())
         self.assertEqual([r["amount"] for r in report["rows"]], ["1234.56", "-5.00"])
         approved = bank.approve(self.root, preview["path"], preview["sha256"], "owner", self.evidence())
+        self.assertTrue(approved["csv_path"].startswith("03_banking/normalized/"))  # Earlier layouts stay flat.
         rows = list(csv.DictReader(io.StringIO((self.root / approved["csv_path"]).read_text())))
         self.assertNotEqual(rows[0]["transaction_id"], "1")
         ledger = self.root / "04_accounting/ledger.csv"

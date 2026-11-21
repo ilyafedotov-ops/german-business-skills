@@ -4,6 +4,38 @@
 
 Evidence index updated **2026-11-21**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## Workspace layout Phase 1 (opt-in v2) — 2026-11-21
+
+Local branch `claude/workspace-layout-phase0` after `905b0a6` adds the opt-in layout v2 of the
+[workspace layout review](research/workspace-layout-review-2026-11-21.md). Checks ran on macOS arm64:
+
+- `tests/test_layout_v2.py` (18 tests) passed: the descriptor and marker record version 2;
+  start defaults stay version 1 and legacy reports none; an unknown version 3 is refused;
+  the EN/RU/DE v2 mappings are one-to-one and reversible; the accounting register is
+  internal and refused as evidence; the overview page is at the workspace root, refreshes
+  a native page, preserves a user-owned file and leaves no temporary file; v1 keeps its
+  overview and register paths; a bank normalization lands under its period year; and the
+  full payment follow-up journey reruns on v2 with comparisons, follow-ups and invoice
+  status reports under the save year. A legacy bank path assertion was added to
+  `tests/test_casebank.py`.
+- The full unit suite passed (507 tests; 11 skipped because they require Windows or a
+  configured PowerShell container image). `tools/check_package.py` passed on a clean copy
+  (the working checkout still reports the local `.claude/worktrees/` limit described
+  below); `tools/check_doc_links.py` (506 links/anchors, 33 files) and `git diff --check` passed.
+- `npm run test:overview` passed in **Chromium** and **WebKit**.
+- Under PowerShell 7 on macOS (`TMPDIR` on a non-symlinked path), `windows-smoke.ps1`
+  (new v2 start, descriptor, mapping and resume checks), `overview-smoke.ps1` (new root
+  page, cross-runtime refresh and user-file refusal), `recovery-smoke.ps1` and
+  `lock-smoke.ps1` passed.
+- Cross-runtime: a Python-created Russian v2 workspace resumed natively, the native
+  overview wrote `ОБЗОР.html` and Python refreshed it; a natively created German v2
+  workspace passed Python `status` and `verify`. The `main` revision (`f7e363f`) refused
+  both v2 workspaces with "Unsupported folder layout" in Python and PowerShell.
+
+Not run: hosted Windows CI and Windows PowerShell 5.1, `npm run test:gui` (GUI code and
+its default v1 workspaces unchanged) and fresh-session `evals/scenarios.json` trials. v2
+is not the default and no workspace is migrated.
+
 ## Workspace layout Phase 0 — 2026-11-21
 
 Local branch `claude/workspace-layout-phase0` based on `f7e363f` implements Phase 0 of the

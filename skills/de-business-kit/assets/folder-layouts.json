@@ -16,6 +16,11 @@
         "08_correspondence": "05 Business/Correspondence",
         "09_audit": ".business-kit/audit"
       },
+      "v2_paths": {
+        "00_admin/overview.html": "OVERVIEW.html",
+        "04_accounting/register.json": ".business-kit/admin/accounting-register.json",
+        "04_accounting/procedure": "03 Accounts/Procedure documentation"
+      },
       "parts": {
         "originals": "Originals",
         "derived": "Processed",
@@ -39,6 +44,11 @@
         "08_correspondence": "05 Бизнес/Переписка",
         "09_audit": ".business-kit/audit"
       },
+      "v2_paths": {
+        "00_admin/overview.html": "ОБЗОР.html",
+        "04_accounting/register.json": ".business-kit/admin/accounting-register.json",
+        "04_accounting/procedure": "03 Учёт/Описание процессов"
+      },
       "parts": {
         "originals": "Оригиналы",
         "derived": "Обработанные",
@@ -61,6 +71,11 @@
         "07_exports": "03 Buchhaltung/Berichte",
         "08_correspondence": "05 Unternehmen/Schriftverkehr",
         "09_audit": ".business-kit/audit"
+      },
+      "v2_paths": {
+        "00_admin/overview.html": "ÜBERSICHT.html",
+        "04_accounting/register.json": ".business-kit/admin/accounting-register.json",
+        "04_accounting/procedure": "03 Buchhaltung/Verfahrensdokumentation"
       },
       "parts": {
         "originals": "Originale",

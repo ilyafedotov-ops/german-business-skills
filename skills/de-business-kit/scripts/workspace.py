@@ -42,6 +42,7 @@ RUNTIME = "00_admin/runtime.json"
 LOCK = ".workspace.lock"
 LOCK_WAIT_SECONDS = 5.0  # Cooperating writers finish quickly; a longer lock needs inspection.
 LAYOUT = ".workspace-layout.json"
+LAYOUT_VERSIONS = {1, 2}
 FIELDS = (
     "legal_form", "activity_classification", "activities", "existing_activities",
     "owner_name", "residence_address", "business_address", "residence_country", "business_country",
@@ -97,10 +98,13 @@ def _layout(root: Path):
         return None
     record = _load(descriptor)
     if (not isinstance(record, dict) or set(record) != {'schema_version', 'language'}
-            or type(record['schema_version']) is not int or record['schema_version'] != 1
+            or type(record['schema_version']) is not int or record['schema_version'] not in LAYOUT_VERSIONS
             or not isinstance(record['language'], str) or record['language'] not in LANGUAGES):
         raise WorkspaceError('Unsupported folder layout; no automatic migration performed.')
-    words = _load(Path(__file__).resolve().parents[1] / 'assets/folder-layouts.json')['languages'][record['language']]
+    words = dict(_load(Path(__file__).resolve().parents[1] / 'assets/folder-layouts.json')['languages'][record['language']])
+    if record['schema_version'] == 2:
+        # v2 adds file-level entries; longest-prefix matching lets them override their folder.
+        words['paths'] = {**words['paths'], **words['v2_paths']}
     if any((root / prefix.split('/')[0]).exists() for prefix in words['paths']):
         raise WorkspaceError('Conflicting legacy and localized directories; preserve both for review.')
     return record, words
@@ -142,6 +146,19 @@ def _logical(root: Path, path: Path) -> str:
     relative = path.relative_to(root).as_posix()
     layout = _layout(root)
     return _mapped(relative, layout[1], reverse=True) if layout else relative
+
+
+def _layout_version(root: Path) -> Optional[int]:
+    """None for the unversioned legacy layout, otherwise the descriptor version."""
+    layout = _layout(root)
+    return layout[0]['schema_version'] if layout else None
+
+
+def _dated(root: Path, area: str, year: str, rest: str) -> str:
+    """Logical path for a new file; layout v2 keeps it under its storage year inside the area."""
+    if not re.fullmatch(r"[1-9]\d{3}", year):
+        raise WorkspaceError("A four-digit storage year is required.")
+    return f"{area}/{year}/{rest}" if _layout_version(root) == 2 else f"{area}/{rest}"
 
 
 def _workspace_present(path: Path) -> bool:
@@ -786,8 +803,9 @@ def init_workspace(root: PathInput, year: int, language: str = "en", mode: str =
     if isinstance(year, bool) or not isinstance(year, int) or not 1900 <= year <= 9999:
         raise WorkspaceError("Year must be an integer between 1900 and 9999.")
     _preferences({"language": language, "mode": mode})
-    if layout not in {"legacy", "localized"}:
-        raise WorkspaceError("Folder layout must be legacy or localized.")
+    if layout not in {"legacy", "localized", "v2"}:
+        raise WorkspaceError("Folder layout must be legacy, localized or v2.")
+    descriptor = {"schema_version": 2 if layout == "v2" else 1, "language": language}
     location = _absolute(root)
     _check_chain(location)
     _private_boundary(location)
@@ -797,8 +815,8 @@ def init_workspace(root: PathInput, year: int, language: str = "en", mode: str =
     with _locked(location):
         if any(child.name != LOCK for child in location.iterdir()):
             raise WorkspaceError("Initialization requires an empty directory.")
-        if layout == "localized":
-            _atomic_json(location / LAYOUT, {"schema_version": 1, "language": language})
+        if layout != "legacy":
+            _atomic_json(location / LAYOUT, descriptor)
         directories = ["00_admin", "00_admin/inbox", "00_admin/work", "01_profile", "02_registration",
                        "03_banking", "04_accounting", f"05_tax/{year}", "06_bookkeeping", "07_exports",
                        "08_correspondence", "09_audit/history"]
@@ -806,8 +824,8 @@ def init_workspace(root: PathInput, year: int, language: str = "en", mode: str =
             _mkdir(_path(location, relative))
         marker = {"schema": SCHEMA, "schema_version": VERSION, "workspace_id": str(uuid.uuid4()),
                   "created_at": _now(), "initial_year": year, "language": language, "mode": mode}
-        if layout == "localized":
-            marker["folder_layout"] = {"schema_version": 1, "language": language}
+        if layout != "legacy":
+            marker["folder_layout"] = descriptor
             words = _layout(location)[1]
             _write_exclusive(location / words["guide_name"], words["guide"].encode("utf-8"))
         _atomic_json(_inside(location, MARKER), marker)
@@ -1280,6 +1298,7 @@ def workspace_status(root: PathInput) -> Dict[str, Any]:
             "language": preferences["language"], "mode": preferences["mode"],
             "folder_language": _layout(location)[0]["language"] if _layout(location) else None,
             "folder_layout": "localized" if _layout(location) else "legacy",
+            "folder_layout_version": _layout_version(location),
             "fact_status_counts": counts, "documents": len(_documents(location)["documents"]),
             "list_item_counts": lists, "locked": locked, "lock": lock}
 
@@ -1298,8 +1317,9 @@ def start_workspace(root: PathInput, year: Optional[int] = None, language: str =
 def workspace_folders(root: PathInput) -> Dict[str, Any]:
     location = _workspace(root)
     layout = _layout(location)
-    words = _load(Path(__file__).resolve().parents[1] / 'assets/folder-layouts.json')['languages']['en']
+    words = layout[1] if layout else _load(Path(__file__).resolve().parents[1] / 'assets/folder-layouts.json')['languages']['en']
     return {'layout': 'localized' if layout else 'legacy',
+            'layout_version': layout[0]['schema_version'] if layout else None,
             'folder_language': layout[0]['language'] if layout else None,
             'paths': {key: _physical(location, key) for key in words['paths']},
             'guide': layout[1]['guide_name'] if layout else None}
@@ -1426,7 +1446,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         command.add_argument("--year", type=int, default=date.today().year)
         command.add_argument("--language", choices=("en", "ru", "de") if name == "start" else ("en", "ru"), default="en")
         if name == "start":
-            command.add_argument("--layout", choices=("localized", "legacy"), default="localized")
+            command.add_argument("--layout", choices=("localized", "legacy", "v2"), default="localized")
             command.add_argument("--mode", choices=sorted(MODES), default="general")
     runtime = commands.add_parser("runtime", help="Record assessed processing configuration with local evidence")
     runtime.add_argument("--root", required=True)
@@ -1440,7 +1460,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     entry.add_argument("--expected-sha256", help="Required current entry hash for an update")
     init = commands.add_parser("init", help="Create an empty private workspace outside Git and skill folders")
     init.add_argument("--root", required=True)
-    init.add_argument("--layout", choices=("localized", "legacy"), default="localized")
+    init.add_argument("--layout", choices=("localized", "legacy", "v2"), default="localized")
     init.add_argument("--year", required=True, type=int)
     init.add_argument("--language", choices=("ru", "en", "de"), default="en",
                       help="Assistant language preference; German report templates are not yet complete")

@@ -15,12 +15,14 @@ from casefiles import documents, reviews, storage
 
 
 class CaseFixture(unittest.TestCase):
+    LAYOUT = "legacy"
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.base = Path(self.temp.name).resolve()
         self.root = self.base / "private"
-        ws.init_workspace(self.root, 2026, "en")
+        ws.init_workspace(self.root, 2026, "en", layout=self.LAYOUT)
 
     def receive(self, filename="invoice.pdf", data=b"Synthetic invoice", kind="invoice"):
         source = self.base / filename
@@ -28,7 +30,7 @@ class CaseFixture(unittest.TestCase):
         return documents.receive(self.root, source, "2026-10", "2026-10-25", kind)
 
     def evidence(self):
-        path = self.root / "08_correspondence/review.txt"
+        path = ws._inside(self.root, "08_correspondence/review.txt")
         path.write_text("Synthetic review and source applicability evidence", encoding="utf-8")
         return "08_correspondence/review.txt"
 

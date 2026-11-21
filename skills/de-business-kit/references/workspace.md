@@ -28,6 +28,8 @@ All relative input paths below are relative to `--root`, not the current shell d
 
 New CLI `init` and `start` use five everyday folders in `en`, `ru` or `de`, plus `.business-kit` for internal records and a localized root start guide. Folder language is pinned separately in `.workspace-layout.json` and the workspace marker. Include both the internal area and descriptor in backups. `--layout legacy` explicitly selects the old layout; existing workspaces resume unchanged. No automatic migration is implemented.
 
+`--layout v2` opts in to the next layout version (descriptor `schema_version` 2); it is not the default yet. In v2 the HTML overview is one localized page at the workspace root (`OVERVIEW.html`, `ОБЗОР.html`, `ÜBERSICHT.html`) refreshed by the Python and native overviews; the accounting register is internal (`.business-kit/admin/accounting-register.json`); `04_accounting/procedure` is reserved for procedure documentation; and bank normalization and correspondence writers save new files under a storage-year folder (`03_banking/<year>/…`, `08_correspondence/<year>/…`). A storage year is not a tax-period determination. Kits that know only version 1 refuse a v2 workspace instead of misreading it. Check `layout_version` in the `folders` output before choosing a destination.
+
 The table below lists **stable logical references**, not necessarily physical paths. Before using ordinary file tools, run `workspace.py folders --root <private-folder>` (or native `-Action folders`) and translate the longest matching prefix. Under the document archive, `originals`, `derived` and `proposals` also have translated names. Prefer the actual paths returned by operations. Never create old English directories alongside a localized workspace. See `assets/folder-layouts.json` for the shared mapping. The low-level Python `init_workspace` API retains its legacy default for existing callers; `start_workspace` defaults to localized folders.
 
 | File / directory | Meaning |
@@ -148,6 +150,9 @@ result use the logical destination below, translated through that mapping:
 `<case>` is a short, non-sensitive task identifier or title; create a subfolder only
 when useful. Use understandable dated/versioned filenames, preserve earlier
 reviewed/sent versions, and keep recipient files apart from private notes.
+In a v2 workspace (`layout_version` 2), put new correspondence and service cases
+under the current year: `08_correspondence/<year>/<case>/`. Leave earlier files
+where they are.
 `<services>` means a readable category name such as `Services`, `Услуги` or
 `Dienstleistungen` in the folder language, not a schema key or literal placeholder.
 Reuse an existing equivalent folder rather than duplicating it.

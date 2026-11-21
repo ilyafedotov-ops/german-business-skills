@@ -61,6 +61,21 @@ try {
         Reject { & $kit -Action overview -Root $root -Period '2026-10' }
         Assert ([IO.File]::ReadAllText((Join-Path $root $view.html_path)) -eq 'USER OWNED FILE') 'Non-generated view overwritten'
     }
+    # Layout v2: one page at the workspace root, refreshed by either runtime.
+    $root=Join-Path $base 'v2'
+    & $kit -Action start -Root $root -Year 2026 -Language en -Layout v2 | Out-Null
+    $v2=& $kit -Action overview -Root $root -Period '2026-10' | ConvertFrom-Json
+    Assert ($v2.html_path -eq 'OVERVIEW.html' -and $v2.json_path.StartsWith('.business-kit/admin/')) 'v2 overview page is not at the root'
+    $page=Join-Path $root 'OVERVIEW.html'
+    $nativeMark='<!-- German Business Kit native overview v1 -->'
+    Assert ([IO.File]::ReadAllText($page,$utf8).StartsWith($nativeMark)) 'v2 native page missing'
+    [IO.File]::WriteAllText($page,"<!-- German Business Kit generated overview v1 -->`n<p>python</p>",$utf8)
+    & $kit -Action overview -Root $root -Period '2026-10' | Out-Null
+    Assert ([IO.File]::ReadAllText($page,$utf8).StartsWith($nativeMark)) 'Python-generated page was not refreshed'
+    Assert (-not (Test-Path -LiteralPath (Join-Path $root '.business-kit/admin/native-overview.html'))) 'v2 kept a second hidden page'
+    [IO.File]::WriteAllText($page,'USER OWNED FILE',$utf8)
+    Reject { & $kit -Action overview -Root $root -Period '2026-10' }
+    Assert ([IO.File]::ReadAllText($page,$utf8) -eq 'USER OWNED FILE') 'User-owned root page overwritten'
     # Static, Python-fingerprinted synthetic fixtures: serializer independence matters.
     $root=Join-Path $base 'Accounting response fixture'
     & $kit -Action start -Root $root -Year 2026 -Language en -Layout legacy | Out-Null
