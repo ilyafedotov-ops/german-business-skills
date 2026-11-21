@@ -59,7 +59,7 @@ class StatedVatTests(CashVatFixture):
         ])
         self.assertEqual(report["totals"]["EUR"]["income"], "226.00")
         self.assertEqual(report["tax_return_status"], "not_calculated")
-        self.assertFalse({"vat_unresolved", "vat_not_recorded"} & set(report["open_items"]))
+        self.assertNotIn("vat_unresolved", report["open_items"])
 
     def test_inconsistent_or_partial_vat_is_rejected_without_recording(self):
         cases = {
@@ -86,14 +86,14 @@ class StatedVatTests(CashVatFixture):
         self.assertIn("VAT on some cash lines is not yet determined", (ws._path(self.root, view["markdown_path"])).read_text(encoding="utf-8"))
 
 
-class LegacyEntryTests(CashVatFixture):
-    def legacy(self, identifier, amount):
-        # Simulates an entry recorded before line VAT existed, through the real register writer.
+class EntryFormatTests(CashVatFixture):
+    def unversioned(self, identifier, amount):
+        # A register entry without schema_version or line VAT, written past the validating writer.
         with ac._edit(self.root, "cash_entry_recorded") as state:
             state["entries"][identifier] = {
                 "entry_id": identifier, "date": "2026-10-20", "account": "bank", "transaction_id": identifier,
                 "amount": amount, "currency": "EUR", "reviewer": "owner", "evidence_file": self.proof,
-                "note": "Recorded before line VAT", "replaces": None, "reverses": None, "recorded_at": ws._now(),
+                "note": "Unversioned entry", "replaces": None, "reverses": None, "recorded_at": ws._now(),
                 "evidence": ac.st.evidence(self.root, self.proof),
                 "lines": [{"kind": "income", "amount": amount, "category": "sale", "activity_id": "consulting"}]}
 
@@ -104,17 +104,13 @@ class LegacyEntryTests(CashVatFixture):
         with self.assertRaisesRegex(ws.WorkspaceError, "accounting-template"):
             ac.post(self.root, value)
 
-    def test_recorded_legacy_entries_stay_reportable_and_correctable(self):
-        self.legacy("old-sale", "100.00")
-        report = ac.period_report(self.root, "2026-10")
-        self.assertEqual(report["totals"]["EUR"]["income"], "100.00")
-        self.assertIn("vat_not_recorded", report["open_items"])
-        ac.reverse(self.root, "old-sale", "old-sale-reversal", self.proof, "owner", "Record the stated VAT")
-        ac.post(self.root, self.entry("old-sale-fixed", "100.00", self.line("100.00", status="none_stated"),
-                                      transaction_id="old-sale", replaces="old-sale"))
-        report = ac.period_report(self.root, "2026-10")
-        self.assertEqual(report["totals"]["EUR"]["income"], "100.00")
-        self.assertEqual(len(report["entries"]), 3)
+    def test_an_unversioned_register_entry_stops_reports_and_reversal(self):
+        self.unversioned("old-sale", "100.00")
+        with self.assertRaises(ws.WorkspaceError):
+            ac.period_report(self.root, "2026-10")
+        with self.assertRaises(ws.WorkspaceError):
+            ac.reverse(self.root, "old-sale", "old-sale-reversal", self.proof, "owner", "Correction")
+        self.assertNotIn("old-sale-reversal", ac._load(self.root)["entries"])
 
 
 class ProposalLinkTests(CashVatFixture):

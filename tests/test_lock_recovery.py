@@ -84,7 +84,7 @@ class LockDiagnosisTests(LockFixture):
 
 class UnlockTests(LockFixture):
     def test_unverifiable_lock_preserves_exact_opaque_bytes(self):
-        data = b"legacy-token-\xff\x00"
+        data = b"token-only-\xff\x00"
         self.lock.write_bytes(data)
         result = ws.unlock_workspace(self.root, hashlib.sha256(data).hexdigest(), confirmed_no_writer=True)
         self.assertEqual((ws._path(self.root, "09_audit/history") / (result["history_id"] + ".lock")).read_bytes(), data)

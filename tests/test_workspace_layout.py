@@ -85,16 +85,16 @@ class StructureTests(CaseFixture):
         self.assertEqual(ws.verify_workspace(root)["status"], "ok")
 
     def test_earlier_preview_layouts_are_refused_without_changes(self):
-        legacy = self.base / "earlier"
-        (legacy / "00_admin").mkdir(parents=True)
-        (legacy / "00_admin/workspace.json").write_text("{}")
+        earlier = self.base / "earlier"
+        (earlier / "00_admin").mkdir(parents=True)
+        (earlier / "00_admin/workspace.json").write_text("{}")
         version_one = self.base / "version-one"
         (version_one / ".business-kit").mkdir(parents=True)
         (version_one / ws.LAYOUT).write_text('{"schema_version": 1, "language": "en"}')
         newer = self.base / "newer"
         newer.mkdir()
         (newer / ws.LAYOUT).write_text('{"schema_version": 3, "language": "en"}')
-        for root, message in ((legacy, "earlier preview"), (version_one, "earlier preview"), (newer, "newer kit")):
+        for root, message in ((earlier, "earlier preview"), (version_one, "earlier preview"), (newer, "newer kit")):
             with self.subTest(root=root.name):
                 before = {p: p.read_bytes() for p in root.rglob("*") if p.is_file()}
                 for operation in (ws.workspace_status, ws.start_workspace, ws.verify_workspace):

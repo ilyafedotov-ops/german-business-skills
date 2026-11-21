@@ -82,9 +82,9 @@ class CatalogTests(CaseFixture):
         self.assertEqual(documents.get(self.root, first["document_id"])["title"], "Readable invoice")
         self.assertEqual(documents.get(self.root, first["document_id"])["review_status"], "reviewed")
 
-    def test_legacy_ingest_appears_without_silent_migration(self):
-        source = self.base / "legacy.pdf"
-        source.write_bytes(b"Legacy synthetic document")
+    def test_low_level_ingest_appears_in_the_catalog_without_casework(self):
+        source = self.base / "plain.pdf"
+        source.write_bytes(b"Plain synthetic document")
         imported = ws.ingest_document(self.root, source, "2026-10")
         before = (ws._path(self.root, ws.DOCUMENTS)).read_bytes()
         self.assertEqual(documents.catalog(self.root)[0]["type"], "unknown")

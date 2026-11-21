@@ -138,23 +138,21 @@ def install(
         source_skill if source_skill is not None
         else Path(__file__).absolute().parent.parent / "skills" / SKILL_NAME
     )
-    # Explicit source_skill retains the legacy single-skill API for old bundles.
+    # The complete bundle catalog is required: a dependent skill is never installed alone.
     catalog = source / "assets/skill-set.json"
     _check_directory_chain(catalog.parent)
     if catalog.is_symlink():
         raise InstallError("Linked skill catalog rejected.")
     try:
-        names = skill_names(catalog.read_bytes()) if catalog.exists() else (SKILL_NAME,)
-        if source_skill is None and not catalog.exists():
+        if not catalog.exists():
             raise InstallError("The complete bundle catalog is missing.")
-        packages = ({name: _read_package(source.parent / name) for name in names}
-                    if catalog.exists() else {SKILL_NAME: _read_package(source)})
-        if catalog.exists():
-            for name, (_, files) in packages.items():
-                captured = {path.as_posix(): data for path, data, _ in files}
-                entry = captured["SKILL.md"].decode("utf-8").replace("\r\n", "\n")
-                if not entry.startswith(f"---\nname: {name}\n") or "agents/openai.yaml" not in captured:
-                    raise InstallError(f"Skill identity or UI metadata missing: {name}")
+        names = skill_names(catalog.read_bytes())
+        packages = {name: _read_package(source.parent / name) for name in names}
+        for name, (_, files) in packages.items():
+            captured = {path.as_posix(): data for path, data, _ in files}
+            entry = captured["SKILL.md"].decode("utf-8").replace("\r\n", "\n")
+            if not entry.startswith(f"---\nname: {name}\n") or "agents/openai.yaml" not in captured:
+                raise InstallError(f"Skill identity or UI metadata missing: {name}")
         validate_links({name + "/" + path.as_posix(): data
                         for name, (_, files) in packages.items() for path, data, _ in files})
     except (OSError, ValueError) as exc:

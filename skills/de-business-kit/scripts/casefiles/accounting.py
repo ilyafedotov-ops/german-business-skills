@@ -21,8 +21,7 @@ STATE = "04_accounting/register.json"
 STATES = {"draft", "reviewed", "authorized", "submission_unconfirmed", "submitted", "cancelled"}
 PREFLIGHT_ACTIONS = {"draft": "review", "reviewed": "authorize", "authorized": "begin"}
 ENTRY_VERSION = 2
-# Entries recorded before line VAT existed have no schema_version; they stay readable, never postable.
-LEGACY_LINE = {"kind", "amount", "category", "activity_id"}
+LINE_KEYS = {"kind", "amount", "category", "activity_id", "proposal_id", "vat"}
 VAT_STATUSES = {"stated", "none_stated", "unresolved"}
 
 
@@ -128,11 +127,8 @@ def configure(root, value, expected=None):
 
 
 def _fields(entry):
-    """Writer input of a saved entry, in the version it was recorded with."""
-    keys = set(template("entry"))
-    if "schema_version" not in entry:
-        keys.discard("schema_version")
-    return {key: entry[key] for key in keys}
+    """Writer input of a saved entry; missing fields fail the entry validation."""
+    return {key: entry[key] for key in template("entry") if key in entry}
 
 
 def _vat(vat, amount):
@@ -153,14 +149,11 @@ def _vat(vat, amount):
         raise ws.WorkspaceError("A stated VAT rate is a percentage between 0 and 100.")
 
 
-def _entry(value, legacy=False):
-    keys = set(template("entry"))
-    if legacy:
-        keys.discard("schema_version")
-    elif (not isinstance(value, dict) or type(value.get("schema_version")) is not int
-          or value["schema_version"] != ENTRY_VERSION):
+def _entry(value):
+    if (not isinstance(value, dict) or type(value.get("schema_version")) is not int
+            or value["schema_version"] != ENTRY_VERSION):
         raise ws.WorkspaceError("Cash entries need schema_version 2 with line VAT status; start from accounting-template --kind entry.")
-    wf.exact(value, keys, "cash entry")
+    wf.exact(value, set(template("entry")), "cash entry")
     for key in ("entry_id", "account", "transaction_id"):
         st.identifier(value[key])
     for key in ("reviewer", "note"):
@@ -172,17 +165,16 @@ def _entry(value, legacy=False):
         raise ws.WorkspaceError("Cash records need classified or explicitly unresolved lines.")
     total = Decimal(0)
     for line in value["lines"]:
-        wf.exact(line, LEGACY_LINE if legacy else LEGACY_LINE | {"proposal_id", "vat"}, "cash line")
+        wf.exact(line, LINE_KEYS, "cash line")
         if line["kind"] not in {"income", "expense", "transfer", "unresolved"}:
             raise ws.WorkspaceError("Unsupported movement kind.")
         wf.text(line["category"], "reviewed category")
         wf.text(line["activity_id"], "activity reference")
         line_amount = ws._amount(wf.text(line["amount"], "line amount"))
         total = ws._add(total, line_amount)
-        if not legacy:
-            if line["proposal_id"] is not None:
-                st.identifier(line["proposal_id"])
-            _vat(line["vat"], line_amount)
+        if line["proposal_id"] is not None:
+            st.identifier(line["proposal_id"])
+        _vat(line["vat"], line_amount)
     if total != amount:
         raise ws.WorkspaceError("Entry line amounts must equal the observed cash movement.")
     if value["replaces"] is not None:
@@ -278,6 +270,7 @@ def reverse(root, entry_id, reversal_id, evidence_file, actor, note):
             raise ws.WorkspaceError("Choose an existing original and a new reversal ID.")
         if any(entry["reverses"] == entry_id for entry in state["entries"].values()):
             raise ws.WorkspaceError("Entry already reversed.")
+        _entry(_fields(original))
         st.check_evidence(root, original["evidence"])
         saved = copy.deepcopy(original)
         saved.update(entry_id=reversal_id, reverses=entry_id, replaces=None, reviewer=actor, note=note,
@@ -285,8 +278,8 @@ def reverse(root, entry_id, reversal_id, evidence_file, actor, note):
         saved["amount"] = format(ws._amount(original["amount"]).copy_negate(), "f")
         for line in saved["lines"]:
             line["amount"] = format(ws._amount(line["amount"]).copy_negate(), "f")
-            vat = line.get("vat")  # Entries recorded before line VAT have none.
-            if vat and vat["status"] == "stated":
+            vat = line["vat"]
+            if vat["status"] == "stated":
                 for key in ("net", "tax"):
                     vat[key] = format(ws._amount(vat[key]).copy_negate(), "f")
         state["entries"][reversal_id] = saved
@@ -321,7 +314,7 @@ def _settlement_basis(root, period, state):
                 if key in linked or key in current and row["period"] <= cutoff[:7]}
     _check_links(root, entries)
     for entry in entries:
-        _entry(_fields(entry), legacy="schema_version" not in entry)
+        _entry(_fields(entry))
         st.check_evidence(root, entry["evidence"])
     for proposal in selected.values():
         if docs.original(root, proposal["document_id"])["sha256"] != proposal["original_sha256"]:
@@ -386,12 +379,10 @@ def _period_report(root, period, state):
     config = _config(root, state, local=True)
     selected = [entry for entry in state["entries"].values() if _in_period(entry["date"], period)]
     totals, categories, vat = {}, {}, {}
-    unresolved = vat_unresolved = vat_not_recorded = False
+    unresolved = vat_unresolved = False
     for entry in selected:
-        legacy = "schema_version" not in entry
-        _entry(_fields(entry), legacy=legacy)
+        _entry(_fields(entry))
         st.check_evidence(root, entry["evidence"])
-        vat_not_recorded |= legacy
         row = totals.setdefault(entry["currency"], dict.fromkeys(("income", "expense", "transfer", "unresolved"), Decimal(0)))
         for line in entry["lines"]:
             amount = ws._amount(line["amount"])
@@ -399,8 +390,6 @@ def _period_report(root, period, state):
             key = (entry["currency"], line["kind"], line["category"], line["activity_id"])
             categories[key] = ws._add(categories.get(key, Decimal(0)), amount)
             unresolved |= line["kind"] == "unresolved"
-            if legacy:
-                continue
             vat_unresolved |= line["vat"]["status"] == "unresolved"
             if line["vat"]["status"] == "stated":
                 rate = line["vat"]["rate"]
@@ -418,8 +407,6 @@ def _period_report(root, period, state):
         issues.append("unclassified_movements")
     if vat_unresolved:
         issues.append("vat_unresolved")
-    if vat_not_recorded:
-        issues.append("vat_not_recorded")
     basis = _settlement_basis(root, period, state)
     settlements = _settlements(basis)
     for status in ("overpaid", "needs_review", "partial", "unpaid"):
@@ -468,9 +455,6 @@ def export_report(root, period):
     if "vat_unresolved" in report["open_items"]:
         lines.extend(["НДС по некоторым строкам ещё не определён; они входят в денежные итоги, но не в суммы НДС по документам." if russian
                       else "VAT is not yet determined for some lines; they are in the cash totals but not in any stated VAT figures.", ""])
-    if "vat_not_recorded" in report["open_items"]:
-        lines.extend(["Некоторые записи сделаны до учёта НДС; чтобы указать НДС, сторнируйте их и создайте связанную замену." if russian
-                      else "Some entries were recorded before VAT capture; reverse them and post a linked replacement to record VAT.", ""])
     if not report["entries"]:
         lines.append("Операции за период отсутствуют." if russian else "No entries supplied for this period.")
     if report["settlements"]:

@@ -27,6 +27,10 @@ class InstallerTests(unittest.TestCase):
             "Read references/intake.md.\n", encoding="utf-8")
         (self.source / "references" / "intake.md").write_text("Synthetic fixture.\n", encoding="utf-8")
         (self.source / "scripts" / "check.py").write_text("print('fixture')\n", encoding="utf-8")
+        (self.source / "assets").mkdir()
+        (self.source / "assets/skill-set.json").write_text(json.dumps({"schema_version": 1, "skills": ["de-business-kit"]}))
+        (self.source / "agents").mkdir()
+        (self.source / "agents/openai.yaml").write_text('interface:\n  display_name: "Core"\n')
         self.project = self.root / "private-business"
         self.project.mkdir()
 
@@ -38,9 +42,6 @@ class InstallerTests(unittest.TestCase):
         return installer.install(source_skill=self.source, **options)
 
     def make_bundle(self):
-        (self.source / "assets").mkdir()
-        (self.source / "agents").mkdir()
-        (self.source / "agents/openai.yaml").write_text('interface:\n  display_name: "Core"\n')
         (self.source / "assets/skill-set.json").write_text(json.dumps({
             "schema_version": 1, "skills": ["de-business-kit", "de-business-tax"]}))
         sibling = self.source.parent / "de-business-tax"
@@ -121,41 +122,11 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual(instructions.read_text(), "Existing instructions.\n")
         self.assertFalse((self.project / ".mcp.json").exists())
 
-    def test_legacy_source_accepts_a_noncanonical_directory_name(self):
-        selected = self.source.with_name("legacy-copy")
-        self.source.rename(selected)
-        self.source = selected
-
-        destinations = self.run_install()
-
-        self.assertEqual(len(destinations), 2)
-        for destination in destinations:
-            self.assertEqual(destination.name, "de-business-kit")
-            self.assertEqual((destination / "references/intake.md").read_text(),
-                             "Synthetic fixture.\n")
-
-    def test_legacy_source_never_reads_an_unselected_canonical_sibling(self):
-        selected = self.source.with_name("legacy-copy")
-        self.source.rename(selected)
-        sibling = self.source
-        sibling.mkdir()
-        (sibling / "SKILL.md").write_text("Unselected package.\n", encoding="utf-8")
-        self.source = selected
-        original_read = Path.read_bytes
-
-        def reject_sibling_read(path):
-            if sibling in path.parents:
-                self.fail("Read an unselected sibling instead of the explicit legacy source")
-            return original_read(path)
-
-        with mock.patch.object(Path, "read_bytes", reject_sibling_read):
-            destinations = self.run_install()
-
-        for destination in destinations:
-            self.assertEqual((destination / "SKILL.md").read_bytes(),
-                             (selected / "SKILL.md").read_bytes())
-            self.assertEqual((destination / "references/intake.md").read_text(),
-                             "Synthetic fixture.\n")
+    def test_a_source_without_the_bundle_catalog_is_refused(self):
+        (self.source / "assets/skill-set.json").unlink()
+        with self.assertRaisesRegex(installer.InstallError, "catalog"):
+            self.run_install()
+        self.assertEqual(list(self.project.iterdir()), [])
 
     def test_second_target_collision_creates_nothing_in_first_target(self):
         existing = self.project / ".claude" / "skills" / "de-business-kit"
@@ -228,6 +199,8 @@ class InstallerTests(unittest.TestCase):
         external = self.root / "external-catalog"
         external.mkdir()
         (external / "skill-set.json").write_text('{"schema_version":1,"skills":["de-business-kit"]}')
+        import shutil
+        shutil.rmtree(self.source / "assets")  # Replace the fixture's real catalog folder with a link.
         self._symlink(self.source / "assets", external, is_directory=True)
         original = Path.read_bytes
         def guarded_read(path):

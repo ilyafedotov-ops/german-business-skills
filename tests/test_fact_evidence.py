@@ -17,7 +17,7 @@ class FactEvidenceTests(CaseFixture):
         ws._path(self.root, evidence).write_text("Changed evidence", encoding="utf-8")
         self.assertEqual(ws.workspace_status(self.root)["verified_fact_evidence_issues"], ["legal_form"])
 
-    def test_legacy_verified_fact_is_preserved_and_needs_reassessment(self):
+    def test_verified_fact_without_fingerprint_is_preserved_and_needs_reassessment(self):
         profile = ws._path(self.root, ws.PROFILE)
         value = json.loads(profile.read_text())
         value["facts"]["legal_form"].update(value="Einzelunternehmen", status="verified", source={"kind": "letter", "ref": "old text"})

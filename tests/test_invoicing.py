@@ -247,18 +247,18 @@ class InvoicingTests(CaseFixture):
         with self.assertRaises(ws.WorkspaceError):
             self.create("nested", business_reference="nested", corrects="amend", correction_kind="amendment")
 
-    def test_legacy_nested_draft_rechecks_family_before_issue(self):
+    def test_nested_draft_that_skipped_the_family_check_is_rechecked_before_issue(self):
         self.issued()
         self.issued("amend", business_reference="amend", corrects="invoice-1", correction_kind="amendment")
         self.begin_delivery()
-        # Model a draft saved by the previous writer's direct-parent-only guard.
+        # Model a draft saved past the correction-family guard.
         with patch.object(inv, "_check_correction_family"):
             self.create("nested", business_reference="nested", corrects="amend", correction_kind="amendment")
         with self.assertRaises(ws.WorkspaceError):
             self.action("review-issue", "nested")
         self.assertNotIn("review-issue", inv.show(self.root, "nested")["allowed_actions"])
 
-    def test_started_legacy_nested_attempt_can_still_record_observed_result(self):
+    def test_started_nested_attempt_can_still_record_observed_result(self):
         self.issued()
         self.issued("amend", business_reference="amend", corrects="invoice-1", correction_kind="amendment")
         self.begin_delivery()

@@ -157,7 +157,7 @@ The two named working modes are `bookkeeping` and `tax-consultant`; `general` co
 
 User-facing conversations and Markdown reports support **English and Russian**. Agent instructions, JSON keys, enum values, logical path IDs and record IDs remain stable; physical folder names support EN/RU/DE. Exact German terms and form labels are preserved and explained in the chosen language. A translation is a linked rendering of the same evidence and decision, not new verification. German folders and a German start guide are supported; the complete report/template set remains EN/RU. Folder language is pinned at creation and differs from conversation/report language. See [folder mapping](../skills/de-business-kit/references/workspace.md).
 
-The workspace format remains **schema version 1**. A v0.1 workspace without `mode` is read as `general`; it does not need to be recreated. Changing a language or mode never changes profile facts, `vat_current_regime`, bookkeeping method or authority filings. The same profile and evidence history serve both languages and all modes.
+The workspace format remains **schema version 1**. The marker must record both language and mode; a marker without them is refused. Changing a language or mode never changes profile facts, `vat_current_regime`, bookkeeping method or authority filings. The same profile and evidence history serve both languages and all modes.
 
 ## Evidence and state
 
@@ -179,7 +179,7 @@ Hashes, history and procedures support record organization; compliance of the co
 
 ## Guided setup and validated records
 
-Use the [beginner guide](../skills/de-business-kit/guides/install.en.md) and [distribution guide](distribution.md). `start` resumes without changing preferences; `demo` uses a separate synthetic workspace; `doctor` checks local health. Processing assessment is a recorded, scoped review with configuration/evidence hashes, not legal certification. Profile values have field-specific validation. `entry` updates tasks/questions/decisions under the same lock with history, explicit transitions, evidence and an expected prior hash. Legacy malformed records are reported without silent migration. The baseline proposal/operation JSON files are instruction templates. The local extension below adds executable proposal validation; operations still have no external execution engine.
+Use the [beginner guide](../skills/de-business-kit/guides/install.en.md) and [distribution guide](distribution.md). `start` resumes without changing preferences; `demo` uses a separate synthetic workspace; `doctor` checks local health. Processing assessment is a recorded, scoped review with configuration/evidence hashes, not legal certification. Profile values have field-specific validation. `entry` updates tasks/questions/decisions under the same lock with history, explicit transitions, evidence and an expected prior hash. Malformed records are reported, never silently rewritten. The baseline proposal/operation JSON files are instruction templates. The local extension below adds executable proposal validation; operations still have no external execution engine.
 
 ## International preparation records
 
@@ -241,7 +241,7 @@ These components describe code present in this source snapshot. `SKILL.md` route
 | [windows-overview.ps1](../skills/de-business-kit/scripts/windows-overview.ps1) | Native saved-state and local-evidence inspection under the workspace lock | Separate `00_admin/native-overview.*` projections |
 | [recovery.py](../skills/de-business-kit/scripts/recovery.py) / [recovery.ps1](../skills/de-business-kit/scripts/recovery.ps1) | Full portable backup/verify/restore, safe paths and coordinated copying | External manifest plus complete workspace tree; fresh restored location |
 
-The casework register has schema version 1 while proposals have schema version 2. The accounting register stays version 1 while new cash entries have version 2; entries recorded before line VAT have no entry version, remain readable and are reported as lacking VAT. These versions are independent of workspace schema version 1. Unsupported casework schemas and old proposal contracts require explicit handling; no silent migration is supplied.
+The casework register has schema version 1 while proposals have schema version 2. The accounting register has version 1 and every cash entry version 2 with line VAT status; an entry without it stops reports, checks and reversals. These versions are independent of workspace schema version 1. Other casework, proposal or entry versions are refused; no migration is supplied.
 
 ## Main execution paths
 

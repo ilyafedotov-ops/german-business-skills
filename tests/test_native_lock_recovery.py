@@ -81,8 +81,8 @@ class NativeLockRecoveryTests(unittest.TestCase):
                 self.assertEqual((self.lock.read_bytes(), self.events.read_bytes()), before)
         self.assertEqual(self.native('unlock', ExpectedSha256=digest, ConfirmedNoWriter=True)['status'], 'removed')
 
-    def test_legacy_invalid_bytes_need_confirmation_and_preserve_exact_evidence(self):
-        raw = b'legacy-token-\xff\x00'
+    def test_invalid_lock_bytes_need_confirmation_and_preserve_exact_evidence(self):
+        raw = b'token-only-\xff\x00'
         digest = self.leave(raw=raw)
         self.assertEqual(self.native('lock-status')['lock']['assessment'], 'unverifiable')
         self.native('unlock', success=False, ExpectedSha256=digest)

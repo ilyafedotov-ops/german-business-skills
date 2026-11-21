@@ -22,7 +22,7 @@ Replace the path and year; do not use the example literally. On Windows, use the
 
 For the recommended **project-scoped installation**, keep the assistant project with installed skills separate from the private business workspace, as described in the [installation guide](../guides/install.en.md#install-in-codex). Open that project and grant access to the private workspace when needed. If an existing setup already co-locates project skills and business records, preserve it; do not reinitialize or move it. For that older co-located route only, initialization must precede installing skills because initialization rejects a nonempty directory. User-scoped installation can happen before workspace creation. Do not enable Git/worktree/cloud syncing for this private folder just to make a host's project UI work; select a local folder session or use the user-level skill.
 
-All relative input paths below are relative to `--root`, not the current shell directory. Use a single writer; a `.workspace.lock` prevents concurrent script mutations, and writers wait up to five seconds for a cooperating writer to finish. If a lock remains, `doctor` reports `lock.assessment`: `active` (its process is running on this computer; never remove it), `stale` (the recorded process has ended on this computer) or `unverifiable` (another computer, an older lock without a recorded computer, or unreadable content). `unlock --expected-sha256 <lock.sha256>` removes a `stale` lock, or an `unverifiable` one with `--confirmed-no-writer` only after the user confirms that no other app, assistant or computer uses the workspace. It refuses an active or changed lock and preserves the removed lock in history and the audit log. Never delete the lock file by hand.
+All relative input paths below are relative to `--root`, not the current shell directory. Use a single writer; a `.workspace.lock` prevents concurrent script mutations, and writers wait up to five seconds for a cooperating writer to finish. If a lock remains, `doctor` reports `lock.assessment`: `active` (its process is running on this computer; never remove it), `stale` (the recorded process has ended on this computer) or `unverifiable` (another computer, or a lock without readable owner details). `unlock --expected-sha256 <lock.sha256>` removes a `stale` lock, or an `unverifiable` one with `--confirmed-no-writer` only after the user confirms that no other app, assistant or computer uses the workspace. It refuses an active or changed lock and preserves the removed lock in history and the audit log. Never delete the lock file by hand.
 
 ## Files and state
 
@@ -76,7 +76,7 @@ Records store **stable logical references** (left column below), not physical pa
 
 The initializer leaves the document archive empty and writes the start guide and the procedure documentation draft. Intake creates only the selected storage month; derived files get directories when an operation needs them. Existing empty month folders are preserved. Originals get a running number per storage year and a readable, Windows-safe name; the number is never reused and gaps stay visible to `verify`. A file imported from the inbox moves to its Imported month afterwards and is never overwritten; sources elsewhere stay untouched. A folder year or month is a storage period, not a tax-period determination. Keep invoice, service, receipt and payment dates in extracted records. Missing values stay unknown.
 
-The task/question/decision files start as empty arrays. Use the validated `entry` command below to preserve IDs, transitions, locks and history. Untyped records from earlier previews are flagged for reviewed conversion; never silently clear or migrate them. A due date in a file does not create an actual reminder.
+The task/question/decision files start as empty arrays. Use the validated `entry` command below to preserve IDs, transitions, locks and history. Entries in another shape are reported as invalid; never clear or rewrite them silently. A due date in a file does not create an actual reminder.
 
 ## Guided start and demonstration
 
@@ -145,7 +145,7 @@ Inspection returns state, evidence health and the version hash without the title
 
 Preserve terminal entries and create linked corrections. For an approved decision, create and approve its replacement with `supersedes=<old-id>`, then change only the old state to `superseded` and add `superseded_by=<replacement-id>`. Its content and reviewer evidence remain unchanged. Dependency and supersession cycles are rejected.
 
-Evidence paths are relative private files; mutable administration files cannot serve as evidence. Hashes detect changes, not document truth. Changed evidence stays flagged, while inspection, unrelated work and linked corrections remain possible. Never rehash just to hide a discrepancy. Preserve legacy registers with incompatible shapes/broken links and prepare a reviewed conversion before using the writer.
+Evidence paths are relative private files; mutable administration files cannot serve as evidence. Hashes detect changes, not document truth. Changed evidence stays flagged, while inspection, unrelated work and linked corrections remain possible. Never rehash just to hide a discrepancy. Preserve registers with invalid shapes or broken links for review; the writer refuses to change them.
 
 ## Route readable results by task
 
@@ -190,7 +190,7 @@ where the readable result was saved and how to resume from the same workspace.
 
 ## Language and working mode
 
-`workspace.json` stores `language` (`en`, `ru` or `de`) and `mode` (`general`, `bookkeeping` or `tax-consultant`). A v0.1 workspace without `mode` is read as `general`; its files are not rewritten during status checks and schema version stays 1. Both languages and modes share the existing profile and evidence.
+`workspace.json` stores `language` (`en`, `ru` or `de`) and `mode` (`general`, `bookkeeping` or `tax-consultant`). A marker without both is refused. Both languages and modes share the existing profile and evidence.
 
 ```bash
 python3 <skill-directory>/scripts/workspace.py configure --root /absolute/private-workspace --language en --mode tax-consultant
@@ -217,11 +217,11 @@ Each fact has this shape:
 }
 ```
 
-Supported states: `unknown`, `declared`, `proposed`, `verified`, `needs_review`. A nonunknown fact needs a value and evidence source. `verified` requires an inspected private file source; the writer stores its hash, and status detects missing/changed evidence. The script cannot validate document truth or a legal conclusion. Legacy verified facts without fingerprints require review, not silent migration. Record money as decimal strings with currency and period identified, not binary floats.
+Supported states: `unknown`, `declared`, `proposed`, `verified`, `needs_review`. A nonunknown fact needs a value and evidence source. `verified` requires an inspected private file source; the writer stores its hash, and status detects missing/changed evidence. The script cannot validate document truth or a legal conclusion. A verified fact without a stored fingerprint is reported for review. Record money as decimal strings with currency and period identified, not binary floats.
 
 New writes validate profile field types. VAT regime is `Kleinunternehmer`, `Regelbesteuerung` or `unresolved`; accounting method is `EÜR`, `Bilanzierung` or `unresolved`. Employee/cash/cross-border/existing-VAT flags are booleans. Dates use `YYYY-MM-DD`; `vat_prior_year` is an integer year. Client/country lists are string arrays. Activities are arrays with unique `activity_id`, optional text `description`, `classification` (`freiberuflich`, `gewerblich`, `mixed`, `unresolved`) and date/null `commenced_at`. VAT-history items contain `regime`, `effective_from`, and `source_ref`. Provider/bank requirements are objects; remaining text fields require nonempty strings. Unknown facts remain null.
 
-Person-wide turnover/forecast fields use `{"amount":"1234.56","currency":"EUR","period":"2026"}` with a nonnegative decimal string and explicit year. Preserve original foreign amounts separately and substantiate conversion. This storage format does not calculate qualifying statutory turnover. Legacy values are flagged without rewriting; correct individual fields with evidence through `record`.
+Person-wide turnover/forecast fields use `{"amount":"1234.56","currency":"EUR","period":"2026"}` with a nonnegative decimal string and explicit year. Preserve original foreign amounts separately and substantiate conversion. This storage format does not calculate qualifying statutory turnover. Values in another shape are reported as invalid without rewriting; correct individual fields with evidence through `record`.
 
 Save a one-field update in `00_admin/work/fact.json`:
 

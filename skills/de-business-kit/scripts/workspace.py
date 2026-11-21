@@ -847,9 +847,10 @@ def _documents(root: Path) -> Dict[str, Any]:
 
 
 def _preferences(marker: Dict[str, Any]) -> Dict[str, str]:
-    """Read UI/workflow preferences without migrating or changing tax facts."""
-    language = marker.get("language", "ru")
-    mode = marker.get("mode", "general")
+    """Read UI/workflow preferences without migrating or changing tax facts; both are required."""
+    if "language" not in marker or "mode" not in marker:
+        raise WorkspaceError("Saved language and mode are missing; preserve the files for review.")
+    language, mode = marker["language"], marker["mode"]
     if not isinstance(language, str) or language not in LANGUAGES:
         raise WorkspaceError("Language must be en, ru or de.")
     if not isinstance(mode, str) or mode not in MODES:
@@ -908,7 +909,7 @@ def configure_workspace(root: PathInput, language: Optional[str] = None,
     if language is None and mode is None:
         raise WorkspaceError("Configure requires at least one of --language or --mode.")
     # Validate requested values before opening or changing the workspace.
-    _preferences({"language": "ru" if language is None else language,
+    _preferences({"language": "en" if language is None else language,
                   "mode": "general" if mode is None else mode})
     location = _workspace(root)
     with _locked(location):
@@ -919,7 +920,7 @@ def configure_workspace(root: PathInput, language: Optional[str] = None,
         after = dict(before)
         after["language"] = preferences["language"] if language is None else language
         after["mode"] = preferences["mode"] if mode is None else mode
-        changed = [key for key in ("language", "mode") if before.get(key) != after[key]]
+        changed = [key for key in ("language", "mode") if before[key] != after[key]]
         if not changed:
             return {"status": "unchanged", "language": after["language"],
                     "mode": after["mode"], "changed_fields": []}

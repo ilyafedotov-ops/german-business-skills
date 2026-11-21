@@ -4,6 +4,28 @@
 
 Evidence index updated **2026-11-21**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## Current record formats only — 2026-11-21
+
+Local branch `claude/workspace-layout-phase0` after `ee283ff` removes read compatibility for record
+formats from earlier previews. Checks ran on macOS arm64:
+
+- New red/green regressions: a marker without saved language or mode is refused by `status` and
+  `configure` without changes; a cash entry without `schema_version` 2 stops period reports and
+  reversal; an install source without its skill catalog is refused. The installer fixtures now use
+  a catalogued bundle, and the catalog-symlink test runs again after that change first made it skip.
+  Integrity checks for malformed facts, untyped register entries, unfingerprinted verified facts and
+  token-only locks are unchanged and lost their "legacy" names.
+- The full unit suite passed (499 tests; 11 skipped because they require Windows or a configured
+  PowerShell container image). `tools/check_package.py` passed on a clean copy;
+  `tools/check_doc_links.py` (512 links/anchors), `git diff --check` and `tools/release.py check`
+  passed.
+- `npm run test:gui` and `npm run test:overview` passed in **Chromium** and **WebKit**.
+- Under PowerShell 7 on macOS, the four native smoke scripts and the Windows-gated interop tests
+  (through the local `pwsh` stand-in described in the previous entry) passed.
+
+Not run: hosted Windows CI and Windows PowerShell 5.1, the packaged GUI smoke and fresh-session
+evaluations; nothing is pushed, tagged or published.
+
 ## Single workspace folder structure and 0.12.0-preview.1 preparation — 2026-11-21
 
 Local branch `claude/workspace-layout-phase0` after `fdcdd90` replaces the earlier layouts with one

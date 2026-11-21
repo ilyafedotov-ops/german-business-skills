@@ -130,22 +130,19 @@ class WorkspaceTests(unittest.TestCase):
         status = workspace.workspace_status(self.root)
         self.assertEqual((status["language"], status["mode"]), ("ru", "tax-consultant"))
 
-    def test_legacy_marker_missing_mode_defaults_without_read_time_mutation(self):
-        marker = self.load(workspace.MARKER)
-        marker.pop("mode")
-        marker["language"] = "de"
+    def test_marker_without_saved_preferences_fails_closed_without_changes(self):
         path = workspace._path(self.root, workspace.MARKER)
-        path.write_text(json.dumps(marker), encoding="utf-8")
-        marker_bytes = path.read_bytes()
-        status = workspace.workspace_status(self.root)
-        self.assertEqual((status["language"], status["mode"]), ("de", "general"))
-        self.assertEqual(path.read_bytes(), marker_bytes)
-        result = workspace.configure_workspace(self.root, mode="bookkeeping")
-        self.assertEqual((result["language"], result["mode"]), ("de", "bookkeeping"))
-        self.assertEqual(self.load(workspace.MARKER)["schema_version"], 1)
-        history = self.load(f"09_audit/history/{result['history_id']}.json")
-        self.assertNotIn("mode", history["before"])
-        self.assertEqual(history["after"]["mode"], "bookkeeping")
+        for missing in ("mode", "language"):
+            with self.subTest(missing=missing):
+                marker = self.load(workspace.MARKER)
+                marker.pop(missing)
+                path.write_text(json.dumps(marker), encoding="utf-8")
+                before = path.read_bytes()
+                with self.assertRaises(workspace.WorkspaceError):
+                    workspace.workspace_status(self.root)
+                with self.assertRaises(workspace.WorkspaceError):
+                    workspace.configure_workspace(self.root, mode="bookkeeping")
+                self.assertEqual(path.read_bytes(), before)
 
     def test_configure_rejects_missing_or_invalid_options_without_changes(self):
         marker_before = (workspace._path(self.root, workspace.MARKER)).read_bytes()

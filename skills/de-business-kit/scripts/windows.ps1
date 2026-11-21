@@ -212,6 +212,7 @@ function Workspace {
     if ($marker.schema -ne 'german-business-workspace' -or $marker.schema_version -ne 1) { throw 'Unsupported workspace; do not initialize over it.' }
     $id = [guid]::Empty
     if (-not [guid]::TryParse($marker.workspace_id, [ref]$id)) { throw 'Invalid workspace identity.' }
+    if ($null -eq $marker.PSObject.Properties['language'] -or $null -eq $marker.PSObject.Properties['mode']) { throw 'Saved language and mode are missing; preserve the files for review.' }
     if ($marker.language -notin @('en','ru','de') -or $marker.mode -notin @('general','bookkeeping','tax-consultant')) { throw 'Invalid saved preferences.' }
     $info = FolderLayout
     if ($null -eq $info -or $null -eq $marker.PSObject.Properties['folder_layout'] -or $marker.folder_layout.schema_version -ne $info.record.schema_version -or $marker.folder_layout.language -cne $info.record.language) { throw 'Folder layout does not match workspace identity.' }
@@ -434,7 +435,7 @@ function UnlockWorkspace {
             if ((Get-Command ConvertFrom-Json).Parameters.ContainsKey('DateKind')) { $options.DateKind='String' }
             $previous = ConvertFrom-Json @options
         } catch { $previous = [Text.Encoding]::UTF8.GetString($data) }
-        # Keep original bytes even for invalid UTF-8 or a legacy token-only lock.
+        # Keep original bytes even for invalid UTF-8 or a lock without readable owner details.
         $evidence = WorkspacePath ('09_audit/history/' + $historyId + '.lock')
         WriteNew $evidence $data
         WriteNew $historyPath (BytesJson @{schema_version=1; action='stale_lock_removed'; recorded_at=(Now); lock_sha256=$ExpectedSha256; lock=$previous; assessment=$status.assessment; confirmed_no_writer=[bool]$ConfirmedNoWriter; lock_evidence=('09_audit/history/' + $historyId + '.lock')})

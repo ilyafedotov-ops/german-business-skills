@@ -86,7 +86,7 @@ class RegisterTests(unittest.TestCase):
         self.assertEqual(json.loads((workspace._path(self.root, "00_admin/tasks.json")).read_text()), [])
         self.assertEqual(lock.read_text(), "active")
 
-    def test_legacy_untyped_register_is_reported_without_rewriting(self):
+    def test_untyped_register_entry_is_reported_without_rewriting(self):
         path = workspace._path(self.root, "00_admin/tasks.json")
         path.write_text('[{"old": "untyped"}]', encoding="utf-8")
         before = path.read_bytes()

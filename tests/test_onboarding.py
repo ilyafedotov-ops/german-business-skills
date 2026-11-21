@@ -108,7 +108,7 @@ class OnboardingTests(unittest.TestCase):
         self.assertEqual(self.read(workspace.PROFILE)["facts"]["employees"]["value"], False)
         workspace.record_fact(self.root, {"field": "employees", "value": None, "status": "unknown"})
 
-    def test_legacy_malformed_fact_is_flagged_without_rewriting_it(self):
+    def test_malformed_fact_is_flagged_without_rewriting_it(self):
         path = workspace._path(self.root, workspace.PROFILE)
         profile = self.read(workspace.PROFILE)
         profile["facts"]["vat_current_regime"].update(value={"old": "unsupported"}, status="declared")

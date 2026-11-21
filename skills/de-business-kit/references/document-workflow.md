@@ -33,7 +33,7 @@ For Gmail/accounting-service records or a mixed folder, start with [existing-dat
 
 ## Contracts and locations
 
-`00_admin/documents.json` preserves the original index. Additive `00_admin/casework.json` schema 1 stores `documents`, `receipts`, `proposals`, `source_checks`, `observations`, `bank_imports`, `inspections`. Reading a legacy workspace derives default catalog entries without rewriting its index. Unsupported schemas require explicit conversion; no migration command is provided.
+`00_admin/documents.json` preserves the original index. Additive `00_admin/casework.json` schema 1 stores `documents`, `receipts`, `proposals`, `source_checks`, `observations`, `bank_imports`, `inspections`. Documents imported with the low-level `ingest` get default catalog entries without rewriting the index. Other schema versions are refused; no migration command is provided.
 
 | Record | Validated contract |
 | --- | --- |
