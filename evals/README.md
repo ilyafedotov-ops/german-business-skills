@@ -53,6 +53,9 @@ for recorded host versions, outcomes and limitations.
 use manual fresh sessions: check a short relevant introduction and a truthful
 user-held installation step when plugin controls are unavailable. These read-only
 trials do not install a plugin or prove discovery in a desktop app.
+`welcome-wizard-after-install` is a manual multi-turn trial: answer each step in a
+resumed session and check the setup check, one decision per step, no writes before a
+folder is chosen, and the closing summary.
 
 ## Filed-return uncertainty and crypto-income trials
 

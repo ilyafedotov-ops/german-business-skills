@@ -21,7 +21,7 @@ German Business Kit application is required.
 
 Open **Claude Code**, the **Claude** app or **Codex** and paste:
 
-> Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills. Follow the repository's installation instructions for my app and use the published release, not a copy of the repository's current files. Check that all seven skills are installed, then tell me how to start a fresh session and try one small example.
+> Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills. Follow the repository's installation instructions for my app and use the published release, not a copy of the repository's current files. Check that all seven skills are installed, then tell me how to start a fresh session and begin the welcome setup.
 
 Your assistant can inspect the instructions and perform the setup its tools allow:
 Claude Code can run the plugin commands once you approve them, in the Claude app it
@@ -59,7 +59,9 @@ needed for an ordinary chat or local document. A skill alone does not grant acce
 
 After installation, start a new task/chat and send:
 
-> Use de-business-kit. I am new here. Show me how to ask for help and give me three examples relevant to my situation. I am [planning a business / already working / preparing reports / making a change].
+> Use de-business-kit. I just installed the kit. Start the welcome setup: check that everything works and guide me step by step.
+
+The assistant checks the kit, its helper and your folder, then guides you one short step at a time: language, your situation, a private business folder, how your data is handled and a first task.
 
 In **Codex**, you can also use **`$de-business-kit`**. In **Claude**, type **/** or
 open **+** and select **de-business-kit** from **German Business Kit**. You can

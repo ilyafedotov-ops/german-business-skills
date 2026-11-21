@@ -12,6 +12,7 @@ The assistant runs commands and explains outcomes; users should not need to edit
 | --- | --- |
 | Research, tax explanation, service comparison, form preparation | Available host search/browser/file tools and localized Markdown templates; no workspace or runtime required for an answer |
 | Install standalone skill | `scripts/windows.ps1 -Action install`; no network, runtime installer or host-setting changes |
+| First-run setup check | `-Action setup-check -Root <folder>`; read-only kit, installation and folder check with the same report as `workspace.py setup-check`; write access is reported as `not_checked` |
 | Create/resume canonical workspace | `-Action start`; same profile, preferences, unknown facts, document index and lock as Python utilities |
 | Resolve actual workspace folders | `-Action folders`; read-only logical-to-physical path map |
 | Preview a mixed folder | `-Action scan`; bounded metadata, exclusions and completeness, no source content reads/import |

@@ -1442,6 +1442,92 @@ def diagnose_workspace(root: PathInput) -> Dict[str, Any]:
     return result
 
 
+SYNC_MARKERS = (("Mobile Documents", "iCloud Drive"), ("iCloudDrive", "iCloud Drive"), ("OneDrive", "OneDrive"),
+                ("Dropbox", "Dropbox"), ("Google Drive", "Google Drive"), ("GoogleDrive", "Google Drive"))
+
+
+def setup_check(folder: Optional[PathInput] = None, home: Optional[PathInput] = None,
+                skill_directory: Optional[PathInput] = None) -> Dict[str, Any]:
+    """Read-only first-run check for the welcome flow: kit, helper runtime and the chosen folder.
+    Writes nothing; findings are plain IDs and facts for the assistant to explain."""
+    skill = Path(skill_directory).resolve() if skill_directory else Path(__file__).resolve().parents[1]
+    home_path = Path(home) if home else Path.home()
+    target = _absolute(folder if folder is not None else os.getcwd())
+    checks: List[Dict[str, Any]] = []
+
+    def add(identifier: str, result: str, detail: Any = None) -> None:
+        checks.append({"id": identifier, "result": result, **({"detail": detail} if detail is not None else {})})
+
+    version_file = skill / "assets" / "version.json"
+    version = _json_bytes(_read_regular(version_file)).get("version") if version_file.is_file() else None
+    names = _json_bytes(_read_regular(skill / "assets" / "skill-set.json"))["skills"]
+    found = [name for name in names if (skill.parent / name / "SKILL.md").is_file()]
+    missing = [name for name in names if name not in found]
+    add("kit_complete", "problem" if missing else "ok", missing or None)
+    others = []
+    for base in (home_path / ".claude" / "skills", home_path / ".agents" / "skills",
+                 target / ".claude" / "skills", target / ".agents" / "skills"):
+        candidate = base / "de-business-kit"
+        if (candidate / "SKILL.md").is_file() and candidate.resolve() != skill:
+            others.append(str(candidate))
+    add("single_installation", "warning" if others else "ok", others or None)
+    parts = skill.parts
+    kind = ("claude_plugin" if ".claude" in parts and "plugins" in parts else
+            "skills_folder" if skill.parent.name == "skills" and skill.parent.parent.name in {".claude", ".agents"} else
+            "source_checkout" if (skill.parents[2] / ".git").exists() else "other")
+    add("helper_runtime", "ok" if sys.version_info >= (3, 9) else "problem", sys.version.split()[0])
+
+    state, details = "missing", None
+    try:
+        _private_boundary(target)
+        add("private_location", "ok")
+    except WorkspaceError as exc:
+        add("private_location", "problem", str(exc))
+    synced = next((name for marker, name in SYNC_MARKERS if any(part.startswith(marker) for part in target.parts)), None)
+    if synced:
+        add("synced_folder", "warning", synced)
+    existing = target if target.exists() else next((p for p in target.parents if p.exists()), target)
+    add("folder_writable", "ok" if existing.is_dir() and os.access(existing, os.W_OK) else "problem")
+    if target.exists():
+        if not target.is_dir():
+            state = "not_a_folder"
+        elif _workspace_present(target):
+            try:
+                status = workspace_status(target)
+                state = "workspace"
+                details = {key: status.get(key) for key in ("status", "workspace_health", "language", "mode",
+                                                             "folder_language", "documents", "list_item_counts")}
+            except WorkspaceError as exc:
+                state, details = "unsupported_workspace", str(exc)
+        else:
+            state = "has_files" if any(not entry.name.startswith(".") for entry in target.iterdir()) else "empty"
+    problems = [row["id"] for row in checks if row["result"] == "problem"]
+    if "kit_complete" in problems:
+        next_action = "Install the complete kit again from the published release; missing skills: " + ", ".join(missing) + "."
+    elif "helper_runtime" in problems:
+        next_action = "Python 3.9 or newer is needed for these helpers; on Windows use the native helper instead."
+    elif state == "unsupported_workspace":
+        next_action = "Explain that this folder cannot be opened and nothing was changed; create a new workspace in another folder."
+    elif "private_location" in problems or "folder_writable" in problems or state == "not_a_folder":
+        next_action = "Choose a private folder you can write to, outside Git repositories and the kit's own folders."
+    elif state == "workspace":
+        next_action = "Resume this workspace with start; never initialize it again."
+    elif state == "has_files":
+        next_action = ("Treat this folder as a source: create the workspace in a new empty folder, then preview "
+                       "these files with scan-folder before importing.")
+    else:
+        next_action = "With the user's agreement, create the workspace here with start."
+    status_value = "needs_attention" if problems or state in {"unsupported_workspace", "not_a_folder"} else "ready"
+    return {"schema_version": 1, "status": status_value,
+            "kit": {"version": version, "install_kind": kind, "skill_directory": str(skill),
+                    "skills_found": found, "skills_missing": missing, "other_installations": others},
+            "runtime": {"python": sys.version.split()[0], "platform": sys.platform, "isolated_mode": bool(sys.flags.isolated)},
+            "folder": {"path": str(target), "state": state, **({"workspace": details} if state == "workspace" else {}),
+                       **({"detail": details} if state == "unsupported_workspace" else {})},
+            "checks": checks, "next_action": next_action,
+            "scope": "Local read-only check. It does not test app discovery, model settings, connections or legal compliance."}
+
+
 def lock_status(root: PathInput) -> Optional[Dict[str, Any]]:
     """Read-only assessment of the workspace lock, or None when unlocked."""
     return _lock_status(_workspace(root))
@@ -1597,6 +1683,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     for name in ("verify", "status", "doctor", "folders"):
         command = commands.add_parser(name)
         command.add_argument("--root", required=True)
+    setup = commands.add_parser("setup-check", help="Read-only first-run check of the kit, helper runtime and a folder")
+    setup.add_argument("--folder", help="Folder to check; defaults to the current folder")
     unlock = commands.add_parser("unlock", help="Remove a lock whose writer has ended (see doctor), preserving it in history")
     unlock.add_argument("--root", required=True)
     unlock.add_argument("--expected-sha256", required=True, help="lock.sha256 from doctor")
@@ -1625,6 +1713,8 @@ def main(argv: Optional[List[str]] = None) -> int:
                                     _load(_inside(_workspace(args.root), args.input)), args.expected_sha256)
         elif args.command == "doctor":
             result = diagnose_workspace(args.root)
+        elif args.command == "setup-check":
+            result = setup_check(args.folder)
         elif args.command == "folders":
             result = workspace_folders(args.root)
         elif args.command == "unlock":

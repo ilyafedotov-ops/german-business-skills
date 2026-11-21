@@ -70,6 +70,14 @@ class ReleaseTests(unittest.TestCase):
             self.run_tool('check', ok=False)
         self.assertFalse((self.base / 'build').exists())
 
+    def test_kit_version_file_must_match_version(self):
+        # The installed skill reports this version in its setup check.
+        kit_version = self.repo / 'skills/de-business-kit/assets/version.json'
+        kit_version.write_text('{"schema_version": 1, "version": "0.0.1"}\n')
+        self.run_tool('check', ok=False)
+        kit_version.unlink()
+        self.run_tool('check', ok=False)
+
     def test_wrong_tag_dirty_tree_and_missing_notes_fail_closed(self):
         self.run_tool('check', '--tag', 'v9.0.0', ok=False)
         (self.repo / 'LICENSE').write_text('changed')

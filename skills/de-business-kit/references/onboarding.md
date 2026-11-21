@@ -4,7 +4,7 @@ User-facing help ships inside the skill: [Russian manual](../guides/user-guide.r
 
 For substantial setup/source-intake work, provide a readable outcome and next step under [readable output](readable-output.md). Do not make the user choose a technical format; use an available readable document by default and explain capability gaps only when relevant.
 
-Use for first use, “help me set this up,” “continue,” or a confused user. Offer outcomes in the active language: **Prepare/start an activity**, **Handle a customer document**, **Organize records/reporting**, **Answer a question or letter**, **Choose/connect a service**, **Change/pause/close an activity**, **Continue my work**. Infer a clear choice from the request; do not force a mode menu. Keep the `tax-consultant` machine ID for existing workspaces; show the preparation-focused label.
+For a new user without a concrete task, run the [welcome wizard](welcome.md); it applies the policies below one step at a time. Use for first use, “help me set this up,” “continue,” or a confused user. Offer outcomes in the active language: **Prepare/start an activity**, **Handle a customer document**, **Organize records/reporting**, **Answer a question or letter**, **Choose/connect a service**, **Change/pause/close an activity**, **Continue my work**. Infer a clear choice from the request; do not force a mode menu. Keep the `tax-consultant` machine ID for existing workspaces; show the preparation-focused label.
 
 If the user already has email, cloud/accounting records or a nonempty folder, follow [existing-data onboarding](existing-data.md) before proposing fresh setup. Inspect source access and existing workspace markers; do not initialize over the source or reset accounting/VAT history.
 
@@ -22,6 +22,8 @@ a download or copy alone; verify availability in a fresh session. Do not install
 runtimes, weaken protections or create a business workspace just for installation.
 If this reference is only being read from a downloaded repository, that is not
 proof the host has installed the skill. Identify the specific remaining step.
+After a successful installation, tell the user to start a fresh session and send
+the welcome request from the guide; that session runs the [welcome wizard](welcome.md).
 
 At first use or before real documents, briefly explain that this is AI assistance,
 not professional tax advice, and that local files can be processed by a remote

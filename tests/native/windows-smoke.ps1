@@ -21,6 +21,11 @@ try {
     [IO.File]::WriteAllText((Join-Path $source '.hidden.csv'), 'hidden')
     [IO.File]::WriteAllText((Join-Path $source 'export.zip'), 'not-a-zip')
     $original = (Get-FileHash -LiteralPath $invoice -Algorithm SHA256).Hash
+    # The first-run check is read-only: it reports the missing folder without creating it.
+    $check = & $kit -Action setup-check -Root $root | ConvertFrom-Json
+    Assert ($check.status -eq 'ready' -and $check.folder.state -eq 'missing' -and @($check.kit.skills_found).Count -eq 7) 'Setup check failed'
+    Assert (-not (Test-Path -LiteralPath $root)) 'Setup check created the folder'
+    Assert ((& $kit -Action setup-check -Root $source | ConvertFrom-Json).folder.state -eq 'has_files') 'Setup check missed existing files'
     $start = & $kit -Action start -Root $root -Year 2026 -Language ru | ConvertFrom-Json
     Assert ($start.status -eq 'initialized') 'Start failed'
     $folders = & $kit -Action folders -Root $root | ConvertFrom-Json

@@ -5,7 +5,7 @@
 #>
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true)][ValidateSet('install','start','scan','ingest','verify','folders','overview','lock-status','unlock')][string]$Action,
+    [Parameter(Mandatory=$true)][ValidateSet('install','setup-check','start','scan','ingest','verify','folders','overview','lock-status','unlock')][string]$Action,
     [Parameter(Mandatory=$true)][string]$Root,
     [string]$Source,
     [ValidateRange(1900,9999)][int]$Year = (Get-Date).Year,
@@ -451,7 +451,67 @@ function UnlockWorkspace {
     } finally { CloseNativeLock $owned }
 }
 
+function SetupCheck {
+    # Read-only first-run check for the welcome flow; same report shape and check IDs as workspace.py setup-check.
+    $checks = New-Object System.Collections.Generic.List[object]
+    $add = { param($id, $result, $detail) $row = [ordered]@{id=$id; result=$result}; if ($null -ne $detail) { $row.detail = $detail }; $checks.Add($row) }
+    $versionFile = Join-Path $kitRoot 'assets/version.json'
+    $version = if (Test-Path -LiteralPath $versionFile -PathType Leaf) { (ReadJson $versionFile).version } else { $null }
+    $names = @((ReadJson (Join-Path $kitRoot 'assets/skill-set.json')).skills)
+    $skillsParent = [IO.Path]::GetDirectoryName($kitRoot.TrimEnd([char[]]'\/'))
+    $found = @($names | Where-Object { Test-Path -LiteralPath (Join-Path (Join-Path $skillsParent $_) 'SKILL.md') -PathType Leaf })
+    $missing = @($names | Where-Object { $found -notcontains $_ })
+    & $add 'kit_complete' $(if ($missing.Count) { 'problem' } else { 'ok' }) $(if ($missing.Count) { ,$missing } else { $null })
+    $others = New-Object System.Collections.Generic.List[string]
+    foreach ($base in @((Join-Path $HOME '.claude/skills'), (Join-Path $HOME '.agents/skills'), (Join-Path $rootPath '.claude/skills'), (Join-Path $rootPath '.agents/skills'))) {
+        $candidate = Join-Path $base 'de-business-kit'
+        if ((Test-Path -LiteralPath (Join-Path $candidate 'SKILL.md') -PathType Leaf) -and -not ([IO.Path]::GetFullPath($candidate).TrimEnd([char[]]'\/') -eq $kitRoot.TrimEnd([char[]]'\/'))) { $others.Add($candidate) }
+    }
+    & $add 'single_installation' $(if ($others.Count) { 'warning' } else { 'ok' }) $(if ($others.Count) { ,@($others.ToArray()) } else { $null })
+    $parts = @($kitRoot.Split([char[]]'\/') | Where-Object { $_ })
+    $kind = if (($parts -contains '.claude') -and ($parts -contains 'plugins')) { 'claude_plugin' }
+        elseif ((Split-Path -Leaf $skillsParent) -eq 'skills' -and (Split-Path -Leaf (Split-Path -Parent $skillsParent)) -in @('.claude','.agents')) { 'skills_folder' }
+        elseif (Test-Path -LiteralPath (Join-Path (Split-Path -Parent $skillsParent) '.git')) { 'source_checkout' } else { 'other' }
+    & $add 'helper_runtime' 'ok' $PSVersionTable.PSVersion.ToString()
+    try { Private $rootPath; & $add 'private_location' 'ok' $null } catch { & $add 'private_location' 'problem' $_.Exception.Message }
+    $synced = $null
+    foreach ($pair in @(@('Mobile Documents','iCloud Drive'), @('iCloudDrive','iCloud Drive'), @('OneDrive','OneDrive'), @('Dropbox','Dropbox'), @('Google Drive','Google Drive'), @('GoogleDrive','Google Drive'))) {
+        if ($null -eq $synced -and @($rootPath.Split([char[]]'\/') | Where-Object { $_.StartsWith($pair[0]) }).Count) { $synced = $pair[1] }
+    }
+    if ($synced) { & $add 'synced_folder' 'warning' $synced }
+    # Write access cannot be established without writing; the assistant learns it from the first real write.
+    & $add 'folder_writable' 'not_checked' $null
+    $state = 'missing'; $details = $null
+    if (Test-Path -LiteralPath $rootPath) {
+        if (-not (Test-Path -LiteralPath $rootPath -PathType Container)) { $state = 'not_a_folder' }
+        elseif (WorkspacePresent $rootPath) {
+            try {
+                $marker = Workspace
+                $state = 'workspace'
+                $details = [ordered]@{language=$marker.language; mode=$marker.mode; folder_language=$marker.folder_layout.language}
+            } catch { $state = 'unsupported_workspace'; $details = $_.Exception.Message }
+        } elseif (@(Get-ChildItem -LiteralPath $rootPath -Force | Where-Object { -not $_.Name.StartsWith('.') }).Count) { $state = 'has_files' }
+        else { $state = 'empty' }
+    }
+    $problems = @($checks | Where-Object { $_.result -eq 'problem' } | ForEach-Object { $_.id })
+    $next = if ($problems -contains 'kit_complete') { 'Install the complete kit again from the published release; missing skills: ' + ($missing -join ', ') + '.' }
+        elseif ($state -eq 'unsupported_workspace') { 'Explain that this folder cannot be opened and nothing was changed; create a new workspace in another folder.' }
+        elseif (($problems -contains 'private_location') -or $state -eq 'not_a_folder') { "Choose a private folder you can write to, outside Git repositories and the kit's own folders." }
+        elseif ($state -eq 'workspace') { 'Resume this workspace with start; never initialize it again.' }
+        elseif ($state -eq 'has_files') { 'Treat this folder as a source: create the workspace in a new empty folder, then preview these files with scan before importing.' }
+        else { "With the user's agreement, create the workspace here with start." }
+    $folder = [ordered]@{path=$rootPath; state=$state}
+    if ($state -eq 'workspace') { $folder.workspace = $details } elseif ($state -eq 'unsupported_workspace') { $folder.detail = $details }
+    $python = [bool](Get-Command -Name 'python','python3','py' -CommandType Application -ErrorAction SilentlyContinue)
+    return [ordered]@{schema_version=1; status=$(if ($problems.Count -or $state -in @('unsupported_workspace','not_a_folder')) { 'needs_attention' } else { 'ready' })
+        kit=[ordered]@{version=$version; install_kind=$kind; skill_directory=$kitRoot; skills_found=$found; skills_missing=$missing; other_installations=@($others.ToArray())}
+        runtime=[ordered]@{powershell=$PSVersionTable.PSVersion.ToString(); platform=[Environment]::OSVersion.Platform.ToString(); python_available=$python}
+        folder=$folder; checks=@($checks.ToArray()); next_action=$next
+        scope='Local read-only check. It does not test app discovery, model settings, connections or legal compliance.'}
+}
+
 $rootPath = Absolute $Root
+if ($Action -eq 'setup-check') { ConvertTo-Json -InputObject (SetupCheck) -Depth 40; return }
 Chain $rootPath
 if ($DryRun -and $Action -ne 'install') { throw 'DryRun is supported only for install.' }
 if ($Action -eq 'install') { Install | ConvertTo-Json -Depth 40; return }

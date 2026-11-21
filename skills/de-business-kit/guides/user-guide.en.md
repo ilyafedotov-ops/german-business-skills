@@ -295,6 +295,10 @@ A complete backup includes original documents, saved progress and internal histo
 
 The normal route is your assistant plus your business folder. The optional records app offers forms for some local operations; you can use the skills without it. Ask for one small fictional trial to check what your actual assistant can do. Installation alone does not connect email, banking or tax services.
 
+> Use de-business-kit. Run the setup check for this folder and explain anything that needs attention.
+
+The check reads only: the kit version and its seven skills, a second installed copy, the local helper and whether the folder is safe for business records. It changes nothing.
+
 For technical help with standalone Windows tools, see [native Windows capabilities](../references/native-windows.md). Some protected accounting/filing operations need an already available supported runtime. The assistant should explain a specific unavailable operation instead of requiring another application for every task.
 
 ## AI limits and your data

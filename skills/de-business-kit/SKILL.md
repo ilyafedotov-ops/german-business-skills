@@ -40,6 +40,9 @@ continuation.
 
 ## Start and continue
 
+Right after installation, or when a new user asks to start, set up or be shown
+around without a concrete task, run the [welcome wizard](references/welcome.md):
+a read-only setup check, then one step at a time in the chat.
 Use [guided onboarding](references/onboarding.md) for requested setup or usage help.
 For “how do I use this?”, explain invocation and offer a few relevant copyable
 requests with expected results; use the existing installation guide for setup.

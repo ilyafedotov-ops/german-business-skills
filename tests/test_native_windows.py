@@ -79,6 +79,26 @@ class NativeInteropTests(unittest.TestCase):
         self.assertEqual(result['unindexed_originals'], 1)
         self.assertEqual(original.read_bytes(), b'unindexed')
 
+    def test_both_runtimes_give_the_same_setup_check(self):
+        def summary(report):
+            # The native helper cannot test write access without writing, so it reports not_checked.
+            checks = {row['id']: row['result'] for row in report['checks'] if row['id'] != 'folder_writable'}
+            return report['status'], report['folder']['state'], report['kit']['skills_missing'], checks
+        cases = {'missing': lambda: None, 'empty': lambda: self.root.mkdir(),
+                 'workspace': lambda: ws.start_workspace(self.root, year=2026, language='de'),
+                 'has_files': lambda: (self.root.mkdir(), (self.root / 'invoice.pdf').write_bytes(b'%PDF'))}
+        for state, prepare in cases.items():
+            with self.subTest(state=state):
+                if self.root.exists():
+                    shutil.rmtree(self.root)
+                prepare()
+                native = self.run_native('setup-check')
+                self.assertEqual(summary(native), summary(ws.setup_check(self.root)))
+                self.assertEqual(native['folder']['state'], state)
+                self.assertEqual(native['kit']['version'], (REPO / 'VERSION').read_text().strip())
+                self.assertEqual(native['folder'].get('workspace', {}).get('folder_language'),
+                                 'de' if state == 'workspace' else None)
+
     def test_both_runtimes_share_paths_numbering_and_integrity(self):
         for language, inbox, archive in [('ru', '01 Входящие', '02 Документы'), ('de', '01 Eingang', '02 Dokumente')]:
             with self.subTest(language=language):

@@ -24,9 +24,13 @@ Prüfen Sie Konto, Datenkontrollen und benötigte Inhalte vor echten Dokumenten.
 
 Am schnellsten: Fügen Sie in Claude Code, der Claude-App oder Codex diese Anfrage ein:
 
-> Installiere German Business Kit von https://github.com/ilyafedotov-ops/german-business-skills. Folge den Installationsanweisungen des Repositorys für meine App und verwende die veröffentlichte Version, keine Kopie der aktuellen Repository-Dateien. Prüfe, ob alle sieben Skills installiert sind, und sag mir dann, wie ich eine neue Sitzung starte und ein kleines Beispiel ausprobiere.
+> Installiere German Business Kit von https://github.com/ilyafedotov-ops/german-business-skills. Folge den Installationsanweisungen des Repositorys für meine App und verwende die veröffentlichte Version, keine Kopie der aktuellen Repository-Dateien. Prüfe, ob alle sieben Skills installiert sind, und sag mir dann, wie ich eine neue Sitzung starte und die Willkommens-Einrichtung beginne.
 
-Claude Code kann die Plugin-Befehle nach Ihrer Bestätigung selbst ausführen; in der Claude-App führt der Assistent Sie bis **Install**; Codex kopiert die veröffentlichten Skills in Ihr Projekt.
+Claude Code kann die Plugin-Befehle nach Ihrer Bestätigung selbst ausführen; in der Claude-App führt der Assistent Sie bis **Install**; Codex kopiert die veröffentlichten Skills in Ihr Projekt. Starten Sie danach eine neue Sitzung und schreiben Sie:
+
+> Nutze de-business-kit. Ich habe das Kit gerade installiert. Starte die Willkommens-Einrichtung: Prüfe, ob alles funktioniert, und führe mich Schritt für Schritt.
+
+Die Einrichtung prüft Kit, Hilfsprogramm und Ordner und führt Sie in kurzen Schritten zu einem privaten Ordner und einer ersten Aufgabe.
 
 Manuell in der Claude-App (kostenpflichtiger Tarif): **Cowork → Customize → Plugins → Add → Add marketplace**, `ilyafedotov-ops/german-business-skills` eingeben und **German Business Kit** installieren. In Claude Code im Terminal: `claude plugin marketplace add ilyafedotov-ops/german-business-skills`, dann `claude plugin install de-business-kit@german-business-kit`. Die ausführliche [Installationsanleitung](install.en.md) gibt es auf Englisch und Russisch, auch für Codex. Starten Sie danach eine neue Aufgabe in Cowork oder öffnen Sie Ihr Codex-Projekt mit den installierten Skills. Ist im Codex-Projekt nur der Ordner vorhanden, bitten Sie den Assistenten, die lokale Installation zu prüfen und die vorgesehenen Dateien und Ziele zu erklären. Ein heruntergeladenes ZIP installiert noch nichts. Python und geänderte Sicherheitseinstellungen sind keine Voraussetzung für den Einstieg.
 

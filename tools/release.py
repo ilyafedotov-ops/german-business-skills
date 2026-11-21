@@ -32,7 +32,7 @@ def check(tag=None):
     if not match or (match[4] and any(part.isdigit() and len(part) > 1 and part[0] == '0'
                                     for part in match[4].split('.'))):
         raise ValueError('VERSION must be SemVer without build metadata or numeric leading zeroes.')
-    for name in ('plugin.json', '.claude-plugin/plugin.json'):
+    for name in ('plugin.json', '.claude-plugin/plugin.json', 'skills/de-business-kit/assets/version.json'):
         if json.loads(read_file(ROOT / name))['version'] != version:
             raise ValueError(f'{name} does not match VERSION.')
     for name in ('CHANGELOG.md', 'CHANGELOG.ru.md'):
