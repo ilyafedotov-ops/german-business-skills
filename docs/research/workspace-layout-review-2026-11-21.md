@@ -1,6 +1,6 @@
-> Dated review, not current implementation status. See [current status](../project-status.md) for delivery and remaining work.
+> Dated review. Its findings were implemented in 0.12.0-preview.1 as one folder structure; see [current status](../project-status.md) for remaining work.
 
-# Private workspace folder layout: review and v2 plan
+# Private workspace folder layout: review and outcome
 
 Review date: **2026-11-21**. Baseline inspected: **`9c3e5e9`** (content of the
 private workspace created by `start`, `demo`, intake and the protected writers).
@@ -43,27 +43,17 @@ area, inconsistent year partitions and the missing procedure documentation.
 | 10 | `demo` used the legacy layout | `create_demo` called `init_workspace` with its `legacy` default |
 | 11 | E-invoice parts are separate unlinked files | Each file is indexed independently by hash |
 
-## Approved plan
+## Outcome
 
-Stored records use logical paths translated by longest-prefix mapping, so a
-versioned mapping can relocate some files without rewriting records. Both Python
-and native PowerShell reject layout descriptors other than version 1, so an older
-kit fails closed on a v2 workspace.
-
-- **Phase 0:** a new `00_admin/work` key for assistant files in every layout
-  (finding 1); `demo` creates the localized layout (finding 10).
-- **Phase 1:** versioned v2 mapping in Python and native Windows; root overview,
-  internal accounting register, a reserved procedure-documentation folder and a
-  shared year-path helper (findings 5–7).
-- **Phase 2:** readable original names with a running number, issued-invoice
-  copies under Documents, managed-inbox preview and post-import handling, then
-  v2 as the default for new workspaces (findings 2–4).
-- **Phase 3:** opt-in v1→v2 migration with a hash-listed plan, a verified full
-  backup and the v2 descriptor written last as the commit point.
-
-Retention class and direction (9), e-invoice grouping (11) and generated
-procedure documentation (8) are separate data-model work. Existing workspaces are
-never migrated silently.
+0.12.0-preview.1 replaced the planned phased, versioned migration with a single
+folder structure, because the preview had no users. Findings 1–8 and 10 are
+implemented in Python and native Windows: assistant files in an internal work
+folder, a managed inbox whose imported files move to Imported, numbered readable
+originals, issued-invoice copies under Documents, storage-year folders, an
+internal accounting register, a root overview page, a procedure documentation
+draft at setup and a demo with the same folders. Workspaces from earlier previews
+are refused without changes instead of migrated. Retention class and document
+direction (9) and e-invoice grouping (11) remain data-model work.
 
 ## Method and limits
 

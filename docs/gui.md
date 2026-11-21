@@ -114,7 +114,7 @@ npm run test:browser
 npm run test:browser -- --browser=webkit
 ```
 
-Tests open the HTML file directly; synthetic screenshots go to ignored `output/prototype/`. No production dependency or network request is added. See the [validation summary](validation.md) for evidence limits and the dated [design research](research/gui-ux-recommendation.md). The real GUI above is implemented separately; ordinary-user usability acceptance remains open.
+Tests open the HTML file directly; synthetic screenshots go to ignored `output/prototype/`. No production dependency or network request is added. See the [validation summary](validation.md) for evidence limits. The real GUI above is implemented separately; ordinary-user usability acceptance remains open.
 
 ## Guided setup page
 

@@ -19,7 +19,7 @@ The installed assistant uses the self-contained [skill entry point](../skills/de
 
 ## Research
 
-[Host-installation sources](research/host-installation-sources.md), [GUI research](research/gui-ux-primary-sources.md), the [design recommendation](research/gui-ux-recommendation.md) and the [workspace layout review](research/workspace-layout-review-2026-11-21.md) retain their original check dates; recheck external claims for the current task.
+The [workspace layout review](research/workspace-layout-review-2026-11-21.md) explains the current folder structure and keeps its source-check date; recheck external claims for the current task. Superseded research lives in Git history.
 
 ## Keep this structure small
 
