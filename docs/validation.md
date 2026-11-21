@@ -4,6 +4,23 @@
 
 Evidence index updated **2026-11-21**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## 0.13.0-preview.1 publication — 2026-11-21
+
+The annotated tag `v0.13.0-preview.1` points to `01eb044e71f7021a4c2307b4695e2366203e2396` (the merge of PR #40, all checks green);
+no signing key is configured. Before pushing it, `tools/release.py check --tag` passed and a local
+`release.py prepare`/`verify` rehearsal built both skill ZIPs. Release run `44897078006` succeeded and
+published the release at 11:08 UTC as an immutable pre-release with eight assets.
+
+With GitHub CLI 2.105.0, on freshly downloaded assets: `SHA256SUMS` matched every file;
+`gh release verify` passed; `gh release verify-asset` and `gh attestation verify` with
+`--source-ref refs/tags/v0.13.0-preview.1`, `--source-digest 01eb044e71f7021a4c2307b4695e2366203e2396` and
+`--deny-self-hosted-runners` passed for all eight assets. Both skill ZIPs were byte-identical to
+the local rehearsal build. Only then did the marketplace pin, the Codex download links, release
+examples, distribution notes and project status move to this release.
+
+Not checked: installing the pinned release through the Claude app, Claude Code's marketplace
+commands or the Codex app after this change.
+
 ## Welcome wizard and setup check — 2026-11-21
 
 Branch `claude/welcome-wizard` adds the welcome wizard (`references/welcome.md`), `setup-check` in
