@@ -4,6 +4,7 @@
 GitHub's PR run head_sha identifies the branch head, not the merge tree tested by
 checkout. The final gate records that tree in authenticated job-step metadata.
 API errors, old workflows without the marker, and incomplete evidence run full CI.
+The tests command splits the unchanged discover run into deterministic shards.
 """
 import argparse
 import json
@@ -11,12 +12,26 @@ import os
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
+import sys
 
 SHA = re.compile(r'[0-9a-f]{40}')
 REPOSITORY = re.compile(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+')
+TEST_SELECTION = re.compile(r'([1-9][0-9]*)/([1-9][0-9]*)')
 WORKFLOW = '.github/workflows/checks.yml'
 REQUIRED_JOBS = ('plan', 'quick', 'prototype', 'native-utilities',
                  'windows-without-python', 'gui-package', 'artifact-transfer')
+# Windows Python 3.9 seconds per test module (Checks run 44815442989), used only
+# to balance shards. Unlisted modules weigh 1; every module still runs exactly once.
+WINDOWS_TEST_SECONDS = {
+    'test_invoicing': 42, 'test_payment_followup': 36, 'test_lexware': 31, 'test_packaging': 29,
+    'test_skill_bundle': 21, 'test_native_task_overview': 20, 'test_recovery': 17,
+    'test_native_windows': 15, 'test_accounting_lifecycle': 14, 'test_release': 13,
+    'test_native_lock_recovery': 13, 'test_journey': 12, 'test_invoice_payments': 12,
+    'test_customer_journey': 10, 'test_preparation_filing': 10, 'test_ci_plan': 8,
+    'test_settlements': 8, 'test_gui_server': 7, 'test_workspace': 7, 'test_invoice_xml': 6,
+    'test_overview': 6, 'test_cash_vat': 6, 'test_workflows': 4, 'test_archive': 4,
+    'test_casework': 3, 'test_casebank': 3, 'test_onboarding': 3, 'test_records': 3,
+}
 
 
 def git(root, *args):
@@ -160,6 +175,44 @@ def validate_gate(needs):
         raise ValueError('Required matrix result missing, failed or unexpectedly skipped')
 
 
+def test_modules(root):
+    """Modules `unittest discover -s tests` loads: top-level test*.py (tests/ has no packages)."""
+    return sorted(path.stem for path in (Path(root) / 'tests').glob('test*.py'))
+
+
+def shard(modules, index, count, weights=WINDOWS_TEST_SECONDS):
+    """Deterministic longest-first split; each module lands in exactly one shard."""
+    if type(index) is not int or type(count) is not int or not 1 <= index <= count:
+        raise ValueError('Invalid test shard')
+    loads, groups = [0] * count, [[] for _ in range(count)]
+    for name in sorted(modules, key=lambda module: (-weights.get(module, 1), module)):
+        target = min(range(count), key=lambda group: (loads[group], group))
+        groups[target].append(name)
+        loads[target] += weights.get(name, 1)
+    return sorted(groups[index - 1])
+
+
+def shard_patterns(root, selection):
+    """unittest -k patterns selecting one INDEX/COUNT shard of the discovered modules."""
+    match = TEST_SELECTION.fullmatch(selection)
+    if not match:
+        raise ValueError('Test selection must be all or INDEX/COUNT')
+    modules = shard(test_modules(root), int(match[1]), int(match[2]))
+    if not modules:
+        raise ValueError('Empty test shard')
+    return [module + '.*' for module in modules]
+
+
+def unit_command(root, selection):
+    """The full discover run, optionally filtered to one shard; same directory and imports."""
+    command = [sys.executable, '-B', '-m', 'unittest', 'discover', '-s', 'tests', '-v']
+    if selection != 'all':
+        # -k never filters import failures, so a broken module still fails every shard.
+        for pattern in shard_patterns(root, selection):
+            command += ['-k', pattern]
+    return command
+
+
 def require_pinned_tag(root):
     """CI fetches all tags: a missing marketplace target must fail, not skip a test."""
     catalog = json.loads((root / '.claude-plugin/marketplace.json').read_text(encoding='utf-8'))
@@ -175,8 +228,15 @@ def require_pinned_tag(root):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command', choices=('plan', 'gate', 'pin'))
+    parser.add_argument('command', choices=('plan', 'gate', 'pin', 'tests'))
+    parser.add_argument('selection', nargs='?', help="tests only: 'all' or a shard INDEX/COUNT")
     args = parser.parse_args()
+    if (args.selection is None) == (args.command == 'tests'):
+        parser.error("the tests command, and only it, takes 'all' or INDEX/COUNT")
+    if args.command == 'tests':
+        command = unit_command(Path.cwd(), args.selection)
+        print('Running', ' '.join(command[3:]), flush=True)
+        raise SystemExit(subprocess.run(command).returncode)
     if args.command == 'pin':
         require_pinned_tag(Path.cwd())
         print('Marketplace commit matches its fetched release tag.')

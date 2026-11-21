@@ -131,9 +131,9 @@ Anthropic reviews plugins listed in its own directory, not plugins added by addr
 
 ## Try your first task
 
-Plugins load when a task starts, so start a **new task** in Cowork. Send this fictional example:
+Plugins load when a task starts, so start a **new task** in Claude (in older versions of the app, in Cowork). Send this fictional example:
 
-> Use de-business-kit. I am just trying the assistant with a fictional example: I want to start working as a translator in Germany. I do not know where to begin. Help me choose one small first step.
+> Use de-business-kit. I am trying the assistant with a fictional example: I am a programmer and want to start freelancing in Germany, building websites and apps for small companies. I do not know where to begin. Help me choose one small first step. Ask only what you need for that step.
 
 Before sending, type **/** or open **+** and select **de-business-kit** from **German Business Kit**. Claude can also select skills automatically. In Codex, name the installed skill with **“Use de-business-kit”** or **`$de-business-kit`**. [More invocation examples](user-guide.en.md#call-a-skill).
 

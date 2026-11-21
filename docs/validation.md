@@ -153,6 +153,91 @@ Not run: hosted Windows CI, browser suites (overview, GUI and prototype code unc
 and fresh-session `evals/scenarios.json` trials for the changed input-file paths.
 Existing workspaces keep earlier preview files in their inbox; nothing is moved.
 
+## Guided setup data and AI-risk step — 2026-11-20
+
+Local branch work based on `4407107` adds a **Data & risks** step and usability
+changes to the [guided setup page](gui.md#guided-setup-page), after a review of every
+screen at 1280 and 390 px found the risk notice reduced to one welcome card, no
+prompt to check the provider's training setting, no overall progress count, a phone
+layout that pushed each heading about 410 px down and an unreadable marketplace
+screenshot. Provider privacy and AI Act claims were checked on official pages the
+same day; sources and consequences are in the [GUI scope](gui.md#guided-setup-page).
+Checks ran on macOS arm64 with Playwright 1.63.0 and Python 3.15.2:
+
+- `tests/test_installer.py` (6 tests) passed, including identical EN/RU/DE structure
+  for the new step, the six practice-check cards matching the answer table in
+  `installer/app.js`, the data request calling `de-business-kit` and the added
+  official hosts.
+- `npm run test:installer` passed in **Chromium** and **WebKit**. In each of the six
+  journeys it ticks the provider's data settings, answers the practice check by
+  keyboard (focus stays on the answer), corrects a wrong answer, keeps answers after
+  a reload, copies the data request, opens, zooms and closes the screenshot dialog
+  with Escape (focus returns), and checks the 7-of-7 count and bar. Without a chosen
+  assistant the step shows both providers' settings. At 390 px the app-step heading
+  starts within the top 300 px. No form or text inputs, console errors or non-file requests
+  were found. WebKit reported 42 screenshot-injection CSP diagnostics;
+  the page CSP was not relaxed.
+- The first WebKit run failed "answering keeps focus": WebKit, like Safari, does not
+  focus a button on a mouse click. The test now answers with the keyboard, which is
+  the case where losing focus would matter.
+- The full unit suite passed (495 tests; 11 skipped because they require Windows
+  PowerShell). `tools/check_package.py`, `tools/check_doc_links.py` (499 links/anchors)
+  and `git diff --check` passed.
+
+Limits: the page cannot see or verify account settings; menu labels are shown in
+English because localized labels were not checked. The GDPR and AI Act text is general
+information, not a legal review, and the six practice cards simplify (health data is
+covered in the text, not as a card). No screen-reader check, nontechnical-user trial or
+hosted CI run exists for this change yet.
+
+## Windows Checks wall time — 2026-11-20
+
+[PR #30](https://github.com/ilyafedotov-ops/german-business-skills/pull/30) shortens
+the Windows jobs that set `Checks` wall time. Nothing waited or timed out. The cause
+was `workspace._read_regular()` requesting `limit + 1` (50 MiB + 1) bytes per read:
+on hosted Windows runners that buffer cost **7.5–7.7 ms (Python 3.9) and
+13.6–13.9 ms (3.14)** for a small file, versus 25–34 µs for a size-bounded read.
+Path handling multiplied it: each evidence check reread the layout record and
+shipped folder catalog about 24 times. The earlier suspect tests came from
+misreading log timestamps, which mark when a `unittest -v` line finishes.
+Defender real-time protection was already off on the runners; no OS setting changed.
+
+Changes: evidence checks read the layout once and `stat` each protected record
+once; the shipped catalog bytes are read once per process; reads are sized from
+`fstat` and still refuse growth past the limit. Each Windows Python version runs
+two `unittest -k` shards of the unchanged discover command, and a selector test
+proves every discovered test runs exactly once. Symlink chain checks, the
+workspace layout record, locks, `Checks gate` and Windows Python 3.9 coverage are
+unchanged.
+
+Temporary same-VM diagnostics ([44812573163](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/44812573163),
+[44815333060](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/44815333060);
+changed code first, so warm caches favoured the baseline) ran four heavy modules
+(41 tests): Windows 3.9 **305 s → 49.5 s**, 3.14 **434 s → 29.8 s**.
+
+| Hosted `Checks` run | Commit | Selector start → gate end | Windows 3.9 jobs | Windows 3.14 jobs | Prototype Windows |
+| --- | --- | --- | --- | --- | --- |
+| [44799353738](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/44799353738) (PR #28, attempt 1) | `9c3e5e9` | 15 min 26 s, failed gate | 881 s | 911 s | 383 s |
+| [44806269174](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/44806269174) (PR #29) | `89e67c5` | 21 min 43 s | 799 s | 1,287 s | 658 s |
+| [44815442989](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/44815442989) (PR #30) | `bb82e2c` | **5 min 30 s** | 272 s + 229 s | 134 s + 146 s | 135 s |
+
+In that PR #30 run the unit-test steps took 210 s + 164 s (Python 3.9) and
+122 s + 133 s (3.14), and Prototype `test:gui` took 31 s (294 s in the PR #29 run).
+Shard weights were then updated from those logs (predicted Python 3.9 split
+190 s/189 s). The next PR #30 run, [44818005665](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/44818005665)
+at `a2678c5`, passed from selector start to gate end in **4 min 14 s**, with
+unit-test steps of 127 s + 120 s (Python 3.9) and 121 s + 153 s (3.14) on faster
+runners. Locally on macOS arm64, Python 3.15.2 ran
+**494 tests with 11 Windows-only skips** in 72.9 s, and Python 3.9.6 ran the two
+shards as 255 + 239 tests with the same skips. Package, release-version, Markdown
+link and diff checks passed.
+
+Limits: one hosted run per configuration, and runner allocation varies (the PR #29
+Prototype job included a 205 s checkout stall). Remaining Windows-specific costs:
+`fsync` on the runners' C: drive (where `%TEMP%` is) takes 4–13.5 ms per call
+versus about 0.4 ms on D:. One `test_native_lock_recovery` PowerShell call exceeded
+its 45 s timeout in PR #28 attempt 1; that is unrelated to this change and unresolved.
+
 ## Guided setup page — 2026-11-20
 
 Local branch work based on `d89f796` adds the static [guided setup page](gui.md#guided-setup-page).

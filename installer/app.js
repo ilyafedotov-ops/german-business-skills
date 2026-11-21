@@ -5,13 +5,20 @@
   const TEXT = window.INSTALLER_TEXT;
   const LINKS = window.INSTALLER_LINKS;
   const LANGUAGES = ['en', 'ru', 'de'];
-  const STEPS = ['welcome', 'assistant', 'account', 'app', 'skills', 'demos'];
+  const STEPS = ['welcome', 'assistant', 'account', 'app', 'safety', 'skills', 'demos'];
   const PROVIDERS = ['claude', 'openai'];
+  const MAKERS = { claude: 'Anthropic', openai: 'OpenAI' };
+  // Practice answers for "would you share this?"; tests/test_installer.py reads this table.
+  const QUIZ = { demo: 'ok', question: 'ok', customer: 'check', letter: 'check', elster: 'never', banking: 'never' };
+  const VERDICTS = ['ok', 'check', 'never'];
   const SYSTEMS = ['windows', 'mac'];
   const DEMOS = Object.keys(TEXT.en.demos.items);
   // Routes are compared with this fixed list, never looked up as object properties.
-  const ROUTES = [...STEPS, ...DEMOS.map(id => `demo-${id}`)];
+  const ROUTES = [...STEPS, 'examples', ...DEMOS.map(id => `demo-${id}`)];
   const NEEDS_ASSISTANT = ['account', 'app', 'skills'];
+  const FIRST_EXAMPLES = ['first', 'creator'];
+  // Like a licence agreement: these steps wait until the data notes are accepted.
+  const NEEDS_ACCEPT = ['skills', 'demos'];
   const KEY = 'gbk-installer-v1';
   const ICONS = {
     page: 'M4 4h16v16H4zM4 9h16M7 6.5h1',
@@ -27,12 +34,18 @@
     check: 'M5 12l5 5 9-10',
     folder: 'M3 6h6l2 2h10v11H3z',
     chat: 'M4 5h16v11H9l-5 4z',
+    cloud: 'M7 18h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.2 8.6 4.7 4.7 0 0 0 7 18z',
+    archive: 'M3 4h18v4H3zM5 8v12h14V8M10 12h4',
+    alert: 'M12 3l9.5 17h-19zM12 10v4M12 17h.01',
+    calc: 'M6 3h12v18H6zM9 7h6M9 11h.01M12 11h.01M15 11h.01M9 14h.01M12 14h.01M15 14h.01M9 17h.01M12 17h.01M15 17h.01',
   };
   const DIAGRAMS = {
     account: ['page', 'mail', 'phone', 'card'],
     app: ['download', 'box', 'person'],
-    claude: ['sliders', 'puzzle', 'plus', 'check'],
-    openai: ['folder', 'download', 'chat', 'check'],
+    claude: ['chat', 'page', 'puzzle', 'check'],
+    openai: ['folder', 'page', 'sliders', 'check'],
+    safety: ['folder', 'chat', 'cloud', 'archive'],
+    risks: ['alert', 'calc', 'person', 'check'],
   };
 
   const $ = id => document.getElementById(id);
@@ -72,19 +85,24 @@
   }
 
   function load() {
-    const fresh = { lang: initialLanguage(), started: false, assistant: null, os: system.os, done: {}, route: 'welcome' };
+    const fresh = { lang: initialLanguage(), assistant: null, os: system.os, done: {}, accepted: false, quiz: {}, route: 'welcome' };
     let saved = null;
     try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (error) { saved = null; }
     if (!saved || typeof saved !== 'object') return fresh;
     if (LANGUAGES.includes(saved.lang)) fresh.lang = saved.lang;
-    fresh.started = saved.started === true;
+    fresh.accepted = saved.accepted === true;
     if (PROVIDERS.includes(saved.assistant)) fresh.assistant = saved.assistant;
     if (SYSTEMS.includes(saved.os)) fresh.os = saved.os;
     if (ROUTES.includes(saved.route)) fresh.route = saved.route;
     if (saved.done && typeof saved.done === 'object') {
+      // Finished steps and tried demos only, never arbitrary saved keys.
       for (const [key, value] of Object.entries(saved.done)) {
-        if (value === true && /^[a-z]+(?::[a-z0-9]+){1,3}$/.test(key)) fresh.done[key] = true;
+        if (value === true && (STEPS.includes(key) || (key.startsWith('demo:') && DEMOS.includes(key.slice(5))))) fresh.done[key] = true;
       }
+    }
+    if (saved.quiz && typeof saved.quiz === 'object') {
+      // Read only the fixed card ids, never arbitrary saved keys.
+      for (const id of Object.keys(QUIZ)) if (VERDICTS.includes(saved.quiz[id])) fresh.quiz[id] = saved.quiz[id];
     }
     return fresh;
   }
@@ -130,27 +148,24 @@
     return svg;
   }
 
-  function diagram(labels, icons) {
-    return h('figure', { class: 'flow' },
+  function diagram(labels, icons, caption = t.ui.illustration) {
+    // The class sets one row per diagram on wide screens and avoids a lone tile on phones.
+    return h('figure', { class: `flow n${labels.length}` },
       h('ol', {}, labels.map((label, index) => h('li', {},
         h('span', { class: 'flow-number', 'aria-hidden': 'true' }, String(index + 1)),
         h('span', { class: 'flow-icon', 'aria-hidden': 'true' }, icon(icons[index])),
         h('span', {}, label)))),
-      h('figcaption', { class: 'hint' }, t.ui.illustration));
+      caption ? h('figcaption', { class: 'hint' }, caption) : null);
   }
 
-  function checklist(prefix, items, extras = {}) {
-    return h('ol', { class: 'checklist' }, items.map((item, index) => {
-      const key = `${prefix}:${index}`;
-      const id = `check-${key.replace(/:/g, '-')}`;
-      const box = h('input', { type: 'checkbox', id, onchange: event => {
-        if (event.target.checked) state.done[key] = true; else delete state.done[key];
-        save();
-        progress();
-      } });
-      box.checked = state.done[key] === true;
-      return h('li', {}, h('div', { class: 'check-row' }, box, h('label', { for: id }, rich(item))), extras[index] || null);
-    }));
+  // Numbered instructions without checkboxes: moving on with Next is enough.
+  function steps(items, extras = {}) {
+    return h('ol', { class: 'steps' }, items.map((item, index) => h('li', {}, h('p', {}, rich(item)), extras[index] || null)));
+  }
+
+  // Details stay one click away, so each step's page stays short.
+  function more(label, ...children) {
+    return h('details', { class: 'card more' }, h('summary', {}, label), children);
   }
 
   async function copyText(value, area) {
@@ -189,9 +204,13 @@
 
   function stepNav(step) {
     const index = STEPS.indexOf(step);
+    const blocked = step === 'safety' && !state.accepted;
     return h('div', { class: 'step-nav' },
       index > 0 ? h('button', { type: 'button', onclick: () => go(STEPS[index - 1]) }, t.ui.back) : null,
-      index < STEPS.length - 1 ? h('button', { type: 'button', class: 'primary', onclick: () => go(STEPS[index + 1]) }, t.ui.next) : null);
+      index < STEPS.length - 1 ? h('button', { type: 'button', class: 'primary', 'data-next': '', disabled: blocked, onclick: () => {
+        state.done[step] = true;
+        go(STEPS[index + 1]);
+      } }, step === 'welcome' ? t.ui.start : t.ui.next) : null);
   }
 
   function rerender(focusSelector) {
@@ -200,23 +219,18 @@
     if (target) target.focus();
   }
 
+  const mobileNotice = () => (system.mobile ? h('p', { class: 'notice' }, t.ui.mobile) : null);
+
   function welcomeView() {
     const w = t.welcome;
     return [
       ...heading(w.title, w.eyebrow),
+      mobileNotice(),
       h('p', { class: 'lead' }, w.lead),
-      h('section', { class: 'card', 'aria-labelledby': 'choose-language' },
-        h('h2', { id: 'choose-language' }, w.chooseLanguage),
-        h('div', { class: 'language-choices' }, LANGUAGES.map(code => h('button', {
-          type: 'button', lang: code, class: 'choice', 'data-language': code, 'aria-pressed': String(code === state.lang),
-          onclick: () => { state.lang = code; save(); rerender(`[data-language="${code}"]`); },
-        }, TEXT[code].meta.language))),
-        h('p', { class: 'hint' }, w.languageHint)),
-      h('div', { class: 'grid two' },
-        h('section', { class: 'card' }, h('h2', {}, w.needTitle), h('ul', { class: 'ticks' }, w.need.map(item => h('li', {}, rich(item))))),
-        h('section', { class: 'card note' }, h('h2', {}, w.aiTitle), h('p', {}, rich(w.ai)), h('p', {}, external(LINKS.docs[state.lang].risks, w.aiLink)))),
-      h('p', { class: 'safety' }, t.ui.safety),
-      h('div', { class: 'step-nav' }, h('button', { type: 'button', class: 'primary', onclick: () => { state.started = true; save(); go('assistant'); } }, t.ui.start)),
+      h('section', { class: 'card' }, h('h2', {}, w.needTitle), h('ul', { class: 'ticks' }, w.need.map(item => h('li', {}, rich(item))))),
+      h('p', { class: 'safety' }, w.aiShort),
+      more(t.ui.more, h('h2', {}, w.aiTitle), h('p', {}, rich(w.ai)), h('p', {}, external(LINKS.docs[state.lang].risks, w.aiLink)), h('p', { class: 'hint' }, t.ui.safety)),
+      stepNav('welcome'),
     ];
   }
 
@@ -226,14 +240,12 @@
     return h('section', { class: selected ? 'card provider selected' : 'card provider', 'aria-labelledby': `provider-${provider}` },
       h('p', { class: 'maker' }, info.maker),
       h('h2', { id: `provider-${provider}` }, info.name),
-      h('p', { class: 'muted' }, info.app),
-      h('ul', { class: 'ticks' }, info.points.map(point => h('li', {}, rich(point)))),
+      h('p', {}, rich(info.summary)),
       h('div', { class: 'actions' },
         h('button', { type: 'button', class: selected ? 'primary' : null, 'data-provider': provider, 'aria-pressed': String(selected),
           onclick: () => { state.assistant = provider; save(); rerender(`[data-provider="${provider}"]`); } },
         fill(t.assistant.choose, { name: info.name })),
-        selected ? h('span', { class: 'badge' }, t.assistant.chosen) : null),
-      h('p', { class: 'small' }, external(LINKS[provider].pricing, info.pricing)));
+        selected ? h('span', { class: 'badge' }, t.assistant.chosen) : null));
   }
 
   function assistantView() {
@@ -243,7 +255,15 @@
       h('p', { class: 'lead' }, a.lead),
       h('div', { class: 'grid two' }, PROVIDERS.map(providerCard)),
       h('p', { class: 'hint' }, rich(a.unsure)),
-      h('p', { class: 'hint' }, a.work),
+      more(t.ui.more,
+        PROVIDERS.map(provider => [
+          h('h2', {}, a[provider].name),
+          h('p', { class: 'muted' }, a[provider].app),
+          h('ul', { class: 'ticks' }, a[provider].points.map(point => h('li', {}, rich(point)))),
+          h('p', { class: 'small' }, external(LINKS[provider].pricing, a[provider].pricing)),
+        ]),
+        h('p', {}, fill(a.business, { name: t.steps.safety })),
+        h('p', { class: 'hint' }, a.work)),
       stepNav('assistant'),
     ];
   }
@@ -254,13 +274,13 @@
     const info = account[provider];
     return [
       ...heading(info.title, eyebrow('account')),
-      h('p', { class: 'lead' }, account.lead),
       h('p', {}, external(LINKS[provider].signup, info.open, 'button-link primary')),
       diagram(info.diagram, DIAGRAMS.account),
-      h('p', { class: 'hint' }, `${t.ui.checklist} ${account.already}`),
-      checklist(`${provider}:account`, info.steps),
-      h('p', { class: 'hint' }, account.labelsNote),
-      h('section', { class: 'card note' }, h('h2', {}, account.safetyTitle), h('ul', { class: 'ticks' }, account.safety.map(item => h('li', {}, rich(item))))),
+      steps(info.short),
+      h('p', { class: 'hint' }, account.already),
+      h('p', {}, t.ui.whenDone),
+      more(t.ui.more, h('p', {}, account.lead), steps(info.steps), h('p', { class: 'hint' }, account.labelsNote),
+        h('h2', {}, account.safetyTitle), h('ul', { class: 'ticks' }, account.safety.map(item => h('li', {}, rich(item))))),
       stepNav('account'),
     ];
   }
@@ -281,71 +301,211 @@
     const provider = state.assistant;
     const app = t.app;
     const info = app[provider];
+    const privacy = t.safety[provider];
     const os = state.os;
     return [
       ...heading(info.title, eyebrow('app')),
-      system.mobile ? h('p', { class: 'notice' }, t.ui.mobile) : null,
+      mobileNotice(),
       h('section', { class: 'card', 'aria-labelledby': 'os-title' },
         h('h2', { id: 'os-title' }, app.osTitle),
         h('p', {}, system.os ? fill(app.detected, { os: app[system.os] }) : app.unknown),
         h('div', { class: 'choices' }, SYSTEMS.map(name => h('button', {
           type: 'button', class: 'choice', 'data-system': name, 'aria-pressed': String(os === name),
           onclick: () => { state.os = name; save(); rerender(`[data-system="${name}"]`); },
-        }, app[name]))),
-        h('p', { class: 'hint' }, app.other)),
+        }, app[name])))),
       os ? h('div', { class: 'downloads' }, downloads(provider, os)) : null,
-      h('p', {}, external(LINKS[provider].downloads, app.official)),
-      os ? [
+      diagram(info.diagram, DIAGRAMS.app),
+      steps(info.short),
+      h('p', {}, t.ui.whenDone),
+      more(t.ui.more,
         h('h2', {}, app.stepsTitle),
-        diagram(info.diagram, DIAGRAMS.app),
-        h('p', { class: 'hint' }, t.ui.checklist),
-        checklist(`${provider}:app:${os}`, info[os]),
+        os ? steps(info[os]) : null,
         h('p', {}, rich(info.doneWhen)),
-      ] : null,
-      h('p', { class: 'hint' }, app.blocked),
+        h('p', { class: 'hint' }, app.other, ' ', external(LINKS[provider].downloads, app.official)),
+        h('p', { class: 'hint' }, app.blocked),
+        h('h2', {}, t.safety.settingsTitle),
+        h('p', { class: 'hint' }, t.safety.settingsLead),
+        steps(privacy.steps),
+        h('p', {}, external(LINKS.privacy[provider], privacy.link)),
+        h('p', { class: 'hint' }, privacy.business)),
       stepNav('app'),
     ];
   }
 
+  function quizView() {
+    const s = t.safety;
+    const ids = Object.keys(QUIZ);
+    const score = h('p', { class: 'quiz-score' });
+    const updateScore = () => {
+      const answered = ids.filter(id => state.quiz[id]);
+      const right = answered.filter(id => state.quiz[id] === QUIZ[id]).length;
+      score.textContent = answered.length ? fill(s.quizScore, { answered: answered.length, total: ids.length, right }) : '';
+    };
+    const cards = ids.map(id => {
+      const item = s.quiz[id];
+      const labelId = `quiz-${id}`;
+      const feedback = h('p', { class: 'quiz-feedback', role: 'status' });
+      const card = h('li', { class: 'quiz-item' });
+      const show = () => {
+        const answer = state.quiz[id];
+        const right = answer === QUIZ[id];
+        buttons.forEach((button, index) => button.setAttribute('aria-pressed', String(VERDICTS[index] === answer)));
+        card.classList.toggle('right', Boolean(answer) && right);
+        card.classList.toggle('wrong', Boolean(answer) && !right);
+        feedback.replaceChildren(...(answer ? [h('strong', {}, right ? s.quizRight : fill(s.quizWrong, { answer: s.quizChoices[QUIZ[id]] })), ` ${item.why}`] : []));
+      };
+      // Answers update in place so focus stays on the chosen button.
+      const buttons = VERDICTS.map(verdict => h('button', { type: 'button', class: `verdict verdict-${verdict}`, onclick: () => {
+        state.quiz[id] = verdict;
+        save();
+        show();
+        updateScore();
+      } }, s.quizChoices[verdict]));
+      show();
+      card.append(h('p', { class: 'quiz-question', id: labelId }, item.item),
+        h('div', { class: 'verdicts', role: 'group', 'aria-labelledby': labelId }, buttons), feedback);
+      return card;
+    });
+    updateScore();
+    return [h('h2', {}, s.quizTitle), h('p', { class: 'hint' }, s.quizLead), h('ol', { class: 'quiz-list' }, cards), score,
+      h('h2', {}, s.askTitle), h('p', {}, s.askLead), copyBox(s.askLabel, s.ask)];
+  }
+
+  // The full notes read like a licence agreement in a scrolling box.
+  function agreement(s, who) {
+    return h('div', { class: 'license', tabindex: '0', role: 'region', 'aria-label': s.title },
+      h('p', {}, s.lead),
+      h('h3', {}, s.risksTitle),
+      s.risks.map(risk => h('p', {}, h('strong', {}, risk.title), ' — ', risk.text)),
+      h('h3', {}, s.flowTitle),
+      h('ul', {}, s.flowText.map(text => h('li', {}, fill(text, { provider: who })))),
+      h('h3', {}, s.gdprTitle),
+      h('ul', {}, s.gdpr.map(item => h('li', {}, rich(item)))),
+      h('p', {}, s.gdprNote),
+      h('p', {}, external(LINKS.privacy.aiAct, s.aiActLink)),
+      h('p', {}, external(LINKS.docs[state.lang].risks, s.fullLink)),
+      h('h3', {}, 'MIT License'),
+      h('p', {}, s.license));
+  }
+
+  function safetyView() {
+    const s = t.safety;
+    const who = state.assistant ? MAKERS[state.assistant] : s.either;
+    const accept = (value, label) => {
+      const input = h('input', { type: 'radio', name: 'accept', id: `accept-${value}`, value, 'data-accept': value, onchange: () => {
+        // Updated in place: the chosen option keeps focus and Next follows the answer.
+        state.accepted = value === 'yes';
+        save();
+        main.querySelector('[data-next]').disabled = !state.accepted;
+        main.querySelector('.notice[role=alert]')?.remove();
+        progress();
+      } });
+      // "I do not accept" is the default answer.
+      input.checked = (value === 'yes') === state.accepted;
+      return h('div', { class: 'check-row' }, input, h('label', { for: `accept-${value}` }, label));
+    };
+    return [
+      ...heading(s.title, eyebrow('safety')),
+      h('ul', { class: 'warnings' }, s.warnings.map(warning => h('li', {},
+        h('span', { class: 'risk-icon', 'aria-hidden': 'true' }, icon('alert')), h('span', {}, fill(warning, { provider: who }))))),
+      h('p', { class: 'hint' }, s.boxNote),
+      agreement(s, who),
+      h('fieldset', { class: 'accept' }, h('legend', {}, s.question), accept('yes', s.understand), accept('no', s.decline)),
+      more(s.selfTest, quizView()),
+      stepNav('safety'),
+    ];
+  }
+
   function screenshot(info) {
-    const image = h('img', { src: LINKS.local.screenshot, alt: info.shotAlt, width: '4096', height: '2076', decoding: 'async' });
-    const figure = h('figure', { class: 'shot' }, image, h('figcaption', { class: 'hint' }, info.shotCaption));
+    const source = LINKS.local.screenshot;
+    const image = h('img', { src: source, alt: info.shotAlt, width: '1100', height: '786', decoding: 'async' });
+    const large = h('img', { src: source, alt: info.shotAlt, width: '1100', height: '786', decoding: 'async' });
+    const body = h('div', { class: 'lightbox-body' }, large);
+    const zoom = h('button', { type: 'button', 'aria-pressed': 'false', onclick: () => {
+      const zoomed = zoom.getAttribute('aria-pressed') !== 'true';
+      zoom.setAttribute('aria-pressed', String(zoomed));
+      body.classList.toggle('zoomed', zoomed);
+    } }, t.ui.zoom);
+    const dialog = h('dialog', { class: 'lightbox', 'aria-label': info.shotAlt },
+      h('div', { class: 'lightbox-bar' }, zoom, h('button', { type: 'button', class: 'primary', onclick: () => dialog.close() }, t.ui.close)),
+      body);
+    const enlarge = h('button', { type: 'button', class: 'shot-enlarge', 'aria-haspopup': 'dialog', onclick: () => dialog.showModal() }, t.ui.enlarge);
+    image.addEventListener('click', () => dialog.showModal());
+    // A click on the dimmed backdrop closes; closing always returns focus to the button.
+    dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
+    dialog.addEventListener('close', () => enlarge.focus());
+    const figure = h('figure', { class: 'shot' }, image, h('figcaption', { class: 'hint' }, info.shotCaption), enlarge, dialog);
     // A copied installer folder may not include the repository image; hide only the figure.
     image.addEventListener('error', () => { figure.hidden = true; });
     return figure;
+  }
+
+  // A real screenshot of the app; a copied installer folder without images hides only the figure.
+  function result(file, alt, caption) {
+    const shot = h('img', { src: file, alt, loading: 'lazy', decoding: 'async' });
+    const figure = h('figure', { class: 'shot' }, shot, caption ? h('figcaption', { class: 'hint' }, caption) : null);
+    shot.addEventListener('error', () => { figure.hidden = true; });
+    return figure;
+  }
+
+  function skillList() {
+    const skills = t.skills;
+    return [h('h2', {}, skills.listTitle), h('dl', { class: 'skill-list' }, Object.entries(skills.list).map(([name, description]) =>
+      [h('dt', {}, h('code', {}, name)), h('dd', {}, description)]))];
+  }
+
+  // Fallback route for when the request does not work: the click-by-click steps.
+  function manualRoute(provider, info) {
+    const extras = {};
+    let after;
+    if (provider === 'claude') {
+      extras[1] = [copyBox(info.addressLabel, LINKS.marketplace), h('p', { class: 'hint' }, info.github)];
+      after = [screenshot(info), h('p', { class: 'hint' }, info.review)];
+    } else {
+      extras[0] = [
+        h('div', { class: 'downloads' },
+          external(LINKS.release.codexZip, fill(info.zip, { file: fileName(LINKS.release.codexZip) }), 'button-link primary'),
+          external(LINKS.release.checksums, fill(info.checksums, { file: fileName(LINKS.release.checksums) }), 'button-link')),
+        h('p', { class: 'hint' }, info.checksumNote, ' ', external(LINKS.release.page, info.releasePage)),
+      ];
+      extras[2] = copyBox(info.manualPromptLabel, info.manualPrompt);
+      after = h('p', {}, external(LINKS.docs[state.lang].manual, info.manual));
+    }
+    return h('details', { class: 'card more manual-route' },
+      h('summary', {}, info.manualTitle), steps(info.manualSteps, extras), skillList(), after);
   }
 
   function skillsView() {
     const provider = state.assistant;
     const skills = t.skills;
     const info = skills[provider];
-    const extras = {};
-    if (provider === 'claude') {
-      extras[1] = [copyBox(info.addressLabel, LINKS.marketplace), h('p', { class: 'hint' }, info.github)];
-    } else {
-      extras[2] = [
-        h('div', { class: 'downloads' },
-          external(LINKS.release.codexZip, fill(info.zip, { file: fileName(LINKS.release.codexZip) }), 'button-link primary'),
-          external(LINKS.release.checksums, fill(info.checksums, { file: fileName(LINKS.release.checksums) }), 'button-link')),
-        h('p', { class: 'hint' }, info.checksumNote, ' ', external(LINKS.release.page, info.releasePage)),
-      ];
-      extras[4] = copyBox(info.promptLabel, info.prompt);
-    }
+    // The request goes right below the step that says to copy it.
+    const extras = { [provider === 'claude' ? 1 : 2]: copyBox(info.promptLabel, info.prompt) };
     return [
       ...heading(info.title, eyebrow('skills')),
       h('p', { class: 'lead' }, info.lead),
       diagram(info.diagram, DIAGRAMS[provider]),
-      h('p', { class: 'hint' }, t.ui.checklist),
-      checklist(`${provider}:skills`, info.steps, extras),
-      provider === 'claude'
-        ? [screenshot(info), h('p', { class: 'hint' }, info.review)]
-        : h('p', {}, external(LINKS.docs[state.lang].manual, info.manual)),
-      h('section', { class: 'card' }, h('h2', {}, skills.listTitle),
-        h('dl', { class: 'skill-list' }, Object.entries(skills.list).map(([name, description]) =>
-          [h('dt', {}, h('code', {}, name)), h('dd', {}, description)]))),
-      h('p', { class: 'hint' }, skills.once),
-      h('p', {}, `${skills.stuck} `, external(LINKS.docs[state.lang].help, skills.stuckLink)),
+      steps(info.short, extras),
+      h('p', {}, t.ui.whenDone),
+      more(t.ui.preview, result(LINKS.local.results.skills[provider][state.lang], info.result.alt, info.result.caption)),
+      manualRoute(provider, info),
+      more(t.ui.more, steps(info.steps), skillList(), h('p', { class: 'hint' }, skills.once),
+        h('p', {}, `${skills.stuck} `, external(LINKS.docs[state.lang].help, skills.stuckLink))),
       stepNav('skills'),
+    ];
+  }
+
+  function finishView() {
+    const demos = t.demos;
+    return [
+      ...heading(demos.doneTitle, eyebrow('demos')),
+      h('p', { class: 'lead' }, demos.doneLead),
+      // Two first examples: the user picks the one closest to their own work.
+      FIRST_EXAMPLES.map(id => copyBox(demos.items[id].title, demos.items[id].prompt)),
+      more(t.ui.preview, (state.assistant ? [state.assistant] : PROVIDERS).map(provider =>
+        result(LINKS.local.results.first[provider][state.lang], demos.result[`${provider}Alt`], '')), h('p', { class: 'hint' }, demos.result.caption)),
+      h('p', {}, h('a', { href: '#examples', class: 'button-link' }, demos.more)),
+      stepNav('demos'),
     ];
   }
 
@@ -360,10 +520,11 @@
         state.done[`demo:${id}`] ? h('span', { class: 'badge' }, t.demos.tried) : null));
   }
 
-  function demosView() {
+  function examplesView() {
     const demos = t.demos;
     const providers = state.assistant ? [state.assistant] : PROVIDERS;
     return [
+      h('p', {}, h('a', { href: '#demos', class: 'back-link' }, t.ui.back)),
       ...heading(demos.title, eyebrow('demos')),
       h('p', { class: 'lead' }, rich(demos.lead)),
       h('section', { class: 'card note' }, h('h2', {}, demos.callTitle),
@@ -373,7 +534,6 @@
       h('section', { class: 'card' }, h('h2', {}, demos.prototype), h('p', {}, h('a', { href: LINKS.local.prototype }, demos.prototypeLink))),
       h('section', { class: 'card finish' }, h('h2', {}, demos.finishTitle), h('p', {}, demos.finish),
         h('p', {}, external(LINKS.docs[state.lang].guide, demos.guideLink))),
-      stepNav('demos'),
     ];
   }
 
@@ -384,11 +544,10 @@
     const tried = h('input', { type: 'checkbox', id: 'demo-tried', onchange: event => {
       if (event.target.checked) state.done[key] = true; else delete state.done[key];
       save();
-      progress();
     } });
     tried.checked = state.done[key] === true;
     return [
-      h('p', {}, h('a', { href: '#demos', class: 'back-link' }, demos.back)),
+      h('p', {}, h('a', { href: '#examples', class: 'back-link' }, demos.back)),
       ...heading(item.title, item.time),
       h('p', { class: 'lead' }, item.summary),
       h('section', { class: 'card' }, h('h2', {}, demos.prepareTitle), h('ol', { class: 'ticks' }, item.prepare.map(step => h('li', {}, rich(step))))),
@@ -397,7 +556,7 @@
       h('section', { class: 'card' }, h('h2', {}, demos.checkTitle), h('ul', { class: 'ticks' }, item.check.map(point => h('li', {}, rich(point)))), h('p', { class: 'hint' }, demos.checkNote)),
       h('section', { class: 'card' }, h('h2', {}, demos.nextTitle), copyBox(demos.nextLabel, item.next)),
       h('div', { class: 'check-row tried' }, tried, h('label', { for: 'demo-tried' }, demos.markTried)),
-      h('div', { class: 'step-nav' }, h('button', { type: 'button', onclick: () => go('demos') }, t.ui.back)),
+      h('div', { class: 'step-nav' }, h('button', { type: 'button', onclick: () => go('examples') }, t.ui.back)),
     ];
   }
 
@@ -407,34 +566,39 @@
       case 'assistant': return assistantView();
       case 'account': return accountView();
       case 'app': return appView();
+      case 'safety': return safetyView();
       case 'skills': return skillsView();
-      case 'demos': return demosView();
+      case 'demos': return finishView();
+      case 'examples': return examplesView();
       default: return demoView(route.slice('demo-'.length));
     }
   }
 
-  const stepFor = route => (route.startsWith('demo-') ? 'demos' : route);
+  const stepFor = route => (route.startsWith('demo-') || route === 'examples' ? 'demos' : route);
 
+  // A step is done when the user moves on with Next; nothing needs ticking.
   function complete(step) {
-    const provider = state.assistant;
-    const all = (prefix, count) => Array.from({ length: count }, (_, index) => state.done[`${prefix}:${index}`] === true).every(Boolean);
     switch (step) {
-      case 'welcome': return state.started;
-      case 'assistant': return Boolean(provider);
-      case 'account': return Boolean(provider) && all(`${provider}:account`, TEXT.en.account[provider].steps.length);
-      case 'app': return Boolean(provider && state.os) && all(`${provider}:app:${state.os}`, TEXT.en.app[provider][state.os].length);
-      case 'skills': return Boolean(provider) && all(`${provider}:skills`, TEXT.en.skills[provider].steps.length);
-      default: return DEMOS.some(id => state.done[`demo:${id}`] === true);
+      case 'assistant': return Boolean(state.assistant);
+      case 'safety': return state.accepted;
+      case 'demos': return state.done.demos === true;
+      default: return state.done[step] === true && (step === 'welcome' || Boolean(state.assistant));
     }
   }
 
   function progress() {
     const step = stepFor(current);
+    const finished = STEPS.map(complete);
+    const count = finished.filter(Boolean).length;
+    $('progress-summary').textContent = fill(t.ui.progressSummary, { done: count, total: STEPS.length });
+    const meter = $('progress-meter');
+    meter.max = STEPS.length;
+    meter.value = count;
     $('progress-list').replaceChildren(...STEPS.map((id, index) => {
-      const done = complete(id);
+      const done = finished[index];
       return h('li', {}, h('a', { href: `#${id}`, class: done ? 'done' : null, 'aria-current': id === step ? 'step' : null },
         h('span', { class: 'progress-mark', 'aria-hidden': 'true' }, done ? '✓' : String(index + 1)),
-        h('span', {}, t.steps[id]),
+        h('span', { class: 'progress-label' }, t.steps[id]),
         done ? h('span', { class: 'visually-hidden' }, ` (${t.ui.done})`) : null));
     }));
   }
@@ -442,7 +606,7 @@
   function chrome() {
     t = TEXT[state.lang];
     document.documentElement.lang = state.lang;
-    const route = current.startsWith('demo-') ? t.demos.items[current.slice(5)].title : t.steps[current];
+    const route = current.startsWith('demo-') ? t.demos.items[current.slice(5)].title : (current === 'examples' ? t.demos.title : t.steps[current]);
     document.title = `${route} · ${t.meta.title}`;
     $('skip').textContent = t.ui.skip;
     $('brand').textContent = t.ui.brand;
@@ -459,22 +623,29 @@
     $('footer-checked').textContent = fill(t.ui.checked, { date });
   }
 
+  // Steps that need an earlier answer send the user back to that question.
+  function allowed(route) {
+    const step = stepFor(route);
+    if (NEEDS_ASSISTANT.includes(step) && !state.assistant) return ['assistant', 'chooseFirst'];
+    if (NEEDS_ACCEPT.includes(step) && !state.accepted) return ['safety', 'acceptFirst'];
+    return [route, null];
+  }
+
   function render(focus) {
     let raw = '';
     try { raw = decodeURIComponent(location.hash.slice(1)); } catch (error) { raw = '#invalid'; }
-    let route = ROUTES.includes(raw) ? raw : (raw ? 'welcome' : state.route);
-    const notice = NEEDS_ASSISTANT.includes(route) && !state.assistant;
-    if (notice) route = 'assistant';
+    const [route, notice] = allowed(ROUTES.includes(raw) ? raw : (raw ? 'welcome' : state.route));
     if (location.hash !== `#${route}`) history.replaceState(null, '', `#${route}`);
     lastHash = location.hash;
     current = route;
     state.route = route;
+    if (route === 'demos') state.done.demos = true;
     save();
     chrome();
     progress();
     copies = 0;
     main.dataset.route = route;
-    main.replaceChildren(...[notice ? h('p', { class: 'notice', role: 'alert' }, TEXT[state.lang].ui.chooseFirst) : null, ...view(route)].flat(Infinity).filter(Boolean));
+    main.replaceChildren(...[notice ? h('p', { class: 'notice', role: 'alert' }, t.ui[notice]) : null, ...view(route)].flat(Infinity).filter(Boolean));
     if (focus) main.querySelector('h1').focus();
   }
 

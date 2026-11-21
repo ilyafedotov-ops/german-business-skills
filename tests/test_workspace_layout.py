@@ -1,5 +1,8 @@
 """The single private-workspace folder layout: mapping, intake, refusals and readable results."""
 import json
+import os
+from pathlib import Path
+from unittest.mock import patch
 from pathlib import Path
 
 from test_casework import CaseFixture
@@ -122,6 +125,49 @@ class StructureTests(CaseFixture):
         self.assertEqual(list((self.root / "03 Accounts/Records").iterdir()), [])
         with self.assertRaises(ws.WorkspaceError):
             ws._evidence_path(self.root, ".business-kit/admin/accounting-register.json")
+
+
+class LookupCostTests(CaseFixture):
+    """Windows pays per filesystem metadata call; layout reads must not repeat per record."""
+
+    def test_evidence_check_finds_hardlinked_record_with_one_layout_lookup(self):
+        root = self.base / "ru"
+        ws.init_workspace(root, 2026, "ru")
+        profile = ws._inside(root, ws.PROFILE)
+        self.assertEqual(profile, root / ".business-kit/profile/business.json")
+        alias = ws._inside(root, "08_correspondence/profile-copy.json")
+        os.link(profile, alias)
+        review = ws._inside(root, "08_correspondence/review.md")
+        review.write_text("Synthetic review.", encoding="utf-8")
+        lookups = []
+        original = ws._layout
+
+        def counted(location):
+            lookups.append(location)
+            return original(location)
+        with patch.object(ws, "_layout", counted):
+            with self.assertRaises(ws.WorkspaceError):
+                ws._evidence_path(root, "05 Бизнес/Переписка/profile-copy.json")
+            refused = len(lookups)
+            self.assertEqual(ws._evidence_path(root, "08_correspondence/review.md"), review)
+        # Each lookup rereads layout files; it must not repeat per protected record.
+        self.assertLessEqual(refused, 3)
+
+    def test_shipped_folder_catalog_is_not_reread_for_each_path(self):
+        root = self.base / "de"
+        ws.init_workspace(root, 2026, "de")
+        reads = []
+        original = ws._read_regular
+
+        def counted(path, *args):
+            reads.append(Path(path).name)
+            return original(path, *args)
+        with patch.object(ws, "_read_regular", counted):
+            for _ in range(5):
+                self.assertEqual(ws._path(root, "03_banking"), root / "03 Buchhaltung/Bank")
+        # The workspace's own layout record is still checked on every lookup.
+        self.assertEqual(reads.count(ws.LAYOUT), 5)
+        self.assertLessEqual(reads.count("folder-layouts.json"), 1)
 
 
 class NumberedOriginalTests(CaseFixture):
