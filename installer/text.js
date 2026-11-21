@@ -12,6 +12,7 @@ window.INSTALLER_TEXT = {
       "back": "Back",
       "next": "Next",
       "more": "More…",
+      "preview": "What it looks like…",
       "ok": "OK",
       "toContinue": "To continue, click Next.",
       "whenDone": "When you have finished, click Next.",
@@ -307,6 +308,10 @@ window.INSTALLER_TEXT = {
         "promptLabel": "Request for Claude",
         "prompt": "Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills and show me how to use it. Follow the repository's installation instructions for my app, check that the complete kit is available, and help me try one small example.",
         "manualTitle": "Install manually…",
+        "result": {
+          "alt": "German Business Kit page in the Claude app after Add: status Added and the kit's skills",
+          "caption": "The real Claude app on 21 November 2026. Your version may look different."
+        },
         "manualSteps": [
           "In the Claude app, open **Customize** in the sidebar, then **Plugins**. If your version shows a separate **Cowork** selector, switch to Cowork first.",
           "Select **Add**, then **Add marketplace**. If offered, choose **Add from a repository**. Paste the address below and select **Sync**.",
@@ -338,6 +343,10 @@ window.INSTALLER_TEXT = {
         "promptLabel": "Request for Codex",
         "prompt": "Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills and show me how to use it. Follow the repository's installation instructions for my app, check that the complete kit is available, and help me try one small example.",
         "manualTitle": "Install manually…",
+        "result": {
+          "alt": "Codex lists the seven German Business Kit skills in a table",
+          "caption": "The real ChatGPT app with Codex on 21 November 2026. Your answer will look different."
+        },
         "manualSteps": [
           "Download these two files into the same folder, for example Downloads.",
           "Copy the full path of each file. Windows: right-click the file and choose **Copy as path**. Mac: select the file in Finder, hold **Option** and choose **Edit → Copy … as Pathname**.",
@@ -357,8 +366,13 @@ window.INSTALLER_TEXT = {
     "demos": {
       "title": "Try your first tasks with made-up examples",
       "doneTitle": "Setup is complete",
-      "doneLead": "German Business Kit is ready. Try a first task with made-up data: paste this request into a new task in Claude or a new chat in Codex.",
+      "doneLead": "German Business Kit is ready. Try a first task with made-up data: pick the example closest to you and paste it into a new task in Claude or a new chat in Codex.",
       "more": "More examples…",
+      "result": {
+        "claudeAlt": "Claude answers the content-creator example with one small first step",
+        "openaiAlt": "Codex answers the programmer example with one small first step",
+        "caption": "Real answers on 21 November 2026 to the fictional examples. Your answer will look different."
+      },
       "lead": "Each demo uses fictional details only. Copy a request, paste it into a **new task** in Claude or a **new chat in your Business Assistant project** in Codex, then compare the answer with the checklist.",
       "callTitle": "How to call the kit",
       "call": {
@@ -386,16 +400,31 @@ window.INSTALLER_TEXT = {
       "guideLink": "Open the user guide",
       "items": {
         "first": {
-          "title": "Your first step",
-          "summary": "Ask for one small next step for a fictional new business.",
+          "title": "First step: freelance programmer",
+          "summary": "Ask for one small next step for a fictional freelance programmer.",
           "time": "About 5 minutes",
           "prepare": ["Start a **new task** in Claude or a **new chat** in your Business Assistant project in Codex. No folder is needed."],
-          "prompt": "Use de-business-kit. I am trying the assistant with a fictional example: I want to start working as a freelance translator in Germany. I do not know where to begin. Help me choose one small first step. Ask only what you need for that step.",
-          "answers": "This is a fictional example. I live in Berlin, I have not registered anything yet and I expect my first customer next month.",
+          "prompt": "Use de-business-kit. I am trying the assistant with a fictional example: I am a programmer and want to start freelancing in Germany, building websites and apps for small companies. I do not know where to begin. Help me choose one small first step. Ask only what you need for that step.",
+          "answers": "This is a fictional example. I live in Berlin, I have not registered anything yet and I expect my first client next month.",
           "check": [
             "One understandable next step, not a long lecture.",
             "Questions only where a fact is really needed.",
             "No request to upload private documents or choose accounting software yet.",
+            "No claim that anything was registered or filed."
+          ],
+          "next": "Explain this in plain language and give me only the next step."
+        },
+        "creator": {
+          "title": "First step: content creator",
+          "summary": "Ask for one small next step for a fictional Instagram and YouTube creator.",
+          "time": "About 5 minutes",
+          "prepare": ["Start a **new task** in Claude or a **new chat** in your Business Assistant project in Codex. No folder is needed."],
+          "prompt": "Use de-business-kit. I am trying the assistant with a fictional example: I make videos for Instagram and YouTube, and the first brands want to pay me for posts. I live in Germany and have not registered anything yet. Help me choose one small first step. Ask only what you need for that step.",
+          "answers": "This is a fictional example. I live in Munich, I am a student, and a brand has offered me EUR 300 and a free product for one video next month.",
+          "check": [
+            "One understandable next step, not a long lecture.",
+            "Questions only where a fact is really needed.",
+            "The brand's free product is treated as something to clarify, not ignored.",
             "No claim that anything was registered or filed."
           ],
           "next": "Explain this in plain language and give me only the next step."
@@ -408,7 +437,7 @@ window.INSTALLER_TEXT = {
             "Create a new, empty folder called **Practice business**. Keep it outside the Business Assistant folder.",
             "Claude: start a new task in Cowork and select this folder. Codex: keep your Business Assistant project open and allow access to the practice folder when asked."
           ],
-          "prompt": "Use de-business-accounting. This is a fictional practice exercise. Use only my selected folder Practice business. Create three made-up receipts from November 2026 for a translator: printer paper EUR 23.80, a train ticket to a client EUR 49.00 and a software subscription EUR 11.90. Organize them for my first month, show what is still unclear and save a short readable summary with the next step. Do not use real data or connect any service.",
+          "prompt": "Use de-business-accounting. This is a fictional practice exercise. Use only my selected folder Practice business. Create three made-up receipts from November 2026 for a freelance programmer: a USB-C cable EUR 19.90, a train ticket to a client EUR 49.00 and a cloud hosting subscription EUR 11.90. Organize them for my first month, show what is still unclear and save a short readable summary with the next step. Do not use real data or connect any service.",
           "answers": "This is practice. In this example I am a Kleinunternehmer and have not chosen accounting software. Keep anything uncertain as an open question.",
           "check": [
             "New files and a summary appear only in the practice folder.",
@@ -423,7 +452,7 @@ window.INSTALLER_TEXT = {
           "summary": "Draft an invoice for a fictional customer without sending it.",
           "time": "About 10 minutes",
           "prepare": ["Use the same **Practice business** folder, or start without a folder."],
-          "prompt": "Use de-business-operations. Fictional example: prepare a draft invoice for a translation I delivered. Customer: Beispiel Verlag GmbH (fictional). Service: translation of a 10-page brochure from English into German, delivered on 3 November 2026. Agreed price: EUR 400. In this example I am a Kleinunternehmer. Use clearly marked placeholders for my address, tax number and bank details. Do not send anything.",
+          "prompt": "Use de-business-operations. Fictional example: prepare a draft invoice for programming work I delivered. Customer: Beispiel Shop GmbH (fictional). Service: building a contact form for the customer's website, 8 hours at EUR 50, delivered on 3 November 2026. Agreed price: EUR 400. In this example I am a Kleinunternehmer. Use clearly marked placeholders for my address, tax number and bank details. Do not send anything.",
           "answers": "This is practice. Keep clearly marked placeholders instead of real personal details.",
           "check": [
             "A readable draft with customer, service, delivery date and amount.",
@@ -465,6 +494,7 @@ window.INSTALLER_TEXT = {
       "back": "Назад",
       "next": "Далее",
       "more": "Подробнее…",
+      "preview": "Как это выглядит…",
       "ok": "OK",
       "toContinue": "Чтобы продолжить, нажмите «Далее».",
       "whenDone": "Когда закончите, нажмите «Далее».",
@@ -760,6 +790,10 @@ window.INSTALLER_TEXT = {
         "promptLabel": "Запрос для Claude",
         "prompt": "Установи German Business Kit из https://github.com/ilyafedotov-ops/german-business-skills и покажи, как им пользоваться. Следуй инструкции репозитория для моего приложения, проверь доступность полного набора и помоги попробовать один небольшой пример.",
         "manualTitle": "Установить вручную…",
+        "result": {
+          "alt": "Страница German Business Kit в приложении Claude после нажатия Add: статус Added и скиллы набора",
+          "caption": "Настоящее приложение Claude, 21 ноября 2026 года. В вашей версии всё может выглядеть иначе."
+        },
         "manualSteps": [
           "В приложении Claude откройте **Customize** на боковой панели, затем **Plugins**. Если в вашей версии есть отдельный переключатель **Cowork**, сначала перейдите в Cowork.",
           "Выберите **Add**, затем **Add marketplace**. Если предложено, выберите **Add from a repository**. Вставьте адрес ниже и выберите **Sync**.",
@@ -791,6 +825,10 @@ window.INSTALLER_TEXT = {
         "promptLabel": "Запрос для Codex",
         "prompt": "Установи German Business Kit из https://github.com/ilyafedotov-ops/german-business-skills и покажи, как им пользоваться. Следуй инструкции репозитория для моего приложения, проверь доступность полного набора и помоги попробовать один небольшой пример.",
         "manualTitle": "Установить вручную…",
+        "result": {
+          "alt": "Codex показывает семь скиллов German Business Kit в таблице",
+          "caption": "Настоящее приложение ChatGPT с Codex, 21 ноября 2026 года. Ваш ответ будет выглядеть иначе."
+        },
         "manualSteps": [
           "Скачайте эти два файла в одну папку, например в «Загрузки».",
           "Скопируйте полный путь к каждому файлу. Windows: щёлкните файл правой кнопкой и выберите **Копировать как путь**. Mac: выберите файл в Finder, удерживайте **Option** и выберите **Правка → Скопировать … как путь**.",
@@ -810,8 +848,13 @@ window.INSTALLER_TEXT = {
     "demos": {
       "title": "Попробуйте первые задачи на вымышленных примерах",
       "doneTitle": "Установка завершена",
-      "doneLead": "German Business Kit готов к работе. Попробуйте первую задачу на вымышленных данных: вставьте этот запрос в новую задачу Claude или в новый разговор Codex.",
+      "doneLead": "German Business Kit готов к работе. Попробуйте первую задачу на вымышленных данных: выберите пример, который ближе вам, и вставьте его в новую задачу Claude или в новый разговор Codex.",
       "more": "Ещё примеры…",
+      "result": {
+        "claudeAlt": "Claude отвечает на пример контент-креатора одним небольшим первым шагом",
+        "openaiAlt": "Codex отвечает на пример программиста одним небольшим первым шагом",
+        "caption": "Настоящие ответы от 21 ноября 2026 года на вымышленные примеры. Ваш ответ будет выглядеть иначе."
+      },
       "lead": "В каждом примере только вымышленные данные. Скопируйте запрос, вставьте его в **новую задачу** в Claude или в **новый разговор в проекте Business Assistant** в Codex и сравните ответ со списком проверки.",
       "callTitle": "Как вызвать набор",
       "call": {
@@ -839,16 +882,31 @@ window.INSTALLER_TEXT = {
       "guideLink": "Открыть руководство пользователя",
       "items": {
         "first": {
-          "title": "Ваш первый шаг",
-          "summary": "Попросите один небольшой следующий шаг для вымышленного нового бизнеса.",
+          "title": "Первый шаг: программист-фрилансер",
+          "summary": "Попросите один небольшой следующий шаг для вымышленного программиста-фрилансера.",
           "time": "Около 5 минут",
           "prepare": ["Начните **новую задачу** в Claude или **новый разговор** в проекте Business Assistant в Codex. Папка не нужна."],
-          "prompt": "Используй de-business-kit. Я пробую ассистента на вымышленном примере: хочу начать работать переводчиком-фрилансером в Германии. Не знаю, с чего начать. Помоги выбрать один небольшой первый шаг. Спрашивай только то, что нужно для этого шага.",
+          "prompt": "Используй de-business-kit. Я пробую ассистента на вымышленном примере: я программист и хочу начать работать фрилансером в Германии — делать сайты и приложения для небольших компаний. Не знаю, с чего начать. Помоги выбрать один небольшой первый шаг. Спрашивай только то, что нужно для этого шага.",
           "answers": "Это вымышленный пример. Я живу в Берлине, ещё ничего не регистрировал(а) и жду первого клиента в следующем месяце.",
           "check": [
             "Один понятный следующий шаг, а не длинная лекция.",
             "Вопросы только там, где действительно нужен факт.",
             "Пока нет просьбы загрузить личные документы или выбрать бухгалтерскую программу.",
+            "Нет утверждений, что что-то уже зарегистрировано или подано."
+          ],
+          "next": "Объясни это простыми словами и назови только следующий шаг."
+        },
+        "creator": {
+          "title": "Первый шаг: контент-креатор",
+          "summary": "Попросите один небольшой следующий шаг для вымышленного автора в Instagram и YouTube.",
+          "time": "Около 5 минут",
+          "prepare": ["Начните **новую задачу** в Claude или **новый разговор** в проекте Business Assistant в Codex. Папка не нужна."],
+          "prompt": "Используй de-business-kit. Я пробую ассистента на вымышленном примере: я снимаю видео для Instagram и YouTube, и первые бренды хотят платить мне за публикации. Я живу в Германии и ещё ничего не регистрировал(а). Помоги выбрать один небольшой первый шаг. Спрашивай только то, что нужно для этого шага.",
+          "answers": "Это вымышленный пример. Я живу в Мюнхене, я студент(ка), и бренд предложил мне 300 EUR и бесплатный товар за одно видео в следующем месяце.",
+          "check": [
+            "Один понятный следующий шаг, а не длинная лекция.",
+            "Вопросы только там, где действительно нужен факт.",
+            "Бесплатный товар от бренда упомянут как то, что нужно прояснить, а не пропущен.",
             "Нет утверждений, что что-то уже зарегистрировано или подано."
           ],
           "next": "Объясни это простыми словами и назови только следующий шаг."
@@ -861,7 +919,7 @@ window.INSTALLER_TEXT = {
             "Создайте новую пустую папку **Учебный бизнес**. Держите её отдельно от папки Business Assistant.",
             "Claude: начните новую задачу в Cowork и выберите эту папку. Codex: оставьте открытым проект Business Assistant и разрешите доступ к учебной папке, когда приложение спросит."
           ],
-          "prompt": "Используй de-business-accounting. Это вымышленное учебное упражнение. Используй только выбранную папку Учебный бизнес. Создай три вымышленных чека за ноябрь 2026 года для переводчика: бумага для принтера 23,80 EUR, билет на поезд к клиенту 49,00 EUR и подписка на программу 11,90 EUR. Разбери их для моего первого месяца, покажи, что ещё неясно, и сохрани короткую понятную сводку со следующим шагом. Не используй настоящие данные и не подключай никакие сервисы.",
+          "prompt": "Используй de-business-accounting. Это вымышленное учебное упражнение. Используй только выбранную папку Учебный бизнес. Создай три вымышленных чека за ноябрь 2026 года для программиста-фрилансера: кабель USB-C 19,90 EUR, билет на поезд к клиенту 49,00 EUR и подписка на облачный хостинг 11,90 EUR. Разбери их для моего первого месяца, покажи, что ещё неясно, и сохрани короткую понятную сводку со следующим шагом. Не используй настоящие данные и не подключай никакие сервисы.",
           "answers": "Это упражнение. В этом примере я Kleinunternehmer и ещё не выбрал(а) бухгалтерскую программу. Всё неясное оставь открытым вопросом.",
           "check": [
             "Новые файлы и сводка появляются только в учебной папке.",
@@ -876,7 +934,7 @@ window.INSTALLER_TEXT = {
           "summary": "Черновик счёта для вымышленного клиента без отправки.",
           "time": "Около 10 минут",
           "prepare": ["Используйте ту же папку **Учебный бизнес** или начните без папки."],
-          "prompt": "Используй de-business-operations. Вымышленный пример: подготовь черновик счёта за выполненный перевод. Клиент: Beispiel Verlag GmbH (вымышленный). Услуга: перевод 10-страничной брошюры с английского на немецкий, выполнен 3 ноября 2026 года. Согласованная цена: 400 EUR. В этом примере я Kleinunternehmer. Для моего адреса, налогового номера и банковских данных используй явно помеченные заполнители. Ничего не отправляй.",
+          "prompt": "Используй de-business-operations. Вымышленный пример: подготовь черновик счёта за выполненную работу по программированию. Клиент: Beispiel Shop GmbH (вымышленный). Услуга: разработка контактной формы для сайта клиента, 8 часов по 50 EUR, выполнено 3 ноября 2026 года. Согласованная цена: 400 EUR. В этом примере я Kleinunternehmer. Для моего адреса, налогового номера и банковских данных используй явно помеченные заполнители. Ничего не отправляй.",
           "answers": "Это упражнение. Оставь явно помеченные заполнители вместо настоящих личных данных.",
           "check": [
             "Понятный черновик с клиентом, услугой, датой выполнения и суммой.",
@@ -918,6 +976,7 @@ window.INSTALLER_TEXT = {
       "back": "Zurück",
       "next": "Weiter",
       "more": "Mehr…",
+      "preview": "So sieht es aus…",
       "ok": "OK",
       "toContinue": "Klicken Sie auf „Weiter“, um fortzufahren.",
       "whenDone": "Wenn Sie fertig sind, klicken Sie auf „Weiter“.",
@@ -1213,6 +1272,10 @@ window.INSTALLER_TEXT = {
         "promptLabel": "Anfrage für Claude",
         "prompt": "Installiere German Business Kit von https://github.com/ilyafedotov-ops/german-business-skills und zeig mir, wie ich es nutze. Folge den Installationsanweisungen des Repositorys für meine App, prüfe, ob das vollständige Kit verfügbar ist, und hilf mir, ein kleines Beispiel auszuprobieren.",
         "manualTitle": "Manuell installieren…",
+        "result": {
+          "alt": "Seite von German Business Kit in der Claude-App nach Add: Status Added und die Skills des Kits",
+          "caption": "Die echte Claude-App am 21. November 2026. In Ihrer Version kann es anders aussehen."
+        },
         "manualSteps": [
           "Öffnen Sie in der Claude-App in der Seitenleiste **Customize** und dann **Plugins**. Zeigt Ihre Version einen eigenen **Cowork**-Umschalter, wechseln Sie zuerst zu Cowork.",
           "Wählen Sie **Add** und dann **Add marketplace**. Falls angeboten, wählen Sie **Add from a repository**. Fügen Sie die Adresse unten ein und wählen Sie **Sync**.",
@@ -1244,6 +1307,10 @@ window.INSTALLER_TEXT = {
         "promptLabel": "Anfrage für Codex",
         "prompt": "Installiere German Business Kit von https://github.com/ilyafedotov-ops/german-business-skills und zeig mir, wie ich es nutze. Folge den Installationsanweisungen des Repositorys für meine App, prüfe, ob das vollständige Kit verfügbar ist, und hilf mir, ein kleines Beispiel auszuprobieren.",
         "manualTitle": "Manuell installieren…",
+        "result": {
+          "alt": "Codex zeigt die sieben Skills von German Business Kit in einer Tabelle",
+          "caption": "Die echte ChatGPT-App mit Codex am 21. November 2026. Ihre Antwort sieht anders aus."
+        },
         "manualSteps": [
           "Laden Sie diese zwei Dateien in denselben Ordner herunter, zum Beispiel Downloads.",
           "Kopieren Sie den vollständigen Pfad jeder Datei. Windows: Rechtsklick auf die Datei und **Als Pfad kopieren** wählen. Mac: Datei im Finder auswählen, die **Wahltaste (Option)** gedrückt halten und **Bearbeiten → „…“ als Pfadname kopieren** wählen.",
@@ -1263,8 +1330,13 @@ window.INSTALLER_TEXT = {
     "demos": {
       "title": "Probieren Sie erste Aufgaben mit erfundenen Beispielen aus",
       "doneTitle": "Die Einrichtung ist abgeschlossen",
-      "doneLead": "German Business Kit ist bereit. Probieren Sie eine erste Aufgabe mit erfundenen Daten: Fügen Sie diese Anfrage in eine neue Aufgabe in Claude oder einen neuen Chat in Codex ein.",
+      "doneLead": "German Business Kit ist bereit. Probieren Sie eine erste Aufgabe mit erfundenen Daten: Wählen Sie das Beispiel, das am besten zu Ihnen passt, und fügen Sie es in eine neue Aufgabe in Claude oder einen neuen Chat in Codex ein.",
       "more": "Weitere Beispiele…",
+      "result": {
+        "claudeAlt": "Claude beantwortet das Content-Creator-Beispiel mit einem kleinen ersten Schritt",
+        "openaiAlt": "Codex beantwortet das Programmier-Beispiel mit einem kleinen ersten Schritt",
+        "caption": "Echte Antworten vom 21. November 2026 auf die erfundenen Beispiele. Ihre Antwort sieht anders aus."
+      },
       "lead": "Jedes Beispiel verwendet nur erfundene Angaben. Kopieren Sie eine Anfrage, fügen Sie sie in eine **neue Aufgabe** in Claude oder einen **neuen Chat im Projekt Business Assistant** in Codex ein und vergleichen Sie die Antwort mit der Checkliste.",
       "callTitle": "So rufen Sie das Kit auf",
       "call": {
@@ -1292,16 +1364,31 @@ window.INSTALLER_TEXT = {
       "guideLink": "Deutsche Startanleitung öffnen",
       "items": {
         "first": {
-          "title": "Ihr erster Schritt",
-          "summary": "Fragen Sie nach einem kleinen nächsten Schritt für ein erfundenes neues Unternehmen.",
+          "title": "Erster Schritt: Programmierung als Freelancer",
+          "summary": "Fragen Sie nach einem kleinen nächsten Schritt für eine erfundene freiberufliche Programmiertätigkeit.",
           "time": "Etwa 5 Minuten",
           "prepare": ["Starten Sie eine **neue Aufgabe** in Claude oder einen **neuen Chat** in Ihrem Projekt Business Assistant in Codex. Ein Ordner ist nicht nötig."],
-          "prompt": "Nutze de-business-kit. Ich probiere den Assistenten mit einem erfundenen Beispiel aus: Ich möchte in Deutschland freiberuflich Übersetzungen anbieten. Ich weiß nicht, wo ich anfangen soll. Hilf mir, einen kleinen ersten Schritt zu wählen. Frag nur, was du für diesen Schritt brauchst.",
+          "prompt": "Nutze de-business-kit. Ich probiere den Assistenten mit einem erfundenen Beispiel aus: Ich bin Programmierer und möchte in Deutschland als Freelancer Websites und Apps für kleine Unternehmen entwickeln. Ich weiß nicht, wo ich anfangen soll. Hilf mir, einen kleinen ersten Schritt zu wählen. Frag nur, was du für diesen Schritt brauchst.",
           "answers": "Das ist ein erfundenes Beispiel. Ich wohne in Berlin, habe noch nichts angemeldet und erwarte meinen ersten Auftrag im nächsten Monat.",
           "check": [
             "Ein verständlicher nächster Schritt statt eines langen Vortrags.",
             "Rückfragen nur, wo eine Angabe wirklich nötig ist.",
             "Noch keine Bitte, private Unterlagen hochzuladen oder eine Buchhaltungssoftware zu wählen.",
+            "Keine Behauptung, dass etwas angemeldet oder eingereicht wurde."
+          ],
+          "next": "Erkläre das in einfachen Worten und nenne mir nur den nächsten Schritt."
+        },
+        "creator": {
+          "title": "Erster Schritt: Content Creator",
+          "summary": "Fragen Sie nach einem kleinen nächsten Schritt für einen erfundenen Instagram- und YouTube-Kanal.",
+          "time": "Etwa 5 Minuten",
+          "prepare": ["Starten Sie eine **neue Aufgabe** in Claude oder einen **neuen Chat** in Ihrem Projekt Business Assistant in Codex. Ein Ordner ist nicht nötig."],
+          "prompt": "Nutze de-business-kit. Ich probiere den Assistenten mit einem erfundenen Beispiel aus: Ich mache Videos für Instagram und YouTube, und erste Marken möchten mich für Beiträge bezahlen. Ich wohne in Deutschland und habe noch nichts angemeldet. Hilf mir, einen kleinen ersten Schritt zu wählen. Frag nur, was du für diesen Schritt brauchst.",
+          "answers": "Das ist ein erfundenes Beispiel. Ich wohne in München, studiere, und eine Marke hat mir für ein Video im nächsten Monat 300 EUR und ein kostenloses Produkt angeboten.",
+          "check": [
+            "Ein verständlicher nächster Schritt statt eines langen Vortrags.",
+            "Rückfragen nur, wo eine Angabe wirklich nötig ist.",
+            "Das kostenlose Produkt der Marke wird als zu klärender Punkt behandelt, nicht übergangen.",
             "Keine Behauptung, dass etwas angemeldet oder eingereicht wurde."
           ],
           "next": "Erkläre das in einfachen Worten und nenne mir nur den nächsten Schritt."
@@ -1314,7 +1401,7 @@ window.INSTALLER_TEXT = {
             "Legen Sie einen neuen, leeren Ordner **Übungsfirma** an. Er liegt nicht im Ordner Business Assistant.",
             "Claude: Starten Sie eine neue Aufgabe in Cowork und wählen Sie diesen Ordner. Codex: Lassen Sie Ihr Projekt Business Assistant geöffnet und erlauben Sie den Zugriff auf den Übungsordner, wenn danach gefragt wird."
           ],
-          "prompt": "Nutze de-business-accounting. Das ist eine erfundene Übung. Verwende nur meinen ausgewählten Ordner Übungsfirma. Lege drei erfundene Belege aus November 2026 für eine Übersetzungstätigkeit an: Druckerpapier 23,80 EUR, Bahnfahrt zu einem Kunden 49,00 EUR und ein Software-Abo 11,90 EUR. Ordne sie für meinen ersten Monat, zeige, was noch unklar ist, und speichere eine kurze lesbare Zusammenfassung mit dem nächsten Schritt. Verwende keine echten Daten und verbinde keinen Dienst.",
+          "prompt": "Nutze de-business-accounting. Das ist eine erfundene Übung. Verwende nur meinen ausgewählten Ordner Übungsfirma. Lege drei erfundene Belege aus November 2026 für eine freiberufliche Programmiertätigkeit an: USB-C-Kabel 19,90 EUR, Bahnfahrt zu einem Kunden 49,00 EUR und ein Cloud-Hosting-Abo 11,90 EUR. Ordne sie für meinen ersten Monat, zeige, was noch unklar ist, und speichere eine kurze lesbare Zusammenfassung mit dem nächsten Schritt. Verwende keine echten Daten und verbinde keinen Dienst.",
           "answers": "Das ist eine Übung. In diesem Beispiel bin ich Kleinunternehmer und habe noch keine Buchhaltungssoftware gewählt. Lass Unklares als offene Frage stehen.",
           "check": [
             "Neue Dateien und eine Zusammenfassung erscheinen nur im Übungsordner.",
@@ -1329,7 +1416,7 @@ window.INSTALLER_TEXT = {
           "summary": "Ein Rechnungsentwurf für einen erfundenen Kunden, ohne Versand.",
           "time": "Etwa 10 Minuten",
           "prepare": ["Verwenden Sie denselben Ordner **Übungsfirma** oder starten Sie ohne Ordner."],
-          "prompt": "Nutze de-business-operations. Erfundenes Beispiel: Bereite einen Rechnungsentwurf für eine erledigte Übersetzung vor. Kunde: Beispiel Verlag GmbH (erfunden). Leistung: Übersetzung einer 10-seitigen Broschüre aus dem Englischen ins Deutsche, geliefert am 3. November 2026. Vereinbarter Preis: 400 EUR. In diesem Beispiel bin ich Kleinunternehmer. Verwende deutlich markierte Platzhalter für meine Anschrift, Steuernummer und Bankverbindung. Versende nichts.",
+          "prompt": "Nutze de-business-operations. Erfundenes Beispiel: Bereite einen Rechnungsentwurf für eine erledigte Programmierarbeit vor. Kunde: Beispiel Shop GmbH (erfunden). Leistung: Entwicklung eines Kontaktformulars für die Website des Kunden, 8 Stunden zu je 50 EUR, erbracht am 3. November 2026. Vereinbarter Preis: 400 EUR. In diesem Beispiel bin ich Kleinunternehmer. Verwende deutlich markierte Platzhalter für meine Anschrift, Steuernummer und Bankverbindung. Versende nichts.",
           "answers": "Das ist eine Übung. Behalte deutlich markierte Platzhalter statt echter persönlicher Angaben.",
           "check": [
             "Ein lesbarer Entwurf mit Kunde, Leistung, Leistungsdatum und Betrag.",

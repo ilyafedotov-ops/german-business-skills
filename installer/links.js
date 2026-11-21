@@ -50,6 +50,10 @@ window.INSTALLER_LINKS = {
   },
   "local": {
     "prototype": "../prototype/index.html",
-    "screenshot": "../skills/de-business-kit/guides/images/claude-marketplace.jpg"
+    "screenshot": "../skills/de-business-kit/guides/images/claude-marketplace.jpg",
+    "results": {
+      "skills": {"claude": {"en": "images/claude-added.jpg", "ru": "images/claude-added.jpg", "de": "images/claude-added.jpg"}, "openai": {"en": "images/codex-skills-en.jpg", "ru": "images/codex-skills-ru.jpg", "de": "images/codex-skills-de.jpg"}},
+      "first": {"claude": {"en": "images/claude-first-en.jpg", "ru": "images/claude-first-ru.jpg", "de": "images/claude-first-de.jpg"}, "openai": {"en": "images/codex-first-en.jpg", "ru": "images/codex-first-ru.jpg", "de": "images/codex-first-de.jpg"}}
+    }
   }
 };

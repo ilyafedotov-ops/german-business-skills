@@ -210,6 +210,11 @@ async function journey(browser, language, assistant, os) {
     assert.equal(await heading(page).innerText(), t.skills[assistant].title);
     assert.equal(await pageSteps().count(), t.skills[assistant].short.length);
     await copies(page, t, t.skills[assistant].promptLabel, t.skills[assistant].prompt);
+    // A real screenshot shows what a successful install looks like.
+    const preview = await more(t.ui.preview);
+    const result = preview.getByRole('img', { name: t.skills[assistant].result.alt, exact: true });
+    assert.equal(await result.evaluate(img => img.decode().then(() => img.naturalWidth > 0, () => false)), true, 'Install screenshot loads');
+    await preview.getByText(t.skills[assistant].result.caption, { exact: true }).waitFor();
     const manual = page.locator('details.manual-route');
     assert.equal(await manual.evaluate(d => d.open), false, 'Manual route starts collapsed');
     await manual.getByText(t.skills[assistant].manualTitle, { exact: true }).click();
@@ -246,7 +251,11 @@ async function journey(browser, language, assistant, os) {
     // Finish: one example to try, more examples on demand.
     assert.equal(await heading(page).innerText(), t.demos.doneTitle);
     assert.equal(await page.getByRole('button', { name: t.ui.next, exact: true }).count(), 0, 'Last step has no Next');
-    await copies(page, t, t.demos.promptLabel, t.demos.items.first.prompt);
+    // Two first examples: a freelance programmer and a content creator.
+    await copies(page, t, t.demos.items.first.title, t.demos.items.first.prompt);
+    await copies(page, t, t.demos.items.creator.title, t.demos.items.creator.prompt);
+    const answer = (await more(t.ui.preview)).getByRole('img', { name: t.demos.result[`${assistant}Alt`], exact: true });
+    assert.equal(await answer.evaluate(img => img.decode().then(() => img.naturalWidth > 0, () => false)), true, 'Answer screenshot loads');
     await page.getByRole('link', { name: t.demos.more, exact: true }).click();
     await route(page, 'examples');
     assert.equal(await heading(page).innerText(), t.demos.title);

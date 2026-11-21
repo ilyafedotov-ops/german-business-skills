@@ -16,6 +16,7 @@
   // Routes are compared with this fixed list, never looked up as object properties.
   const ROUTES = [...STEPS, 'examples', ...DEMOS.map(id => `demo-${id}`)];
   const NEEDS_ASSISTANT = ['account', 'app', 'skills'];
+  const FIRST_EXAMPLES = ['first', 'creator'];
   // Like a licence agreement: these steps wait until the data notes are accepted.
   const NEEDS_ACCEPT = ['skills', 'demos'];
   const KEY = 'gbk-installer-v1';
@@ -439,6 +440,14 @@
     return figure;
   }
 
+  // A real screenshot of the app; a copied installer folder without images hides only the figure.
+  function result(file, alt, caption) {
+    const shot = h('img', { src: file, alt, loading: 'lazy', decoding: 'async' });
+    const figure = h('figure', { class: 'shot' }, shot, caption ? h('figcaption', { class: 'hint' }, caption) : null);
+    shot.addEventListener('error', () => { figure.hidden = true; });
+    return figure;
+  }
+
   function skillList() {
     const skills = t.skills;
     return [h('h2', {}, skills.listTitle), h('dl', { class: 'skill-list' }, Object.entries(skills.list).map(([name, description]) =>
@@ -478,6 +487,7 @@
       diagram(info.diagram, DIAGRAMS[provider]),
       steps(info.short, extras),
       h('p', {}, t.ui.whenDone),
+      more(t.ui.preview, result(LINKS.local.results.skills[provider][state.lang], info.result.alt, info.result.caption)),
       manualRoute(provider, info),
       more(t.ui.more, steps(info.steps), skillList(), h('p', { class: 'hint' }, skills.once),
         h('p', {}, `${skills.stuck} `, external(LINKS.docs[state.lang].help, skills.stuckLink))),
@@ -490,7 +500,10 @@
     return [
       ...heading(demos.doneTitle, eyebrow('demos')),
       h('p', { class: 'lead' }, demos.doneLead),
-      copyBox(demos.promptLabel, demos.items.first.prompt),
+      // Two first examples: the user picks the one closest to their own work.
+      FIRST_EXAMPLES.map(id => copyBox(demos.items[id].title, demos.items[id].prompt)),
+      more(t.ui.preview, (state.assistant ? [state.assistant] : PROVIDERS).map(provider =>
+        result(LINKS.local.results.first[provider][state.lang], demos.result[`${provider}Alt`], '')), h('p', { class: 'hint' }, demos.result.caption)),
       h('p', {}, h('a', { href: '#examples', class: 'button-link' }, demos.more)),
       stepNav('demos'),
     ];
