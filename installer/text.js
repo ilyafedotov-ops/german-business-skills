@@ -11,23 +11,25 @@ window.INSTALLER_TEXT = {
       "stepOf": "Step {current} of {total}",
       "back": "Back",
       "next": "Next",
+      "more": "More…",
+      "ok": "OK",
+      "toContinue": "To continue, click Next.",
+      "whenDone": "When you have finished, click Next.",
       "start": "Start setup",
       "copy": "Copy",
       "copied": "Copied. Paste it with Ctrl+V (Windows) or Cmd+V (Mac).",
       "copyFailed": "Could not copy automatically. Select the text and press Ctrl+C (Windows) or Cmd+C (Mac).",
       "newTab": "opens in a new tab",
       "done": "done",
-      "checklist": "Tick each step when it is done.",
       "saved": "Your progress is saved in this browser on this computer only.",
       "notSaved": "This browser does not allow saving progress. Keep this page open until you finish.",
       "checked": "Provider details checked on {date}. Plans, prices and menus can change; the provider's own page is authoritative.",
       "safety": "This guide never asks for passwords, payment details, verification codes or keys. Enter them only on the provider's own website or in its app.",
       "illustration": "Illustration. Real screens may look different.",
       "chooseFirst": "Choose your assistant first.",
-      "mobile": "Setup needs a Windows PC or a Mac. Open this guide on your computer to install the app.",
+      "acceptFirst": "First read the text and choose “I have read and understand”.",
+      "mobile": "Setup runs on a computer. Open this page on Windows or a Mac.",
       "progressSummary": "{done} of {total} steps done",
-      "ticked": "{done} of {total} ticked",
-      "allTicked": "All {total} ticked. Continue with Next.",
       "enlarge": "Enlarge screenshot",
       "zoom": "Zoom in",
       "close": "Close",
@@ -36,34 +38,33 @@ window.INSTALLER_TEXT = {
     "steps": {"welcome": "Welcome", "assistant": "Assistant", "account": "Account", "app": "App", "safety": "Data & risks", "skills": "Skills", "demos": "First tasks"},
     "welcome": {
       "eyebrow": "Guided setup · about 30 minutes",
-      "title": "Set up your AI business assistant, step by step",
-      "lead": "This guide helps you create an account with Claude or ChatGPT, install the app, add German Business Kit and try first tasks with made-up examples. You do not need programming skills.",
-      "chooseLanguage": "Choose your language",
-      "languageHint": "You can change the language at any time at the top of the page.",
+      "title": "Welcome to the German Business Kit Setup Wizard",
+      "lead": "This wizard helps you set up an AI assistant for your business: an account, the app and German Business Kit. No programming skills are needed.",
       "needTitle": "What you need",
       "need": [
-        "A Windows PC or a Mac with internet access.",
-        "An email address you can open now.",
-        "A mobile phone that can receive text messages (SMS).",
-        "For a paid plan: a bank card. You enter it only on the provider's own website, never here."
+        "A Windows PC or a Mac with internet access",
+        "An email address you can open now",
+        "A mobile phone that receives SMS",
+        "A bank card for a paid plan: Claude Pro or ChatGPT Plus"
       ],
       "aiTitle": "Good to know before you start",
+      "aiShort": "German Business Kit is not a tax adviser, and AI can make mistakes.",
       "ai": "German Business Kit is AI-assisted self-help software, not a tax adviser (Steuerberater). AI can make mistakes, including in amounts and deadlines. Files the assistant reads are processed by Anthropic or OpenAI. Use made-up examples until you have read the data guidance.",
-      "aiLink": "Read about AI limits and your data",
-      "aiStep": "The “{name}” step shows what to check before real work"
+      "aiLink": "Read about AI limits and your data"
     },
     "assistant": {
       "title": "Choose your assistant",
       "business": "Will you work with customers' or employees' data? Personal plans, such as Claude Pro or ChatGPT Plus, do not include a business data processing agreement (DPA); business plans such as Claude Team or ChatGPT Business offer one. The “{name}” step explains this.",
-      "lead": "German Business Kit works inside one of two AI apps. Both can do the tasks in this guide. Pick the one you prefer; you can set up the other one later.",
+      "lead": "Choose the app German Business Kit will work in. You can set up the other one later.",
       "choose": "Choose {name}",
       "chosen": "Selected",
-      "unsure": "Not sure? Choose **Claude** for the fewest setup steps if a paid plan is fine for you. Choose **ChatGPT with Codex** if you want to start without paying.",
+      "unsure": "Not sure? Choose **Claude**: it has the fewest setup steps.",
       "work": "Using an account from your employer or school? Its administrator may block apps, plugins or skills. Ask them first.",
       "claude": {
         "name": "Claude",
         "maker": "by Anthropic",
         "app": "Claude desktop app with Cowork",
+        "summary": "Fewest setup steps. Needs **Pro** or higher.",
         "pricing": "Claude plans and prices",
         "points": [
           "Easiest setup: you add the kit inside the app with a few clicks.",
@@ -75,9 +76,10 @@ window.INSTALLER_TEXT = {
         "name": "ChatGPT with Codex",
         "maker": "by OpenAI",
         "app": "ChatGPT desktop app with Codex",
+        "summary": "A few more setup steps. We recommend **Plus** or higher.",
         "pricing": "ChatGPT plans and prices",
         "points": [
-          "You can start on any plan, including **Free**. Paid plans give more usage.",
+          "We recommend a paid plan: **Plus** or higher (Plus, Pro, Business or Enterprise). Free and Go have low limits.",
           "More setup steps: you download a file and Codex copies the kit into a project folder.",
           "Works with the files in a project folder on your computer."
         ]
@@ -86,7 +88,7 @@ window.INSTALLER_TEXT = {
     "account": {
       "lead": "You sign up on the provider's own website. This guide only opens the official page in a new tab.",
       "labelsNote": "Button names can differ by language or app version.",
-      "already": "Already have an account? Tick the steps you have done and continue.",
+      "already": "Already have an account? Just click Next.",
       "safetyTitle": "Keep your account safe",
       "safety": [
         "Type passwords, codes and card details only on the provider's own page or in its app.",
@@ -96,6 +98,11 @@ window.INSTALLER_TEXT = {
       "claude": {
         "title": "Create your Claude account",
         "open": "Open the official Claude sign-up page",
+        "short": [
+          "Sign up with Google or with your email address.",
+          "Confirm your mobile number with the code from the SMS.",
+          "Choose **Pro** or higher and pay on the Claude website."
+        ],
         "steps": [
           "On the official page, choose **Continue with Google**, or enter your email address and choose **Continue with email**.",
           "If you used email, open the message from Claude and select its sign-in link. Claude does not use a password.",
@@ -107,11 +114,16 @@ window.INSTALLER_TEXT = {
       "openai": {
         "title": "Create your ChatGPT account",
         "open": "Open the official ChatGPT sign-up page",
+        "short": [
+          "Choose **Sign up** and use your email address or another offered option.",
+          "Confirm your email address.",
+          "Choose **Plus** or higher and pay on the OpenAI website."
+        ],
         "steps": [
           "On the official page, choose **Sign up**. Use your email address or one of the account options the page offers.",
           "Follow the page's steps to confirm your email address.",
           "When you first use Codex, the app may ask you to add or verify a phone number. Do this only in the ChatGPT app or on chatgpt.com.",
-          "Choose a plan. **Free** is enough to try; **Plus** or higher gives more Codex usage. Pay only on OpenAI's own website."
+          "Choose a plan: **Plus** or higher. Pay only on OpenAI's own website."
         ],
         "diagram": ["Open page", "Confirm email", "Verify phone", "Choose plan"]
       }
@@ -133,6 +145,11 @@ window.INSTALLER_TEXT = {
           "windows": "Download Claude for Windows",
           "windowsArm": "Windows on ARM, for example a Snapdragon laptop? Download this version instead."
         },
+        "short": [
+          "Download and install the app with the button above.",
+          "Open Claude and sign in.",
+          "In **Settings → Privacy**, turn off **Help improve our AI models** if you do not want your chats used to train AI models."
+        ],
         "mac": [
           "Download the file with the button above. It is saved in your **Downloads** folder.",
           "Open the downloaded file. In the window that appears, drag the Claude icon onto the **Applications** folder.",
@@ -155,6 +172,11 @@ window.INSTALLER_TEXT = {
           "macIntel": "Download ChatGPT for Mac with Intel processor",
           "windows": "Get ChatGPT for Windows from the Microsoft Store"
         },
+        "short": [
+          "Download and install the app with the button above.",
+          "Open ChatGPT, sign in and choose **Codex**.",
+          "In **Settings → Data controls**, turn off **Improve the model for everyone** if you do not want your chats used to train AI models."
+        ],
         "macWhich": "Which Mac do I have? Open the Apple menu and choose **About This Mac**. **Chip: Apple M…** means Apple chip; **Processor: Intel** means Intel.",
         "mac": [
           "Download the file for your Mac with a button above. It is saved in your **Downloads** folder.",
@@ -173,8 +195,19 @@ window.INSTALLER_TEXT = {
       }
     },
     "safety": {
-      "title": "Before real work: AI risks and your data",
+      "title": "Read before you start",
       "lead": "Read this once before the assistant sees real documents. It takes about five minutes. It is general information, not legal advice.",
+      "warnings": [
+        "AI can make mistakes, including in amounts and deadlines. Check everything before you send, sign or pay.",
+        "Files the assistant reads are sent to {provider} for processing.",
+        "German Business Kit is not a tax adviser or a lawyer."
+      ],
+      "boxNote": "Please read the following text. Scroll down to see all of it.",
+      "license": "German Business Kit is free software under the MIT License. It is provided “as is”, without warranty of any kind.",
+      "question": "Do you understand these points? To continue, choose “I have read and understand”.",
+      "understand": "I have read and understand",
+      "decline": "I do not accept",
+      "selfTest": "Test yourself…",
       "risksTitle": "What AI can get wrong",
       "risks": [
         {"title": "Confident mistakes", "text": "It can misread a document, use the wrong year's rules or cite a source that does not exist, and still sound sure."},
@@ -259,8 +292,22 @@ window.INSTALLER_TEXT = {
       "stuckLink": "See “If you get stuck” in the installation guide",
       "claude": {
         "title": "Add German Business Kit to Claude",
-        "lead": "The kit is one plugin with seven connected skills. You add it once; it is saved to your Claude account and also works in Claude chat and Claude Code.",
+        "lead": "Ask Claude to install the kit for you. It takes one request.",
+        "short": [
+          "Open Claude, switch to **Cowork** and start a new task.",
+          "Copy this request, paste it into the task and send it:",
+          "Follow Claude's answer. When it asks, select **Install** or confirm the action yourself."
+        ],
         "steps": [
+          "Open the Claude app, switch to **Cowork** and start a new task.",
+          "Copy the request below, paste it into the task and send it.",
+          "Follow Claude's answer. When it asks you to select **Install** in **Plugins** or to confirm an action, do it yourself: Claude tells you where, but cannot click for you.",
+          "Start a **new task** and check that the seven skills below are available: open German Business Kit and its **Skills** tab, or ask Claude which German Business Kit skills it can use."
+        ],
+        "promptLabel": "Request for Claude",
+        "prompt": "Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills and show me how to use it. Follow the repository's installation instructions for my app, check that the complete kit is available, and help me try one small example.",
+        "manualTitle": "Install manually…",
+        "manualSteps": [
           "In the Claude app, open **Customize** in the sidebar, then **Plugins**. If your version shows a separate **Cowork** selector, switch to Cowork first.",
           "Select **Add**, then **Add marketplace**. If offered, choose **Add from a repository**. Paste the address below and select **Sync**.",
           "Find **German Business Kit** in the list (look under **Discover** if needed) and select **Install**. Some versions say **Add**.",
@@ -271,31 +318,47 @@ window.INSTALLER_TEXT = {
         "review": "Anthropic reviews plugins in its own directory, not plugins added by address. This address installs the project's verified release.",
         "shotAlt": "Claude desktop dialog for adding a marketplace, with the project address entered and the Sync button",
         "shotCaption": "Actual Claude desktop app 3.6556.2 on macOS, captured on 26 October 2026 before selecting Sync. Labels may differ in your version.",
-        "diagram": ["Customize", "Plugins", "Add marketplace", "Install"]
+        "diagram": ["Cowork", "Paste request", "Install", "New task"]
       },
       "openai": {
         "title": "Add German Business Kit to Codex",
-        "lead": "In Codex, the kit is copied into a project folder on your computer. After you download the kit, Codex can do the copying for you.",
+        "lead": "Ask Codex to install the kit for you. It takes one request.",
+        "short": [
+          "Create an empty folder called **Business Assistant**, for example in Documents.",
+          "In ChatGPT, choose **Codex**, open this folder as a project and start a **New chat**.",
+          "Copy this request, paste it into Codex and send it:",
+          "Follow Codex's answer. Allow internet access or file changes for this project only."
+        ],
         "steps": [
           "Create a new folder called **Business Assistant** in a private place, for example in Documents. It holds only the kit, not your business records.",
           "In the ChatGPT app, choose **Codex**, open the **Business Assistant** folder as your project and start a **New chat**. If asked to trust a folder, confirm only this one.",
+          "Copy the request below, paste it into Codex and send it. If Codex asks for internet access or permission to change files, allow it for this project only.",
+          "Start a **new chat in the same project**. Open **Skills** in the sidebar and check that the seven skills below are listed. If they are missing, close and reopen the app."
+        ],
+        "promptLabel": "Request for Codex",
+        "prompt": "Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills and show me how to use it. Follow the repository's installation instructions for my app, check that the complete kit is available, and help me try one small example.",
+        "manualTitle": "Install manually…",
+        "manualSteps": [
           "Download these two files into the same folder, for example Downloads.",
           "Copy the full path of each file. Windows: right-click the file and choose **Copy as path**. Mac: select the file in Finder, hold **Option** and choose **Edit → Copy … as Pathname**.",
           "Copy the request below, paste it into Codex, replace the two parts in square brackets with your paths and send it.",
-          "Start a **new chat in the same project**. Open **Skills** in the sidebar and check that the seven skills below are listed. If they are missing, close and reopen the app."
+          "Start a new chat in the same project. Open **Skills** in the sidebar and check that the seven skills below are listed."
         ],
         "zip": "Download {file}",
         "checksums": "Download {file} (checksum list)",
         "releasePage": "Open the release page",
-        "promptLabel": "Request for Codex",
-        "prompt": "I am setting up German Business Kit in this local Business Assistant project in Codex. My ZIP is at [full ZIP path] and SHA256SUMS is at [full checksum-file path]. Check the ZIP against its checksum and stop if it does not match. Extract it into a new folder, then copy all seven complete skill folders into this project's .agents/skills. Use native file tools, preserve existing files and stop if a destination already exists. Do not install runtimes, change security settings or change global app configuration. Tell me the seven installed names and how to start a fresh session.",
+        "manualPromptLabel": "Request with file paths",
+        "manualPrompt": "I am setting up German Business Kit in this local Business Assistant project in Codex. My ZIP is at [full ZIP path] and SHA256SUMS is at [full checksum-file path]. Check the ZIP against its checksum and stop if it does not match. Extract it into a new folder, then copy all seven complete skill folders into this project's .agents/skills. Use native file tools, preserve existing files and stop if a destination already exists. Do not install runtimes, change security settings or change global app configuration. Tell me the seven installed names and how to start a fresh session.",
         "checksumNote": "The checksum list lets Codex check that the download is complete and unchanged. It does not prove who published the file.",
         "manual": "Codex could not copy the files? Follow the manual steps in the installation guide.",
-        "diagram": ["Project folder", "Download", "Ask Codex", "New chat"]
+        "diagram": ["Project folder", "Paste request", "Allow access", "New chat"]
       }
     },
     "demos": {
       "title": "Try your first tasks with made-up examples",
+      "doneTitle": "Setup is complete",
+      "doneLead": "German Business Kit is ready. Try a first task with made-up data: paste this request into a new task in Claude or a new chat in Codex.",
+      "more": "More examples…",
       "lead": "Each demo uses fictional details only. Copy a request, paste it into a **new task** in Claude or a **new chat in your Business Assistant project** in Codex, then compare the answer with the checklist.",
       "callTitle": "How to call the kit",
       "call": {
@@ -401,23 +464,25 @@ window.INSTALLER_TEXT = {
       "stepOf": "Шаг {current} из {total}",
       "back": "Назад",
       "next": "Далее",
+      "more": "Подробнее…",
+      "ok": "OK",
+      "toContinue": "Чтобы продолжить, нажмите «Далее».",
+      "whenDone": "Когда закончите, нажмите «Далее».",
       "start": "Начать установку",
       "copy": "Копировать",
       "copied": "Скопировано. Вставьте с помощью Ctrl+V (Windows) или Cmd+V (Mac).",
       "copyFailed": "Не удалось скопировать автоматически. Выделите текст и нажмите Ctrl+C (Windows) или Cmd+C (Mac).",
       "newTab": "откроется в новой вкладке",
       "done": "выполнено",
-      "checklist": "Отмечайте каждый шаг, когда он выполнен.",
       "saved": "Ваш прогресс сохраняется только в этом браузере на этом компьютере.",
       "notSaved": "Этот браузер не разрешает сохранять прогресс. Не закрывайте страницу до конца установки.",
       "checked": "Сведения о сервисах проверены {date}; тарифы, цены и меню могут меняться, решающей остаётся страница самого сервиса.",
       "safety": "Эта инструкция никогда не спрашивает пароли, платёжные данные, коды подтверждения или ключи. Вводите их только на сайте или в приложении самого сервиса.",
       "illustration": "Схема. Настоящие экраны могут выглядеть иначе.",
       "chooseFirst": "Сначала выберите ассистента.",
-      "mobile": "Для установки нужен компьютер с Windows или Mac. Откройте эту инструкцию на компьютере, чтобы установить приложение.",
+      "acceptFirst": "Сначала прочтите текст и выберите «Я прочитал(а) и понимаю».",
+      "mobile": "Установка выполняется на компьютере. Откройте эту страницу на Windows или Mac.",
       "progressSummary": "Выполнено шагов: {done} из {total}",
-      "ticked": "Отмечено: {done} из {total}",
-      "allTicked": "Отмечены все {total}. Нажмите «Далее».",
       "enlarge": "Увеличить снимок экрана",
       "zoom": "Приблизить",
       "close": "Закрыть",
@@ -426,34 +491,33 @@ window.INSTALLER_TEXT = {
     "steps": {"welcome": "Начало", "assistant": "Ассистент", "account": "Аккаунт", "app": "Приложение", "safety": "Данные и риски", "skills": "Скиллы", "demos": "Первые задачи"},
     "welcome": {
       "eyebrow": "Пошаговая установка · около 30 минут",
-      "title": "Настройте AI-ассистента для бизнеса шаг за шагом",
-      "lead": "Эта инструкция поможет создать аккаунт Claude или ChatGPT, установить приложение, добавить German Business Kit и попробовать первые задачи на вымышленных примерах. Навыки программирования не нужны.",
-      "chooseLanguage": "Выберите язык",
-      "languageHint": "Язык можно сменить в любой момент вверху страницы.",
+      "title": "Вас приветствует мастер установки German Business Kit",
+      "lead": "Мастер поможет подготовить AI-ассистента для бизнеса: аккаунт, приложение и German Business Kit. Навыки программирования не нужны.",
       "needTitle": "Что понадобится",
       "need": [
-        "Компьютер с Windows или Mac и доступом в интернет.",
-        "Адрес электронной почты, который вы можете открыть сейчас.",
-        "Мобильный телефон, принимающий SMS.",
-        "Для платного тарифа — банковская карта. Её данные вводятся только на сайте самого сервиса, никогда здесь."
+        "Компьютер с Windows или Mac и доступом в интернет",
+        "Адрес почты, который можно открыть сейчас",
+        "Мобильный телефон, принимающий SMS",
+        "Банковская карта для платного тарифа: Claude Pro или ChatGPT Plus"
       ],
       "aiTitle": "Важно знать до начала",
+      "aiShort": "German Business Kit — не налоговый консультант, а AI может ошибаться.",
       "ai": "German Business Kit — программа для самостоятельной работы с помощью AI, а не налоговый консультант (Steuerberater). AI может ошибаться, в том числе в суммах и сроках. Файлы, которые читает ассистент, обрабатываются Anthropic или OpenAI. Используйте вымышленные примеры, пока не прочитаете рекомендации о данных.",
-      "aiLink": "Ограничения AI и ваши данные",
-      "aiStep": "Шаг «{name}» покажет, что проверить до настоящей работы"
+      "aiLink": "Ограничения AI и ваши данные"
     },
     "assistant": {
       "title": "Выберите ассистента",
       "business": "Будете работать с данными клиентов или сотрудников? Личные тарифы, например Claude Pro или ChatGPT Plus, не включают договор об обработке данных для бизнеса (DPA); его предлагают бизнес-тарифы, например Claude Team или ChatGPT Business. Подробнее — на шаге «{name}».",
-      "lead": "German Business Kit работает внутри одного из двух AI-приложений. Оба справляются с задачами из этой инструкции. Выберите удобное; второе можно настроить позже.",
+      "lead": "Выберите приложение, в котором будет работать German Business Kit. Второе можно настроить позже.",
       "choose": "Выбрать {name}",
       "chosen": "Выбрано",
-      "unsure": "Сомневаетесь? Выберите **Claude**, если хотите меньше шагов при установке и готовы к платному тарифу. Выберите **ChatGPT с Codex**, если хотите начать бесплатно.",
+      "unsure": "Сомневаетесь? Выберите **Claude**: у него меньше всего шагов установки.",
       "work": "Аккаунт от работодателя или учебного заведения? Администратор может запретить приложения, плагины или скиллы. Сначала спросите у него.",
       "claude": {
         "name": "Claude",
         "maker": "от Anthropic",
         "app": "Приложение Claude для компьютера с Cowork",
+        "summary": "Меньше всего шагов установки. Нужен тариф **Pro** или выше.",
         "pricing": "Тарифы и цены Claude",
         "points": [
           "Самая простая установка: набор добавляется в приложении в несколько кликов.",
@@ -465,9 +529,10 @@ window.INSTALLER_TEXT = {
         "name": "ChatGPT с Codex",
         "maker": "от OpenAI",
         "app": "Приложение ChatGPT для компьютера с Codex",
+        "summary": "Чуть больше шагов установки. Рекомендуем тариф **Plus** или выше.",
         "pricing": "Тарифы и цены ChatGPT",
         "points": [
-          "Можно начать на любом тарифе, включая **Free**. Платные тарифы дают больше использования.",
+          "Рекомендуем платный тариф: **Plus** или выше (Plus, Pro, Business или Enterprise). У Free и Go низкие лимиты.",
           "Больше шагов при установке: вы скачиваете файл, а Codex копирует набор в папку проекта.",
           "Работает с файлами в папке проекта на вашем компьютере."
         ]
@@ -476,7 +541,7 @@ window.INSTALLER_TEXT = {
     "account": {
       "lead": "Регистрация проходит на сайте самого сервиса. Эта инструкция только открывает официальную страницу в новой вкладке.",
       "labelsNote": "Названия кнопок могут отличаться в зависимости от языка или версии приложения.",
-      "already": "Аккаунт уже есть? Отметьте выполненные шаги и продолжайте.",
+      "already": "Аккаунт уже есть? Просто нажмите «Далее».",
       "safetyTitle": "Безопасность аккаунта",
       "safety": [
         "Вводите пароли, коды и данные карты только на странице самого сервиса или в его приложении.",
@@ -486,6 +551,11 @@ window.INSTALLER_TEXT = {
       "claude": {
         "title": "Создайте аккаунт Claude",
         "open": "Открыть официальную страницу регистрации Claude",
+        "short": [
+          "Зарегистрируйтесь через Google или по адресу почты.",
+          "Подтвердите номер мобильного телефона кодом из SMS.",
+          "Выберите тариф **Pro** или выше и оплатите его на сайте Claude."
+        ],
         "steps": [
           "На официальной странице выберите **Continue with Google** или введите адрес почты и выберите **Continue with email**.",
           "Если вы выбрали почту, откройте письмо от Claude и нажмите ссылку для входа. Claude не использует пароль.",
@@ -497,11 +567,16 @@ window.INSTALLER_TEXT = {
       "openai": {
         "title": "Создайте аккаунт ChatGPT",
         "open": "Открыть официальную страницу регистрации ChatGPT",
+        "short": [
+          "Выберите **Sign up** и зарегистрируйтесь по почте или другим предложенным способом.",
+          "Подтвердите адрес почты.",
+          "Выберите тариф **Plus** или выше и оплатите его на сайте OpenAI."
+        ],
         "steps": [
           "На официальной странице выберите **Sign up** (**Зарегистрироваться**). Используйте адрес почты или один из вариантов входа, которые предлагает страница.",
           "Следуйте шагам на странице, чтобы подтвердить адрес почты.",
           "При первом запуске Codex приложение может попросить добавить или подтвердить номер телефона. Делайте это только в приложении ChatGPT или на chatgpt.com.",
-          "Выберите тариф. Для пробы достаточно **Free**; **Plus** или выше даёт больше использования Codex. Оплачивайте только на сайте OpenAI."
+          "Выберите тариф: **Plus** или выше. Оплачивайте только на сайте OpenAI."
         ],
         "diagram": ["Открыть страницу", "Подтвердить почту", "Проверить телефон", "Выбрать тариф"]
       }
@@ -523,6 +598,11 @@ window.INSTALLER_TEXT = {
           "windows": "Скачать Claude для Windows",
           "windowsArm": "Windows на ARM, например ноутбук со Snapdragon? Скачайте эту версию."
         },
+        "short": [
+          "Скачайте и установите приложение кнопкой выше.",
+          "Откройте Claude и войдите в аккаунт.",
+          "В **Settings → Privacy** выключите **Help improve our AI models**, если не хотите, чтобы ваши разговоры использовались для обучения AI."
+        ],
         "mac": [
           "Скачайте файл кнопкой выше. Он сохранится в папке **Загрузки** (Downloads).",
           "Откройте скачанный файл. В появившемся окне перетащите значок Claude в папку **Программы** (Applications).",
@@ -545,6 +625,11 @@ window.INSTALLER_TEXT = {
           "macIntel": "Скачать ChatGPT для Mac с процессором Intel",
           "windows": "Установить ChatGPT для Windows из Microsoft Store"
         },
+        "short": [
+          "Скачайте и установите приложение кнопкой выше.",
+          "Откройте ChatGPT, войдите в аккаунт и выберите **Codex**.",
+          "В **Settings → Data controls** выключите **Improve the model for everyone**, если не хотите, чтобы ваши разговоры использовались для обучения AI."
+        ],
         "macWhich": "Какой у меня Mac? Откройте меню Apple и выберите **Об этом Mac**. **Чип: Apple M…** означает чип Apple; **Процессор: Intel** означает Intel.",
         "mac": [
           "Скачайте файл для вашего Mac одной из кнопок выше. Он сохранится в папке **Загрузки**.",
@@ -563,8 +648,19 @@ window.INSTALLER_TEXT = {
       }
     },
     "safety": {
-      "title": "До настоящей работы: риски AI и ваши данные",
+      "title": "Прочтите перед началом работы",
       "lead": "Прочитайте это один раз, прежде чем ассистент увидит настоящие документы. Это займёт около пяти минут. Здесь общая информация, а не юридическая консультация.",
+      "warnings": [
+        "AI может ошибаться, в том числе в суммах и сроках. Проверяйте всё, прежде чем отправить, подписать или оплатить.",
+        "Файлы, которые читает ассистент, отправляются для обработки в {provider}.",
+        "German Business Kit — не налоговый консультант и не юрист."
+      ],
+      "boxNote": "Прочтите текст ниже. Прокрутите его, чтобы увидеть полностью.",
+      "license": "German Business Kit — свободная программа по лицензии MIT. Она предоставляется «как есть», без каких-либо гарантий.",
+      "question": "Вам понятны эти пункты? Чтобы продолжить, выберите «Я прочитал(а) и понимаю».",
+      "understand": "Я прочитал(а) и понимаю",
+      "decline": "Не принимаю",
+      "selfTest": "Проверить себя…",
       "risksTitle": "В чём AI может ошибиться",
       "risks": [
         {"title": "Уверенные ошибки", "text": "AI может неверно прочитать документ, применить правила не того года или сослаться на несуществующий источник — и при этом звучать уверенно."},
@@ -649,8 +745,22 @@ window.INSTALLER_TEXT = {
       "stuckLink": "Раздел «Если что-то не получается» в инструкции по установке",
       "claude": {
         "title": "Добавьте German Business Kit в Claude",
-        "lead": "Набор — это один плагин с семью связанными скиллами. Его добавляют один раз; он сохраняется в вашем аккаунте Claude и работает также в чате Claude и в Claude Code.",
+        "lead": "Попросите Claude установить набор за вас. Для этого нужен один запрос.",
+        "short": [
+          "Откройте Claude, перейдите в **Cowork** и начните новую задачу.",
+          "Скопируйте этот запрос, вставьте его в задачу и отправьте:",
+          "Следуйте ответу Claude. Когда он попросит, нажмите **Install** или подтвердите действие сами."
+        ],
         "steps": [
+          "Откройте приложение Claude, перейдите в **Cowork** и начните новую задачу.",
+          "Скопируйте запрос ниже, вставьте его в задачу и отправьте.",
+          "Следуйте ответу Claude. Когда он попросит выбрать **Install** в разделе **Plugins** или подтвердить действие, сделайте это сами: Claude подскажет, где это, но нажать за вас не может.",
+          "Начните **новую задачу** и проверьте, что доступны семь скиллов из списка ниже: откройте German Business Kit и вкладку **Skills** или спросите Claude, какие скиллы German Business Kit ему доступны."
+        ],
+        "promptLabel": "Запрос для Claude",
+        "prompt": "Установи German Business Kit из https://github.com/ilyafedotov-ops/german-business-skills и покажи, как им пользоваться. Следуй инструкции репозитория для моего приложения, проверь доступность полного набора и помоги попробовать один небольшой пример.",
+        "manualTitle": "Установить вручную…",
+        "manualSteps": [
           "В приложении Claude откройте **Customize** на боковой панели, затем **Plugins**. Если в вашей версии есть отдельный переключатель **Cowork**, сначала перейдите в Cowork.",
           "Выберите **Add**, затем **Add marketplace**. Если предложено, выберите **Add from a repository**. Вставьте адрес ниже и выберите **Sync**.",
           "Найдите **German Business Kit** в списке (при необходимости в разделе **Discover**) и выберите **Install**. В некоторых версиях кнопка называется **Add**.",
@@ -661,31 +771,47 @@ window.INSTALLER_TEXT = {
         "review": "Anthropic проверяет плагины из своего каталога, но не плагины, добавленные по адресу. Этот адрес устанавливает проверенный выпуск проекта.",
         "shotAlt": "Окно Claude для добавления маркетплейса с введённым адресом проекта и кнопкой Sync",
         "shotCaption": "Настоящее приложение Claude 3.6556.2 на macOS, снимок от 26 октября 2026 года до нажатия Sync. В вашей версии названия могут отличаться.",
-        "diagram": ["Customize", "Plugins", "Add marketplace", "Install"]
+        "diagram": ["Cowork", "Вставить запрос", "Install", "Новая задача"]
       },
       "openai": {
         "title": "Добавьте German Business Kit в Codex",
-        "lead": "В Codex набор копируется в папку проекта на вашем компьютере. Когда вы скачаете набор, Codex может скопировать его сам.",
+        "lead": "Попросите Codex установить набор за вас. Для этого нужен один запрос.",
+        "short": [
+          "Создайте пустую папку **Business Assistant**, например в «Документах».",
+          "В ChatGPT выберите **Codex**, откройте эту папку как проект и начните **New chat**.",
+          "Скопируйте этот запрос, вставьте его в Codex и отправьте:",
+          "Следуйте ответу Codex. Разрешайте доступ в интернет и изменение файлов только для этого проекта."
+        ],
         "steps": [
           "Создайте новую папку **Business Assistant** в приватном месте, например в «Документах». В ней будет только набор, а не ваши деловые записи.",
           "В приложении ChatGPT выберите **Codex**, откройте папку **Business Assistant** как проект и начните **New chat** (новый разговор). Если приложение спросит, доверять ли папке, подтвердите только эту.",
+          "Скопируйте запрос ниже, вставьте его в Codex и отправьте. Если Codex попросит доступ в интернет или разрешение изменить файлы, разрешите это только для этого проекта.",
+          "Начните **новый разговор в том же проекте**. Откройте **Skills** на боковой панели и проверьте, что там семь скиллов из списка ниже. Если их нет, закройте и снова откройте приложение."
+        ],
+        "promptLabel": "Запрос для Codex",
+        "prompt": "Установи German Business Kit из https://github.com/ilyafedotov-ops/german-business-skills и покажи, как им пользоваться. Следуй инструкции репозитория для моего приложения, проверь доступность полного набора и помоги попробовать один небольшой пример.",
+        "manualTitle": "Установить вручную…",
+        "manualSteps": [
           "Скачайте эти два файла в одну папку, например в «Загрузки».",
           "Скопируйте полный путь к каждому файлу. Windows: щёлкните файл правой кнопкой и выберите **Копировать как путь**. Mac: выберите файл в Finder, удерживайте **Option** и выберите **Правка → Скопировать … как путь**.",
           "Скопируйте запрос ниже, вставьте его в Codex, замените две части в квадратных скобках своими путями и отправьте.",
-          "Начните **новый разговор в том же проекте**. Откройте **Skills** на боковой панели и проверьте, что там семь скиллов из списка ниже. Если их нет, закройте и снова откройте приложение."
+          "Начните новый разговор в том же проекте. Откройте **Skills** на боковой панели и проверьте, что там семь скиллов из списка ниже."
         ],
         "zip": "Скачать {file}",
         "checksums": "Скачать {file} (контрольные суммы)",
         "releasePage": "Открыть страницу выпуска",
-        "promptLabel": "Запрос для Codex",
-        "prompt": "Я устанавливаю German Business Kit в этот локальный проект Business Assistant в Codex. ZIP находится по пути [полный путь к ZIP], а SHA256SUMS — по пути [полный путь к файлу контрольных сумм]. Проверь ZIP по контрольной сумме и остановись, если она не совпадает. Распакуй архив в новую папку, затем скопируй все семь полных папок скиллов в .agents/skills этого проекта. Используй обычные файловые инструменты, сохраняй существующие файлы и остановись, если папка назначения уже существует. Не устанавливай среды выполнения, не меняй настройки безопасности и глобальную конфигурацию приложения. Назови семь установленных скиллов и объясни, как начать новый разговор.",
+        "manualPromptLabel": "Запрос с путями к файлам",
+        "manualPrompt": "Я устанавливаю German Business Kit в этот локальный проект Business Assistant в Codex. ZIP находится по пути [полный путь к ZIP], а SHA256SUMS — по пути [полный путь к файлу контрольных сумм]. Проверь ZIP по контрольной сумме и остановись, если она не совпадает. Распакуй архив в новую папку, затем скопируй все семь полных папок скиллов в .agents/skills этого проекта. Используй обычные файловые инструменты, сохраняй существующие файлы и остановись, если папка назначения уже существует. Не устанавливай среды выполнения, не меняй настройки безопасности и глобальную конфигурацию приложения. Назови семь установленных скиллов и объясни, как начать новый разговор.",
         "checksumNote": "Файл контрольных сумм позволяет Codex проверить, что загрузка полная и не изменена. Он не доказывает, кто опубликовал файл.",
         "manual": "Codex не смог скопировать файлы? Выполните ручные шаги из инструкции по установке.",
-        "diagram": ["Папка проекта", "Скачать", "Попросить Codex", "Новый разговор"]
+        "diagram": ["Папка проекта", "Вставить запрос", "Разрешить доступ", "Новый разговор"]
       }
     },
     "demos": {
       "title": "Попробуйте первые задачи на вымышленных примерах",
+      "doneTitle": "Установка завершена",
+      "doneLead": "German Business Kit готов к работе. Попробуйте первую задачу на вымышленных данных: вставьте этот запрос в новую задачу Claude или в новый разговор Codex.",
+      "more": "Ещё примеры…",
       "lead": "В каждом примере только вымышленные данные. Скопируйте запрос, вставьте его в **новую задачу** в Claude или в **новый разговор в проекте Business Assistant** в Codex и сравните ответ со списком проверки.",
       "callTitle": "Как вызвать набор",
       "call": {
@@ -791,23 +917,25 @@ window.INSTALLER_TEXT = {
       "stepOf": "Schritt {current} von {total}",
       "back": "Zurück",
       "next": "Weiter",
+      "more": "Mehr…",
+      "ok": "OK",
+      "toContinue": "Klicken Sie auf „Weiter“, um fortzufahren.",
+      "whenDone": "Wenn Sie fertig sind, klicken Sie auf „Weiter“.",
       "start": "Einrichtung starten",
       "copy": "Kopieren",
       "copied": "Kopiert. Fügen Sie es mit Strg+V (Windows) oder Cmd+V (Mac) ein.",
       "copyFailed": "Automatisches Kopieren war nicht möglich. Markieren Sie den Text und drücken Sie Strg+C (Windows) oder Cmd+C (Mac).",
       "newTab": "öffnet in einem neuen Tab",
       "done": "erledigt",
-      "checklist": "Haken Sie jeden Schritt ab, wenn er erledigt ist.",
       "saved": "Ihr Fortschritt wird nur in diesem Browser auf diesem Computer gespeichert.",
       "notSaved": "Dieser Browser erlaubt kein Speichern des Fortschritts. Lassen Sie diese Seite bis zum Ende geöffnet.",
       "checked": "Anbieterangaben geprüft am {date}. Tarife, Preise und Menüs können sich ändern; maßgeblich ist die Seite des Anbieters.",
       "safety": "Diese Anleitung fragt nie nach Passwörtern, Zahlungsdaten, Bestätigungscodes oder Schlüsseln. Geben Sie diese nur auf der Website oder in der App des Anbieters ein.",
       "illustration": "Schema. Echte Bildschirme können anders aussehen.",
       "chooseFirst": "Wählen Sie zuerst Ihren Assistenten.",
-      "mobile": "Für die Einrichtung brauchen Sie einen Windows-PC oder einen Mac. Öffnen Sie diese Anleitung auf Ihrem Computer, um die App zu installieren.",
+      "acceptFirst": "Lesen Sie zuerst den Text und wählen Sie „Ich habe gelesen und verstanden“.",
+      "mobile": "Die Einrichtung erfolgt am Computer. Öffnen Sie diese Seite unter Windows oder auf einem Mac.",
       "progressSummary": "{done} von {total} Schritten erledigt",
-      "ticked": "{done} von {total} abgehakt",
-      "allTicked": "Alle {total} abgehakt. Weiter mit „Weiter“.",
       "enlarge": "Screenshot vergrößern",
       "zoom": "Hineinzoomen",
       "close": "Schließen",
@@ -816,34 +944,33 @@ window.INSTALLER_TEXT = {
     "steps": {"welcome": "Start", "assistant": "Assistent", "account": "Konto", "app": "App", "safety": "Daten & Risiken", "skills": "Skills", "demos": "Erste Aufgaben"},
     "welcome": {
       "eyebrow": "Geführte Einrichtung · etwa 30 Minuten",
-      "title": "Richten Sie Ihren KI-Assistenten für Ihr Unternehmen Schritt für Schritt ein",
-      "lead": "Diese Anleitung hilft Ihnen, ein Konto bei Claude oder ChatGPT anzulegen, die App zu installieren, German Business Kit hinzuzufügen und erste Aufgaben mit erfundenen Beispielen auszuprobieren. Programmierkenntnisse brauchen Sie nicht.",
-      "chooseLanguage": "Sprache wählen",
-      "languageHint": "Sie können die Sprache jederzeit oben auf der Seite ändern.",
+      "title": "Willkommen beim Setup-Assistenten für German Business Kit",
+      "lead": "Der Assistent hilft Ihnen, einen KI-Assistenten für Ihr Unternehmen einzurichten: Konto, App und German Business Kit. Programmierkenntnisse sind nicht nötig.",
       "needTitle": "Das brauchen Sie",
       "need": [
-        "Einen Windows-PC oder Mac mit Internetzugang.",
-        "Eine E-Mail-Adresse, die Sie jetzt abrufen können.",
-        "Ein Mobiltelefon, das SMS empfangen kann.",
-        "Für einen kostenpflichtigen Tarif: eine Bankkarte. Sie geben sie nur auf der Website des Anbieters ein, niemals hier."
+        "Ein Windows-PC oder Mac mit Internetzugang",
+        "Eine E-Mail-Adresse, die Sie jetzt öffnen können",
+        "Ein Mobiltelefon, das SMS empfängt",
+        "Eine Bankkarte für einen kostenpflichtigen Tarif: Claude Pro oder ChatGPT Plus"
       ],
       "aiTitle": "Gut zu wissen vor dem Start",
+      "aiShort": "German Business Kit ist keine Steuerberatung, und KI kann Fehler machen.",
       "ai": "German Business Kit ist KI-gestützte Selbsthilfe-Software und kein Steuerberater. KI kann sich irren, auch bei Beträgen und Fristen. Dateien, die der Assistent liest, werden von Anthropic oder OpenAI verarbeitet. Verwenden Sie erfundene Beispiele, bis Sie die Hinweise zu Ihren Daten gelesen haben.",
-      "aiLink": "KI-Grenzen und Ihre Daten (auf Englisch)",
-      "aiStep": "Der Schritt „{name}“ zeigt, was Sie vor echter Arbeit prüfen sollten"
+      "aiLink": "KI-Grenzen und Ihre Daten (auf Englisch)"
     },
     "assistant": {
       "title": "Wählen Sie Ihren Assistenten",
       "business": "Arbeiten Sie mit Daten von Kundinnen, Kunden oder Beschäftigten? Private Tarife wie Claude Pro oder ChatGPT Plus enthalten keinen Auftragsverarbeitungsvertrag (AVV) für Unternehmen; Business-Tarife wie Claude Team oder ChatGPT Business bieten einen an. Mehr dazu im Schritt „{name}“.",
-      "lead": "German Business Kit arbeitet in einer von zwei KI-Apps. Beide schaffen die Aufgaben in dieser Anleitung. Wählen Sie, was Ihnen lieber ist; die andere App können Sie später einrichten.",
+      "lead": "Wählen Sie die App, in der German Business Kit arbeiten soll. Die andere können Sie später einrichten.",
       "choose": "{name} wählen",
       "chosen": "Ausgewählt",
-      "unsure": "Unsicher? Wählen Sie **Claude** für die wenigsten Einrichtungsschritte, wenn ein kostenpflichtiger Tarif für Sie passt. Wählen Sie **ChatGPT mit Codex**, wenn Sie kostenlos beginnen möchten.",
+      "unsure": "Unsicher? Wählen Sie **Claude**: Dort sind es die wenigsten Einrichtungsschritte.",
       "work": "Nutzen Sie ein Konto Ihres Arbeitgebers oder Ihrer Hochschule? Die Verwaltung kann Apps, Plugins oder Skills sperren. Fragen Sie zuerst dort nach.",
       "claude": {
         "name": "Claude",
         "maker": "von Anthropic",
         "app": "Claude-Desktop-App mit Cowork",
+        "summary": "Die wenigsten Einrichtungsschritte. Benötigt **Pro** oder höher.",
         "pricing": "Claude: Tarife und Preise",
         "points": [
           "Einfachste Einrichtung: Sie fügen das Kit in der App mit wenigen Klicks hinzu.",
@@ -855,9 +982,10 @@ window.INSTALLER_TEXT = {
         "name": "ChatGPT mit Codex",
         "maker": "von OpenAI",
         "app": "ChatGPT-Desktop-App mit Codex",
+        "summary": "Ein paar Einrichtungsschritte mehr. Empfohlen: **Plus** oder höher.",
         "pricing": "ChatGPT: Tarife und Preise",
         "points": [
-          "Sie können mit jedem Tarif beginnen, auch mit **Free**. Kostenpflichtige Tarife bieten mehr Nutzung.",
+          "Wir empfehlen einen kostenpflichtigen Tarif: **Plus** oder höher (Plus, Pro, Business oder Enterprise). Free und Go haben niedrige Limits.",
           "Mehr Einrichtungsschritte: Sie laden eine Datei herunter, und Codex kopiert das Kit in einen Projektordner.",
           "Arbeitet mit den Dateien in einem Projektordner auf Ihrem Computer."
         ]
@@ -866,7 +994,7 @@ window.INSTALLER_TEXT = {
     "account": {
       "lead": "Die Registrierung erfolgt auf der Website des Anbieters. Diese Anleitung öffnet nur die offizielle Seite in einem neuen Tab.",
       "labelsNote": "Schaltflächen können je nach Sprache oder App-Version anders heißen.",
-      "already": "Sie haben schon ein Konto? Haken Sie die erledigten Schritte ab und machen Sie weiter.",
+      "already": "Sie haben schon ein Konto? Klicken Sie einfach auf „Weiter“.",
       "safetyTitle": "So bleibt Ihr Konto sicher",
       "safety": [
         "Geben Sie Passwörter, Codes und Kartendaten nur auf der Seite oder in der App des Anbieters ein.",
@@ -876,6 +1004,11 @@ window.INSTALLER_TEXT = {
       "claude": {
         "title": "Legen Sie Ihr Claude-Konto an",
         "open": "Offizielle Claude-Registrierung öffnen",
+        "short": [
+          "Registrieren Sie sich mit Google oder Ihrer E-Mail-Adresse.",
+          "Bestätigen Sie Ihre Mobilnummer mit dem Code aus der SMS.",
+          "Wählen Sie **Pro** oder höher und bezahlen Sie auf der Claude-Website."
+        ],
         "steps": [
           "Wählen Sie auf der offiziellen Seite **Continue with Google** oder geben Sie Ihre E-Mail-Adresse ein und wählen Sie **Continue with email**.",
           "Wenn Sie E-Mail gewählt haben, öffnen Sie die Nachricht von Claude und wählen Sie den Anmeldelink. Claude verwendet kein Passwort.",
@@ -887,11 +1020,16 @@ window.INSTALLER_TEXT = {
       "openai": {
         "title": "Legen Sie Ihr ChatGPT-Konto an",
         "open": "Offizielle ChatGPT-Registrierung öffnen",
+        "short": [
+          "Wählen Sie **Sign up** und nutzen Sie Ihre E-Mail-Adresse oder eine andere angebotene Option.",
+          "Bestätigen Sie Ihre E-Mail-Adresse.",
+          "Wählen Sie **Plus** oder höher und bezahlen Sie auf der OpenAI-Website."
+        ],
         "steps": [
           "Wählen Sie auf der offiziellen Seite **Sign up** (**Registrieren**). Verwenden Sie Ihre E-Mail-Adresse oder eine der Anmeldeoptionen auf der Seite.",
           "Folgen Sie den Schritten auf der Seite, um Ihre E-Mail-Adresse zu bestätigen.",
           "Beim ersten Start von Codex kann die App Sie bitten, eine Telefonnummer hinzuzufügen oder zu bestätigen. Tun Sie das nur in der ChatGPT-App oder auf chatgpt.com.",
-          "Wählen Sie einen Tarif. **Free** reicht zum Ausprobieren; **Plus** oder höher bietet mehr Codex-Nutzung. Bezahlen Sie nur auf der Website von OpenAI."
+          "Wählen Sie einen Tarif: **Plus** oder höher. Bezahlen Sie nur auf der Website von OpenAI."
         ],
         "diagram": ["Seite öffnen", "E-Mail bestätigen", "Telefon prüfen", "Tarif wählen"]
       }
@@ -913,6 +1051,11 @@ window.INSTALLER_TEXT = {
           "windows": "Claude für Windows herunterladen",
           "windowsArm": "Windows auf ARM, zum Beispiel ein Snapdragon-Laptop? Laden Sie stattdessen diese Version."
         },
+        "short": [
+          "Laden Sie die App mit der Schaltfläche oben herunter und installieren Sie sie.",
+          "Öffnen Sie Claude und melden Sie sich an.",
+          "Schalten Sie unter **Settings → Privacy** **Help improve our AI models** aus, wenn Ihre Chats nicht zum Training von KI-Modellen genutzt werden sollen."
+        ],
         "mac": [
           "Laden Sie die Datei über die Schaltfläche oben herunter. Sie landet im Ordner **Downloads**.",
           "Öffnen Sie die heruntergeladene Datei. Ziehen Sie im erscheinenden Fenster das Claude-Symbol in den Ordner **Programme**.",
@@ -935,6 +1078,11 @@ window.INSTALLER_TEXT = {
           "macIntel": "ChatGPT für Mac mit Intel-Prozessor herunterladen",
           "windows": "ChatGPT für Windows aus dem Microsoft Store holen"
         },
+        "short": [
+          "Laden Sie die App mit der Schaltfläche oben herunter und installieren Sie sie.",
+          "Öffnen Sie ChatGPT, melden Sie sich an und wählen Sie **Codex**.",
+          "Schalten Sie unter **Settings → Data controls** **Improve the model for everyone** aus, wenn Ihre Chats nicht zum Training von KI-Modellen genutzt werden sollen."
+        ],
         "macWhich": "Welchen Mac habe ich? Öffnen Sie das Apple-Menü und wählen Sie **Über diesen Mac**. **Chip: Apple M…** bedeutet Apple-Chip; **Prozessor: Intel** bedeutet Intel.",
         "mac": [
           "Laden Sie die passende Datei für Ihren Mac über eine Schaltfläche oben herunter. Sie landet im Ordner **Downloads**.",
@@ -953,8 +1101,19 @@ window.INSTALLER_TEXT = {
       }
     },
     "safety": {
-      "title": "Vor echter Arbeit: KI-Risiken und Ihre Daten",
+      "title": "Vor dem Start lesen",
       "lead": "Lesen Sie das einmal, bevor der Assistent echte Unterlagen sieht. Es dauert etwa fünf Minuten. Es sind allgemeine Hinweise, keine Rechtsberatung.",
+      "warnings": [
+        "KI kann Fehler machen, auch bei Beträgen und Fristen. Prüfen Sie alles, bevor Sie etwas senden, unterschreiben oder bezahlen.",
+        "Dateien, die der Assistent liest, werden zur Verarbeitung an {provider} gesendet.",
+        "German Business Kit ist keine Steuerberatung und keine Rechtsberatung."
+      ],
+      "boxNote": "Lesen Sie den folgenden Text. Scrollen Sie nach unten, um alles zu sehen.",
+      "license": "German Business Kit ist freie Software unter der MIT-Lizenz. Sie wird ohne Mängelgewähr und ohne jegliche Garantie bereitgestellt.",
+      "question": "Haben Sie diese Punkte verstanden? Um fortzufahren, wählen Sie „Ich habe gelesen und verstanden“.",
+      "understand": "Ich habe gelesen und verstanden",
+      "decline": "Ich stimme nicht zu",
+      "selfTest": "Selbsttest…",
       "risksTitle": "Was KI falsch machen kann",
       "risks": [
         {"title": "Selbstsichere Fehler", "text": "Sie kann ein Dokument falsch lesen, Regeln des falschen Jahres anwenden oder eine Quelle nennen, die es nicht gibt – und trotzdem überzeugt klingen."},
@@ -1039,8 +1198,22 @@ window.INSTALLER_TEXT = {
       "stuckLink": "Abschnitt „If you get stuck“ in der Installationsanleitung (auf Englisch)",
       "claude": {
         "title": "Fügen Sie German Business Kit zu Claude hinzu",
-        "lead": "Das Kit ist ein Plugin mit sieben verbundenen Skills. Sie fügen es einmal hinzu; es wird in Ihrem Claude-Konto gespeichert und funktioniert auch im Claude-Chat und in Claude Code.",
+        "lead": "Bitten Sie Claude, das Kit für Sie zu installieren. Dafür reicht eine Anfrage.",
+        "short": [
+          "Öffnen Sie Claude, wechseln Sie zu **Cowork** und starten Sie eine neue Aufgabe.",
+          "Kopieren Sie diese Anfrage, fügen Sie sie in die Aufgabe ein und senden Sie sie:",
+          "Folgen Sie der Antwort von Claude. Wählen Sie selbst **Install** oder bestätigen Sie die Aktion, wenn Claude darum bittet."
+        ],
         "steps": [
+          "Öffnen Sie die Claude-App, wechseln Sie zu **Cowork** und starten Sie eine neue Aufgabe.",
+          "Kopieren Sie die Anfrage unten, fügen Sie sie in die Aufgabe ein und senden Sie sie.",
+          "Folgen Sie der Antwort von Claude. Wenn Claude Sie bittet, unter **Plugins** **Install** zu wählen oder eine Aktion zu bestätigen, tun Sie das selbst: Claude zeigt Ihnen, wo, kann aber nicht für Sie klicken.",
+          "Starten Sie eine **neue Aufgabe** und prüfen Sie, dass die sieben Skills unten verfügbar sind: Öffnen Sie German Business Kit und den Reiter **Skills** oder fragen Sie Claude, welche Skills von German Business Kit verfügbar sind."
+        ],
+        "promptLabel": "Anfrage für Claude",
+        "prompt": "Installiere German Business Kit von https://github.com/ilyafedotov-ops/german-business-skills und zeig mir, wie ich es nutze. Folge den Installationsanweisungen des Repositorys für meine App, prüfe, ob das vollständige Kit verfügbar ist, und hilf mir, ein kleines Beispiel auszuprobieren.",
+        "manualTitle": "Manuell installieren…",
+        "manualSteps": [
           "Öffnen Sie in der Claude-App in der Seitenleiste **Customize** und dann **Plugins**. Zeigt Ihre Version einen eigenen **Cowork**-Umschalter, wechseln Sie zuerst zu Cowork.",
           "Wählen Sie **Add** und dann **Add marketplace**. Falls angeboten, wählen Sie **Add from a repository**. Fügen Sie die Adresse unten ein und wählen Sie **Sync**.",
           "Suchen Sie **German Business Kit** in der Liste (falls nötig unter **Discover**) und wählen Sie **Install**. Manche Versionen zeigen **Add**.",
@@ -1051,31 +1224,47 @@ window.INSTALLER_TEXT = {
         "review": "Anthropic prüft Plugins im eigenen Verzeichnis, nicht per Adresse hinzugefügte Plugins. Diese Adresse installiert die geprüfte Veröffentlichung des Projekts.",
         "shotAlt": "Claude-Dialog zum Hinzufügen eines Marketplace mit eingetragener Projektadresse und der Schaltfläche Sync",
         "shotCaption": "Echte Claude-Desktop-App 3.6556.2 unter macOS, aufgenommen am 26. Oktober 2026 vor dem Auswählen von Sync. Bezeichnungen können in Ihrer Version abweichen.",
-        "diagram": ["Customize", "Plugins", "Add marketplace", "Install"]
+        "diagram": ["Cowork", "Anfrage einfügen", "Install", "Neue Aufgabe"]
       },
       "openai": {
         "title": "Fügen Sie German Business Kit zu Codex hinzu",
-        "lead": "In Codex wird das Kit in einen Projektordner auf Ihrem Computer kopiert. Nach dem Herunterladen kann Codex das Kopieren für Sie erledigen.",
+        "lead": "Bitten Sie Codex, das Kit für Sie zu installieren. Dafür reicht eine Anfrage.",
+        "short": [
+          "Legen Sie einen leeren Ordner **Business Assistant** an, zum Beispiel unter Dokumente.",
+          "Wählen Sie in ChatGPT **Codex**, öffnen Sie diesen Ordner als Projekt und starten Sie einen **New chat**.",
+          "Kopieren Sie diese Anfrage, fügen Sie sie in Codex ein und senden Sie sie:",
+          "Folgen Sie der Antwort von Codex. Erlauben Sie Internetzugriff und Dateiänderungen nur für dieses Projekt."
+        ],
         "steps": [
           "Legen Sie an einem privaten Ort, zum Beispiel unter Dokumente, einen neuen Ordner **Business Assistant** an. Er enthält nur das Kit, nicht Ihre Geschäftsunterlagen.",
           "Wählen Sie in der ChatGPT-App **Codex**, öffnen Sie den Ordner **Business Assistant** als Projekt und starten Sie einen **New chat** (neuen Chat). Werden Sie gefragt, ob Sie einem Ordner vertrauen, bestätigen Sie nur diesen.",
+          "Kopieren Sie die Anfrage unten, fügen Sie sie in Codex ein und senden Sie sie. Fragt Codex nach Internetzugriff oder der Erlaubnis, Dateien zu ändern, erlauben Sie das nur für dieses Projekt.",
+          "Starten Sie einen **neuen Chat im selben Projekt**. Öffnen Sie **Skills** in der Seitenleiste und prüfen Sie, dass die sieben Skills unten aufgeführt sind. Fehlen sie, schließen Sie die App und öffnen Sie sie erneut."
+        ],
+        "promptLabel": "Anfrage für Codex",
+        "prompt": "Installiere German Business Kit von https://github.com/ilyafedotov-ops/german-business-skills und zeig mir, wie ich es nutze. Folge den Installationsanweisungen des Repositorys für meine App, prüfe, ob das vollständige Kit verfügbar ist, und hilf mir, ein kleines Beispiel auszuprobieren.",
+        "manualTitle": "Manuell installieren…",
+        "manualSteps": [
           "Laden Sie diese zwei Dateien in denselben Ordner herunter, zum Beispiel Downloads.",
           "Kopieren Sie den vollständigen Pfad jeder Datei. Windows: Rechtsklick auf die Datei und **Als Pfad kopieren** wählen. Mac: Datei im Finder auswählen, die **Wahltaste (Option)** gedrückt halten und **Bearbeiten → „…“ als Pfadname kopieren** wählen.",
           "Kopieren Sie die Anfrage unten, fügen Sie sie in Codex ein, ersetzen Sie die zwei Teile in eckigen Klammern durch Ihre Pfade und senden Sie sie.",
-          "Starten Sie einen **neuen Chat im selben Projekt**. Öffnen Sie **Skills** in der Seitenleiste und prüfen Sie, dass die sieben Skills unten aufgeführt sind. Fehlen sie, schließen Sie die App und öffnen Sie sie erneut."
+          "Starten Sie einen neuen Chat im selben Projekt. Öffnen Sie **Skills** in der Seitenleiste und prüfen Sie, dass die sieben Skills unten aufgeführt sind."
         ],
         "zip": "{file} herunterladen",
         "checksums": "{file} herunterladen (Prüfsummenliste)",
         "releasePage": "Veröffentlichungsseite öffnen",
-        "promptLabel": "Anfrage für Codex",
-        "prompt": "Ich richte German Business Kit in diesem lokalen Projekt Business Assistant in Codex ein. Mein ZIP liegt unter [vollständiger ZIP-Pfad] und SHA256SUMS unter [vollständiger Pfad der Prüfsummendatei]. Prüfe das ZIP anhand der Prüfsumme und brich ab, wenn sie nicht übereinstimmt. Entpacke es in einen neuen Ordner und kopiere dann alle sieben vollständigen Skill-Ordner in .agents/skills dieses Projekts. Verwende normale Dateiwerkzeuge, erhalte vorhandene Dateien und brich ab, wenn ein Zielordner bereits existiert. Installiere keine Laufzeitumgebungen und ändere weder Sicherheitseinstellungen noch die globale App-Konfiguration. Nenne mir die sieben installierten Namen und erkläre, wie ich eine neue Sitzung starte.",
+        "manualPromptLabel": "Anfrage mit Dateipfaden",
+        "manualPrompt": "Ich richte German Business Kit in diesem lokalen Projekt Business Assistant in Codex ein. Mein ZIP liegt unter [vollständiger ZIP-Pfad] und SHA256SUMS unter [vollständiger Pfad der Prüfsummendatei]. Prüfe das ZIP anhand der Prüfsumme und brich ab, wenn sie nicht übereinstimmt. Entpacke es in einen neuen Ordner und kopiere dann alle sieben vollständigen Skill-Ordner in .agents/skills dieses Projekts. Verwende normale Dateiwerkzeuge, erhalte vorhandene Dateien und brich ab, wenn ein Zielordner bereits existiert. Installiere keine Laufzeitumgebungen und ändere weder Sicherheitseinstellungen noch die globale App-Konfiguration. Nenne mir die sieben installierten Namen und erkläre, wie ich eine neue Sitzung starte.",
         "checksumNote": "Mit der Prüfsummenliste kann Codex prüfen, ob der Download vollständig und unverändert ist. Sie beweist nicht, wer die Datei veröffentlicht hat.",
         "manual": "Codex konnte die Dateien nicht kopieren? Folgen Sie den manuellen Schritten in der Installationsanleitung (auf Englisch).",
-        "diagram": ["Projektordner", "Herunterladen", "Codex fragen", "Neuer Chat"]
+        "diagram": ["Projektordner", "Anfrage einfügen", "Zugriff erlauben", "Neuer Chat"]
       }
     },
     "demos": {
       "title": "Probieren Sie erste Aufgaben mit erfundenen Beispielen aus",
+      "doneTitle": "Die Einrichtung ist abgeschlossen",
+      "doneLead": "German Business Kit ist bereit. Probieren Sie eine erste Aufgabe mit erfundenen Daten: Fügen Sie diese Anfrage in eine neue Aufgabe in Claude oder einen neuen Chat in Codex ein.",
+      "more": "Weitere Beispiele…",
       "lead": "Jedes Beispiel verwendet nur erfundene Angaben. Kopieren Sie eine Anfrage, fügen Sie sie in eine **neue Aufgabe** in Claude oder einen **neuen Chat im Projekt Business Assistant** in Codex ein und vergleichen Sie die Antwort mit der Checkliste.",
       "callTitle": "So rufen Sie das Kit auf",
       "call": {

@@ -85,8 +85,46 @@ class InstallerContentTests(unittest.TestCase):
                     invoked = re.findall(r"de-business-[a-z]+", demo["prompt"])
                     self.assertTrue(invoked, f"{name} request must call a skill")
                     self.assertTrue(set(invoked) <= set(self.skills), invoked)
-                self.assertIn("[", locale["skills"]["openai"]["prompt"])
+                self.assertIn("[", locale["skills"]["openai"]["manualPrompt"])
                 self.assertEqual(re.findall(r"de-business-[a-z]+", locale["safety"]["ask"]), ["de-business-kit"])
+
+    def test_kit_install_starts_with_one_request_to_the_assistant(self):
+        # Beginners paste one request; the click-by-click routes stay as a fallback.
+        readme = {"en": ROOT / "README.md", "ru": ROOT / "README.ru.md"}
+        for language in LANGUAGES:
+            for provider in ("claude", "openai"):
+                with self.subTest(language=language, provider=provider):
+                    info = self.text[language]["skills"][provider]
+                    self.assertIn(f"https://github.com/{REPOSITORY}", info["prompt"])
+                    self.assertNotIn("[", info["prompt"], "The request must work without editing")
+                    self.assertTrue(info["promptLabel"].strip())
+                    self.assertLessEqual(len(info["steps"]), 4)
+                    self.assertGreaterEqual(len(info["manualSteps"]), 4)
+                    self.assertTrue(info["manualTitle"].strip())
+                    if language in readme:
+                        quoted = re.findall(r"^> (.*German Business Kit.*github\.com.*)$",
+                                            readme[language].read_text(encoding="utf-8"), re.M)
+                        self.assertIn(info["prompt"], quoted, "Keep the request identical to the README")
+
+    def test_pages_stay_short_and_recommend_only_paid_plans(self):
+        # Each page shows a few short steps; the detailed steps stay for "More…".
+        for language in LANGUAGES:
+            with self.subTest(language=language):
+                locale = self.text[language]
+                for provider in ("claude", "openai"):
+                    for step in ("account", "app", "skills"):
+                        short = locale[step][provider]["short"]
+                        self.assertLessEqual(len(short), 4, f"{step}.{provider}.short")
+                        self.assertLessEqual(max(len(item.split()) for item in short), 30, f"{step}.{provider}.short")
+                    self.assertTrue(locale["assistant"][provider]["summary"].strip())
+                openai = locale["assistant"]["openai"]
+                for text in (locale["assistant"]["unsure"], openai["summary"], *openai["points"],
+                             *locale["account"]["openai"]["steps"], *locale["account"]["openai"]["short"]):
+                    self.assertNotRegex(text, r"\*\*Free\*\*|бесплатно|kostenlos|without paying", "Recommend paid plans only")
+                safety = locale["safety"]
+                self.assertEqual(len(safety["warnings"]), 3)
+                self.assertIn("MIT", safety["license"])
+                self.assertIn(safety["understand"], safety["question"], "The question names the option to choose")
 
     def test_data_and_risk_step_covers_both_providers_and_the_share_check(self):
         app = (INSTALLER / "app.js").read_text(encoding="utf-8")
