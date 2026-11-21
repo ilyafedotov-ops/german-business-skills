@@ -29,7 +29,7 @@ for language in ("en", "ru"):
                 ws.save_entry(case.root, "tasks", {"schema_version": 1, "id": "reply", "owner": "owner",
                               "status": "pending", "title": "Review authority reply", "depends_on": ["launch"]})
             if scenario == "corrupt":
-                (case.root / ac.STATE).unlink()
+                ws._path(case.root, ac.STATE).unlink()
             rendered = overview.generate(case.root, "2026-10", "2026-10-26", language)
             (output / (language + "-" + scenario + ".html")).write_bytes((case.root / rendered["html_path"]).read_bytes())
             ws.configure_workspace(case.root, language=language)

@@ -40,7 +40,7 @@ class NativeTaskOverviewTests(unittest.TestCase):
                              capture_output=True, text=True, timeout=40)
         self.assertEqual(run.returncode, 0, run.stderr)
         result = json.loads(run.stdout)
-        return json.loads((self.root / result['json_path']).read_text()), result
+        return json.loads((ws._path(self.root, result['json_path'])).read_text()), result
 
     def test_empty_workspace_asks_for_business_task(self):
         snapshot, result = self.view()
@@ -52,19 +52,19 @@ class NativeTaskOverviewTests(unittest.TestCase):
         self.task('undated', note='Discuss <script>facts</script>')
         self.task('pending', due_date='2099-12-01', deadline_source='Explicit user target')
         self.task('working', status='in_progress', due_date='2099-12-01', deadline_source='Explicit user target')
-        before = (self.root / '00_admin/tasks.json').read_bytes()
+        before = (ws._path(self.root, '00_admin/tasks.json')).read_bytes()
         snapshot, result = self.view()
         self.assertEqual(snapshot['next_action'], 'continue_task')
         self.assertEqual(snapshot['next_task_id'], 'working')
         self.assertEqual([row['id'] for row in snapshot['active_tasks']], ['working', 'pending', 'undated'])
         self.assertEqual(snapshot['active_tasks'][2]['evidence_status'], 'not_recorded')
-        html = (self.root / result['html_path']).read_text()
+        html = (ws._path(self.root, result['html_path'])).read_text()
         self.assertIn('Discuss &lt;script&gt;facts&lt;/script&gt;', html)
         self.assertIn('Explicit user target', html)
-        self.assertEqual((self.root / '00_admin/tasks.json').read_bytes(), before)
+        self.assertEqual((ws._path(self.root, '00_admin/tasks.json')).read_bytes(), before)
 
     def test_cancelled_dependency_blocks_and_stale_completed_ancestor_needs_review(self):
-        evidence = self.root / '00_admin/proof.txt'
+        evidence = ws._path(self.root, '00_admin/proof.txt')
         evidence.write_text('Synthetic preserved result')
         saved = self.task('ancestor')
         ws.save_entry(self.root, 'tasks', dict(schema_version=1, id='ancestor', title='Ancestor',
@@ -91,7 +91,7 @@ class NativeTaskOverviewTests(unittest.TestCase):
 
     def test_malformed_graph_fails_closed(self):
         self.task('one')
-        path = self.root / '00_admin/tasks.json'
+        path = ws._path(self.root, '00_admin/tasks.json')
         for dependencies in (['missing'], ['one'], 'one'):
             records = json.loads(path.read_text())
             records[0]['depends_on'] = dependencies
@@ -102,7 +102,7 @@ class NativeTaskOverviewTests(unittest.TestCase):
 
     def test_binary_completion_evidence_matches_python_readiness(self):
         from casefiles import summary
-        proof = self.root / '00_admin/proof.pdf'
+        proof = ws._path(self.root, '00_admin/proof.pdf')
         proof.write_bytes(b'%PDF-1.7\n%\xff\xfe\x80\x81\nSynthetic binary evidence')
         self.task('done', status='completed', evidence_file='00_admin/proof.pdf')
         self.task('continue', depends_on=['done'])
@@ -113,17 +113,17 @@ class NativeTaskOverviewTests(unittest.TestCase):
 
     def test_accounting_corruption_suppresses_previously_collected_tasks(self):
         self.task('one')
-        (self.root / '04_accounting/register.json').write_text('{broken')
+        (ws._path(self.root, '04_accounting/register.json')).write_text('{broken')
         snapshot, result = self.view()
         self.assertEqual(snapshot['next_action'], 'repair')
         self.assertIsNone(snapshot['next_task_id'])
         self.assertEqual(snapshot['active_tasks'], [])
-        self.assertNotIn('Synthetic one', (self.root / result['html_path']).read_text())
+        self.assertNotIn('Synthetic one', (ws._path(self.root, result['html_path'])).read_text())
 
     def test_hardlink_to_mutable_profile_cannot_establish_task_readiness(self):
         from casefiles import summary
-        profile = self.root / '01_profile/business.json'
-        proof = self.root / '00_admin/proof.json'
+        profile = ws._path(self.root, '01_profile/business.json')
+        proof = ws._path(self.root, '00_admin/proof.json')
         proof.write_bytes(profile.read_bytes())
         self.task('one', evidence_file='00_admin/proof.json')
         proof.unlink()
@@ -135,7 +135,7 @@ class NativeTaskOverviewTests(unittest.TestCase):
         self.assertEqual(snapshot['active_tasks'], [])
 
     def test_safe_stale_task_keeps_an_independent_task_actionable(self):
-        evidence = self.root / '00_admin/proof.txt'
+        evidence = ws._path(self.root, '00_admin/proof.txt')
         evidence.write_text('Synthetic task evidence')
         self.task('A', evidence_file='00_admin/proof.txt')
         self.task('a')
@@ -151,9 +151,9 @@ class NativeTaskOverviewTests(unittest.TestCase):
         import hashlib
         from casefiles import summary
         self.task('invoice-follow-up')
-        register = self.root / '00_admin/invoicing.json'
+        register = ws._path(self.root, '00_admin/invoicing.json')
         register.write_text('{"synthetic":"mutable"}')
-        path = self.root / '00_admin/tasks.json'
+        path = ws._path(self.root, '00_admin/tasks.json')
         records = json.loads(path.read_text())
         records[0].update(evidence_file='00_admin/invoicing.json', evidence_sha256=hashlib.sha256(register.read_bytes()).hexdigest())
         path.write_text(json.dumps(records))
@@ -166,7 +166,7 @@ class NativeTaskOverviewTests(unittest.TestCase):
     def test_cyclic_dependencies_and_unsafe_evidence_fail_closed(self):
         self.task('one')
         self.task('two', depends_on=['one'])
-        path = self.root / '00_admin/tasks.json'
+        path = ws._path(self.root, '00_admin/tasks.json')
         records = json.loads(path.read_text())
         records[0]['depends_on'] = ['two']
         path.write_text(json.dumps(records))

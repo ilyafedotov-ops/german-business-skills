@@ -1,4 +1,5 @@
 """Prepare customer payment queries separately from private evidence; never send."""
+from datetime import date
 import hashlib
 import re
 import uuid
@@ -113,7 +114,7 @@ def prepare(root, input_path, expected, language="en"):
             if snapshot["sha256"] != captured["sha256"]:
                 raise ws.WorkspaceError("Follow-up evidence changed while saving; inspect partial output.")
             sources.append(snapshot)
-        relative = "08_correspondence/payment-followups/" + uuid.uuid4().hex
+        relative = ws._dated("08_correspondence", str(date.today().year), "payment-followups/" + uuid.uuid4().hex)
         recipient_path = ws._physical(root, relative + "-recipient.txt")
         private = _review(value, comparison, language, recipient_path)
         artifacts = {}

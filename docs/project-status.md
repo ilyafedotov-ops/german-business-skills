@@ -101,7 +101,7 @@ Customer payment follow-up now produces a DE/EN/RU recipient query and separate 
 
 ## Source and published release
 
-`VERSION` and the verified immutable [release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.11.0-preview.1) are **0.11.0-preview.1**, from `9e2bc4c2dfd19ecac88b5433d40adbdb403d8547`. Published on **2026-10-27**, this release adds protected invoice issue/correction/delivery workflows, the accepted Lexware browser route, local receipt reconciliation and customer follow-up drafts, receipt-bound filing preparation, and cost/privacy safeguards. All eight downloaded assets passed checksum, release-attestation and exact-source provenance checks before the marketplace pin was advanced. It provides Codex/Claude skill bundles and Windows x64/macOS arm64/macOS x86_64 application archives. See [validation](validation.md) for results and remaining limits. Earlier tags/assets are preserved. This repository distributes skills and local applications; it has no hosted production application.
+`VERSION` is **0.12.0-preview.1**, prepared in source with the new workspace folder structure and not yet published. The latest verified immutable [release](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.11.0-preview.1) is **0.11.0-preview.1**, from `9e2bc4c2dfd19ecac88b5433d40adbdb403d8547`. Published on **2026-10-27**, this release adds protected invoice issue/correction/delivery workflows, the accepted Lexware browser route, local receipt reconciliation and customer follow-up drafts, receipt-bound filing preparation, and cost/privacy safeguards. All eight downloaded assets passed checksum, release-attestation and exact-source provenance checks before the marketplace pin was advanced. It provides Codex/Claude skill bundles and Windows x64/macOS arm64/macOS x86_64 application archives. See [validation](validation.md) for results and remaining limits. Earlier tags/assets are preserved. This repository distributes skills and local applications; it has no hosted production application.
 
 ## Implemented scope
 
@@ -165,6 +165,19 @@ routing tasks. Acceptance requires criterion-level source/action evidence and
 retests of demonstrated failures, not agreement with a secondary FAQ answer.
 
 Automatic reminders require a defined authorized scheduler and verified delivery; no such service exists. Additional connectors, statutory ledger features and e-invoice validation should be selected for a concrete journey, not required for every user. Do not replace the chosen accounting system just to complete the roadmap.
+
+**Workspace folder structure** (plan approved 2026-11-21 and narrowed at Phase 3 to one
+structure; [dated review](research/workspace-layout-review-2026-11-21.md)). In source for
+Python, native Windows, the GUI and the demo: five visible areas, a root overview page
+and internal records in `.business-kit`; assistant files in a work folder instead of the
+inbox; originals numbered per storage year with readable names; imported inbox sources
+filed under Imported; issued-invoice copies under Outgoing invoices; storage-year folders
+for bank and correspondence files; an internal accounting register; and a procedure
+documentation (Verfahrensdokumentation) draft written at setup. The earlier layouts and
+the layout options were removed. Because the preview had no users, folders created by
+earlier previews are refused without changes instead of migrated. Hosted Windows CI has
+not yet run on these changes. Remaining data-model work: retention class and document
+direction in the index, and grouping of e-invoice parts.
 
 ## Accounting acceptance
 

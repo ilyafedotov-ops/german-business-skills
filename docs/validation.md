@@ -2,7 +2,156 @@
 
 [English](validation.md) · [Русский](validation.ru.md) · [Technical documentation](index.md)
 
-Evidence index updated **2026-11-20**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
+Evidence index updated **2026-11-21**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
+
+## Current record formats only — 2026-11-21
+
+Local branch `claude/workspace-layout-phase0` after `ee283ff` removes read compatibility for record
+formats from earlier previews. Checks ran on macOS arm64:
+
+- New red/green regressions: a marker without saved language or mode is refused by `status` and
+  `configure` without changes; a cash entry without `schema_version` 2 stops period reports and
+  reversal; an install source without its skill catalog is refused. The installer fixtures now use
+  a catalogued bundle, and the catalog-symlink test runs again after that change first made it skip.
+  Integrity checks for malformed facts, untyped register entries, unfingerprinted verified facts and
+  token-only locks are unchanged and lost their "legacy" names.
+- The full unit suite passed (499 tests; 11 skipped because they require Windows or a configured
+  PowerShell container image). `tools/check_package.py` passed on a clean copy;
+  `tools/check_doc_links.py` (512 links/anchors), `git diff --check` and `tools/release.py check`
+  passed.
+- `npm run test:gui` and `npm run test:overview` passed in **Chromium** and **WebKit**.
+- Under PowerShell 7 on macOS, the four native smoke scripts and the Windows-gated interop tests
+  (through the local `pwsh` stand-in described in the previous entry) passed.
+
+Not run: hosted Windows CI and Windows PowerShell 5.1, the packaged GUI smoke and fresh-session
+evaluations; nothing is pushed, tagged or published.
+
+## Single workspace folder structure and 0.12.0-preview.1 preparation — 2026-11-21
+
+Local branch `claude/workspace-layout-phase0` after `fdcdd90` replaces the earlier layouts with one
+folder structure (see the [folder-structure review](research/workspace-layout-review-2026-11-21.md)),
+removes the layout options and hash-named originals, adds a procedure documentation draft at
+setup, and sets `VERSION` to 0.12.0-preview.1. Checks ran on macOS arm64:
+
+- The full unit suite passed (500 tests; 11 skipped because they require Windows or a configured
+  PowerShell container image). The new `tests/test_workspace_layout.py` covers the EN/RU/DE tree,
+  start guides and procedure draft, a one-to-one reversible mapping, refusal of earlier-preview
+  folders (numbered folders, a version-1 or newer descriptor) without changes, numbered originals,
+  inbox filing, the root overview, the internal register and bank year folders. The former
+  layout test modules were folded into it; tests now resolve paths through the mapping and put
+  assistant inputs in the work folder, and the case-insensitive evidence-alias test runs again.
+- `tools/check_package.py` passed on a clean copy; `tools/check_doc_links.py` (512
+  links/anchors, 33 files), `git diff --check` and `tools/release.py check` (0.12.0-preview.1)
+  passed, as did the release, packaging and installer tests.
+- `npm run test:gui` and `npm run test:overview` passed in **Chromium** and **WebKit**; the
+  overview fixture builder was ported after its first run failed on a legacy path. `npm test`
+  and `npm run test:documents` passed.
+- Under PowerShell 7 on macOS (`TMPDIR` on a non-symlinked path), `windows-smoke.ps1` (single
+  layout, procedure draft, numbering, inbox filing, refusal of earlier-preview folders),
+  `overview-smoke.ps1`, `recovery-smoke.ps1` and `lock-smoke.ps1` passed. The Windows-gated
+  interop tests (native lock recovery, native task overview, native/Python workspace and recovery
+  interop) also passed through local PowerShell 7 with a scratch `docker` stand-in that runs
+  `pwsh` on the same paths.
+- A CLI run of a new English workspace showed the documented tree, filed the inbox source under
+  `01 Inbox/Imported/2026-10/`, stored `2026-00001_Supplier invoice 42.pdf` and wrote
+  `OVERVIEW.html`; a folder with an earlier-preview marker was refused with "nothing was changed".
+
+Not run: hosted Windows CI and Windows PowerShell 5.1, the packaged GUI smoke, fresh-session
+`evals/scenarios.json` trials and any release publication; 0.12.0-preview.1 is not tagged or
+published, and the marketplace still pins 0.11.0-preview.1.
+
+## Workspace layout Phase 2 (v2 default) — 2026-11-21
+
+Local branch `claude/workspace-layout-phase0` after `cec4088` completes layout v2 and makes it
+the default for new workspaces, per the [workspace layout review](research/workspace-layout-review-2026-11-21.md). Checks ran on macOS arm64:
+
+- `tests/test_layout_v2.py` (26 tests) passed, adding: running document numbers per
+  storage year with readable, Windows-safe names (forbidden characters, 120-character and
+  empty names); identical bytes are not renumbered; `verify` flags a renamed original;
+  legacy stays hash-named; issued-invoice copies land in `Outgoing invoices` by issue
+  month while other invoice evidence uses the correspondence year; the workspace inbox
+  can be previewed with `Imported` skipped and internal folders still refused; an inbox
+  import files the source without overwriting (`Rechnung (2).pdf`), including identical
+  content, and leaves outside sources and v1 inboxes untouched; v2 is the default for
+  `start`, the CLI and the demo, with the v2 note only in v2 start guides. A legacy
+  issued-invoice path assertion was added to `tests/test_invoicing.py`, and two packaging
+  checks now use the returned overview `json_path` instead of deriving it from the page.
+- The full unit suite passed (515 tests; 11 skipped because they require Windows or a
+  configured PowerShell container image). `tools/check_package.py` passed on a clean copy;
+  `tools/check_doc_links.py` (510 links/anchors, 33 files) and `git diff --check` passed.
+- `npm run test:gui` and `npm run test:overview` passed in **Chromium** and **WebKit**
+  with GUI-created workspaces now on v2.
+- Under PowerShell 7 on macOS (`TMPDIR` on a non-symlinked path), `windows-smoke.ps1`
+  (numbered native import, duplicate, managed-inbox preview and filing, refusal of the
+  workspace root), `overview-smoke.ps1` (now EN/RU/DE on both `localized` and `v2`),
+  `recovery-smoke.ps1` and `lock-smoke.ps1` (both now on the v2 default) passed.
+- Cross-runtime numbering continued across engines (Python `2026-00001`, native
+  `2026-00002` with `<>` sanitized) and both verifiers accepted the shared index. A CLI
+  run of the default workspace previewed its own inbox, received the file as
+  `2026-00001_Supplier invoice 42.pdf`, filed the source under `01 Inbox/Imported/2026-10/`
+  and wrote `OVERVIEW.html` at the root.
+
+Not run: hosted Windows CI and Windows PowerShell 5.1, the packaged GUI smoke and
+fresh-session `evals/scenarios.json` trials. Existing workspaces are not migrated.
+
+## Workspace layout Phase 1 (opt-in v2) — 2026-11-21
+
+Local branch `claude/workspace-layout-phase0` after `905b0a6` adds the opt-in layout v2 of the
+[workspace layout review](research/workspace-layout-review-2026-11-21.md). Checks ran on macOS arm64:
+
+- `tests/test_layout_v2.py` (18 tests) passed: the descriptor and marker record version 2;
+  start defaults stay version 1 and legacy reports none; an unknown version 3 is refused;
+  the EN/RU/DE v2 mappings are one-to-one and reversible; the accounting register is
+  internal and refused as evidence; the overview page is at the workspace root, refreshes
+  a native page, preserves a user-owned file and leaves no temporary file; v1 keeps its
+  overview and register paths; a bank normalization lands under its period year; and the
+  full payment follow-up journey reruns on v2 with comparisons, follow-ups and invoice
+  status reports under the save year. A legacy bank path assertion was added to
+  `tests/test_casebank.py`.
+- The full unit suite passed (507 tests; 11 skipped because they require Windows or a
+  configured PowerShell container image). `tools/check_package.py` passed on a clean copy
+  (the working checkout still reports the local `.claude/worktrees/` limit described
+  below); `tools/check_doc_links.py` (506 links/anchors, 33 files) and `git diff --check` passed.
+- `npm run test:overview` passed in **Chromium** and **WebKit**.
+- Under PowerShell 7 on macOS (`TMPDIR` on a non-symlinked path), `windows-smoke.ps1`
+  (new v2 start, descriptor, mapping and resume checks), `overview-smoke.ps1` (new root
+  page, cross-runtime refresh and user-file refusal), `recovery-smoke.ps1` and
+  `lock-smoke.ps1` passed.
+- Cross-runtime: a Python-created Russian v2 workspace resumed natively, the native
+  overview wrote `ОБЗОР.html` and Python refreshed it; a natively created German v2
+  workspace passed Python `status` and `verify`. The `main` revision (`f7e363f`) refused
+  both v2 workspaces with "Unsupported folder layout" in Python and PowerShell.
+
+Not run: hosted Windows CI and Windows PowerShell 5.1, `npm run test:gui` (GUI code and
+its default v1 workspaces unchanged) and fresh-session `evals/scenarios.json` trials. v2
+is not the default and no workspace is migrated.
+
+## Workspace layout Phase 0 — 2026-11-21
+
+Local branch `claude/workspace-layout-phase0` based on `f7e363f` implements Phase 0 of the
+[workspace layout review](research/workspace-layout-review-2026-11-21.md). Checks ran on macOS arm64:
+
+- New regressions passed: folder previews are saved under `00_admin/work`
+  (`.business-kit/admin/work` in localized workspaces, created on first use in an older
+  workspace) and leave the user's inbox empty; new legacy and localized workspaces
+  report and create the work folder; `demo` in EN and RU creates the same visible
+  folders as `start`, resumes, verifies and keeps the ordinary localized guide below
+  its synthetic note.
+- The full unit suite passed (489 tests; 11 skipped because they require Windows or
+  a configured PowerShell container image).
+- `tools/check_package.py` passed on a clean copy of tracked and new files. In the
+  working checkout it reported symlinks and links inside local, Git-excluded
+  `.claude/worktrees/` copies; `main` gives the same clean-copy result, so this is a
+  local-environment limit, not a package defect.
+- `tools/check_doc_links.py` (502 links/anchors, 33 files) and `git diff --check` passed.
+- `tests/native/windows-smoke.ps1` passed under PowerShell 7 on macOS with `TMPDIR`
+  on a non-symlinked path, including the new work-folder assertion; a native localized
+  `start` created `.business-kit/admin/work`. This is not Windows PowerShell 5.1 or
+  Windows CI acceptance.
+
+Not run: hosted Windows CI, browser suites (overview, GUI and prototype code unchanged)
+and fresh-session `evals/scenarios.json` trials for the changed input-file paths.
+Existing workspaces keep earlier preview files in their inbox; nothing is moved.
 
 ## Guided setup data and AI-risk step — 2026-11-20
 

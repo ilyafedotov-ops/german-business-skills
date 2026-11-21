@@ -19,7 +19,7 @@ class CashVatFixture(unittest.TestCase):
         self.root = self.base / "private"
         ws.init_workspace(self.root, 2026, "en")
         self.proof = "08_correspondence/review.md"
-        (self.root / self.proof).write_text("Synthetic owner review of the payment evidence", encoding="utf-8")
+        ws._path(self.root, self.proof).write_text("Synthetic owner review of the payment evidence", encoding="utf-8")
         config = ac.template("configuration")
         config.update(system="local", account_reference="business-one", method="EÜR",
                       reviewer="owner", evidence_file=self.proof)
@@ -59,7 +59,7 @@ class StatedVatTests(CashVatFixture):
         ])
         self.assertEqual(report["totals"]["EUR"]["income"], "226.00")
         self.assertEqual(report["tax_return_status"], "not_calculated")
-        self.assertFalse({"vat_unresolved", "vat_not_recorded"} & set(report["open_items"]))
+        self.assertNotIn("vat_unresolved", report["open_items"])
 
     def test_inconsistent_or_partial_vat_is_rejected_without_recording(self):
         cases = {
@@ -83,17 +83,17 @@ class StatedVatTests(CashVatFixture):
         self.assertIn("vat_unresolved", report["open_items"])
         self.assertEqual(report["vat"], [])
         view = overview.generate(self.root, "2026-10", "2026-10-26")
-        self.assertIn("VAT on some cash lines is not yet determined", (self.root / view["markdown_path"]).read_text(encoding="utf-8"))
+        self.assertIn("VAT on some cash lines is not yet determined", (ws._path(self.root, view["markdown_path"])).read_text(encoding="utf-8"))
 
 
-class LegacyEntryTests(CashVatFixture):
-    def legacy(self, identifier, amount):
-        # Simulates an entry recorded before line VAT existed, through the real register writer.
+class EntryFormatTests(CashVatFixture):
+    def unversioned(self, identifier, amount):
+        # A register entry without schema_version or line VAT, written past the validating writer.
         with ac._edit(self.root, "cash_entry_recorded") as state:
             state["entries"][identifier] = {
                 "entry_id": identifier, "date": "2026-10-20", "account": "bank", "transaction_id": identifier,
                 "amount": amount, "currency": "EUR", "reviewer": "owner", "evidence_file": self.proof,
-                "note": "Recorded before line VAT", "replaces": None, "reverses": None, "recorded_at": ws._now(),
+                "note": "Unversioned entry", "replaces": None, "reverses": None, "recorded_at": ws._now(),
                 "evidence": ac.st.evidence(self.root, self.proof),
                 "lines": [{"kind": "income", "amount": amount, "category": "sale", "activity_id": "consulting"}]}
 
@@ -104,17 +104,13 @@ class LegacyEntryTests(CashVatFixture):
         with self.assertRaisesRegex(ws.WorkspaceError, "accounting-template"):
             ac.post(self.root, value)
 
-    def test_recorded_legacy_entries_stay_reportable_and_correctable(self):
-        self.legacy("old-sale", "100.00")
-        report = ac.period_report(self.root, "2026-10")
-        self.assertEqual(report["totals"]["EUR"]["income"], "100.00")
-        self.assertIn("vat_not_recorded", report["open_items"])
-        ac.reverse(self.root, "old-sale", "old-sale-reversal", self.proof, "owner", "Record the stated VAT")
-        ac.post(self.root, self.entry("old-sale-fixed", "100.00", self.line("100.00", status="none_stated"),
-                                      transaction_id="old-sale", replaces="old-sale"))
-        report = ac.period_report(self.root, "2026-10")
-        self.assertEqual(report["totals"]["EUR"]["income"], "100.00")
-        self.assertEqual(len(report["entries"]), 3)
+    def test_an_unversioned_register_entry_stops_reports_and_reversal(self):
+        self.unversioned("old-sale", "100.00")
+        with self.assertRaises(ws.WorkspaceError):
+            ac.period_report(self.root, "2026-10")
+        with self.assertRaises(ws.WorkspaceError):
+            ac.reverse(self.root, "old-sale", "old-sale-reversal", self.proof, "owner", "Correction")
+        self.assertNotIn("old-sale-reversal", ac._load(self.root)["entries"])
 
 
 class ProposalLinkTests(CashVatFixture):
@@ -150,7 +146,7 @@ class ProposalLinkTests(CashVatFixture):
                                                          activity=activity, proposal=proposal))
 
     def change_proposal(self, identifier):
-        path = self.root / "00_admin/casework.json"
+        path = ws._path(self.root, "00_admin/casework.json")
         state = json.loads(path.read_text(encoding="utf-8"))
         state["proposals"][identifier]["review"]["note"] = "Changed outside the reviewed writer"
         path.write_text(json.dumps(state), encoding="utf-8")
@@ -188,7 +184,7 @@ class ProposalLinkTests(CashVatFixture):
         filing = ac.template("filing")
         filing.update(filing_id="return-1", form="ustva", form_version="2026", period="2026-10",
                       recipient="synthetic-finanzamt", payload_file=payload,
-                      source_files=[ws._logical(self.root, self.root / report["path"])])
+                      source_files=[ws._logical(self.root, ws._path(self.root, report["path"]))])
         ac.create_filing(self.root, filing)
         self.assertEqual(ac.check_filing(self.root, "return-1")["issues"], [])
         self.change_proposal("proposal-1")
@@ -207,11 +203,11 @@ class ReversalAndExportTests(CashVatFixture):
 
     def test_exported_report_lists_stated_vat_in_the_workspace_language(self):
         ac.post(self.root, self.entry("sale", "119.00", self.line("119.00", net="100.00", tax="19.00", rate="19")))
-        markdown = (self.root / ac.export_report(self.root, "2026-10")["markdown_path"]).read_text(encoding="utf-8")
+        markdown = ws._path(self.root, ac.export_report(self.root, "2026-10")["markdown_path"]).read_text(encoding="utf-8")
         self.assertIn("## VAT as stated on documents (EUR)", markdown)
         self.assertIn("- Receipts · 19 %: net 100.00, VAT 19.00", markdown)
         ws.configure_workspace(self.root, language="ru")
-        markdown = (self.root / ac.export_report(self.root, "2026-10")["markdown_path"]).read_text(encoding="utf-8")
+        markdown = ws._path(self.root, ac.export_report(self.root, "2026-10")["markdown_path"]).read_text(encoding="utf-8")
         self.assertIn("## НДС по документам (EUR)", markdown)
         self.assertIn("- Поступления · 19 %: нетто 100.00, НДС 19.00", markdown)
 

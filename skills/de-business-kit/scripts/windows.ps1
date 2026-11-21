@@ -10,7 +10,6 @@ param(
     [string]$Source,
     [ValidateRange(1900,9999)][int]$Year = (Get-Date).Year,
     [ValidateSet('en','ru','de')][string]$Language = 'en',
-    [ValidateSet('localized','legacy')][string]$Layout = 'localized',
     [ValidateSet('general','bookkeeping','tax-consultant')][string]$Mode = 'general',
     [string]$Period,
     [ValidateSet('codex','claude','both')][string]$Target = 'both',
@@ -27,6 +26,7 @@ $utf8 = New-Object Text.UTF8Encoding($false, $true)
 $limit = 50 * 1024 * 1024
 $extensions = @('.pdf','.xml','.png','.jpg','.jpeg','.tif','.tiff','.csv')
 $markerName = '00_admin/workspace.json'
+$earlierLayout = 'This folder uses an earlier preview folder layout that this version no longer opens; nothing was changed. Create a new workspace and import the originals again.'
 $kitRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 . (Join-Path $PSScriptRoot 'windows-locks.ps1')
 
@@ -85,32 +85,39 @@ function ReadJson([string]$path) {
 }
 function BytesJson($value) { return ,$utf8.GetBytes((ConvertTo-Json -InputObject $value -Depth 40 -Compress) + "`n") }
 function FolderLayout {
+    # The workspace's folder mapping, or $null while the folder is not a workspace yet.
     $descriptor = Join-Path $rootPath '.workspace-layout.json'
     if (-not (Test-Path -LiteralPath $descriptor)) {
-        if (Test-Path -LiteralPath (Join-Path $rootPath '.business-kit')) { throw 'Missing localized layout; preserve existing files.' }
+        if (Test-Path -LiteralPath (Join-Path $rootPath $markerName)) { throw $earlierLayout }
+        if (Test-Path -LiteralPath (Join-Path $rootPath '.business-kit')) { throw 'The workspace folder mapping is missing; preserve the existing files.' }
         return $null
     }
     $record = ReadJson $descriptor
-    if ($record -isnot [pscustomobject] -or (@($record.PSObject.Properties.Name | Sort-Object) -join ',') -ne 'language,schema_version' -or $record.schema_version -isnot [int] -and $record.schema_version -isnot [long] -or $record.schema_version -ne 1 -or $record.language -cnotin @('en','ru','de')) { throw 'Unsupported folder layout.' }
+    if ($record -isnot [pscustomobject] -or (@($record.PSObject.Properties.Name | Sort-Object) -join ',') -ne 'language,schema_version' -or $record.schema_version -isnot [int] -and $record.schema_version -isnot [long] -or $record.language -cnotin @('en','ru','de')) { throw 'Unsupported folder layout.' }
+    if ($record.schema_version -ne 2) { if ($record.schema_version -lt 2) { throw $earlierLayout }; throw 'A newer kit created this workspace; update the kit before using it.' }
     $catalog = ReadJson (Join-Path $kitRoot 'assets/folder-layouts.json')
     $words = $catalog.languages.PSObject.Properties[$record.language].Value
-    foreach ($prefix in $words.paths.PSObject.Properties.Name) {
-        if (Test-Path -LiteralPath (Join-Path $rootPath $prefix.Split('/')[0])) { throw 'Conflicting legacy and localized folders; preserve both.' }
+    $paths = [ordered]@{}
+    foreach ($property in $words.paths.PSObject.Properties) { $paths[$property.Name] = $property.Value }
+    # Logical record names never appear as physical top-level folders in a workspace.
+    foreach ($prefix in $paths.Keys) {
+        if (Test-Path -LiteralPath (Join-Path $rootPath $prefix.Split('/')[0])) { throw 'Folders named after internal records sit beside the workspace folders; preserve both for review.' }
     }
-    return @{record=$record; words=$words}
+    return @{record=$record; words=$words; paths=$paths}
 }
 function WorkspacePath([string]$relative) {
     if ([IO.Path]::IsPathRooted($relative) -or $relative -match '(^|[\\/])\.\.([\\/]|$)') { throw 'Expected a relative workspace path.' }
     $info = FolderLayout
     if ($null -ne $info) {
-        foreach ($property in @($info.words.paths.PSObject.Properties | Sort-Object { $_.Name.Length } -Descending)) {
-            if ($relative -ceq $property.Name -or $relative.StartsWith($property.Name + '/', [StringComparison]::Ordinal)) {
-                $suffix = $relative.Substring($property.Name.Length).TrimStart('/').Split('/')
-                if ($property.Name -ceq '06_bookkeeping' -and $suffix.Count -ge 3) {
+        foreach ($entry in @($info.paths.GetEnumerator() | Sort-Object { ([string]$_.Key).Length } -Descending)) {
+            $name = [string]$entry.Key
+            if ($relative -ceq $name -or $relative.StartsWith($name + '/', [StringComparison]::Ordinal)) {
+                $suffix = $relative.Substring($name.Length).TrimStart('/').Split('/')
+                if ($name -ceq '06_bookkeeping' -and $suffix.Count -ge 3) {
                     $part = $info.words.parts.PSObject.Properties[$suffix[2]]
                     if ($null -ne $part) { $suffix[2] = $part.Value }
                 }
-                $relative = $property.Value
+                $relative = [string]$entry.Value
                 if ($suffix[0]) { $relative += '/' + ($suffix -join '/') }
                 break
             }
@@ -127,6 +134,54 @@ function WorkspacePresent([string]$path) {
 function Hash([byte[]]$bytes) {
     $sha = [Security.Cryptography.SHA256]::Create()
     try { return ([BitConverter]::ToString($sha.ComputeHash($bytes))).Replace('-','').ToLowerInvariant() } finally { $sha.Dispose() }
+}
+function PortableStem([string]$name) {
+    # Readable, Windows-safe file stem; the index keeps the exact original name.
+    $stem = [IO.Path]::GetFileNameWithoutExtension($name).Normalize([Text.NormalizationForm]::FormC)
+    $stem = [Text.RegularExpressions.Regex]::Replace($stem, '[<>:"/\\|?*\x00-\x1f\x7f]', '-')
+    $stem = [Text.RegularExpressions.Regex]::Replace($stem, '\s+', ' ').Trim([char[]]' .-')
+    if ($stem.Length -gt 60) { $stem = $stem.Substring(0, $(if ([char]::IsHighSurrogate($stem[59])) { 59 } else { 60 })) }
+    $stem = $stem.TrimEnd([char[]]' .-')
+    if (-not $stem) { return 'document' }
+    return $stem
+}
+function NextDocumentNumber($index, [string]$year) {
+    # Running number per storage year; gaps or duplicates stay visible to Verify.
+    $max = 0
+    foreach ($doc in @($index.documents)) {
+        $property = $doc.PSObject.Properties['document_number']
+        if ($null -ne $property -and $property.Value -is [string] -and $property.Value -cmatch '^[0-9]{4}-[0-9]{5}$' -and $property.Value.Substring(0,4) -ceq $year) {
+            $max = [Math]::Max($max, [int]$property.Value.Substring(5))
+        }
+    }
+    if ($max -ge 99999) { throw 'The yearly document number range is exhausted; review the index.' }
+    return $year + '-' + ($max + 1).ToString('00000')
+}
+function FileInboxSource([string]$inputPath, [string]$digest) {
+    # After a committed import, move a source taken from the managed inbox to Imported/<period>
+    # so the inbox shows only pending files. Never overwrites or deletes.
+    $sep = [IO.Path]::DirectorySeparatorChar
+    $inbox = [IO.Path]::GetFullPath((WorkspacePath '00_admin/inbox')).TrimEnd([char[]]'\/') + $sep
+    $imported = [IO.Path]::GetFullPath((WorkspacePath '00_admin/inbox/imported')).TrimEnd([char[]]'\/')
+    $full = [IO.Path]::GetFullPath($inputPath)
+    if (-not $full.StartsWith($inbox, [StringComparison]::OrdinalIgnoreCase) -or $full.StartsWith($imported + $sep, [StringComparison]::OrdinalIgnoreCase)) { return $null }
+    $target = $null
+    try {
+        if ((Hash (ReadBytes $full)) -cne $digest) { return $null }
+        $folder = Join-Path $imported $Period
+        Chain $folder
+        [void][IO.Directory]::CreateDirectory($folder)
+        $stem = [IO.Path]::GetFileNameWithoutExtension($full); $ext = [IO.Path]::GetExtension($full)
+        for ($count = 1; $count -lt 1000 -and $null -eq $target; $count++) {
+            $candidate = Join-Path $folder $(if ($count -eq 1) { [IO.Path]::GetFileName($full) } else { $stem + ' (' + $count + ')' + $ext })
+            if (-not (Test-Path -LiteralPath $candidate)) { $target = $candidate }
+        }
+        if ($null -eq $target) { return $null }
+        [IO.File]::Move($full, $target)
+    } catch { return $null }
+    $moved = $target.Substring($rootPath.TrimEnd([char[]]'\/').Length + 1).Replace('\','/')
+    Audit 'inbox_source_filed' @{to=$moved}
+    return $moved
 }
 function WriteNew([string]$path, [byte[]]$bytes) {
     Chain $path $true
@@ -157,10 +212,10 @@ function Workspace {
     if ($marker.schema -ne 'german-business-workspace' -or $marker.schema_version -ne 1) { throw 'Unsupported workspace; do not initialize over it.' }
     $id = [guid]::Empty
     if (-not [guid]::TryParse($marker.workspace_id, [ref]$id)) { throw 'Invalid workspace identity.' }
+    if ($null -eq $marker.PSObject.Properties['language'] -or $null -eq $marker.PSObject.Properties['mode']) { throw 'Saved language and mode are missing; preserve the files for review.' }
     if ($marker.language -notin @('en','ru','de') -or $marker.mode -notin @('general','bookkeeping','tax-consultant')) { throw 'Invalid saved preferences.' }
     $info = FolderLayout
-    if ($null -ne $info -and ($null -eq $marker.PSObject.Properties['folder_layout'] -or $marker.folder_layout.schema_version -ne 1 -or $marker.folder_layout.language -cne $info.record.language)) { throw 'Folder layout does not match workspace identity.' }
-    if ($null -eq $info -and $null -ne $marker.PSObject.Properties['folder_layout']) { throw 'Localized marker has no layout descriptor.' }
+    if ($null -eq $info -or $null -eq $marker.PSObject.Properties['folder_layout'] -or $marker.folder_layout.schema_version -ne $info.record.schema_version -or $marker.folder_layout.language -cne $info.record.language) { throw 'Folder layout does not match workspace identity.' }
     return $marker
 }
 function Index {
@@ -173,16 +228,24 @@ function Verify {
     $errors = New-Object 'Collections.Generic.List[string]'
     $paths = @{}
     $ids = @{}
+    $numbers = @{}
     foreach ($doc in $index.documents) {
         try {
             if ($doc.period -notmatch '^[1-9][0-9]{3}-(0[1-9]|1[0-2])$' -or [int]$doc.period.Substring(0,4) -lt 1900) { throw 'Invalid period.' }
             if ($doc.sha256 -cnotmatch '^[0-9a-f]{64}$' -or [string]::IsNullOrWhiteSpace($doc.document_id) -or $ids.ContainsKey($doc.document_id)) { throw 'Invalid digest or duplicate identity.' }
             $ids[$doc.document_id] = $true
             $ext = [IO.Path]::GetExtension($doc.path)
-            $expected = '06_bookkeeping/' + $doc.period.Substring(0,4) + '/' + $doc.period.Substring(5,2) + '/originals/' + $doc.sha256 + $ext
-            if ($ext -cnotin $extensions -or $doc.path -cne $expected -or $paths.ContainsKey($expected)) { throw 'Invalid or duplicate original path.' }
-            $paths[$expected] = $true
-            $bytes = ReadBytes (WorkspacePath $expected)
+            $folder = '06_bookkeeping/' + $doc.period.Substring(0,4) + '/' + $doc.period.Substring(5,2) + '/originals/'
+            $leaf = if ($doc.path -is [string] -and $doc.path.StartsWith($folder, [StringComparison]::Ordinal)) { $doc.path.Substring($folder.Length) } else { '' }
+            $stem = [IO.Path]::GetFileNameWithoutExtension($leaf)
+            $numberProperty = $doc.PSObject.Properties['document_number']
+            $number = if ($null -ne $numberProperty) { $numberProperty.Value } else { $null }
+            # Originals are named by their document number and a readable stem.
+            $named = $leaf.IndexOfAny([char[]]'/\') -lt 0 -and (($number -is [string] -and $number -cmatch '^[1-9][0-9]{3}-[0-9]{5}$' -and $number.Substring(0,4) -ceq $doc.period.Substring(0,4) -and $stem.StartsWith($number + '_', [StringComparison]::Ordinal) -and $stem.Length -gt $number.Length + 1))
+            if ($ext -cnotin $extensions -or -not $named -or $paths.ContainsKey($doc.path)) { throw 'Invalid or duplicate original path.' }
+            if ($null -ne $number) { if ($numbers.ContainsKey($number)) { throw 'Duplicate document number.' }; $numbers[$number] = $true }
+            $paths[$doc.path] = $true
+            $bytes = ReadBytes (WorkspacePath $doc.path)
             if ($bytes.Length -ne $doc.size_bytes -or (Hash $bytes) -cne $doc.sha256) { throw 'Original content or size changed.' }
         } catch { $errors.Add($_.Exception.Message) }
     }
@@ -372,7 +435,7 @@ function UnlockWorkspace {
             if ((Get-Command ConvertFrom-Json).Parameters.ContainsKey('DateKind')) { $options.DateKind='String' }
             $previous = ConvertFrom-Json @options
         } catch { $previous = [Text.Encoding]::UTF8.GetString($data) }
-        # Keep original bytes even for invalid UTF-8 or a legacy token-only lock.
+        # Keep original bytes even for invalid UTF-8 or a lock without readable owner details.
         $evidence = WorkspacePath ('09_audit/history/' + $historyId + '.lock')
         WriteNew $evidence $data
         WriteNew $historyPath (BytesJson @{schema_version=1; action='stale_lock_removed'; recorded_at=(Now); lock_sha256=$ExpectedSha256; lock=$previous; assessment=$status.assessment; confirmed_no_writer=[bool]$ConfirmedNoWriter; lock_evidence=('09_audit/history/' + $historyId + '.lock')})
@@ -411,22 +474,22 @@ try {
     $result = $null
     if ($Action -eq 'start' -and -not (Test-Path -LiteralPath (WorkspacePath $markerName))) {
         if (@(Get-ChildItem -LiteralPath $rootPath -Force | Where-Object { $_.Name -ne '.workspace.lock' }).Count) { throw 'Folder changed; preserve it.' }
-        if ($Layout -eq 'localized') { WriteNew (Join-Path $rootPath '.workspace-layout.json') (BytesJson @{schema_version=1; language=$Language}) }
+        WriteNew (Join-Path $rootPath '.workspace-layout.json') (BytesJson @{schema_version=2; language=$Language})
+        $info = FolderLayout
         $seed = ReadJson (Join-Path $kitRoot 'assets/workspace-seed.json')
         foreach ($property in $seed.PSObject.Properties) { WriteNew (WorkspacePath $property.Name) (BytesJson $property.Value) }
-        foreach ($dir in @('00_admin/inbox','02_registration','03_banking','04_accounting',"05_tax/$Year",'06_bookkeeping','07_exports','08_correspondence','09_audit/history')) { [void][IO.Directory]::CreateDirectory((WorkspacePath $dir)) }
+        foreach ($dir in @('00_admin/inbox','00_admin/work','02_registration','03_banking','04_accounting','04_accounting/procedure',"05_tax/$Year",'06_bookkeeping','07_exports','08_correspondence','09_audit/history')) { [void][IO.Directory]::CreateDirectory((WorkspacePath $dir)) }
         WriteNew (WorkspacePath '09_audit/events.json') (BytesJson @((Event 'workspace_initialized' @{year=$Year; language=$Language; mode=$Mode; runtime='powershell'})))
         # Marker last: interrupted initialization must never look complete.
         $newMarker = @{schema='german-business-workspace'; schema_version=1; workspace_id=[guid]::NewGuid().ToString(); created_at=(Now); initial_year=$Year; language=$Language; mode=$Mode}
-        if ($Layout -eq 'localized') {
-            $info = FolderLayout
-            $newMarker.folder_layout = $info.record
-            WriteNew (Join-Path $rootPath $info.words.guide_name) ($utf8.GetBytes($info.words.guide))
-            if ($env:OS -eq 'Windows_NT') {
-                foreach ($hidden in @('.business-kit','.workspace-layout.json')) {
-                    $hiddenPath = Join-Path $rootPath $hidden
-                    [IO.File]::SetAttributes($hiddenPath, ([IO.File]::GetAttributes($hiddenPath) -bor [IO.FileAttributes]::Hidden))
-                }
+        $newMarker.folder_layout = $info.record
+        WriteNew (Join-Path $rootPath $info.words.guide_name) ($utf8.GetBytes($info.words.guide))
+        # A starter procedure documentation (GoBD Verfahrensdokumentation) for the user to complete.
+        WriteNew (WorkspacePath ('04_accounting/procedure/' + $info.words.procedure_name)) ($utf8.GetBytes($info.words.procedure))
+        if ($env:OS -eq 'Windows_NT') {
+            foreach ($hidden in @('.business-kit','.workspace-layout.json')) {
+                $hiddenPath = Join-Path $rootPath $hidden
+                [IO.File]::SetAttributes($hiddenPath, ([IO.File]::GetAttributes($hiddenPath) -bor [IO.FileAttributes]::Hidden))
             }
         }
         WriteNew (WorkspacePath $markerName) (BytesJson $newMarker)
@@ -446,12 +509,10 @@ try {
             'folders' {
                 $info = FolderLayout
                 $paths = @{}
-                $catalog = ReadJson (Join-Path $kitRoot 'assets/folder-layouts.json')
-                foreach ($key in $catalog.languages.en.paths.PSObject.Properties.Name) {
+                foreach ($key in @($info.paths.Keys)) {
                     $paths[$key] = (WorkspacePath $key).Substring($rootPath.TrimEnd([char[]]'\/').Length + 1).Replace('\','/')
                 }
-                $result = @{layout='legacy'; folder_language=$null; paths=$paths; guide=$null}
-                if ($null -ne $info) { $result.layout='localized'; $result.folder_language=$info.record.language; $result.guide=$info.words.guide_name }
+                $result = @{folder_language=$info.record.language; paths=$paths; guide=$info.words.guide_name}
             }
             'ingest' {
                 if ($Period -notmatch '^[1-9][0-9]{3}-(0[1-9]|1[0-2])$' -or [int]$Period.Substring(0,4) -lt 1900) { throw 'Storage period must be YYYY-MM, year 1900-9999.' }
@@ -468,14 +529,22 @@ try {
                 if ($existing.Count) {
                     Audit 'document_content_seen_again' @{document_id=$existing[0].document_id}
                     $result = @{status='existing_content'; document_id=$existing[0].document_id; note='Identical bytes; not a business duplicate determination.'}
+                    $result.source_moved_to = FileInboxSource $inputPath $digest
                 } else {
-                    $relative = '06_bookkeeping/' + $Period.Substring(0,4) + '/' + $Period.Substring(5,2) + '/originals/' + $digest + $ext
+                    # Originals get a readable name with a running number; the hash stays in the index.
+                    $number = NextDocumentNumber $index $Period.Substring(0,4)
+                    $leaf = $number + '_' + (PortableStem ([IO.Path]::GetFileName($inputPath))) + $ext
+                    $relative = '06_bookkeeping/' + $Period.Substring(0,4) + '/' + $Period.Substring(5,2) + '/originals/' + $leaf
                     WriteNew (WorkspacePath $relative) $data
                     $document = @{document_id='doc-' + [guid]::NewGuid().ToString('N'); sha256=$digest; size_bytes=$data.Length; original_name=[IO.Path]::GetFileName($inputPath); path=$relative; period=$Period; imported_at=(Now); status='imported'; provider_state='unknown'}
+                    $document.document_number = $number
                     $index.documents = @($index.documents) + $document
                     ReplaceJson (WorkspacePath '00_admin/documents.json') $index
                     Audit 'document_imported' @{document_id=$document.document_id; sha256=$digest}
-                    $result = @{status='imported'; document_id=$document.document_id; size_bytes=$data.Length; note='Storage period only; document catalog/review/posting not performed.'}
+                    $physical = (WorkspacePath $relative).Substring($rootPath.TrimEnd([char[]]'\/').Length + 1).Replace('\','/')
+                    $result = @{status='imported'; document_id=$document.document_id; size_bytes=$data.Length; path=$physical; note='Storage period only; document catalog/review/posting not performed.'}
+                    $result.document_number = $number
+                    $result.source_moved_to = FileInboxSource $inputPath $digest
                 }
             }
             'scan' {
@@ -484,7 +553,10 @@ try {
                 if (-not [IO.Directory]::Exists($sourcePath)) { throw 'Source directory missing.' }
                 $sep = [IO.Path]::DirectorySeparatorChar
                 $left = $rootPath.TrimEnd([char[]]'\/') + $sep; $right = $sourcePath.TrimEnd([char[]]'\/') + $sep
-                if ($left.StartsWith($right,[StringComparison]::OrdinalIgnoreCase) -or $right.StartsWith($left,[StringComparison]::OrdinalIgnoreCase)) { throw 'Source and workspace must not overlap.' }
+                # The workspace's own inbox is the one managed source inside it; files already filed there are skipped.
+                $managed = $right.Equals([IO.Path]::GetFullPath((WorkspacePath '00_admin/inbox')).TrimEnd([char[]]'\/') + $sep, [StringComparison]::OrdinalIgnoreCase)
+                $importedPath = if ($managed) { [IO.Path]::GetFullPath((WorkspacePath '00_admin/inbox/imported')).TrimEnd([char[]]'\/') } else { $null }
+                if (-not $managed -and ($left.StartsWith($right,[StringComparison]::OrdinalIgnoreCase) -or $right.StartsWith($left,[StringComparison]::OrdinalIgnoreCase))) { throw 'Source and workspace must not overlap.' }
                 if (WorkspacePresent $sourcePath) { throw 'Resume an existing workspace instead of scanning it as a source.' }
                 $entries = New-Object 'Collections.Generic.List[object]'
                 $queue = New-Object 'Collections.Generic.Stack[object]'
@@ -499,6 +571,7 @@ try {
                         $item = Get-Item -LiteralPath $child -Force
                         $row = @{path=$child.Substring($right.Length).Replace('\','/'); status='skipped'; reason=$null}
                         if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { $row.reason='link_or_reparse_point' }
+                        elseif ($null -ne $importedPath -and [IO.Path]::GetFullPath($child).TrimEnd([char[]]'\/').Equals($importedPath, [StringComparison]::OrdinalIgnoreCase)) { $row.reason='already_imported' }
                         elseif ($item.Name.StartsWith('.') -or ($item.Attributes -band [IO.FileAttributes]::Hidden)) { $row.reason='hidden_entry' }
                         elseif ($item.PSIsContainer) {
                             if (WorkspacePresent $child) { $row.reason='existing_workspace' }

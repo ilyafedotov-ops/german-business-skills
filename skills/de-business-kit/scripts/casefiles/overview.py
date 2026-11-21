@@ -13,6 +13,8 @@ from . import summary
 from . import accounting
 
 MARK = "<!-- German Business Kit generated overview v1 -->\n"
+# Both runtimes refresh the same root page; each accepts the other's projection.
+NATIVE_MARK = "<!-- German Business Kit native overview v1 -->\n"
 CSS = """*{box-sizing:border-box}body{margin:0;background:#f5f6f3;color:#182d29;font:16px/1.55 system-ui,sans-serif}
 main,header,nav{max-width:1100px;margin:auto;padding:22px 28px}header{padding-top:40px}h1{font-size:clamp(28px,5vw,44px);line-height:1.12;margin:8px 0}
 h2{font-size:23px;margin:0 0 14px}h3{font-size:18px}p{max-width:80ch}.muted{color:#52635f}.eyebrow{letter-spacing:.08em;text-transform:uppercase;font-size:12px;font-weight:700}
@@ -190,16 +192,18 @@ def _generate(root, period, as_of, language):
             raise ws.WorkspaceError("Existing overview JSON is not tool-generated; preserve it before recovery.")
     for name, payload in (("overview.html", document), ("overview.md", markdown)):
         path = ws._inside(root, "00_admin/" + name)
-        if path.exists() and not ws._read_regular(path).startswith(MARK.encode()):
+        marks = (MARK.encode(), NATIVE_MARK.encode()) if name == "overview.html" else (MARK.encode(),)
+        if path.exists() and not ws._read_regular(path).startswith(marks):
             raise ws.WorkspaceError("Existing overview file is not tool-generated; preserve it and choose a safe recovery.")
     for name, payload in (("overview.html", document), ("overview.md", markdown)):
         path = ws._inside(root, "00_admin/" + name)
-        temporary = ws._inside(root, "00_admin/.overview-" + uuid.uuid4().hex + ".tmp")
+        # Replace within the target folder; the page lives at the workspace root.
+        temporary = path.parent / (".overview-" + uuid.uuid4().hex + ".tmp")
         ws._write_exclusive(temporary, payload.encode("utf-8"))
         temporary.replace(path)
     ws._atomic_json(ws._inside(root, "00_admin/overview.json"), result, replace=True)
-    layout = ws._layout(root)
-    start = ws._inside(root, layout[1]['guide_name'] if layout else "START-HERE.md")
+    start = ws._inside(root, ws._layout(root)[1]['guide_name'])
     if not start.exists():
         ws._write_exclusive(start, ("# " + words["title"] + "\n\n[" + words["overview"] + "](" + quote(ws._physical(root, "00_admin/overview.html")) + ") · [Markdown](" + quote(ws._physical(root, "00_admin/overview.md")) + ")\n\n" + words["snapshot"] + "\n").encode("utf-8"))
-    return {"html_path": ws._physical(root, "00_admin/overview.html"), "markdown_path": ws._physical(root, "00_admin/overview.md"), "counts": counts, "health": result["health"], "errors": errors}
+    return {"html_path": ws._physical(root, "00_admin/overview.html"), "markdown_path": ws._physical(root, "00_admin/overview.md"),
+            "json_path": ws._physical(root, "00_admin/overview.json"), "counts": counts, "health": result["health"], "errors": errors}

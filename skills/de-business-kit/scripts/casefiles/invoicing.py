@@ -1,6 +1,7 @@
 """Versioned invoice issue/correction/delivery evidence; no external transport."""
 from contextlib import contextmanager
 import copy
+from datetime import date
 import hashlib
 from pathlib import Path
 import re
@@ -81,7 +82,8 @@ def _edit(root, action):
         ws._audit(root, action, {"history_id": history})
 
 
-def _snapshot(root, relative):
+def _snapshot(root, relative, issued=None):
+    """Freeze evidence. An issued invoice copy (issue date, number) is kept with the documents of its issue month."""
     source = st.evidence(root, relative)
     data = ws._read_regular(ws._inside(root, source["path"]))
     if hashlib.sha256(data).hexdigest() != source["sha256"]:
@@ -89,7 +91,13 @@ def _snapshot(root, relative):
     suffix = Path(relative).suffix.lower()
     if suffix not in {".md", ".txt", ".json", ".xml", ".pdf", ".html", ".csv", ".png", ".jpg", ".eml"}:
         raise ws.WorkspaceError("Unsupported invoice evidence format; never supply credentials.")
-    destination = "08_correspondence/invoice-evidence/" + uuid.uuid4().hex + suffix
+    if issued and re.fullmatch(r"[1-9][0-9]{3}-[0-9]{2}-[0-9]{2}", issued[0]):
+        name = ws._portable_text(issued[1]) + "_" + source["sha256"][:8]
+        destination = f"06_bookkeeping/{issued[0][:4]}/{issued[0][5:7]}/issued/{name}{suffix}"
+        if ws._inside(root, destination).exists():
+            destination = destination[:-len(suffix)] + "-" + uuid.uuid4().hex[:8] + suffix
+    else:
+        destination = ws._dated("08_correspondence", str(date.today().year), "invoice-evidence/" + uuid.uuid4().hex + suffix)
     target = ws._inside(root, destination)
     ws._mkdir(target.parent)
     ws._write_exclusive(target, data)
@@ -352,7 +360,7 @@ def act(root, value, expected):
                  "evidence": _snapshot(root, value["evidence_file"]), "attempt_id": value["attempt_id"],
                  "external_id": value["external_id"], "outcome_kind": value["outcome_kind"]}
         if action in ISSUED:
-            event["document"] = _snapshot(root, value["document_file"])
+            event["document"] = _snapshot(root, value["document_file"], (value["occurred_on"], value["invoice_number"] or value["invoice_id"]))
             row["issued"] = {"external_id": value["external_id"], "invoice_number": value["invoice_number"],
                              "document": event["document"], "evidence": event["evidence"], "occurred_on": value["occurred_on"]}
         if action in {"review-delivery", "adopt-dispatched"}:
@@ -517,7 +525,7 @@ def export(root, identifier, language="en"):
         if identifier not in state["invoices"]:
             raise ws.WorkspaceError("Invoice not found.")
         view = _view(root, state["invoices"][identifier], state, language)
-        relative = "08_correspondence/invoice-status-" + uuid.uuid4().hex + ".md"
+        relative = ws._dated("08_correspondence", str(date.today().year), "invoice-status-" + uuid.uuid4().hex + ".md")
         target = ws._inside(root, relative)
         ws._mkdir(target.parent)
         ws._write_exclusive(target, view["markdown"].encode("utf-8"))

@@ -19,7 +19,7 @@
 
 ## Исследования
 
-[Источники по установке хостов](research/host-installation-sources.md), [исследование GUI](research/gui-ux-primary-sources.md) и [дизайн-рекомендация](research/gui-ux-recommendation.md) сохраняют исходные даты; внешние сведения нужно проверять для текущей задачи.
+[Источники по установке хостов](research/host-installation-sources.md), [исследование GUI](research/gui-ux-primary-sources.md), [дизайн-рекомендация](research/gui-ux-recommendation.md) и [обзор структуры рабочей папки](research/workspace-layout-review-2026-11-21.md) (на английском) сохраняют исходные даты; внешние сведения нужно проверять для текущей задачи.
 
 ## Как сохранить компактную структуру
 

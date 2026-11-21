@@ -6,8 +6,16 @@ Versions follow Semantic Versioning. All releases below are previews, not a
 certification of accounting correctness or desktop compatibility. Historical
 milestones are first published on 2026-10-26; their original commits are retained.
 
-## Unreleased
+## 0.12.0-preview.1
 
+- **New private-workspace folder structure** (breaking for workspaces from earlier previews, which this version refuses without changing them; create a new workspace and import the originals again). One structure in English, Russian or German, created the same way by Python, native Windows, the GUI and the demo:
+  - five visible areas, a root overview page (`OVERVIEW.html` / `ОБЗОР.html` / `ÜBERSICHT.html`) refreshed by both overview engines, and internal records in `.business-kit`;
+  - the inbox holds only the user's files: assistant inputs and folder previews use an internal work folder, the workspace inbox can be previewed, and a file imported from it moves to `Imported/<YYYY-MM>` without overwriting;
+  - originals get a running number per storage year and a readable, Windows-safe name such as `2026-00007_invoice.pdf`, while the index keeps the SHA-256 and original name;
+  - copies of issued invoices are kept in `02 Documents/<year>/<month>/Outgoing invoices`, and new bank and correspondence files under storage-year folders;
+  - the accounting register is internal, and setup writes a procedure documentation (Verfahrensdokumentation) draft with retention periods (§147 AO, §14b UStG; checked 2026-11-21) for the user to complete;
+  - start guides and the user guides explain every folder. The earlier layouts, the `--layout`/`-Layout` options and hash-named originals were removed. See the [dated folder-structure review](docs/research/workspace-layout-review-2026-11-21.md).
+- Records accept only the current formats: a workspace marker without saved language and mode, a cash entry without `schema_version` 2 and line VAT status, or a bundle without its skill catalog is refused instead of being read with defaults. The `vat_not_recorded` report issue and the installer's single-skill fallback were removed; malformed records are still reported without being rewritten.
 - Add an offline EN/RU/DE guided setup page (`installer/`) for beginners: assistant choice with plan requirements, official sign-up and per-system download links, the existing Claude marketplace and Codex project-skill routes with copyable text, and four fictional first-task demos. It never downloads or runs installers and never collects credentials; provider links and plans were checked on 2026-11-20. It is not yet published at a web address or as a release asset.
 - Add a "Data & risks" step to the guided setup page: what AI can get wrong, where file content goes, GDPR basics in plain words, the AI-literacy duty for staff, the provider's own training setting as a checklist, and a six-card "would you share this?" practice check. Provider privacy facts were checked on 2026-11-20. Also add a progress count and bar, checklist tick counts, an enlargeable marketplace screenshot and a compact phone layout.
 - Make the guided setup page's kit-installation step start with one copyable request to Claude or Codex, the same one the README recommends; the Claude marketplace and Codex ZIP routes move into a collapsed "install manually" section.

@@ -31,7 +31,7 @@ def run(root, language="en"):
     registry = json.loads(ws._inside(root, "00_admin/documents.json").read_text())
     ids = {row["original_name"]: row["document_id"] for row in registry["documents"]}
     def save_input(name, value):
-        relative = "00_admin/inbox/" + name
+        relative = "00_admin/work/" + name
         ws._inside(root, relative).write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8")
         return relative
     for name, kind in (("invoice.synthetic.xml", "invoice"), ("authority.synthetic.pdf", "authority_letter"), ("bank.synthetic.csv", "bank_statement")):

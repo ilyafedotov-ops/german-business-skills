@@ -339,20 +339,27 @@ function NativeOverview {
     $body+=& $section $words.accounting $accountRows
     $mark="<!-- German Business Kit native overview v1 -->`n"
     $html=$mark+'<!doctype html><html lang="'+$language+'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src ''none''; style-src ''unsafe-inline''; base-uri ''none''; form-action ''none''"><title>'+(& $e $words.title)+'</title><style>body{margin:0;background:#f5f6f3;color:#182d29;font:16px/1.55 system-ui,sans-serif}main{max-width:1000px;margin:auto;padding:24px}section{background:white;border:1px solid #d7dfd9;border-radius:12px;padding:20px;margin:18px 0}h1{line-height:1.15}li,p{overflow-wrap:anywhere}li{margin-bottom:12px}small{color:#52635f}</style></head><body><main><h1>'+(& $e $words.title)+'</h1><p>'+(& $e $Period)+' / '+(& $e $result.as_of)+'</p><p>'+(& $e $words.boundary)+'</p>'+$body+'</main></body></html>'
+    # Both runtimes refresh one root page; each accepts the other's generated projection.
+    $htmlName='00_admin/overview.html'
+    $pythonMark="<!-- German Business Kit generated overview v1 -->`n"
     # Preflight every output before replacing any; only these generated projections are replaceable.
-    foreach ($name in @('native-overview.html','native-overview.md','native-overview.json')) {
-        $target=WorkspacePath ('00_admin/'+$name)
+    foreach ($name in @($htmlName,'00_admin/native-overview.md','00_admin/native-overview.json')) {
+        $target=WorkspacePath $name
         if (Test-Path -LiteralPath $target) {
             if ($name.EndsWith('.json')) { if ((ViewProperty (ReadJson $target) 'generated_by') -cne $result.generated_by) { throw 'Existing native view is not tool-generated; preserve it.' } }
-            elseif (-not $utf8.GetString((ReadBytes $target)).StartsWith($mark,[StringComparison]::Ordinal)) { throw 'Existing native view is not tool-generated; preserve it.' }
+            else {
+                $existing=$utf8.GetString((ReadBytes $target))
+                $known=$existing.StartsWith($mark,[StringComparison]::Ordinal) -or ($name -ceq $htmlName -and $existing.StartsWith($pythonMark,[StringComparison]::Ordinal))
+                if (-not $known) { throw 'Existing native view is not tool-generated; preserve it.' }
+            }
         }
     }
     $markdownRows=@($errors.ToArray())+@($words.active_tasks,$words.tasks_scope)+$(if ($taskRows.Count) { $taskRows } else { @($noTasks) })+@($docs | ForEach-Object { $_.original_name })+@($questions | ForEach-Object { $_.title })+$accountRows
     $markdownRows=@($markdownRows | ForEach-Object { ([Net.WebUtility]::HtmlEncode([string]$_)) -replace '([\\`*_{}\[\]()#+.!|>~-])','\$1' })
     $markdown=$mark+'# '+$words.title+"`n`n"+$Period+' / '+$result.as_of+"`n`n"+$words.boundary+"`n`n"+$words.next+': '+$words[$next]+"`n`n"+($markdownRows -join "`n`n")+"`n"
-    ViewSave '00_admin/native-overview.html' ($utf8.GetBytes($html))
+    ViewSave $htmlName ($utf8.GetBytes($html))
     ViewSave '00_admin/native-overview.md' ($utf8.GetBytes($markdown))
     ViewSave '00_admin/native-overview.json' (BytesJson $result)
-    $prefix=(WorkspacePath '00_admin').Substring($rootPath.TrimEnd([char[]]'\/').Length+1).Replace('\','/')
-    return @{health=$health;errors=@($errors.ToArray());html_path=$prefix+'/native-overview.html';markdown_path=$prefix+'/native-overview.md';json_path=$prefix+'/native-overview.json';next_action=$next;next_task_id=$nextTaskId;scope=$result.scope}
+    $physical={ param($name) (WorkspacePath $name).Substring($rootPath.TrimEnd([char[]]'\/').Length+1).Replace('\','/') }
+    return @{health=$health;errors=@($errors.ToArray());html_path=(& $physical $htmlName);markdown_path=(& $physical '00_admin/native-overview.md');json_path=(& $physical '00_admin/native-overview.json');next_action=$next;next_task_id=$nextTaskId;scope=$result.scope}
 }

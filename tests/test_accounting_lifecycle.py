@@ -19,7 +19,7 @@ class AccountingTests(unittest.TestCase):
         self.root = Path(self.temp.name).resolve() / "private"
         ws.init_workspace(self.root, 2026, "en")
         self.proof = "08_correspondence/review.md"
-        (self.root / self.proof).write_text("Synthetic user choice and reviewed evidence", encoding="utf-8")
+        ws._path(self.root, self.proof).write_text("Synthetic user choice and reviewed evidence", encoding="utf-8")
 
     def configure(self, system="local", **changes):
         value = ac.template("configuration")
@@ -39,7 +39,7 @@ class AccountingTests(unittest.TestCase):
         return value
 
     def filing(self, identifier="return-1", **changes):
-        payload = self.root / "05_tax/2026/draft.json"
+        payload = ws._path(self.root, "05_tax/2026/draft.json")
         if not payload.exists():
             payload.write_text('{"synthetic":true,"amount":"100.00"}', encoding="utf-8")
         value = ac.template("filing")
@@ -59,7 +59,7 @@ class AccountingTests(unittest.TestCase):
 
     def test_welcome_has_no_accounting_default_and_resume_preserves_choice(self):
         self.assertEqual(ac.status(self.root)["accounting_system"], "undecided")
-        self.assertFalse((self.root / ac.STATE).exists())
+        self.assertFalse((ws._path(self.root, ac.STATE)).exists())
         self.configure("external")
         ws.start_workspace(self.root, year=2027, language="ru")
         self.assertEqual(ac.status(self.root)["accounting_system"], "external")
@@ -68,11 +68,11 @@ class AccountingTests(unittest.TestCase):
         self.assertEqual(ac.status(self.root)["entry_count"], 0)
 
     def test_existing_profile_method_is_not_replaced_or_assumed(self):
-        before = (self.root / ws.PROFILE).read_bytes()
+        before = (ws._path(self.root, ws.PROFILE)).read_bytes()
         self.configure(method="unresolved")
         with self.assertRaises(ws.WorkspaceError):
             ac.post(self.root, self.entry())
-        self.assertEqual((self.root / ws.PROFILE).read_bytes(), before)
+        self.assertEqual((ws._path(self.root, ws.PROFILE)).read_bytes(), before)
 
     def test_cash_movements_separate_sales_fees_transfers_and_currencies(self):
         self.configure()
@@ -120,7 +120,7 @@ class AccountingTests(unittest.TestCase):
     def test_changed_entry_evidence_is_not_a_clean_report(self):
         self.configure()
         ac.post(self.root, self.entry())
-        (self.root / self.proof).write_text("Changed evidence", encoding="utf-8")
+        ws._path(self.root, self.proof).write_text("Changed evidence", encoding="utf-8")
         with self.assertRaises(ws.WorkspaceError):
             ac.period_report(self.root, "2026-10")
 
@@ -156,7 +156,7 @@ class AccountingTests(unittest.TestCase):
         self.filing()
         self.action("return-1", "review")
         self.action("return-1", "authorize")
-        (self.root / "05_tax/2026/draft.json").write_text('{"changed":true}', encoding="utf-8")
+        (ws._path(self.root, "05_tax/2026/draft.json")).write_text('{"changed":true}', encoding="utf-8")
         with self.assertRaises(ws.WorkspaceError):
             self.action("return-1", "begin")
         self.action("return-1", "cancel")
@@ -188,13 +188,13 @@ class AccountingTests(unittest.TestCase):
         self.action("return-1", "review")
         self.action("return-1", "authorize")
         self.action("return-1", "begin")
-        (self.root / "05_tax/2026/draft.json").write_text("Next version", encoding="utf-8")
+        (ws._path(self.root, "05_tax/2026/draft.json")).write_text("Next version", encoding="utf-8")
         self.action("return-1", "receipt", external_id="synthetic-ticket-1")
         self.action("return-1", "response", response_kind="request_for_information", due_date="2026-11-15")
         record = ac.get_filing(self.root, "return-1")["record"]
         self.assertEqual(record["state"], "submitted")
         self.assertEqual(record["responses"][0]["due_date"], "2026-11-15")
-        self.assertIn('"amount":"100.00"', (self.root / record["payload"]["path"]).read_text())
+        self.assertIn('"amount":"100.00"', (ws._path(self.root, record["payload"]["path"])).read_text())
         self.assertNotIn("accepted", record)
 
     def test_stale_updates_missing_receipts_and_mutable_evidence_are_rejected(self):
@@ -238,11 +238,11 @@ class AccountingTests(unittest.TestCase):
         self.configure()
         ac.post(self.root, self.entry(account="bank"))
         bank_path = "03_banking/synthetic.csv"
-        (self.root / bank_path).write_text("transaction_id,booking_date,amount,currency\nsale,2026-10-20,100.00,EUR\n", encoding="utf-8")
+        (ws._path(self.root, bank_path)).write_text("transaction_id,booking_date,amount,currency\nsale,2026-10-20,100.00,EUR\n", encoding="utf-8")
         for language, expected in (("en", "Cash movement report"), ("ru", "Отчёт о движении денег")):
             ws.configure_workspace(self.root, language=language)
             exported = ac.export_report(self.root, "2026-10")
-            self.assertIn(expected, (self.root / exported["markdown_path"]).read_text(encoding="utf-8"))
+            self.assertIn(expected, (ws._path(self.root, exported["markdown_path"])).read_text(encoding="utf-8"))
             reconciled = ws.reconciliation_report(self.root, bank_path, exported["ledger_files"]["bank"], "2026-10")
             self.assertEqual(len(reconciled["matches"]), 1)
             self.assertEqual(reconciled["differences"], [])
@@ -255,17 +255,17 @@ class AccountingTests(unittest.TestCase):
 
     def test_missing_or_rolled_back_register_cannot_erase_uncertain_submission(self):
         self.configure()
-        old = (self.root / ac.STATE).read_bytes()
+        old = (ws._path(self.root, ac.STATE)).read_bytes()
         self.filing()
         self.action("return-1", "review")
         self.action("return-1", "authorize")
         self.action("return-1", "begin")
-        (self.root / ac.STATE).unlink()
+        (ws._path(self.root, ac.STATE)).unlink()
         with self.assertRaises(ws.WorkspaceError):
             ac.status(self.root)
         with self.assertRaises(ws.WorkspaceError):
             self.configure()
-        (self.root / ac.STATE).write_bytes(old)
+        (ws._path(self.root, ac.STATE)).write_bytes(old)
         with self.assertRaises(ws.WorkspaceError):
             ac.status(self.root)
 
@@ -286,7 +286,7 @@ class AccountingTests(unittest.TestCase):
         ac.post(self.root, self.entry("sale-2", account="bank"))
         report = ac.export_report(self.root, "2026-10")
         self.assertEqual(list(report["ledger_files"]), ["bank"])
-        self.assertEqual(len((self.root / report["ledger_files"]["bank"]).read_text().splitlines()), 3)
+        self.assertEqual(len((ws._path(self.root, report["ledger_files"]["bank"])).read_text().splitlines()), 3)
 
     def test_cash_summary_cannot_be_approved_as_a_completed_tax_return(self):
         self.configure()
@@ -319,8 +319,8 @@ class AccountingTests(unittest.TestCase):
     def test_filing_check_reports_multiple_issues_without_changing_draft(self):
         self.configure()
         self.filing(unresolved_items=["Unverified VAT timing"])
-        (self.root / self.proof).unlink()
-        (self.root / "05_tax/2026/draft.json").write_text("Changed draft")
+        ws._path(self.root, self.proof).unlink()
+        (ws._path(self.root, "05_tax/2026/draft.json")).write_text("Changed draft")
         check = ac.check_filing(self.root, "return-1")
         codes = {item["code"] for item in check["issues"]}
         self.assertTrue({"configuration_evidence", "source_changed", "unresolved_item"} <= codes)
@@ -334,7 +334,7 @@ class AccountingTests(unittest.TestCase):
         self.configure()
         self.filing()
         saved = ac.get_filing(self.root, "return-1")["record"]
-        (self.root / saved["payload"]["path"]).unlink()
+        (ws._path(self.root, saved["payload"]["path"])).unlink()
         check = ac.check_filing(self.root, "return-1")
         self.assertIn("snapshot_changed", [item["code"] for item in check["issues"]])
         self.assertEqual(check["allowed_preflight_actions"], [])
@@ -359,8 +359,8 @@ class AccountingTests(unittest.TestCase):
         self.filing()
         for action in ("review", "authorize", "begin"):
             self.action("return-1", action)
-        (self.root / self.proof).write_text("New current records")
-        (self.root / "05_tax/2026/draft.json").unlink()
+        ws._path(self.root, self.proof).write_text("New current records")
+        (ws._path(self.root, "05_tax/2026/draft.json")).unlink()
         check = ac.check_filing(self.root, "return-1")
         self.assertEqual(check["issues"], [])
         self.assertEqual(check["source_scope"], "frozen_evidence_only")
@@ -390,7 +390,7 @@ class AccountingTests(unittest.TestCase):
         invalid = {item["path"] for item in check["issues"] if item["code"] == "local_report_invalid"}
         self.assertEqual(invalid, {month["path"], year["path"]})
         record = ac.get_filing(self.root, "return-1")["record"]
-        (self.root / record["sources"][0]["path"]).unlink()
+        (ws._path(self.root, record["sources"][0]["path"])).unlink()
         check = ac.check_filing(self.root, "return-1")
         self.assertIn("snapshot_changed", [item["code"] for item in check["issues"]])
         self.assertIn(year["path"], [item["path"] for item in check["issues"] if item["code"] == "local_report_invalid"])
@@ -399,14 +399,14 @@ class AccountingTests(unittest.TestCase):
         self.configure()
         paths = ["08_correspondence/one.md", "08_correspondence/two.md"]
         for i, path in enumerate(paths):
-            (self.root / path).write_text("Synthetic cash entry evidence")
+            ws._path(self.root, path).write_text("Synthetic cash entry evidence")
             ac.post(self.root, self.entry("sale-" + str(i), evidence_file=path))
         report = ac.export_report(self.root, "2026-10")
         self.filing(source_files=[report["path"]])
         for path in paths:
-            (self.root / path).unlink()
+            ws._path(self.root, path).unlink()
         check = ac.check_filing(self.root, "return-1")
-        self.assertEqual({item["path"] for item in check["issues"] if item["code"] == "local_entry_evidence"}, set(paths))
+        self.assertEqual({item["path"] for item in check["issues"] if item["code"] == "local_entry_evidence"}, {ws._physical(self.root, p) for p in paths})
 
 
 if __name__ == "__main__":

@@ -138,7 +138,26 @@ For ongoing work, choose a private permanent folder such as **My business**, sep
 
 The assistant manages the supporting records. Ask it to link the saved result; you should not have to edit technical files or remember internal IDs. It should distinguish facts you supplied, checked facts and assumptions, and ask before treating an uncertain interpretation as a lasting fact. When a fact changes, give the effective date if you know it.
 
-A new folder has everyday areas for **Inbox, Documents, Accounts, Taxes and Business**. Folder names can be English, Russian or German. Keep an existing folder layout and its original files intact; ask the assistant to find documents by name, date or purpose. Changing conversation language does not rename folders.
+## Your folders
+
+A new workspace has the same structure in English, Russian or German. The folder language is chosen once; changing the conversation language does not rename folders.
+
+| Folder | What it holds |
+| --- | --- |
+| `START-HERE.md` | How to begin and how to continue later. |
+| `OVERVIEW.html` | The latest saved overview of tasks, documents and accounting. Ask the assistant to refresh it; it appears after the first overview. |
+| `01 Inbox/` | Your unsorted files. The assistant previews them before importing. After an import the file moves to `Imported/<year>-<month>/`, so the inbox shows only what is still pending. |
+| `02 Documents/<year>/<month>/` | `Originals/`: unchanged copies with a running number per year, such as `2026-00007_invoice.pdf`. `Outgoing invoices/`: copies of invoices you issued, by issue month. `Processed/`: extracted text or data when needed. |
+| `03 Accounts/` | `Bank/<year>/`: statements and normalized bank data. `Records/`: notes about your accounting system and working agreements. `Reports/`: reconciliations and reports. `Procedure documentation/`: the draft that describes how your records are kept. |
+| `04 Taxes/<year>/` | Tax questions, estimates, forms and actual filing evidence. |
+| `05 Business/` | `Registration/`: launch and change plans. `Correspondence/<year>/`: customer cases, letters and service comparisons. |
+| `.business-kit/` | Internal records: profile, tasks, questions, decisions, history and assistant working files. Keep it in backups; do not edit it by hand. |
+
+Why numbered originals? A running number makes gaps visible and lets you, an adviser or a tax auditor find each document without the kit; the index keeps the original file name and a SHA-256 fingerprint of the exact bytes. Year and month folders are storage periods, not tax decisions.
+
+The procedure documentation draft in `03 Accounts` describes how documents arrive, are filed, protected and kept. German record-keeping rules (GoBD) expect such a description. Complete the marked parts, keep dated versions, and treat it as your own document, not a certification. Retention periods run from the end of the calendar year: 10 years for books and records, 8 years for accounting vouchers including invoices, 6 years for business letters, and longer while a tax assessment is still open. Do not delete records without checking.
+
+The Inbox is only for your files: the assistant keeps previews and prepared inputs in `.business-kit`. Ask the assistant to find documents by name, date or purpose. Folders created by an earlier preview of the kit are not opened by this version and nothing in them is changed; start a new workspace and import the originals again.
 
 ## Where results are saved
 
@@ -151,17 +170,16 @@ their location; the assistant should link them rather than reorganize them.
 | --- | --- |
 | Ask a general question | Answer in chat. If you ask to save it, keep the note with the related topic below. |
 | Plan a business or fill registration forms | `05 Business/Registration/`, with a small case folder only when needed. |
-| Prepare a proposal, contract, invoice draft or customer reply | `05 Business/Correspondence/<case>/`; recipient files and private review notes are separate. Issued documents remain in the chosen invoicing system and preserved evidence. |
-| Import receipts or supplied originals | `01 Inbox/` for initial selection, then preserved copies in `02 Documents/<year>/<month>/Originals/` through the import workflow. Processed copies appear separately when needed. |
+| Prepare a proposal, contract, invoice draft or customer reply | `05 Business/Correspondence/<year>/<case>/`; recipient files and private review notes are separate. Issued documents remain in the chosen invoicing system; a preserved copy of each issued invoice is kept in `02 Documents/<year>/<month>/Outgoing invoices/`. |
+| Import receipts or supplied originals | `01 Inbox/` for initial selection, then numbered preserved copies in `02 Documents/<year>/<month>/Originals/` through the import workflow; the imported file moves to `01 Inbox/Imported/<year>-<month>/`. Processed copies appear separately when needed. |
 | Compare banks or work with statements | `03 Accounts/Bank/`; accounting-system comparisons/working notes use `03 Accounts/Records/`. |
-| Compare insurance/software other than accounting, or plan a connection | `05 Business/Correspondence/Services/<case>/`; readable findings only, never passwords or API keys. Existing service/source records are reused. |
+| Compare insurance/software other than accounting, or plan a connection | `05 Business/Correspondence/<year>/Services/<case>/`; readable findings only, never passwords or API keys. Existing service/source records are reused. |
 | Ask a tax question, estimate, prepare a return or answer Finanzamt | `04 Taxes/<year>/`; link the relevant original, sources, draft and observed receipt where available. |
 | Reconcile or prepare accounting reports/exports | `03 Accounts/Reports/`; these reports do not replace the chosen ledger or a full backup. |
 | Change, hire, pause or close | Keep a plan in `05 Business/Registration/<case>/`, related letters in Correspondence and tax material in the relevant tax year. Link the parts from one existing task. |
 
 `<case>`, `<year>` and `<month>` are placeholders, not folder names to type.
-Case names can use your language. Standard folders also support Russian/German;
-older workspaces may retain technical names. The assistant follows the saved
+Case names can use your language. The assistant follows the saved folder
 mapping, not the language of the latest message. Months are storage periods,
 not evidence of the tax period or payment date.
 

@@ -22,36 +22,61 @@ Replace the path and year; do not use the example literally. On Windows, use the
 
 For the recommended **project-scoped installation**, keep the assistant project with installed skills separate from the private business workspace, as described in the [installation guide](../guides/install.en.md#install-in-codex). Open that project and grant access to the private workspace when needed. If an existing setup already co-locates project skills and business records, preserve it; do not reinitialize or move it. For that older co-located route only, initialization must precede installing skills because initialization rejects a nonempty directory. User-scoped installation can happen before workspace creation. Do not enable Git/worktree/cloud syncing for this private folder just to make a host's project UI work; select a local folder session or use the user-level skill.
 
-All relative input paths below are relative to `--root`, not the current shell directory. Use a single writer; a `.workspace.lock` prevents concurrent script mutations, and writers wait up to five seconds for a cooperating writer to finish. If a lock remains, `doctor` reports `lock.assessment`: `active` (its process is running on this computer; never remove it), `stale` (the recorded process has ended on this computer) or `unverifiable` (another computer, an older lock without a recorded computer, or unreadable content). `unlock --expected-sha256 <lock.sha256>` removes a `stale` lock, or an `unverifiable` one with `--confirmed-no-writer` only after the user confirms that no other app, assistant or computer uses the workspace. It refuses an active or changed lock and preserves the removed lock in history and the audit log. Never delete the lock file by hand.
+All relative input paths below are relative to `--root`, not the current shell directory. Use a single writer; a `.workspace.lock` prevents concurrent script mutations, and writers wait up to five seconds for a cooperating writer to finish. If a lock remains, `doctor` reports `lock.assessment`: `active` (its process is running on this computer; never remove it), `stale` (the recorded process has ended on this computer) or `unverifiable` (another computer, or a lock without readable owner details). `unlock --expected-sha256 <lock.sha256>` removes a `stale` lock, or an `unverifiable` one with `--confirmed-no-writer` only after the user confirms that no other app, assistant or computer uses the workspace. It refuses an active or changed lock and preserves the removed lock in history and the audit log. Never delete the lock file by hand.
 
 ## Files and state
 
-New CLI `init` and `start` use five everyday folders in `en`, `ru` or `de`, plus `.business-kit` for internal records and a localized root start guide. Folder language is pinned separately in `.workspace-layout.json` and the workspace marker. Include both the internal area and descriptor in backups. `--layout legacy` explicitly selects the old layout; existing workspaces resume unchanged. No automatic migration is implemented.
+`init` and `start` create one folder structure in the chosen folder language (`en`, `ru` or `de`): five everyday folders, a root start guide, the root overview page once generated, and the hidden `.business-kit` area for internal records. `.workspace-layout.json` (descriptor `schema_version` 2) pins the folder language and must match the marker; include it and `.business-kit` in backups. Folders created by earlier previews (numbered `00_admin`… folders or a version-1 descriptor) are refused without any change: create a new workspace and import the originals again. A newer descriptor version asks for a kit update.
 
-The table below lists **stable logical references**, not necessarily physical paths. Before using ordinary file tools, run `workspace.py folders --root <private-folder>` (or native `-Action folders`) and translate the longest matching prefix. Under the document archive, `originals`, `derived` and `proposals` also have translated names. Prefer the actual paths returned by operations. Never create old English directories alongside a localized workspace. See `assets/folder-layouts.json` for the shared mapping. The low-level Python `init_workspace` API retains its legacy default for existing callers; `start_workspace` defaults to localized folders.
+```text
+<workspace>/                        en / ru / de
+├── START-HERE.md                   НАЧНИТЕ-ЗДЕСЬ.md / HIER-STARTEN.md
+├── OVERVIEW.html                   ОБЗОР.html / ÜBERSICHT.html (after the first overview)
+├── 01 Inbox/                       01 Входящие / 01 Eingang
+│   └── Imported/<YYYY-MM>/         Импортировано / Importiert
+├── 02 Documents/<YYYY>/<MM>/       02 Документы / 02 Dokumente
+│   ├── Originals/                  Оригиналы / Originale
+│   ├── Outgoing invoices/          Исходящие счета / Ausgangsrechnungen
+│   └── Processed/                  Обработанные / Aufbereitet
+├── 03 Accounts/                    03 Учёт / 03 Buchhaltung
+│   ├── Bank/<YYYY>/                Банк / Bank
+│   ├── Records/                    Записи / Unterlagen
+│   ├── Reports/<YYYY-MM>/          Отчёты / Berichte
+│   └── Procedure documentation/    Описание процессов / Verfahrensdokumentation
+├── 04 Taxes/<YYYY>/                04 Налоги / 04 Steuern
+├── 05 Business/                    05 Бизнес / 05 Unternehmen
+│   ├── Registration/               Регистрация / Anmeldung
+│   └── Correspondence/<YYYY>/      Переписка / Schriftverkehr
+└── .business-kit/                  admin, profile, audit (internal records)
+```
 
-| File / directory | Meaning |
+Records store **stable logical references** (left column below), not physical paths. Before using ordinary file tools, run `workspace.py folders --root <private-folder>` (or native `-Action folders`) and translate the longest matching prefix; prefer the actual paths returned by operations. Never create folders named after logical references. See `assets/folder-layouts.json` for the mapping.
+
+| Logical reference | Meaning |
 |---|---|
 | `00_admin/workspace.json` | Workspace UUID, schema version, initial year, language and working mode |
 | `00_admin/runtime.json` | Actual host/provider/plan/data-processing configuration |
-| `00_admin/documents.json` | Index of original bytes and storage periods |
-| `00_admin/tasks.json` | Task array, with dependencies and completion evidence |
-| `00_admin/questions.json` | Question array, with fact blocked and requested evidence |
-| `00_admin/decisions.json` | Decision array, with effective date, reviewer and evidence |
-| `00_admin/inbox/` | Private intake/answer files |
+| `00_admin/documents.json` | Index of originals: document number, SHA-256, original name, size, storage period and import time |
+| `00_admin/tasks.json`, `questions.json`, `decisions.json` | Task, question and decision registers |
+| `00_admin/inbox/` | The user's unsorted files awaiting selected import; never write assistant files here |
+| `00_admin/inbox/imported/YYYY-MM/` | Sources filed after their import from the inbox |
+| `00_admin/work/` | Assistant input/answer files and folder previews |
+| `00_admin/overview.html` | The root overview page, refreshed by the Python and native overviews |
 | `01_profile/business.json` | Canonical profile; flat `facts` mapping |
 | `02_registration/`, `05_tax/YYYY/` | Draft worksheets, official receipts and responses; tax consultations in `05_tax/YYYY/consultations/` |
-| `03_banking/`, `04_accounting/` | Provider requirements, statements/normalized files, workflow agreements |
-| `06_bookkeeping/YYYY/MM/originals/` | Immutable-by-workflow original copies; no legal immutability guarantee |
+| `03_banking/YYYY/`, `04_accounting/` | Statements and normalized files by statement year; accounting-system notes and working agreements |
+| `04_accounting/register.json` | Internal accounting register (journal and filings); not evidence |
+| `04_accounting/procedure/` | Procedure documentation (GoBD Verfahrensdokumentation) draft for the user to complete |
+| `06_bookkeeping/YYYY/MM/originals/` | Immutable-by-workflow original copies named `<YYYY>-<NNNNN>_<readable name>`; no legal immutability guarantee |
+| `06_bookkeeping/YYYY/MM/issued/` | Copies of issued invoices, by issue date |
 | `06_bookkeeping/YYYY/MM/derived/` | OCR, extracted facts and normalized data |
-| `06_bookkeeping/YYYY/MM/proposals/` | Legacy proposal files; new validated records use `00_admin/casework.json` |
 | `07_exports/YYYY-MM/` | Generated reconciliation and optional records archives |
-| `08_correspondence/` | Relevant correspondence |
-| `09_audit/events.json`, `09_audit/history/` | Local events and before/after profile snapshots |
+| `08_correspondence/YYYY/` | Correspondence, customer cases and saved reports, by the year they were saved |
+| `09_audit/events.json`, `09_audit/history/` | Local events and before/after snapshots |
 
-The initializer leaves the document archive empty. Intake creates only the selected storage month; derived files and proposals get directories when an operation needs them. Existing empty month folders are preserved. A folder period is not a tax-period determination. Keep invoice, service, receipt and payment dates in extracted records. Missing values stay unknown.
+The initializer leaves the document archive empty and writes the start guide and the procedure documentation draft. Intake creates only the selected storage month; derived files get directories when an operation needs them. Existing empty month folders are preserved. Originals get a running number per storage year and a readable, Windows-safe name; the number is never reused and gaps stay visible to `verify`. A file imported from the inbox moves to its Imported month afterwards and is never overwritten; sources elsewhere stay untouched. A folder year or month is a storage period, not a tax-period determination. Keep invoice, service, receipt and payment dates in extracted records. Missing values stay unknown.
 
-The task/question/decision files start as empty arrays. Use the validated `entry` command below to preserve IDs, transitions, locks and history. Legacy untyped records are flagged for reviewed conversion; never silently clear or migrate them. A due date in a file does not create an actual reminder.
+The task/question/decision files start as empty arrays. Use the validated `entry` command below to preserve IDs, transitions, locks and history. Entries in another shape are reported as invalid; never clear or rewrite them silently. A due date in a file does not create an actual reminder.
 
 ## Guided start and demonstration
 
@@ -62,7 +87,7 @@ python3 <skill-directory>/scripts/workspace.py doctor --root <private-folder>
 python3 <skill-directory>/scripts/workspace.py unlock --root <private-folder> --expected-sha256 <lock.sha256 from doctor>
 ```
 
-Use [onboarding](onboarding.md) to guide the user instead of making them type commands. `start` resumes an existing workspace without changing preferences or year; arguments select defaults only for a new workspace. `demo` requires a new/empty folder and creates synthetic CSVs, preserved originals, a real reconciliation and localized `START-HERE.md`. It never fills a real business profile. Inspect interrupted demonstrations with `start`/`doctor`; do not rerun initialization over them.
+Use [onboarding](onboarding.md) to guide the user instead of making them type commands. `start` resumes an existing workspace without changing preferences or year; arguments select defaults only for a new workspace. `demo` (`en` or `ru`) requires a new/empty folder and creates the same localized folders as `start`, with synthetic CSVs, preserved originals, a real reconciliation and a demo note above the ordinary localized start guide. It never fills a real business profile. Inspect interrupted demonstrations with `start`/`doctor`; do not rerun initialization over them.
 
 ## Runtime review and diagnostics
 
@@ -84,7 +109,7 @@ For a recorded assessment, set `client_data_mode` to `review_recorded` and add:
 The nonempty private evidence file explains the actual assessment, sources, limitations and scope. It cannot be a mutable configuration/register file. Missing settings cannot be marked reviewed. Save the full proposed runtime object as a private input file, then run:
 
 ```bash
-python3 <skill-directory>/scripts/workspace.py runtime --root <private-folder> --input 00_admin/inbox/runtime-review.json
+python3 <skill-directory>/scripts/workspace.py runtime --root <private-folder> --input 00_admin/work/runtime-review.json
 ```
 
 The writer stores assessment/configuration hashes and history under the workspace lock. A changed evidence file or configuration edited outside the command invalidates the recorded review. A changed provider, plan, connector, purpose or data category requires reconsideration; the command cannot decide legal suitability. To proceed without an assessment, retain `synthetic_or_redacted_until_reviewed`. Follow [privacy](privacy.md) before real personal-data processing. This is not a compliance checkbox.
@@ -105,9 +130,9 @@ Every entry needs `schema_version: 1`, an opaque `id` (letters/digits/underscore
 ```
 
 ```bash
-python3 <skill-directory>/scripts/workspace.py entry --root <private-folder> --collection tasks --input 00_admin/inbox/task.json
+python3 <skill-directory>/scripts/workspace.py entry --root <private-folder> --collection tasks --input 00_admin/work/task.json
 python3 <skill-directory>/scripts/workspace.py entry --root <private-folder> --collection tasks --id task-check-001
-python3 <skill-directory>/scripts/workspace.py entry --root <private-folder> --collection tasks --input 00_admin/inbox/task-update.json --expected-sha256 <current-entry-hash>
+python3 <skill-directory>/scripts/workspace.py entry --root <private-folder> --collection tasks --input 00_admin/work/task-update.json --expected-sha256 <current-entry-hash>
 ```
 
 Inspection returns state, evidence health and the version hash without the title/evidence content. Updates require that exact previous hash. Writes preserve unrelated entries and history; they never schedule reminders or perform external actions.
@@ -120,14 +145,14 @@ Inspection returns state, evidence health and the version hash without the title
 
 Preserve terminal entries and create linked corrections. For an approved decision, create and approve its replacement with `supersedes=<old-id>`, then change only the old state to `superseded` and add `superseded_by=<replacement-id>`. Its content and reviewer evidence remain unchanged. Dependency and supersession cycles are rejected.
 
-Evidence paths are relative private files; mutable administration files cannot serve as evidence. Hashes detect changes, not document truth. Changed evidence stays flagged, while inspection, unrelated work and linked corrections remain possible. Never rehash just to hide a discrepancy. Preserve legacy registers with incompatible shapes/broken links and prepare a reviewed conversion before using the writer.
+Evidence paths are relative private files; mutable administration files cannot serve as evidence. Hashes detect changes, not document truth. Changed evidence stays flagged, while inspection, unrelated work and linked corrections remain possible. Never rehash just to hide a discrepancy. Preserve registers with invalid shapes or broken links for review; the writer refuses to change them.
 
 ## Route readable results by task
 
-Keep the five existing visible areas. Do not add mandatory lifecycle-stage roots,
-create a workspace per request/year/activity, or change mappings to improve labels:
-existing localized descriptors pin the language, and mapping changes can reinterpret
-already stored paths. Ordinary questions stay in chat unless persistence is needed.
+Keep the five visible areas. Do not add mandatory lifecycle-stage roots, create a
+workspace per request/year/activity, or change mappings to improve labels: the
+descriptor pins the language, and mapping changes can reinterpret stored paths.
+Ordinary questions stay in chat unless persistence is needed.
 
 Before writing, obtain the actual paths with `folders`/native `-Action folders`.
 Reuse the existing task/case and stored report location first. For a new readable
@@ -136,17 +161,19 @@ result use the logical destination below, translated through that mapping:
 | Result | Logical destination |
 | --- | --- |
 | Launch plan, registration worksheet, change/hiring/pause/closure plan | `02_registration/<case>/` |
-| Customer proposal/contract/invoice draft, ordinary letter or saved general business answer | `08_correspondence/<case>/` |
-| Bank comparison or statement working files | `03_banking/` |
+| Customer proposal/contract/invoice draft, ordinary letter or saved general business answer | `08_correspondence/<year>/<case>/` |
+| Bank comparison or statement working files | `03_banking/<year>/` |
 | Accounting-system comparison or working agreement | `04_accounting/` |
-| Insurance/other-service comparison or readable connection assessment | `08_correspondence/<services>/<case>/` |
+| Insurance/other-service comparison or readable connection assessment | `08_correspondence/<year>/<services>/<case>/` |
 | Tax research/estimate/form, Finanzamt reply or annual preparation | `05_tax/<year>/` (existing consultation/filing writers retain their own paths) |
 | Accounting reconciliation/report/export | `07_exports/<period>/` (use the generating writer's returned path) |
-| Original documents | Existing intake/catalog writers, normally `06_bookkeeping/<year>/<month>/originals/`; no manual relocation |
+| Original documents | Intake/catalog writers only: `06_bookkeeping/<year>/<month>/originals/`; no manual relocation |
+| Copy of an issued invoice | The invoicing writer files it in `06_bookkeeping/<year>/<month>/issued/` |
 
 `<case>` is a short, non-sensitive task identifier or title; create a subfolder only
 when useful. Use understandable dated/versioned filenames, preserve earlier
 reviewed/sent versions, and keep recipient files apart from private notes.
+`<year>` is the year the file is saved, not a tax year.
 `<services>` means a readable category name such as `Services`, `Услуги` or
 `Dienstleistungen` in the folder language, not a schema key or literal placeholder.
 Reuse an existing equivalent folder rather than duplicating it.
@@ -163,7 +190,7 @@ where the readable result was saved and how to resume from the same workspace.
 
 ## Language and working mode
 
-`workspace.json` stores `language` (`en` or `ru`; legacy `de` accepted) and `mode` (`general`, `bookkeeping` or `tax-consultant`). A v0.1 workspace without `mode` is read as `general`; its files are not rewritten during status checks and schema version stays 1. Both languages and modes share the existing profile and evidence.
+`workspace.json` stores `language` (`en`, `ru` or `de`) and `mode` (`general`, `bookkeeping` or `tax-consultant`). A marker without both is refused. Both languages and modes share the existing profile and evidence.
 
 ```bash
 python3 <skill-directory>/scripts/workspace.py configure --root /absolute/private-workspace --language en --mode tax-consultant
@@ -190,13 +217,13 @@ Each fact has this shape:
 }
 ```
 
-Supported states: `unknown`, `declared`, `proposed`, `verified`, `needs_review`. A nonunknown fact needs a value and evidence source. `verified` requires an inspected private file source; the writer stores its hash, and status detects missing/changed evidence. The script cannot validate document truth or a legal conclusion. Legacy verified facts without fingerprints require review, not silent migration. Record money as decimal strings with currency and period identified, not binary floats.
+Supported states: `unknown`, `declared`, `proposed`, `verified`, `needs_review`. A nonunknown fact needs a value and evidence source. `verified` requires an inspected private file source; the writer stores its hash, and status detects missing/changed evidence. The script cannot validate document truth or a legal conclusion. A verified fact without a stored fingerprint is reported for review. Record money as decimal strings with currency and period identified, not binary floats.
 
 New writes validate profile field types. VAT regime is `Kleinunternehmer`, `Regelbesteuerung` or `unresolved`; accounting method is `EÜR`, `Bilanzierung` or `unresolved`. Employee/cash/cross-border/existing-VAT flags are booleans. Dates use `YYYY-MM-DD`; `vat_prior_year` is an integer year. Client/country lists are string arrays. Activities are arrays with unique `activity_id`, optional text `description`, `classification` (`freiberuflich`, `gewerblich`, `mixed`, `unresolved`) and date/null `commenced_at`. VAT-history items contain `regime`, `effective_from`, and `source_ref`. Provider/bank requirements are objects; remaining text fields require nonempty strings. Unknown facts remain null.
 
-Person-wide turnover/forecast fields use `{"amount":"1234.56","currency":"EUR","period":"2026"}` with a nonnegative decimal string and explicit year. Preserve original foreign amounts separately and substantiate conversion. This storage format does not calculate qualifying statutory turnover. Legacy values are flagged without rewriting; correct individual fields with evidence through `record`.
+Person-wide turnover/forecast fields use `{"amount":"1234.56","currency":"EUR","period":"2026"}` with a nonnegative decimal string and explicit year. Preserve original foreign amounts separately and substantiate conversion. This storage format does not calculate qualifying statutory turnover. Values in another shape are reported as invalid without rewriting; correct individual fields with evidence through `record`.
 
-Save a one-field update in `00_admin/inbox/fact.json`:
+Save a one-field update in `00_admin/work/fact.json`:
 
 ```json
 {
@@ -212,7 +239,7 @@ Save a one-field update in `00_admin/inbox/fact.json`:
 Run:
 
 ```bash
-python3 <skill-directory>/scripts/workspace.py record --root /absolute/private-workspace --input 00_admin/inbox/fact.json
+python3 <skill-directory>/scripts/workspace.py record --root /absolute/private-workspace --input 00_admin/work/fact.json
 ```
 
 The input file must be inside the workspace. `--input -` also accepts JSON through stdin; do not embed secrets in shell command arguments. Keep external submission dates and evidence in an operation record, not an inferred boolean in the profile. Previous profile values are preserved in snapshots.
@@ -225,7 +252,7 @@ python3 <skill-directory>/scripts/workspace.py verify --root /absolute/private-w
 python3 <skill-directory>/scripts/workspace.py status --root /absolute/private-workspace
 ```
 
-Intake accepts regular PDF, XML, PNG, JPG/JPEG, TIF/TIFF and CSV files, at most 50 MiB. It reads bytes without executing, OCRing or parsing active content, gives the stored copy a SHA-256 filename, and indexes original name, size, hash, storage period and import time. Originals are not overwritten. Identical bytes reuse an indexed document only after integrity verification; this is not a conclusion about business duplicates. Different scans of the same invoice still need business-level review.
+Intake accepts regular PDF, XML, PNG, JPG/JPEG, TIF/TIFF and CSV files, at most 50 MiB. It reads bytes without executing, OCRing or parsing active content, names the stored copy by its running document number and a readable name, and indexes the document number, SHA-256, original name, size, storage period and import time. Originals are not overwritten. A source taken from the workspace inbox then moves to its Imported month; sources elsewhere stay untouched. Identical bytes reuse an indexed document only after integrity verification; this is not a conclusion about business duplicates. Different scans of the same invoice still need business-level review.
 
 `verify` checks indexed original integrity and reports unexpected original files requiring review. It does not validate tax treatment, completeness of received documents, XML business rules, legal retention or the integrity of the audit history itself. The user can alter files and their index; this is not a tamper-proof archive. Never label a successful hash check GoBD certification.
 
@@ -289,6 +316,6 @@ Use [document workflow](document-workflow.md) for `desk.py` commands and additiv
 
 ## Creation defaults and lock evidence
 
-New `init` and `start` workspaces default to English unless a language is explicitly selected. The low-level Python `init_workspace` API retains its legacy layout default for existing callers; CLI `init` and `start` default to localized folders. Resuming a workspace preserves its language and physical folders. Never rename existing folders to align defaults.
+New `init` and `start` workspaces default to English unless a language is explicitly selected. Resuming a workspace preserves its language and physical folders. Never rename existing folders to align defaults.
 
 Python unlock preserves the exact captured lock bytes as a `.lock` history file as well as readable metadata. Native diagnosis/recovery is described in [native Windows](native-windows.md#diagnose-and-recover-a-remaining-lock).

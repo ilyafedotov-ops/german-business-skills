@@ -19,7 +19,7 @@ The installed assistant uses the self-contained [skill entry point](../skills/de
 
 ## Research
 
-[Host-installation sources](research/host-installation-sources.md), [GUI research](research/gui-ux-primary-sources.md) and the [design recommendation](research/gui-ux-recommendation.md) retain their original check dates; recheck external claims for the current task.
+[Host-installation sources](research/host-installation-sources.md), [GUI research](research/gui-ux-primary-sources.md), the [design recommendation](research/gui-ux-recommendation.md) and the [workspace layout review](research/workspace-layout-review-2026-11-21.md) retain their original check dates; recheck external claims for the current task.
 
 ## Keep this structure small
 

@@ -1,5 +1,6 @@
 """Opt-in Lexware Office draft API and exact-object browser handoff."""
 import copy
+from datetime import date
 import hashlib
 import http.client
 import json
@@ -95,7 +96,7 @@ def template():
 
 
 def _save(root, data, suffix=".json"):
-    relative = "08_correspondence/invoice-evidence/lexware-" + uuid.uuid4().hex + suffix
+    relative = ws._dated("08_correspondence", str(date.today().year), "invoice-evidence/lexware-" + uuid.uuid4().hex + suffix)
     path = ws._inside(root, relative)
     ws._mkdir(path.parent)
     ws._write_exclusive(path, data)

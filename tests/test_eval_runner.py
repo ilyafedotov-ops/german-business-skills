@@ -32,25 +32,25 @@ p = pathlib.Path.cwd()
 (p / 'observed-argv.json').write_text(json.dumps(sys.argv[1:]))
 if 'timeout-host' in sys.argv[0]: time.sleep(20)
 if 'corrupt-host' in sys.argv[0]:
-    (p / 'workspace/00_admin/inbox/invoice-original.xml').write_text('destroyed')
+    next((p / 'workspace').rglob('invoice-original.xml')).write_text('destroyed')
 if 'symlink-root-host' in sys.argv[0]:
     shutil.rmtree(p / 'workspace')
     outside = p.parent / 'outside'; outside.mkdir()
     (outside / 'private-sentinel.txt').write_text('observer must not read this outside fixture')
     (p / 'workspace').symlink_to(outside, target_is_directory=True)
 if 'fifo-host' in sys.argv[0]:
-    marker = p / 'workspace/00_admin/workspace.json'
+    marker = p / 'workspace/.business-kit/admin/workspace.json'
     marker.unlink(); os.mkfifo(marker)
 if 'background-host' in sys.argv[0]:
     subprocess.Popen([sys.executable, '-c', \"import pathlib,time;time.sleep(0.7);pathlib.Path('background-survived').write_text('late write')\"], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 if 'forged-history-host' in sys.argv[0]:
-    marker_path = p / 'workspace/00_admin/workspace.json'
+    marker_path = p / 'workspace/.business-kit/admin/workspace.json'
     marker = json.loads(marker_path.read_text()); marker.update(language='en', mode='tax-consultant')
     marker_path.write_text(json.dumps(marker))
-    events_path = p / 'workspace/09_audit/events.json'
+    events_path = p / 'workspace/.business-kit/audit/events.json'
     events = json.loads(events_path.read_text()); events.append({'action':'workspace_configured','details':{'history_id':'empty-checkpoint'}})
     events_path.write_text(json.dumps(events))
-    (p / 'workspace/09_audit/history/empty-checkpoint.json').write_text('{}')
+    (p / 'workspace/.business-kit/audit/history/empty-checkpoint.json').write_text('{}')
 if 'configure-host' in sys.argv[0]:
     subprocess.run([sys.executable, '-B', str(p / 'skills/de-business-kit/scripts/workspace.py'), 'configure', '--root', str(p / 'workspace'), '--language', 'en', '--mode', 'tax-consultant'], check=True, capture_output=True)
 if 'attack-host' in sys.argv[0]:

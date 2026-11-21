@@ -29,29 +29,29 @@ class RegisterTests(unittest.TestCase):
         completed = self.task(status="completed")
         with self.assertRaises(workspace.WorkspaceError):
             workspace.save_entry(self.root, "tasks", completed, result["sha256"])
-        (self.root / "00_admin/evidence.md").write_text("Synthetic inspected result", encoding="utf-8")
+        (workspace._path(self.root, "00_admin/evidence.md")).write_text("Synthetic inspected result", encoding="utf-8")
         completed["evidence_file"] = "00_admin/evidence.md"
         saved = workspace.save_entry(self.root, "tasks", completed, result["sha256"])
-        records = json.loads((self.root / "00_admin/tasks.json").read_text())
+        records = json.loads((workspace._path(self.root, "00_admin/tasks.json")).read_text())
         self.assertEqual([r["status"] for r in records], ["completed", "pending"])
         self.assertTrue(records[0]["evidence_sha256"])
-        self.assertTrue((self.root / f"09_audit/history/{saved['history_id']}.json").exists())
+        self.assertTrue((workspace._path(self.root, f"09_audit/history/{saved['history_id']}.json")).exists())
 
     def test_update_requires_exact_previous_version(self):
         result = workspace.save_entry(self.root, "tasks", self.task())
         workspace.save_entry(self.root, "tasks", self.task(status="in_progress"), result["sha256"])
-        before = (self.root / "00_admin/tasks.json").read_bytes()
+        before = (workspace._path(self.root, "00_admin/tasks.json")).read_bytes()
         for expected in (None, result["sha256"]):
             with self.assertRaises(workspace.WorkspaceError):
                 workspace.save_entry(self.root, "tasks", self.task(status="blocked"), expected)
-        self.assertEqual((self.root / "00_admin/tasks.json").read_bytes(), before)
+        self.assertEqual((workspace._path(self.root, "00_admin/tasks.json")).read_bytes(), before)
 
     def test_new_approved_decision_and_completion_without_dependencies_are_rejected(self):
         with self.assertRaises(workspace.WorkspaceError):
             workspace.save_entry(self.root, "decisions", self.task(status="approved", reviewer="user"))
         first = workspace.save_entry(self.root, "tasks", self.task())
         second = workspace.save_entry(self.root, "tasks", self.task(id="task-2", depends_on=["task-1"]))
-        (self.root / "00_admin/result.md").write_text("Synthetic result", encoding="utf-8")
+        (workspace._path(self.root, "00_admin/result.md")).write_text("Synthetic result", encoding="utf-8")
         with self.assertRaises(workspace.WorkspaceError):
             workspace.save_entry(self.root, "tasks", self.task(id="task-2", status="completed", depends_on=["task-1"], evidence_file="00_admin/result.md"), second["sha256"])
 
@@ -68,7 +68,7 @@ class RegisterTests(unittest.TestCase):
         first = workspace.save_entry(self.root, "decisions", proposed)
         with self.assertRaises(workspace.WorkspaceError):
             workspace.save_entry(self.root, "decisions", dict(proposed, status="approved"), first["sha256"])
-        (self.root / "00_admin/decision.md").write_text("Synthetic reviewer decision", encoding="utf-8")
+        (workspace._path(self.root, "00_admin/decision.md")).write_text("Synthetic reviewer decision", encoding="utf-8")
         saved = workspace.save_entry(self.root, "decisions", dict(proposed, status="approved", reviewer="user", evidence_file="00_admin/decision.md"), first["sha256"])
         summary = workspace.entry_status(self.root, "decisions", "task-1")
         self.assertEqual(summary["sha256"], saved["sha256"])
@@ -79,15 +79,15 @@ class RegisterTests(unittest.TestCase):
     def test_active_lock_and_unknown_record_fields_do_not_write(self):
         with self.assertRaises(workspace.WorkspaceError):
             workspace.save_entry(self.root, "tasks", self.task(automatic_submission=True))
-        lock = self.root / workspace.LOCK
+        lock = workspace._path(self.root, workspace.LOCK)
         lock.write_text("active", encoding="utf-8")
         with self.assertRaises(workspace.WorkspaceError):
             workspace.save_entry(self.root, "tasks", self.task())
-        self.assertEqual(json.loads((self.root / "00_admin/tasks.json").read_text()), [])
+        self.assertEqual(json.loads((workspace._path(self.root, "00_admin/tasks.json")).read_text()), [])
         self.assertEqual(lock.read_text(), "active")
 
-    def test_legacy_untyped_register_is_reported_without_rewriting(self):
-        path = self.root / "00_admin/tasks.json"
+    def test_untyped_register_entry_is_reported_without_rewriting(self):
+        path = workspace._path(self.root, "00_admin/tasks.json")
         path.write_text('[{"old": "untyped"}]', encoding="utf-8")
         before = path.read_bytes()
         status = workspace.workspace_status(self.root)
@@ -97,7 +97,7 @@ class RegisterTests(unittest.TestCase):
         self.assertEqual(path.read_bytes(), before)
 
     def test_changed_evidence_allows_inspection_and_linked_correction(self):
-        evidence = self.root / "00_admin/result.md"
+        evidence = workspace._path(self.root, "00_admin/result.md")
         evidence.write_text("First result", encoding="utf-8")
         original = workspace.save_entry(self.root, "tasks", self.task(evidence_file="00_admin/result.md"))
         evidence.write_text("Changed result", encoding="utf-8")
@@ -112,10 +112,10 @@ class RegisterTests(unittest.TestCase):
             with self.subTest(name=name):
                 with self.assertRaises(workspace.WorkspaceError):
                     workspace.save_entry(self.root, "tasks", self.task(evidence_file=name))
-        self.assertEqual(json.loads((self.root / "00_admin/tasks.json").read_text()), [])
+        self.assertEqual(json.loads((workspace._path(self.root, "00_admin/tasks.json")).read_text()), [])
 
     def test_superseding_decision_requires_approved_replacement_and_preserves_old_review(self):
-        evidence = self.root / "00_admin/result.md"
+        evidence = workspace._path(self.root, "00_admin/result.md")
         evidence.write_text("Synthetic decision", encoding="utf-8")
         first = workspace.save_entry(self.root, "decisions", self.task(status="proposed"))
         approved = self.task(status="approved", reviewer="owner", evidence_file="00_admin/result.md")
@@ -132,29 +132,29 @@ class RegisterTests(unittest.TestCase):
 
     def test_status_detects_missing_dependencies(self):
         workspace.save_entry(self.root, "tasks", self.task())
-        path = self.root / "00_admin/tasks.json"
+        path = workspace._path(self.root, "00_admin/tasks.json")
         entries = json.loads(path.read_text())
         entries[0]["depends_on"] = ["missing"]
         path.write_text(json.dumps(entries), encoding="utf-8")
         self.assertIn("tasks_invalid", workspace.workspace_status(self.root)["issues"])
 
     def test_mutable_evidence_alias_is_rejected_on_case_insensitive_filesystem(self):
-        alias = self.root / "00_ADMIN/TASKS.JSON"
+        alias = self.root / ".business-kit/ADMIN/TASKS.JSON"
         if not alias.exists():
             self.skipTest("Filesystem is case-sensitive")
         with self.assertRaises(workspace.WorkspaceError):
-            workspace.save_entry(self.root, "tasks", self.task(evidence_file="00_ADMIN/TASKS.JSON"))
+            workspace.save_entry(self.root, "tasks", self.task(evidence_file=".business-kit/ADMIN/TASKS.JSON"))
 
     def test_replacement_with_changed_evidence_cannot_supersede_reviewed_decision(self):
         for name in ("old.md", "new.md"):
-            (self.root / "00_admin" / name).write_text(name, encoding="utf-8")
+            (workspace._path(self.root, "00_admin") / name).write_text(name, encoding="utf-8")
         first = workspace.save_entry(self.root, "decisions", self.task(status="proposed"))
         approved = self.task(status="approved", reviewer="owner", evidence_file="00_admin/old.md")
         old = workspace.save_entry(self.root, "decisions", approved, first["sha256"])
         replacement = self.task(id="decision-2", status="proposed", supersedes="task-1")
         new = workspace.save_entry(self.root, "decisions", replacement)
         workspace.save_entry(self.root, "decisions", dict(replacement, status="approved", reviewer="owner", evidence_file="00_admin/new.md"), new["sha256"])
-        (self.root / "00_admin/new.md").write_text("changed", encoding="utf-8")
+        (workspace._path(self.root, "00_admin/new.md")).write_text("changed", encoding="utf-8")
         with self.assertRaises(workspace.WorkspaceError):
             workspace.save_entry(self.root, "decisions", dict(approved, status="superseded", superseded_by="decision-2"), old["sha256"])
 

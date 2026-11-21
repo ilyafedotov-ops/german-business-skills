@@ -29,7 +29,7 @@ class WorkspaceTests(unittest.TestCase):
         workspace.init_workspace(self.root, 2026, "ru")
 
     def load(self, relative):
-        return json.loads((self.root / relative).read_text(encoding="utf-8"))
+        return json.loads(workspace._path(self.root, relative).read_text(encoding="utf-8"))
 
     def source(self, name="invoice.pdf", content=b"synthetic-original\n"):
         path = self.base / name
@@ -37,8 +37,8 @@ class WorkspaceTests(unittest.TestCase):
         return path
 
     def csvs(self, bank, ledger):
-        bank_path = self.root / "03_banking" / "bank.csv"
-        ledger_path = self.root / "04_accounting" / "ledger.csv"
+        bank_path = workspace._path(self.root, "03_banking") / "bank.csv"
+        ledger_path = workspace._path(self.root, "04_accounting") / "ledger.csv"
         bank_path.write_text("transaction_id,booking_date,amount,currency\n" + bank, encoding="utf-8")
         ledger_path.write_text("entry_id,transaction_id,amount,currency\n" + ledger, encoding="utf-8")
         return bank_path, ledger_path
@@ -63,23 +63,23 @@ class WorkspaceTests(unittest.TestCase):
             self.assertIsNone(fact["value"])
             self.assertEqual(fact["status"], "unknown")
             self.assertEqual(fact["source"], {"kind": None, "ref": None})
-        self.assertEqual(list((self.root / "06_bookkeeping").iterdir()), [])
+        self.assertEqual(list((workspace._path(self.root, "06_bookkeeping")).iterdir()), [])
         for name in ("tasks", "questions", "decisions"):
             self.assertEqual(self.load(f"00_admin/{name}.json"), [])
         self.assertEqual(self.load(workspace.DOCUMENTS)["documents"], [])
         self.assertEqual(self.load(workspace.MARKER)["mode"], "general")
-        self.assertFalse((self.root / ".git").exists())
+        self.assertFalse((workspace._path(self.root, ".git")).exists())
         if os.name == "posix":
             self.assertEqual(stat.S_IMODE(self.root.stat().st_mode), 0o700)
-            self.assertEqual(stat.S_IMODE((self.root / workspace.PROFILE).stat().st_mode), 0o600)
+            self.assertEqual(stat.S_IMODE((workspace._path(self.root, workspace.PROFILE)).stat().st_mode), 0o600)
 
-    def test_intake_creates_only_the_required_month_and_preserves_legacy_empty_folders(self):
-        archive = self.root / '06_bookkeeping'
+    def test_intake_creates_only_the_required_month_and_preserves_existing_empty_folders(self):
+        archive = workspace._path(self.root, '06_bookkeeping')
         workspace.ingest_document(self.root, self.source(), '2026-10')
         self.assertEqual([p.name for p in archive.iterdir()], ['2026'])
         self.assertEqual([p.name for p in (archive / '2026').iterdir()], ['10'])
-        self.assertEqual([p.name for p in (archive / '2026/10').iterdir()], ['originals'])
-        old_empty = archive / '2026/01/proposals'
+        self.assertEqual([p.name for p in (archive / '2026/10').iterdir()], ['Оригиналы'])
+        old_empty = archive / '2026/01/Оригиналы'
         old_empty.mkdir(parents=True)
         workspace.start_workspace(self.root, 2027, 'de')
         self.assertTrue(old_empty.is_dir())
@@ -101,7 +101,7 @@ class WorkspaceTests(unittest.TestCase):
 
     def test_configure_persists_preferences_and_history_without_changing_tax_facts(self):
         workspace.record_fact(self.root, self.record(field="vat_current_regime", value="Regelbesteuerung"))
-        profile_before = (self.root / workspace.PROFILE).read_bytes()
+        profile_before = (workspace._path(self.root, workspace.PROFILE)).read_bytes()
         marker_before = self.load(workspace.MARKER)
         result = workspace.configure_workspace(self.root, language="en", mode="bookkeeping")
         marker_after = self.load(workspace.MARKER)
@@ -109,7 +109,7 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual(marker_after["workspace_id"], marker_before["workspace_id"])
         self.assertEqual(marker_after["created_at"], marker_before["created_at"])
         self.assertEqual(marker_after["initial_year"], marker_before["initial_year"])
-        self.assertEqual((self.root / workspace.PROFILE).read_bytes(), profile_before)
+        self.assertEqual((workspace._path(self.root, workspace.PROFILE)).read_bytes(), profile_before)
         snapshot = self.load(f"09_audit/history/{result['history_id']}.json")
         self.assertEqual(snapshot["action"], "configure_workspace")
         self.assertEqual(snapshot["before"], marker_before)
@@ -130,36 +130,33 @@ class WorkspaceTests(unittest.TestCase):
         status = workspace.workspace_status(self.root)
         self.assertEqual((status["language"], status["mode"]), ("ru", "tax-consultant"))
 
-    def test_legacy_marker_missing_mode_defaults_without_read_time_mutation(self):
-        marker = self.load(workspace.MARKER)
-        marker.pop("mode")
-        marker["language"] = "de"
-        path = self.root / workspace.MARKER
-        path.write_text(json.dumps(marker), encoding="utf-8")
-        marker_bytes = path.read_bytes()
-        status = workspace.workspace_status(self.root)
-        self.assertEqual((status["language"], status["mode"]), ("de", "general"))
-        self.assertEqual(path.read_bytes(), marker_bytes)
-        result = workspace.configure_workspace(self.root, mode="bookkeeping")
-        self.assertEqual((result["language"], result["mode"]), ("de", "bookkeeping"))
-        self.assertEqual(self.load(workspace.MARKER)["schema_version"], 1)
-        history = self.load(f"09_audit/history/{result['history_id']}.json")
-        self.assertNotIn("mode", history["before"])
-        self.assertEqual(history["after"]["mode"], "bookkeeping")
+    def test_marker_without_saved_preferences_fails_closed_without_changes(self):
+        path = workspace._path(self.root, workspace.MARKER)
+        for missing in ("mode", "language"):
+            with self.subTest(missing=missing):
+                marker = self.load(workspace.MARKER)
+                marker.pop(missing)
+                path.write_text(json.dumps(marker), encoding="utf-8")
+                before = path.read_bytes()
+                with self.assertRaises(workspace.WorkspaceError):
+                    workspace.workspace_status(self.root)
+                with self.assertRaises(workspace.WorkspaceError):
+                    workspace.configure_workspace(self.root, mode="bookkeeping")
+                self.assertEqual(path.read_bytes(), before)
 
     def test_configure_rejects_missing_or_invalid_options_without_changes(self):
-        marker_before = (self.root / workspace.MARKER).read_bytes()
-        profile_before = (self.root / workspace.PROFILE).read_bytes()
-        events_before = (self.root / workspace.EVENTS).read_bytes()
+        marker_before = (workspace._path(self.root, workspace.MARKER)).read_bytes()
+        profile_before = (workspace._path(self.root, workspace.PROFILE)).read_bytes()
+        events_before = (workspace._path(self.root, workspace.EVENTS)).read_bytes()
         for kwargs in ({}, {"language": "fr"}, {"mode": "automatic-tax-filing"},
                        {"language": "en", "mode": "invalid"}):
             with self.subTest(options=kwargs):
                 with self.assertRaises(workspace.WorkspaceError):
                     workspace.configure_workspace(self.root, **kwargs)
-        self.assertEqual((self.root / workspace.MARKER).read_bytes(), marker_before)
-        self.assertEqual((self.root / workspace.PROFILE).read_bytes(), profile_before)
-        self.assertEqual((self.root / workspace.EVENTS).read_bytes(), events_before)
-        self.assertEqual(list((self.root / "09_audit/history").iterdir()), [])
+        self.assertEqual((workspace._path(self.root, workspace.MARKER)).read_bytes(), marker_before)
+        self.assertEqual((workspace._path(self.root, workspace.PROFILE)).read_bytes(), profile_before)
+        self.assertEqual((workspace._path(self.root, workspace.EVENTS)).read_bytes(), events_before)
+        self.assertEqual(list((workspace._path(self.root, "09_audit/history")).iterdir()), [])
         target = self.base / "invalid-mode-workspace"
         with self.assertRaises(workspace.WorkspaceError):
             workspace.init_workspace(target, 2026, mode="invalid")
@@ -167,25 +164,25 @@ class WorkspaceTests(unittest.TestCase):
 
     @patch.object(workspace, "LOCK_WAIT_SECONDS", 0)  # Refusal, not the wait, is under test.
     def test_configure_respects_lock_without_history_or_state_changes(self):
-        marker_before = (self.root / workspace.MARKER).read_bytes()
-        events_before = (self.root / workspace.EVENTS).read_bytes()
-        lock = self.root / workspace.LOCK
+        marker_before = (workspace._path(self.root, workspace.MARKER)).read_bytes()
+        events_before = (workspace._path(self.root, workspace.EVENTS)).read_bytes()
+        lock = workspace._path(self.root, workspace.LOCK)
         lock.write_text("another operation", encoding="utf-8")
         with self.assertRaises(workspace.WorkspaceError):
             workspace.configure_workspace(self.root, language="en", mode="bookkeeping")
         self.assertEqual(lock.read_text(), "another operation")
-        self.assertEqual((self.root / workspace.MARKER).read_bytes(), marker_before)
-        self.assertEqual((self.root / workspace.EVENTS).read_bytes(), events_before)
-        self.assertEqual(list((self.root / "09_audit/history").iterdir()), [])
+        self.assertEqual((workspace._path(self.root, workspace.MARKER)).read_bytes(), marker_before)
+        self.assertEqual((workspace._path(self.root, workspace.EVENTS)).read_bytes(), events_before)
+        self.assertEqual(list((workspace._path(self.root, "09_audit/history")).iterdir()), [])
 
     def test_configure_unchanged_preferences_create_no_redundant_history(self):
-        marker_before = (self.root / workspace.MARKER).read_bytes()
-        events_before = (self.root / workspace.EVENTS).read_bytes()
+        marker_before = (workspace._path(self.root, workspace.MARKER)).read_bytes()
+        events_before = (workspace._path(self.root, workspace.EVENTS)).read_bytes()
         result = workspace.configure_workspace(self.root, language="ru", mode="general")
         self.assertEqual(result["status"], "unchanged")
-        self.assertEqual((self.root / workspace.MARKER).read_bytes(), marker_before)
-        self.assertEqual((self.root / workspace.EVENTS).read_bytes(), events_before)
-        self.assertEqual(list((self.root / "09_audit/history").iterdir()), [])
+        self.assertEqual((workspace._path(self.root, workspace.MARKER)).read_bytes(), marker_before)
+        self.assertEqual((workspace._path(self.root, workspace.EVENTS)).read_bytes(), events_before)
+        self.assertEqual(list((workspace._path(self.root, "09_audit/history")).iterdir()), [])
 
     def test_configure_cli_requires_option_and_persists_selected_mode(self):
         with redirect_stderr(io.StringIO()):
@@ -199,10 +196,10 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual(workspace.workspace_status(self.root)["mode"], "tax-consultant")
 
     def test_init_never_overwrites_nonempty_directory(self):
-        before = (self.root / workspace.PROFILE).read_bytes()
+        before = (workspace._path(self.root, workspace.PROFILE)).read_bytes()
         with self.assertRaises(workspace.WorkspaceError):
             workspace.init_workspace(self.root, 2027)
-        self.assertEqual((self.root / workspace.PROFILE).read_bytes(), before)
+        self.assertEqual((workspace._path(self.root, workspace.PROFILE)).read_bytes(), before)
         occupied = self.base / "occupied"
         occupied.mkdir()
         sentinel = occupied / "keep.txt"
@@ -243,17 +240,17 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual(list(target.iterdir()), [])
 
     def test_existing_workspace_made_git_repository_blocks_record_and_ingest(self):
-        before = (self.root / workspace.PROFILE).read_bytes()
-        registry_before = (self.root / workspace.DOCUMENTS).read_bytes()
-        (self.root / ".git").mkdir()
-        (self.root / ".git/HEAD").write_text("ref: refs/heads/main", encoding="utf-8")
+        before = (workspace._path(self.root, workspace.PROFILE)).read_bytes()
+        registry_before = (workspace._path(self.root, workspace.DOCUMENTS)).read_bytes()
+        (workspace._path(self.root, ".git")).mkdir()
+        (workspace._path(self.root, ".git/HEAD")).write_text("ref: refs/heads/main", encoding="utf-8")
         with self.assertRaises(workspace.WorkspaceError):
             workspace.record_fact(self.root, self.record())
         with self.assertRaises(workspace.WorkspaceError):
             workspace.ingest_document(self.root, self.source(), "2026-10")
-        self.assertEqual((self.root / workspace.PROFILE).read_bytes(), before)
-        self.assertEqual((self.root / workspace.DOCUMENTS).read_bytes(), registry_before)
-        self.assertFalse((self.root / "06_bookkeeping/2026/10").exists())
+        self.assertEqual((workspace._path(self.root, workspace.PROFILE)).read_bytes(), before)
+        self.assertEqual((workspace._path(self.root, workspace.DOCUMENTS)).read_bytes(), registry_before)
+        self.assertFalse((workspace._path(self.root, "06_bookkeeping/2026/10")).exists())
 
     def test_record_keeps_before_after_history_and_evidence(self):
         first = workspace.record_fact(self.root, self.record())
@@ -261,14 +258,14 @@ class WorkspaceTests(unittest.TestCase):
         history = self.load(f"09_audit/history/{second['history_id']}.json")
         self.assertEqual(history["before"]["facts"]["legal_form"]["status"], "declared")
         self.assertEqual(history["after"]["facts"]["legal_form"]["status"], "needs_review")
-        self.assertTrue((self.root / f"09_audit/history/{first['history_id']}.json").is_file())
+        self.assertTrue((workspace._path(self.root, f"09_audit/history/{first['history_id']}.json")).is_file())
         fact = self.load(workspace.PROFILE)["facts"]["legal_form"]
         self.assertEqual(fact["source"]["ref"], "intake-1")
         self.assertIsNotNone(fact["recorded_at"])
         self.assertEqual(len(self.load(workspace.EVENTS)), 3)
 
     def test_record_rejects_unknown_fields_missing_evidence_and_model_verification(self):
-        before = (self.root / workspace.PROFILE).read_bytes()
+        before = (workspace._path(self.root, workspace.PROFILE)).read_bytes()
         records = [self.record(field="password"), self.record(source={"kind": "user", "ref": ""}),
                    self.record(status="verified", source={"kind": "model", "ref": "confidence=.99"}),
                    self.record(effective_from="2026-02-30"), self.record(value=float("nan"))]
@@ -276,8 +273,8 @@ class WorkspaceTests(unittest.TestCase):
             with self.subTest(record=record):
                 with self.assertRaises(workspace.WorkspaceError):
                     workspace.record_fact(self.root, record)
-        self.assertEqual((self.root / workspace.PROFILE).read_bytes(), before)
-        self.assertEqual(list((self.root / "09_audit/history").iterdir()), [])
+        self.assertEqual((workspace._path(self.root, workspace.PROFILE)).read_bytes(), before)
+        self.assertEqual(list((workspace._path(self.root, "09_audit/history")).iterdir()), [])
 
     def test_linked_folder_refusal_names_the_link_and_its_real_location(self):
         real = self.base / "real-documents"
@@ -292,13 +289,13 @@ class WorkspaceTests(unittest.TestCase):
 
     @patch.object(workspace, "LOCK_WAIT_SECONDS", 0)
     def test_lock_prevents_mutation_and_is_not_removed_by_rejected_writer(self):
-        before = (self.root / workspace.PROFILE).read_bytes()
-        lock = self.root / workspace.LOCK
+        before = (workspace._path(self.root, workspace.PROFILE)).read_bytes()
+        lock = workspace._path(self.root, workspace.LOCK)
         lock.write_text("another operation", encoding="utf-8")
         with self.assertRaises(workspace.WorkspaceError):
             workspace.record_fact(self.root, self.record())
         self.assertEqual(lock.read_text(), "another operation")
-        self.assertEqual((self.root / workspace.PROFILE).read_bytes(), before)
+        self.assertEqual((workspace._path(self.root, workspace.PROFILE)).read_bytes(), before)
 
     def test_ingest_preserves_bytes_and_deduplicates_without_tax_verdict(self):
         content = b"<not-parsed><arbitrary-data/></not-parsed>\n"
@@ -311,7 +308,7 @@ class WorkspaceTests(unittest.TestCase):
         documents = self.load(workspace.DOCUMENTS)["documents"]
         self.assertEqual(len(documents), 1)
         document = documents[0]
-        self.assertEqual((self.root / document["path"]).read_bytes(), content)
+        self.assertEqual((workspace._path(self.root, document["path"])).read_bytes(), content)
         self.assertEqual(source.read_bytes(), content)
         self.assertEqual(document["status"], "imported")
         self.assertEqual(document["provider_state"], "unknown")
@@ -322,7 +319,7 @@ class WorkspaceTests(unittest.TestCase):
     def test_verify_detects_tamper_and_cli_returns_nonzero(self):
         workspace.ingest_document(self.root, self.source(), "2026-10")
         document = self.load(workspace.DOCUMENTS)["documents"][0]
-        (self.root / document["path"]).write_bytes(b"altered")
+        (workspace._path(self.root, document["path"])).write_bytes(b"altered")
         self.assertEqual(workspace.verify_workspace(self.root)["status"], "needs_review")
         with redirect_stdout(io.StringIO()):
             code = workspace.main(["verify", "--root", str(self.root)])
@@ -332,7 +329,7 @@ class WorkspaceTests(unittest.TestCase):
         source = self.source()
         workspace.ingest_document(self.root, source, "2026-10")
         document = self.load(workspace.DOCUMENTS)["documents"][0]
-        saved = self.root / document["path"]
+        saved = workspace._path(self.root, document["path"])
         saved.write_bytes(b"altered")
         with self.assertRaises(workspace.WorkspaceError):
             workspace.ingest_document(self.root, source, "2026-10")
@@ -343,7 +340,7 @@ class WorkspaceTests(unittest.TestCase):
         workspace.ingest_document(self.root, self.source(), "2026-10")
         registry = self.load(workspace.DOCUMENTS)
         registry["documents"][0]["path"] = "../../outside.pdf"
-        (self.root / workspace.DOCUMENTS).write_text(json.dumps(registry), encoding="utf-8")
+        (workspace._path(self.root, workspace.DOCUMENTS)).write_text(json.dumps(registry), encoding="utf-8")
         result = workspace.verify_workspace(self.root)
         self.assertTrue(any("Parent-directory" in error["issue"] for error in result["errors"]))
         self.assertEqual(result["unindexed_originals"], 1)
@@ -355,7 +352,7 @@ class WorkspaceTests(unittest.TestCase):
         original_write = workspace._atomic_json
 
         def fail_registry(path, *args, **kwargs):
-            if path == self.root / workspace.DOCUMENTS:
+            if path == workspace._path(self.root, workspace.DOCUMENTS):
                 raise OSError("Simulated registry write failure")
             return original_write(path, *args, **kwargs)
 
@@ -363,7 +360,7 @@ class WorkspaceTests(unittest.TestCase):
             with self.assertRaises(OSError):
                 workspace.ingest_document(self.root, source, "2026-10")
         self.assertEqual(source.read_bytes(), source_bytes)
-        self.assertEqual(list((self.root / "06_bookkeeping/2026/10/originals").iterdir()), [])
+        self.assertEqual(list((workspace._path(self.root, "06_bookkeeping/2026/10/originals")).iterdir()), [])
         self.assertEqual(self.load(workspace.DOCUMENTS)["documents"], [])
         self.assertEqual(workspace.ingest_document(self.root, source, "2026-10")["status"], "imported")
         self.assertEqual(workspace.verify_workspace(self.root)["status"], "ok")
@@ -396,7 +393,7 @@ class WorkspaceTests(unittest.TestCase):
             return ClosingWriter(stream) if mode == "wb" else stream
 
         def fail_registry(path, *args, **kwargs):
-            if path == self.root / workspace.DOCUMENTS:
+            if path == workspace._path(self.root, workspace.DOCUMENTS):
                 raise OSError("Simulated registry write failure")
             return original_write(path, *args, **kwargs)
 
@@ -410,11 +407,11 @@ class WorkspaceTests(unittest.TestCase):
     def test_failed_ingest_preserves_a_modified_copy_and_verify_flags_it(self):
         source = self.source()
         digest = hashlib.sha256(source.read_bytes()).hexdigest()
-        target = self.root / f"06_bookkeeping/2026/10/originals/{digest}.pdf"
+        target = workspace._path(self.root, "06_bookkeeping/2026/10/originals/2026-00001_invoice.pdf")
         original_write = workspace._atomic_json
 
         def fail_registry(path, *args, **kwargs):
-            if path == self.root / workspace.DOCUMENTS:
+            if path == workspace._path(self.root, workspace.DOCUMENTS):
                 target.write_bytes(b"Changed by a separate operation")
                 raise OSError("Simulated registry write failure")
             return original_write(path, *args, **kwargs)
@@ -431,13 +428,13 @@ class WorkspaceTests(unittest.TestCase):
     def test_failed_ingest_preserves_replacement_even_with_identical_bytes(self):
         source = self.source()
         digest = hashlib.sha256(source.read_bytes()).hexdigest()
-        target = self.root / f"06_bookkeeping/2026/10/originals/{digest}.pdf"
+        target = workspace._path(self.root, "06_bookkeeping/2026/10/originals/2026-00001_invoice.pdf")
         replacement = self.base / "replacement.pdf"
         replacement.write_bytes(source.read_bytes())
         original_write = workspace._atomic_json
 
         def fail_registry(path, *args, **kwargs):
-            if path == self.root / workspace.DOCUMENTS:
+            if path == workspace._path(self.root, workspace.DOCUMENTS):
                 info = target.stat()
                 os.utime(replacement, ns=(info.st_atime_ns, info.st_mtime_ns))
                 os.replace(replacement, target)
@@ -456,7 +453,7 @@ class WorkspaceTests(unittest.TestCase):
 
         def fail_after_commit(path, *args, **kwargs):
             result = original_write(path, *args, **kwargs)
-            if path == self.root / workspace.DOCUMENTS:
+            if path == workspace._path(self.root, workspace.DOCUMENTS):
                 raise OSError("Simulated error after registry replacement")
             return result
 
@@ -467,13 +464,13 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual(workspace.ingest_document(self.root, source, "2026-10")["status"], "existing_content")
 
     def test_verify_flags_crash_orphan_without_following_originals_symlinks(self):
-        original = self.root / "06_bookkeeping/2026/10/originals/orphan.pdf"
+        original = workspace._path(self.root, "06_bookkeeping/2026/10/originals/orphan.pdf")
         original.parent.mkdir(parents=True)
         original.write_bytes(b"Unindexed crash orphan")
         external = self.base / "outside-originals"
         external.mkdir()
         (external / "must-not-be-inventoried.pdf").write_bytes(b"External bytes")
-        self._symlink(self.root / "06_bookkeeping/2026/10/originals/link", external, True)
+        self._symlink(workspace._path(self.root, "06_bookkeeping/2026/10/originals/link"), external, True)
         result = workspace.verify_workspace(self.root)
         self.assertEqual(result["status"], "needs_review")
         self.assertEqual(result["unindexed_originals"], 1)
@@ -490,7 +487,7 @@ class WorkspaceTests(unittest.TestCase):
             workspace.ingest_document(self.root, linked, "2026-10")
         with self.assertRaises(workspace.WorkspaceError):
             workspace.ingest_document(self.root, self.source("key.pfx"), "2026-10")
-        originals = self.root / "06_bookkeeping/2026/10/originals"
+        originals = workspace._path(self.root, "06_bookkeeping/2026/10/originals")
         originals.parent.mkdir(parents=True)
         outside = self.base / "outside"
         outside.mkdir()
@@ -503,7 +500,7 @@ class WorkspaceTests(unittest.TestCase):
     def test_ingest_refuses_existing_unindexed_original(self):
         source = self.source()
         digest = hashlib.sha256(source.read_bytes()).hexdigest()
-        target = self.root / f"06_bookkeeping/2026/10/originals/{digest}.pdf"
+        target = workspace._path(self.root, "06_bookkeeping/2026/10/originals/2026-00001_invoice.pdf")
         target.parent.mkdir(parents=True)
         target.write_bytes(b"preexisting-do-not-overwrite")
         with self.assertRaises(FileExistsError):
@@ -611,7 +608,7 @@ class WorkspaceTests(unittest.TestCase):
                 bank, ledger = self.csvs(bank_text, ledger_text)
                 with self.assertRaises(workspace.WorkspaceError):
                     workspace.reconcile(self.root, bank, ledger, "2026-10")
-        self.assertEqual(list((self.root / "07_exports").iterdir()), [])
+        self.assertEqual(list((workspace._path(self.root, "07_exports")).iterdir()), [])
 
     def test_reconcile_requires_private_input_paths(self):
         bank, ledger = self.csvs("x,2026-10-01,1,EUR\n", "e,x,1,EUR\n")
@@ -621,22 +618,22 @@ class WorkspaceTests(unittest.TestCase):
             workspace.reconcile(self.root, external, ledger, "2026-10")
         with self.assertRaises(workspace.WorkspaceError):
             workspace.reconcile(self.root, "../public-bank.csv", ledger, "2026-10")
-        self.assertEqual(list((self.root / "07_exports").iterdir()), [])
+        self.assertEqual(list((workspace._path(self.root, "07_exports")).iterdir()), [])
 
     def test_reconciliation_reports_never_overwrite_previous_reports(self):
         bank, ledger = self.csvs("x,2026-10-01,1,EUR\n", "e,x,1,EUR\n")
         first = workspace.reconcile(self.root, bank, ledger, "2026-10")
-        first_bytes = (self.root / first["report"]).read_bytes()
+        first_bytes = (workspace._path(self.root, first["report"])).read_bytes()
         second = workspace.reconcile(self.root, bank, ledger, "2026-10")
         self.assertNotEqual(first["report"], second["report"])
-        self.assertEqual((self.root / first["report"]).read_bytes(), first_bytes)
+        self.assertEqual((workspace._path(self.root, first["report"])).read_bytes(), first_bytes)
 
     def test_corrupt_audit_log_blocks_mutation_before_profile_change(self):
-        before = (self.root / workspace.PROFILE).read_bytes()
-        (self.root / workspace.EVENTS).write_text("{}", encoding="utf-8")
+        before = (workspace._path(self.root, workspace.PROFILE)).read_bytes()
+        (workspace._path(self.root, workspace.EVENTS)).write_text("{}", encoding="utf-8")
         with self.assertRaises(workspace.WorkspaceError):
             workspace.record_fact(self.root, self.record())
-        self.assertEqual((self.root / workspace.PROFILE).read_bytes(), before)
+        self.assertEqual((workspace._path(self.root, workspace.PROFILE)).read_bytes(), before)
 
     def test_status_does_not_print_private_fact_values(self):
         workspace.record_fact(self.root, self.record(field="owner_name", value="Synthetic Private Name"))

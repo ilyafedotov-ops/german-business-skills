@@ -21,12 +21,16 @@ try {
     [IO.File]::WriteAllText((Join-Path $source '.hidden.csv'), 'hidden')
     [IO.File]::WriteAllText((Join-Path $source 'export.zip'), 'not-a-zip')
     $original = (Get-FileHash -LiteralPath $invoice -Algorithm SHA256).Hash
-    $start = & $kit -Action start -Layout legacy -Root $root -Year 2026 -Language ru | ConvertFrom-Json
+    $start = & $kit -Action start -Root $root -Year 2026 -Language ru | ConvertFrom-Json
     Assert ($start.status -eq 'initialized') 'Start failed'
-    Assert (@(Get-ChildItem -LiteralPath (Join-Path $root '06_bookkeeping')).Count -eq 0) 'Empty months should not be created before intake'
-    $profile = Join-Path $root '01_profile/business.json'
+    $folders = & $kit -Action folders -Root $root | ConvertFrom-Json
+    Assert (@(Get-ChildItem -LiteralPath (Join-Path $root $folders.paths.'06_bookkeeping')).Count -eq 0) 'Empty months should not be created before intake'
+    Assert (Test-Path -LiteralPath (Join-Path $root $folders.paths.'00_admin/work') -PathType Container) 'Assistant work folder missing'
+    Assert (@(Get-ChildItem -LiteralPath (Join-Path $root $folders.paths.'04_accounting/procedure') -Filter '*.md').Count -eq 1) 'Procedure documentation draft missing'
+    Assert (-not (Test-Path -LiteralPath (Join-Path $root '00_admin'))) 'Internal record names exposed as folders'
+    $profile = Join-Path $root ($folders.paths.'01_profile' + '/business.json')
     $before = (Get-FileHash -LiteralPath $profile).Hash
-    $resume = & $kit -Action start -Layout legacy -Root $root -Language en | ConvertFrom-Json
+    $resume = & $kit -Action start -Root $root -Language en | ConvertFrom-Json
     Assert ($resume.status -eq 'resumed' -and $resume.language -eq 'ru') 'Resume changed preferences'
     Assert ((Get-FileHash -LiteralPath $profile).Hash -eq $before) 'Resume changed facts'
     $preview = & $kit -Action scan -Root $root -Source $source | ConvertFrom-Json
@@ -45,23 +49,49 @@ try {
         Assert ($hiddenPreview.candidates -eq 1) 'Windows hidden attribute not excluded'
     }
     $import = & $kit -Action ingest -Root $root -Source $invoice -Period '2026-10' | ConvertFrom-Json
-    Assert ($import.status -eq 'imported') 'Import failed'
+    Assert ($import.status -eq 'imported' -and $import.document_number -eq '2026-00001' -and $import.path.EndsWith('/2026-00001_invoice [1] ' + [char]0x00fc + '.csv')) 'Original not numbered readably'
+    Assert ($null -eq $import.source_moved_to) 'A source outside the inbox was moved'
     $duplicate = & $kit -Action ingest -Root $root -Source $invoice -Period '2026-11' | ConvertFrom-Json
     Assert ($duplicate.status -eq 'existing_content') 'Duplicate content copied again'
-    $events = Get-Content -LiteralPath (Join-Path $root '09_audit/events.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+    $events = Get-Content -LiteralPath (Join-Path $root ($folders.paths.'09_audit' + '/events.json')) -Raw -Encoding UTF8 | ConvertFrom-Json
     Assert ($events.Count -eq 3 -and $events[0].action -eq 'workspace_initialized' -and $events[2].action -eq 'document_content_seen_again') 'Audit events are not flat or were lost'
     $verify = & $kit -Action verify -Root $root | ConvertFrom-Json
     Assert ($verify.status -eq 'ok' -and $verify.indexed_documents -eq 1) 'Integrity check failed'
     Assert ((Get-FileHash -LiteralPath $invoice).Hash -eq $original) 'Source changed'
-    Reject { & $kit -Action start -Layout legacy -Root $source }
+    $enRoot = Join-Path $base 'English workspace'
+    Assert ((& $kit -Action start -Root $enRoot -Year 2026 -Language en | ConvertFrom-Json).status -eq 'initialized') 'English start failed'
+    $descriptor = [IO.File]::ReadAllText((Join-Path $enRoot '.workspace-layout.json')) | ConvertFrom-Json
+    Assert ($descriptor.schema_version -eq 2 -and $descriptor.language -eq 'en') 'Layout descriptor not recorded'
+    $enFolders = & $kit -Action folders -Root $enRoot | ConvertFrom-Json
+    Assert ($enFolders.paths.'00_admin/overview.html' -eq 'OVERVIEW.html' -and $enFolders.paths.'04_accounting/register.json' -eq '.business-kit/admin/accounting-register.json' -and $enFolders.paths.'00_admin/work' -eq '.business-kit/admin/work' -and $enFolders.paths.'00_admin/inbox/imported' -eq '01 Inbox/Imported') 'Folder mapping missing'
+    $inbox = Join-Path $enRoot '01 Inbox'
+    $inboxFile = Join-Path $inbox 'inbox receipt.csv'
+    [IO.File]::WriteAllText($inboxFile, "amount,currency`n1.00,EUR`n", (New-Object Text.UTF8Encoding($false)))
+    Assert ((& $kit -Action scan -Root $enRoot -Source $inbox | ConvertFrom-Json).candidates -eq 1) 'Managed inbox preview failed'
+    $filed = & $kit -Action ingest -Root $enRoot -Source $inboxFile -Period '2026-10' | ConvertFrom-Json
+    Assert ($filed.document_number -eq '2026-00001' -and $filed.source_moved_to -eq '01 Inbox/Imported/2026-10/inbox receipt.csv' -and -not (Test-Path -LiteralPath $inboxFile)) 'Imported inbox file was not filed'
+    $inboxAgain = & $kit -Action scan -Root $enRoot -Source $inbox | ConvertFrom-Json
+    Assert ($inboxAgain.candidates -eq 0 -and @($inboxAgain.entries | Where-Object { $_.reason -eq 'already_imported' }).Count -eq 1) 'Imported folder was offered again'
+    Reject { & $kit -Action scan -Root $enRoot -Source $enRoot }
+    Assert ((& $kit -Action verify -Root $enRoot | ConvertFrom-Json).status -eq 'ok') 'Filing the inbox source changed integrity'
+    $earlier = Join-Path $base 'Earlier preview'
+    [void][IO.Directory]::CreateDirectory((Join-Path $earlier '00_admin'))
+    [IO.File]::WriteAllText((Join-Path $earlier '00_admin/workspace.json'), '{}')
+    Reject { & $kit -Action verify -Root $earlier }
+    Reject { & $kit -Action start -Root $earlier }
+    $versionOne = Join-Path $base 'Version one'
+    [void][IO.Directory]::CreateDirectory((Join-Path $versionOne '.business-kit'))
+    [IO.File]::WriteAllText((Join-Path $versionOne '.workspace-layout.json'), '{"schema_version":1,"language":"en"}')
+    Reject { & $kit -Action verify -Root $versionOne }
+    Assert ([IO.File]::ReadAllText((Join-Path $earlier '00_admin/workspace.json')) -eq '{}') 'Earlier preview folder was changed'
+    Reject { & $kit -Action start -Root $source }
     Reject { & $kit -Action scan -Root $root -Source $base }
     Reject { & $kit -Action ingest -Root $root -Source (Join-Path $source 'certificate.pfx') -Period '2026-10' }
     [IO.File]::WriteAllText((Join-Path $root '.workspace.lock'), 'other writer')
     Reject { & $kit -Action ingest -Root $root -Source $invoice -Period '2026-10' }
     Assert ([IO.File]::ReadAllText((Join-Path $root '.workspace.lock')) -eq 'other writer') 'Another writer lock removed'
     [IO.File]::Delete((Join-Path $root '.workspace.lock'))
-    $index = Get-Content -LiteralPath (Join-Path $root '00_admin/documents.json') -Raw -Encoding UTF8 | ConvertFrom-Json
-    $stored = Join-Path $root $index.documents[0].path
+    $stored = Join-Path $root $import.path
     [IO.File]::WriteAllText($stored, 'tampered')
     $bad = & $kit -Action verify -Root $root | ConvertFrom-Json
     Assert ($bad.status -eq 'needs_review') 'Changed original was accepted'
@@ -81,8 +111,8 @@ try {
     Assert (Test-Path -LiteralPath (Join-Path $homeDir '.agents/skills/de-business-kit/scripts/windows.ps1')) 'Detached native utility missing'
     Reject { & $kit -Action install -Root $homeDir -Target both }
     $corruptRoot = Join-Path $base 'Corrupt audit'
-    & $kit -Action start -Layout legacy -Root $corruptRoot | Out-Null
-    $auditPath = Join-Path $corruptRoot '09_audit/events.json'
+    & $kit -Action start -Root $corruptRoot | Out-Null
+    $auditPath = Join-Path $corruptRoot ((& $kit -Action folders -Root $corruptRoot | ConvertFrom-Json).paths.'09_audit' + '/events.json')
     foreach ($malformed in @('[null]', '[],"extra":true', '[],"value":[]')) {
         [IO.File]::WriteAllText($auditPath, $malformed)
         Reject { & $kit -Action ingest -Root $corruptRoot -Source $invoice -Period '2026-10' }
@@ -94,18 +124,17 @@ try {
     Reject { & $kit -Action install -Root $secondHome -Target both }
     Assert (-not (Test-Path -LiteralPath (Join-Path $secondHome '.agents'))) 'Second-target conflict wrote first target'
     $detached = Join-Path $homeDir '.agents/skills/de-business-kit/scripts/windows.ps1'
-    & $detached -Action start -Layout legacy -Root (Join-Path $base 'detached') -Year 2026 | Out-Null
     foreach ($language in @('en','ru','de')) {
-        $localized = Join-Path $base ('localized-' + $language)
+        $localized = Join-Path $base ('detached-' + $language)
         & $detached -Action start -Root $localized -Language $language -Year 2026 | Out-Null
-        Assert (-not (Test-Path -LiteralPath (Join-Path $localized '00_admin'))) 'Localized start exposed legacy folders'
+        Assert (-not (Test-Path -LiteralPath (Join-Path $localized '00_admin'))) 'Start exposed internal record names as folders'
         $layout = Get-Content -LiteralPath (Join-Path $localized '.workspace-layout.json') -Raw -Encoding UTF8 | ConvertFrom-Json
         Assert ($layout.language -eq $language) 'Folder language was not saved'
         & $detached -Action ingest -Root $localized -Source $invoice -Period '2026-10' | Out-Null
         $verified = & $detached -Action verify -Root $localized | ConvertFrom-Json
-        Assert ($verified.status -eq 'ok') 'Localized original integrity failed'
+        Assert ($verified.status -eq 'ok') 'Original integrity failed'
         $resumed = & $detached -Action start -Root $localized -Language en | ConvertFrom-Json
-        Assert ($resumed.language -eq $language) 'Resume changed localized preferences'
+        Assert ($resumed.language -eq $language) 'Resume changed preferences'
         $folders = & $detached -Action folders -Root $localized | ConvertFrom-Json
         Assert ($folders.folder_language -eq $language -and $folders.paths.'06_bookkeeping' -ne '06_bookkeeping') 'Folder discovery did not return physical names'
         Reject { & $detached -Action scan -Root $root -Source $localized }
@@ -113,7 +142,7 @@ try {
         $originalDir = @(Get-ChildItem -LiteralPath $orphan -Directory)[0].FullName
         [IO.File]::WriteAllText((Join-Path $originalDir 'orphan.csv'), 'preserve orphan')
         $unindexed = & $detached -Action verify -Root $localized | ConvertFrom-Json
-        Assert ($unindexed.unindexed_originals -eq 1) 'Localized orphan was missed'
+        Assert ($unindexed.unindexed_originals -eq 1) 'Unindexed original was missed'
     }
     'Native smoke passed: start/resume, preview, preservation, duplicates, tamper, locks, install and detached resources.'
 } finally {

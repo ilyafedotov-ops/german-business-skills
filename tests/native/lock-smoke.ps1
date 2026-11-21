@@ -13,17 +13,17 @@ try {
     & $kit -Action start -Root $base -Year 2026 | Out-Null
     $lockPath = Join-Path $base '.workspace.lock'
     $encoding = New-Object Text.UTF8Encoding($false)
-    $raw = $encoding.GetBytes('legacy-recovery-token')
+    $raw = $encoding.GetBytes('token-only-lock')
     [IO.File]::WriteAllBytes($lockPath, $raw)
     $status = & $kit -Action lock-status -Root $base | ConvertFrom-Json
-    Assert ($status.lock.assessment -eq 'unverifiable') 'Legacy lock was automatically treated as stale'
+    Assert ($status.lock.assessment -eq 'unverifiable') 'A token-only lock was automatically treated as stale'
     Reject { & $kit -Action unlock -Root $base -ExpectedSha256 $status.lock.sha256 }
     Reject { & $kit -Action unlock -Root $base -ExpectedSha256 ('0' * 64) -ConfirmedNoWriter }
     $recovered = & $kit -Action unlock -Root $base -ExpectedSha256 $status.lock.sha256 -ConfirmedNoWriter | ConvertFrom-Json
     Assert ($recovered.status -eq 'removed' -and -not (Test-Path -LiteralPath $lockPath)) 'Recovery failed'
     $folders = & $kit -Action folders -Root $base | ConvertFrom-Json
     $audit = Join-Path $base $folders.paths.'09_audit'
-    Assert ([IO.File]::ReadAllText((Join-Path $audit ('history/' + $recovered.history_id + '.lock'))) -ceq 'legacy-recovery-token') 'Original lock bytes were lost'
+    Assert ([IO.File]::ReadAllText((Join-Path $audit ('history/' + $recovered.history_id + '.lock'))) -ceq 'token-only-lock') 'Original lock bytes were lost'
     $events = Get-Content -LiteralPath (Join-Path $audit 'events.json') -Raw -Encoding UTF8 | ConvertFrom-Json
     Assert ($events[-1].action -eq 'stale_lock_removed') 'Recovery audit event missing'
     $active = @{pid=$PID; host=[System.Net.Dns]::GetHostName(); created_at=[DateTime]::UtcNow.ToString('o')} | ConvertTo-Json -Compress

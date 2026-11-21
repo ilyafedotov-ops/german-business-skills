@@ -26,7 +26,10 @@ def scan(root, source, max_entries=1000, max_depth=10):
     root = ws._workspace(root)
     source = ws._absolute(source)
     directory(source)
-    if source == root or source in root.parents or root in source.parents:
+    # The workspace's own inbox is the one managed source inside it; files already filed there are skipped.
+    managed = source == ws._path(root, "00_admin/inbox")
+    imported = ws._path(root, "00_admin/inbox/imported") if managed else None
+    if not managed and (source == root or source in root.parents or root in source.parents):
         raise ws.WorkspaceError("Keep the existing source folder and destination workspace separate, without ancestor overlap.")
     if ws._workspace_present(source):
         raise ws.WorkspaceError("This source is an existing workspace; resume or review an explicit migration instead of importing it.")
@@ -51,6 +54,8 @@ def scan(root, source, max_entries=1000, max_depth=10):
                         info = child.stat(follow_symlinks=False)
                         if linked(info):
                             row["reason"] = "link_or_reparse_point"
+                        elif path == imported:
+                            row["reason"] = "already_imported"
                         elif (child.name.startswith(".")
                               or getattr(info, "st_file_attributes", 0) & getattr(stat, "FILE_ATTRIBUTE_HIDDEN", 2)
                               or getattr(info, "st_flags", 0) & getattr(stat, "UF_HIDDEN", 0x8000)):
@@ -92,9 +97,11 @@ def scan(root, source, max_entries=1000, max_depth=10):
     payload = st.encoded(report)
     if len(payload) > ws.MAX_BYTES:
         raise ws.WorkspaceError("Inventory exceeds the supported report size; choose a smaller source scope.")
-    relative = "00_admin/inbox/folder-scan-" + uuid.uuid4().hex + ".json"
+    # Assistant-generated files stay out of the user's inbox; the folder is recreated if it was removed.
+    relative = "00_admin/work/folder-scan-" + uuid.uuid4().hex + ".json"
     with ws._locked(root):
         ws._check_audit(root)
+        ws._mkdir(ws._path(root, "00_admin/work"))
         ws._write_exclusive(ws._inside(root, relative), payload)
         ws._audit(root, "folder_previewed", {"path": relative, "counts": counts, "traversal_complete": not warnings})
     return {"status": "preview", "path": ws._physical(root, relative), "sha256": hashlib.sha256(payload).hexdigest(),

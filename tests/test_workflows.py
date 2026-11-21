@@ -19,11 +19,11 @@ class WorkspaceFixture(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name).resolve() / "private"
         workspace.init_workspace(self.root, 2026, "en")
-        self.evidence = self.root / "08_correspondence/synthetic.txt"
+        self.evidence = workspace._path(self.root, "08_correspondence/synthetic.txt")
         self.evidence.write_text("Synthetic evidence only", encoding="utf-8")
 
     def write(self, name, value):
-        path = self.root / "00_admin/inbox" / name
+        path = workspace._path(self.root, "00_admin/work") / name
         path.write_text(json.dumps(value), encoding="utf-8")
         return path
 
@@ -35,7 +35,7 @@ class WorkspaceFixture(unittest.TestCase):
 
     def prepare(self, kind, value):
         result = workflows.prepare(self.root, kind, self.write("request.json", value))
-        return json.loads((self.root / result["path"]).read_text(encoding="utf-8"))
+        return json.loads((workspace._path(self.root, result["path"])).read_text(encoding="utf-8"))
 
 
 class PreparationTests(WorkspaceFixture):
@@ -68,12 +68,12 @@ class PreparationTests(WorkspaceFixture):
         self.assertNotIn("reverse_charge_review", report["routes"])
 
     def test_mixed_activity_preserves_person_wide_profile(self):
-        before = (self.root / workspace.PROFILE).read_bytes()
+        before = (workspace._path(self.root, workspace.PROFILE)).read_bytes()
         value = self.request("classification")
         value["facts"].update(activity_description="Teaching and selling books", mixed_activities=True)
         report = self.prepare("classification", value)
         self.assertIn("mixed_activity_review", report["routes"])
-        self.assertEqual((self.root / workspace.PROFILE).read_bytes(), before)
+        self.assertEqual((workspace._path(self.root, workspace.PROFILE)).read_bytes(), before)
 
     def test_form_requires_exact_observed_labels_and_evidence_for_reviewed_values(self):
         value = self.request("elster")
@@ -103,7 +103,7 @@ class PreparationTests(WorkspaceFixture):
             value.update(extra)
             with self.assertRaises(workspace.WorkspaceError):
                 self.prepare("elster", value)
-        self.assertEqual(list((self.root / "07_exports").rglob("preparation-*.json")), [])
+        self.assertEqual(list((workspace._path(self.root, "07_exports")).rglob("preparation-*.json")), [])
 
     def test_changed_evidence_is_detected_and_reports_are_versioned(self):
         value = self.request("classification")
@@ -135,10 +135,10 @@ class PreparationTests(WorkspaceFixture):
             "checked_on": "2026-10-25", "applicable_period": "2026-10", "conclusion": "Synthetic reviewed scenario",
             "evidence_ids": ["proof"]}]
         result = workflows.prepare(self.root, "elster", self.write("complete.json", value))
-        report = json.loads((self.root / result["path"]).read_text(encoding="utf-8"))
+        report = json.loads((workspace._path(self.root, result["path"])).read_text(encoding="utf-8"))
         self.assertEqual(report["status"], "ready_for_review")
         self.assertEqual(report["filing_status"], "not_submitted")
-        self.assertIn("Synthetic A & B", (self.root / result["markdown_path"]).read_text(encoding="utf-8"))
+        self.assertIn("Synthetic A & B", (workspace._path(self.root, result["markdown_path"])).read_text(encoding="utf-8"))
 
     def test_outside_workspace_and_mutable_administrative_evidence_are_rejected(self):
         outside = self.root.parent / "outside.json"
@@ -158,14 +158,14 @@ class PreparationTests(WorkspaceFixture):
             capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         report = json.loads(result.stdout)
-        self.assertIn("Подготовка", (self.root / report["markdown_path"]).read_text(encoding="utf-8"))
+        self.assertIn("Подготовка", (workspace._path(self.root, report["markdown_path"])).read_text(encoding="utf-8"))
 
 
 class PaymentTests(WorkspaceFixture):
     def config(self, events, bank=""):
-        (self.root / "03_banking/events.csv").write_text(
+        (workspace._path(self.root, "03_banking/events.csv")).write_text(
             "event_id,booking_date,kind,amount,currency,related_id,transfer_id,bank_transaction_id\n" + events, encoding="utf-8")
-        (self.root / "03_banking/bank.csv").write_text(
+        (workspace._path(self.root, "03_banking/bank.csv")).write_text(
             "transaction_id,booking_date,amount,currency\n" + bank, encoding="utf-8")
         return {"schema_version": 1, "account_id": "synthetic-psp", "period": "2026-10",
             "balance_basis": "available statement balance", "coverage_confirmed": True,
@@ -174,7 +174,7 @@ class PaymentTests(WorkspaceFixture):
 
     def payment_report(self, value):
         result = payments.prepare(self.root, self.write("payments.json", value))
-        return json.loads((self.root / result["path"]).read_text(encoding="utf-8"))
+        return json.loads((workspace._path(self.root, result["path"])).read_text(encoding="utf-8"))
 
     def test_gross_fee_partial_refund_payout_reconciles_without_duplicate_revenue(self):
         value = self.config("c1,2026-10-01,charge,100,EUR,,,\nf1,2026-10-01,fee,-3,EUR,c1,,\n"
@@ -215,7 +215,7 @@ class PaymentTests(WorkspaceFixture):
 
     def test_stripe_major_units_and_separate_fee_event(self):
         value = self.config("")
-        path = self.root / "03_banking/stripe.csv"
+        path = workspace._path(self.root, "03_banking/stripe.csv")
         path.write_text("balance_transaction_id,created_utc,currency,gross,fee,net,reporting_category,is_managed_payments,withheld_tax\n"
                         "txn_1,2026-10-01 12:00:00,eur,100.00,3.00,97.00,charge,false,0\n", encoding="utf-8")
         value["sources"] = [{"path": "03_banking/stripe.csv", "format": "stripe_activity"}]
@@ -227,7 +227,7 @@ class PaymentTests(WorkspaceFixture):
 
     def test_stripe_net_mismatch_and_ambiguous_timezone_are_rejected(self):
         value = self.config("")
-        path = self.root / "03_banking/stripe.csv"
+        path = workspace._path(self.root, "03_banking/stripe.csv")
         value["sources"] = [{"path": "03_banking/stripe.csv", "format": "stripe_activity"}]
         for heading, net in (("created_utc", "98"), ("created", "97")):
             path.write_text(f"balance_transaction_id,{heading},currency,gross,fee,net,reporting_category,is_managed_payments,withheld_tax\n"
@@ -245,7 +245,7 @@ class PaymentTests(WorkspaceFixture):
 
     def test_managed_payments_are_not_imported_as_simple_processing_fees(self):
         value = self.config("")
-        path = self.root / "03_banking/stripe.csv"
+        path = workspace._path(self.root, "03_banking/stripe.csv")
         path.write_text("balance_transaction_id,created_utc,currency,gross,fee,net,reporting_category,is_managed_payments,withheld_tax\n"
                         "txn_1,2026-10-01 12:00:00,eur,100,22,78,charge,false,19\n", encoding="utf-8")
         value["sources"] = [{"path": "03_banking/stripe.csv", "format": "stripe_activity"}]

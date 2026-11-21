@@ -161,19 +161,24 @@ or German folder names during setup. This example shows the English layout:
 ```text
 My business/
 ├── START-HERE.md          Where to begin and how to continue
+├── OVERVIEW.html         Latest saved overview; ask the assistant to refresh it
 ├── 01 Inbox/             Unsorted files awaiting selected import
+│   └── Imported/2026-10/   Files moved here after their import
 ├── 02 Documents/         Preserved source documents
-│   └── 2026/10/Originals/  Created when October documents are imported
+│   └── 2026/10/
+│       ├── Originals/          Numbered copies, e.g. 2026-00007_invoice.pdf
+│       └── Outgoing invoices/  Copies of invoices you issued
 ├── 03 Accounts/
-│   ├── Bank/             Statements, bank comparisons and working files
-│   ├── Records/          Accounting records and accounting-system notes
-│   └── Reports/          Reconciliation results, reports and selected exports
+│   ├── Bank/2026/        Statements, bank comparisons and working files
+│   ├── Records/          Accounting-system notes and working agreements
+│   ├── Reports/          Reconciliation results, reports and selected exports
+│   └── Procedure documentation/  Draft Verfahrensdokumentation to complete
 ├── 04 Taxes/
 │   └── 2026/             Tax questions, estimates, forms and filing evidence
 ├── 05 Business/
 │   ├── Registration/     Launch plans, registration and activity changes
-│   └── Correspondence/   Customer cases, letters and other service comparisons
-├── .business-kit/        Saved profile, tasks, questions, decisions and history
+│   └── Correspondence/2026/  Customer cases, letters and other service comparisons
+├── .business-kit/        Saved profile, tasks, questions, decisions, history and assistant working files
 └── .workspace-layout.json  Internal folder-language mapping
 ```
 
@@ -181,7 +186,7 @@ Months and task subfolders appear only when needed. A proposal for a client belo
 in their business case; it is different from an accounting-data review proposal.
 Saved answers and research stay with the relevant topic, so general help, customer
 work, service setup and closure do not need separate top-level workspaces.
-[Where each type of request is saved](skills/de-business-kit/guides/user-guide.en.md#where-results-are-saved).
+[What each folder holds](skills/de-business-kit/guides/user-guide.en.md#your-folders) and [where each type of request is saved](skills/de-business-kit/guides/user-guide.en.md#where-results-are-saved).
 
 > Use de-business-kit. Show the folders in my selected business workspace, explain what belongs where, and link the last result and next action. Keep existing files and folder names unchanged.
 
@@ -196,7 +201,7 @@ You do not need to edit JSON or remember these paths.
 - **It prepares; you decide and send.** The assistant drafts forms, letters and records. You sign in to ELSTER, your bank or your accounting software yourself and make the final click.
 - **Research before calculation, checks before reliance.** It clarifies missing facts, researches rules for the relevant period and can calculate bounded estimates with recorded checks. A complete statutory tax engine and direct ELSTER transmission are not included. You can manage your own reporting, with professional help for specific issues.
 - **Your data stays your choice.** Content your assistant reads can be sent to its AI provider; local storage does not mean local-only processing. Try a fictional example first, keep real records in a separate private folder, and never type passwords or TANs into the chat.
-- **This is a preview** (0.11.0-preview.1). See [what works today and what is planned](docs/project-status.md).
+- **This is a preview** (0.12.0-preview.1). See [what works today and what is planned](docs/project-status.md).
 
 ## More
 

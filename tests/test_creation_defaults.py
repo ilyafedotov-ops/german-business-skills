@@ -26,6 +26,6 @@ class CreationDefaultsTests(unittest.TestCase):
             ws.init_workspace(root, 2026)
             self.assertEqual(ws.workspace_status(root)["language"], "en")
             ws.configure_workspace(root, language="ru")
-            before = (root / ws.MARKER).read_bytes()
+            before = (ws._path(root, ws.MARKER)).read_bytes()
             self.assertEqual(ws.start_workspace(root)["language"], "ru")
-            self.assertEqual((root / ws.MARKER).read_bytes(), before)
+            self.assertEqual((ws._path(root, ws.MARKER)).read_bytes(), before)

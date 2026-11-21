@@ -22,13 +22,17 @@ class CaseFixture(unittest.TestCase):
         self.root = self.base / "private"
         ws.init_workspace(self.root, 2026, "en")
 
+    def path(self, logical):
+        """Physical path of a logical workspace reference."""
+        return ws._path(self.root, logical)
+
     def receive(self, filename="invoice.pdf", data=b"Synthetic invoice", kind="invoice"):
         source = self.base / filename
         source.write_bytes(data)
         return documents.receive(self.root, source, "2026-10", "2026-10-25", kind)
 
     def evidence(self):
-        path = self.root / "08_correspondence/review.txt"
+        path = ws._inside(self.root, "08_correspondence/review.txt")
         path.write_text("Synthetic review and source applicability evidence", encoding="utf-8")
         return "08_correspondence/review.txt"
 
@@ -62,7 +66,7 @@ class CatalogTests(CaseFixture):
         self.assertEqual({item["type"] for item in catalog}, {"invoice", "authority_letter"})
         self.assertEqual(len(ws._documents(self.root)["documents"]), 2)
         original = documents.original(self.root, invoice["document_id"])
-        self.assertEqual((self.root / original["path"]).read_bytes(), b"Synthetic invoice")
+        self.assertEqual((ws._path(self.root, original["path"])).read_bytes(), b"Synthetic invoice")
         self.assertEqual(next(item for item in catalog if item["document_id"] == letter["document_id"])["review_status"], "new")
 
     def test_identical_bytes_add_receipt_without_duplicate_original_or_resetting_review(self):
@@ -78,14 +82,14 @@ class CatalogTests(CaseFixture):
         self.assertEqual(documents.get(self.root, first["document_id"])["title"], "Readable invoice")
         self.assertEqual(documents.get(self.root, first["document_id"])["review_status"], "reviewed")
 
-    def test_legacy_ingest_appears_without_silent_migration(self):
-        source = self.base / "legacy.pdf"
-        source.write_bytes(b"Legacy synthetic document")
+    def test_low_level_ingest_appears_in_the_catalog_without_casework(self):
+        source = self.base / "plain.pdf"
+        source.write_bytes(b"Plain synthetic document")
         imported = ws.ingest_document(self.root, source, "2026-10")
-        before = (self.root / ws.DOCUMENTS).read_bytes()
+        before = (ws._path(self.root, ws.DOCUMENTS)).read_bytes()
         self.assertEqual(documents.catalog(self.root)[0]["type"], "unknown")
-        self.assertFalse((self.root / storage.STATE).exists())
-        self.assertEqual((self.root / ws.DOCUMENTS).read_bytes(), before)
+        self.assertFalse((ws._path(self.root, storage.STATE)).exists())
+        self.assertEqual((ws._path(self.root, ws.DOCUMENTS)).read_bytes(), before)
 
     def test_stale_edit_bad_links_and_modified_original_are_rejected(self):
         first = self.receive()
@@ -99,7 +103,7 @@ class CatalogTests(CaseFixture):
             documents.save(self.root, record, saved["sha256"])
         record["links"]["task_ids"] = []
         original = documents.original(self.root, first["document_id"])
-        (self.root / original["path"]).write_bytes(b"tampered")
+        (ws._path(self.root, original["path"])).write_bytes(b"tampered")
         with self.assertRaises(ws.WorkspaceError):
             documents.save(self.root, record, saved["sha256"])
 
@@ -163,7 +167,7 @@ class ProposalTests(CaseFixture):
         record = self.draft(received["document_id"])
         saved = reviews.save_proposal(self.root, record)
         record["review"].update(status="approved", reviewer="owner", reviewed_on="2026-10-25", note="Synthetic")
-        (self.root / "08_correspondence/review.txt").write_text("Changed", encoding="utf-8")
+        (ws._path(self.root, "08_correspondence/review.txt")).write_text("Changed", encoding="utf-8")
         with self.assertRaises(ws.WorkspaceError):
             reviews.save_proposal(self.root, record, saved["sha256"])
 
