@@ -4,6 +4,31 @@
 
 Evidence index updated **2026-11-21**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## Welcome wizard and setup check — 2026-11-21
+
+Branch `claude/welcome-wizard` adds the welcome wizard (`references/welcome.md`), `setup-check` in
+`workspace.py` and `windows.ps1`, `assets/version.json`, and sets `VERSION` to 0.13.0-preview.1.
+
+- Red/green regressions: the setup check reports a complete kit and an empty folder as ready and
+  writes nothing; a missing skill and a second installed copy; existing, earlier-preview, filled,
+  Git-contained and synced folders; the command under `python3 -I`; and `release.py check`
+  refusing a kit version file that differs from `VERSION`. A cross-runtime test compares the
+  Python and native reports for missing, empty, workspace and filled folders; the native smoke
+  script runs the check under PowerShell 7 and, in CI, Windows PowerShell 5.1.
+- The full unit suite passed (523 tests; 12 skipped because they need Windows); the
+  PowerShell-gated tests and four native smoke scripts passed under PowerShell 7 on macOS.
+- Live trials in fresh Claude Code 2.1.329 sessions (Claude Opus 5.5, High) with the built plugin:
+  an English five-turn welcome ran the check, asked one question per step, created the workspace
+  with `start` only after the folder choice, offered made-up data first and, when the user stopped,
+  showed a summary, saved an unfinished-setup task through `entry` and removed its temporary input;
+  `verify` reported `ok`. Russian first turns then skipped the welcome text: the model had written
+  it before the tool call, where it stayed in hidden reasoning. With the welcome moved into the
+  visible reply after the check, both English and Russian first turns showed the welcome, the AI
+  notice, the approval line and a plain command description.
+
+Not run: Claude Code's interactive multiple-choice questions (print mode has none), the Claude app,
+the Codex app, a native Windows welcome with a model and a German live trial.
+
 ## 0.12.0-preview.1 publication — 2026-11-21
 
 The annotated tag `v0.12.0-preview.1` points to `e6c78c0ce9e441a0b20b5bf39f54fb6b9c21b0a2` (the merge of PR #38). No signing key is
