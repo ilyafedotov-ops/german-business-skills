@@ -21,6 +21,12 @@ and ends with a fresh session.
 Not run: the request itself in Claude Code, the Claude app or Codex. In Claude Code it would change
 the tester's own plugin settings.
 
+Hosted Windows CI (Python 3.14, tests 2/2) then hit an intermittent `PermissionError` in
+`test_writer_waits_for_a_lock_that_another_writer_releases`: on Windows, creating the lock fails
+while the previous holder is still deleting it. The bounded wait now treats that like a held lock
+and re-raises a lasting refusal; two red/green regressions cover both cases, and the full unit
+suite passed again locally.
+
 ## Onboarding live trials and fixes — 2026-11-21
 
 Live trials used `main` at `fa7f785`, built with `tools/build_package.py` and loaded through

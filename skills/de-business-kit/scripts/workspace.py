@@ -402,6 +402,12 @@ def _locked(root: Path):
             if time.monotonic() >= deadline:
                 raise WorkspaceError("Workspace is locked by another operation; check the lock (doctor, or Check workspace lock in the application) before retrying.") from exc
             time.sleep(0.1)
+        except PermissionError:
+            # Windows refuses to create the lock while another writer's released copy is
+            # still being deleted. Wait as for a held lock; a lasting refusal is reported as is.
+            if time.monotonic() >= deadline:
+                raise
+            time.sleep(0.1)
     identity = os.fstat(descriptor)
     try:
         with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
