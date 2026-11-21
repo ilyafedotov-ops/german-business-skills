@@ -138,7 +138,7 @@ For ongoing work, choose a private permanent folder such as **My business**, sep
 
 The assistant manages the supporting records. Ask it to link the saved result; you should not have to edit technical files or remember internal IDs. It should distinguish facts you supplied, checked facts and assumptions, and ask before treating an uncertain interpretation as a lasting fact. When a fact changes, give the effective date if you know it.
 
-A new folder has everyday areas for **Inbox, Documents, Accounts, Taxes and Business**. Folder names can be English, Russian or German. Keep an existing folder layout and its original files intact; ask the assistant to find documents by name, date or purpose. Changing conversation language does not rename folders.
+A new folder has everyday areas for **Inbox, Documents, Accounts, Taxes and Business**. Folder names can be English, Russian or German. Keep an existing folder layout and its original files intact; ask the assistant to find documents by name, date or purpose. Changing conversation language does not rename folders. The Inbox is only for your files: the assistant keeps previews and prepared inputs in the internal `.business-kit` folder.
 
 ## Where results are saved
 

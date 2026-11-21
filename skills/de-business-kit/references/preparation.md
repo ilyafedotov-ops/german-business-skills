@@ -7,9 +7,9 @@ python3 <skill>/scripts/workflows.py template --kind international
 python3 <skill>/scripts/workflows.py template --kind classification
 python3 <skill>/scripts/workflows.py template --kind elster
 python3 <skill>/scripts/workflows.py catalog
-python3 <skill>/scripts/workflows.py prepare --root <private-workspace> --kind international --input 00_admin/inbox/case.json
+python3 <skill>/scripts/workflows.py prepare --root <private-workspace> --kind international --input 00_admin/work/case.json
 python3 <skill>/scripts/payments.py template
-python3 <skill>/scripts/payments.py prepare --root <private-workspace> --input 00_admin/inbox/payments.json
+python3 <skill>/scripts/payments.py prepare --root <private-workspace> --input 00_admin/work/payments.json
 python3 <skill>/scripts/workflows.py verify --root <private-workspace> --report <returned-json-path>
 ```
 

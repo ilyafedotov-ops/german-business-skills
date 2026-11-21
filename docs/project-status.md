@@ -166,6 +166,18 @@ retests of demonstrated failures, not agreement with a secondary FAQ answer.
 
 Automatic reminders require a defined authorized scheduler and verified delivery; no such service exists. Additional connectors, statutory ledger features and e-invoice validation should be selected for a concrete journey, not required for every user. Do not replace the chosen accounting system just to complete the roadmap.
 
+**Workspace layout v2** (plan approved 2026-11-21; [dated review](research/workspace-layout-review-2026-11-21.md)).
+Phase 0 is in source: assistant input files and folder previews use `00_admin/work`
+instead of the user's inbox in every layout, and `demo` creates the same localized
+folders as `start`. Remaining: Phase 1, a versioned v2 mapping in Python and native
+Windows (overview at the workspace root, internal accounting register, year folders
+for bank and correspondence writers); Phase 2, readable original names with a running
+document number, issued-invoice copies under Documents, managed-inbox preview and
+post-import handling, then v2 as the default for new workspaces; Phase 3, an opt-in,
+hash-planned v1→v2 migration after a verified full backup. Retention class and
+direction, e-invoice grouping and generated procedure documentation are separate
+data-model work. Existing workspaces are never migrated silently.
+
 ## Accounting acceptance
 
 The first developed monthly route is **explicitly chosen local cash records plus manual ELSTER**, not a default for everyone. Follow the [monthly](../skills/de-business-kit/references/monthly-workflow.md) and [annual](../skills/de-business-kit/references/annual-workflow.md) workflows. Full backup/restore and the real overview are implemented; they do not establish complete statutory accounting.

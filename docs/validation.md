@@ -2,7 +2,34 @@
 
 [English](validation.md) · [Русский](validation.ru.md) · [Technical documentation](index.md)
 
-Evidence index updated **2026-11-20**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
+Evidence index updated **2026-11-21**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
+
+## Workspace layout Phase 0 — 2026-11-21
+
+Local branch `claude/workspace-layout-phase0` based on `f7e363f` implements Phase 0 of the
+[workspace layout review](research/workspace-layout-review-2026-11-21.md). Checks ran on macOS arm64:
+
+- New regressions passed: folder previews are saved under `00_admin/work`
+  (`.business-kit/admin/work` in localized workspaces, created on first use in an older
+  workspace) and leave the user's inbox empty; new legacy and localized workspaces
+  report and create the work folder; `demo` in EN and RU creates the same visible
+  folders as `start`, resumes, verifies and keeps the ordinary localized guide below
+  its synthetic note.
+- The full unit suite passed (489 tests; 11 skipped because they require Windows or
+  a configured PowerShell container image).
+- `tools/check_package.py` passed on a clean copy of tracked and new files. In the
+  working checkout it reported symlinks and links inside local, Git-excluded
+  `.claude/worktrees/` copies; `main` gives the same clean-copy result, so this is a
+  local-environment limit, not a package defect.
+- `tools/check_doc_links.py` (502 links/anchors, 33 files) and `git diff --check` passed.
+- `tests/native/windows-smoke.ps1` passed under PowerShell 7 on macOS with `TMPDIR`
+  on a non-symlinked path, including the new work-folder assertion; a native localized
+  `start` created `.business-kit/admin/work`. This is not Windows PowerShell 5.1 or
+  Windows CI acceptance.
+
+Not run: hosted Windows CI, browser suites (overview, GUI and prototype code unchanged)
+and fresh-session `evals/scenarios.json` trials for the changed input-file paths.
+Existing workspaces keep earlier preview files in their inbox; nothing is moved.
 
 ## Guided setup page — 2026-11-20
 

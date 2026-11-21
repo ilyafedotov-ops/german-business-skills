@@ -24,6 +24,7 @@ try {
     $start = & $kit -Action start -Layout legacy -Root $root -Year 2026 -Language ru | ConvertFrom-Json
     Assert ($start.status -eq 'initialized') 'Start failed'
     Assert (@(Get-ChildItem -LiteralPath (Join-Path $root '06_bookkeeping')).Count -eq 0) 'Empty months should not be created before intake'
+    Assert (Test-Path -LiteralPath (Join-Path $root '00_admin/work') -PathType Container) 'Assistant work folder missing'
     $profile = Join-Path $root '01_profile/business.json'
     $before = (Get-FileHash -LiteralPath $profile).Hash
     $resume = & $kit -Action start -Layout legacy -Root $root -Language en | ConvertFrom-Json

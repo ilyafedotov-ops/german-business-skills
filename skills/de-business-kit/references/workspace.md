@@ -38,7 +38,8 @@ The table below lists **stable logical references**, not necessarily physical pa
 | `00_admin/tasks.json` | Task array, with dependencies and completion evidence |
 | `00_admin/questions.json` | Question array, with fact blocked and requested evidence |
 | `00_admin/decisions.json` | Decision array, with effective date, reviewer and evidence |
-| `00_admin/inbox/` | Private intake/answer files |
+| `00_admin/inbox/` | The user's unsorted files awaiting selected import; never write assistant files here |
+| `00_admin/work/` | Assistant input/answer files and folder previews; older workspaces gain it when first needed |
 | `01_profile/business.json` | Canonical profile; flat `facts` mapping |
 | `02_registration/`, `05_tax/YYYY/` | Draft worksheets, official receipts and responses; tax consultations in `05_tax/YYYY/consultations/` |
 | `03_banking/`, `04_accounting/` | Provider requirements, statements/normalized files, workflow agreements |
@@ -62,7 +63,7 @@ python3 <skill-directory>/scripts/workspace.py doctor --root <private-folder>
 python3 <skill-directory>/scripts/workspace.py unlock --root <private-folder> --expected-sha256 <lock.sha256 from doctor>
 ```
 
-Use [onboarding](onboarding.md) to guide the user instead of making them type commands. `start` resumes an existing workspace without changing preferences or year; arguments select defaults only for a new workspace. `demo` requires a new/empty folder and creates synthetic CSVs, preserved originals, a real reconciliation and localized `START-HERE.md`. It never fills a real business profile. Inspect interrupted demonstrations with `start`/`doctor`; do not rerun initialization over them.
+Use [onboarding](onboarding.md) to guide the user instead of making them type commands. `start` resumes an existing workspace without changing preferences or year; arguments select defaults only for a new workspace. `demo` (`en` or `ru`) requires a new/empty folder and creates the same localized folders as `start`, with synthetic CSVs, preserved originals, a real reconciliation and a demo note above the ordinary localized start guide. It never fills a real business profile. Inspect interrupted demonstrations with `start`/`doctor`; do not rerun initialization over them.
 
 ## Runtime review and diagnostics
 
@@ -84,7 +85,7 @@ For a recorded assessment, set `client_data_mode` to `review_recorded` and add:
 The nonempty private evidence file explains the actual assessment, sources, limitations and scope. It cannot be a mutable configuration/register file. Missing settings cannot be marked reviewed. Save the full proposed runtime object as a private input file, then run:
 
 ```bash
-python3 <skill-directory>/scripts/workspace.py runtime --root <private-folder> --input 00_admin/inbox/runtime-review.json
+python3 <skill-directory>/scripts/workspace.py runtime --root <private-folder> --input 00_admin/work/runtime-review.json
 ```
 
 The writer stores assessment/configuration hashes and history under the workspace lock. A changed evidence file or configuration edited outside the command invalidates the recorded review. A changed provider, plan, connector, purpose or data category requires reconsideration; the command cannot decide legal suitability. To proceed without an assessment, retain `synthetic_or_redacted_until_reviewed`. Follow [privacy](privacy.md) before real personal-data processing. This is not a compliance checkbox.
@@ -105,9 +106,9 @@ Every entry needs `schema_version: 1`, an opaque `id` (letters/digits/underscore
 ```
 
 ```bash
-python3 <skill-directory>/scripts/workspace.py entry --root <private-folder> --collection tasks --input 00_admin/inbox/task.json
+python3 <skill-directory>/scripts/workspace.py entry --root <private-folder> --collection tasks --input 00_admin/work/task.json
 python3 <skill-directory>/scripts/workspace.py entry --root <private-folder> --collection tasks --id task-check-001
-python3 <skill-directory>/scripts/workspace.py entry --root <private-folder> --collection tasks --input 00_admin/inbox/task-update.json --expected-sha256 <current-entry-hash>
+python3 <skill-directory>/scripts/workspace.py entry --root <private-folder> --collection tasks --input 00_admin/work/task-update.json --expected-sha256 <current-entry-hash>
 ```
 
 Inspection returns state, evidence health and the version hash without the title/evidence content. Updates require that exact previous hash. Writes preserve unrelated entries and history; they never schedule reminders or perform external actions.
@@ -196,7 +197,7 @@ New writes validate profile field types. VAT regime is `Kleinunternehmer`, `Rege
 
 Person-wide turnover/forecast fields use `{"amount":"1234.56","currency":"EUR","period":"2026"}` with a nonnegative decimal string and explicit year. Preserve original foreign amounts separately and substantiate conversion. This storage format does not calculate qualifying statutory turnover. Legacy values are flagged without rewriting; correct individual fields with evidence through `record`.
 
-Save a one-field update in `00_admin/inbox/fact.json`:
+Save a one-field update in `00_admin/work/fact.json`:
 
 ```json
 {
@@ -212,7 +213,7 @@ Save a one-field update in `00_admin/inbox/fact.json`:
 Run:
 
 ```bash
-python3 <skill-directory>/scripts/workspace.py record --root /absolute/private-workspace --input 00_admin/inbox/fact.json
+python3 <skill-directory>/scripts/workspace.py record --root /absolute/private-workspace --input 00_admin/work/fact.json
 ```
 
 The input file must be inside the workspace. `--input -` also accepts JSON through stdin; do not embed secrets in shell command arguments. Keep external submission dates and evidence in an operation record, not an inferred boolean in the profile. Previous profile values are preserved in snapshots.

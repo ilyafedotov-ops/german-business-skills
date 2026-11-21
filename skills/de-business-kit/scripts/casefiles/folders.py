@@ -92,9 +92,11 @@ def scan(root, source, max_entries=1000, max_depth=10):
     payload = st.encoded(report)
     if len(payload) > ws.MAX_BYTES:
         raise ws.WorkspaceError("Inventory exceeds the supported report size; choose a smaller source scope.")
-    relative = "00_admin/inbox/folder-scan-" + uuid.uuid4().hex + ".json"
+    # Assistant-generated files stay out of the user's inbox; older workspaces gain the folder on demand.
+    relative = "00_admin/work/folder-scan-" + uuid.uuid4().hex + ".json"
     with ws._locked(root):
         ws._check_audit(root)
+        ws._mkdir(ws._path(root, "00_admin/work"))
         ws._write_exclusive(ws._inside(root, relative), payload)
         ws._audit(root, "folder_previewed", {"path": relative, "counts": counts, "traversal_complete": not warnings})
     return {"status": "preview", "path": ws._physical(root, relative), "sha256": hashlib.sha256(payload).hexdigest(),

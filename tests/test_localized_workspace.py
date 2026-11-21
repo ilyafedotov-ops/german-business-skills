@@ -53,6 +53,21 @@ class LocalizedWorkspaceTests(unittest.TestCase):
         self.assertIn('Originale', (self.root / 'HIER-STARTEN.md').read_text(encoding='utf-8'))
         self.assertEqual(ws.verify_workspace(self.root)['status'], 'ok')
 
+    def test_new_workspaces_keep_assistant_work_files_out_of_the_user_inbox(self):
+        cases = (('localized', lambda root: ws.start_workspace(root, 2026, 'de'),
+                  '01 Eingang', '.business-kit/admin/work'),
+                 ('legacy', lambda root: ws.init_workspace(root, 2026, 'en'),
+                  '00_admin/inbox', '00_admin/work'))
+        for name, create, inbox, work in cases:
+            with self.subTest(layout=name):
+                root = self.root.parent / name
+                create(root)
+                paths = ws.workspace_folders(root)['paths']
+                self.assertEqual(paths['00_admin/inbox'], inbox)
+                self.assertEqual(paths['00_admin/work'], work)
+                self.assertTrue((root / work).is_dir())
+                self.assertEqual(ws._inside(root, '00_admin/work/fact.json'), root / work / 'fact.json')
+
     def test_legacy_workspace_remains_legacy(self):
         ws.init_workspace(self.root, 2026, 'ru')
         before = (self.root / ws.MARKER).read_bytes()

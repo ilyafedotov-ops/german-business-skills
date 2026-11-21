@@ -155,6 +155,25 @@ class OnboardingTests(unittest.TestCase):
             workspace.create_demo(target, year=2026)
         self.assertEqual(report.read_bytes(), before)
 
+    def test_demo_shows_the_same_localized_folders_as_a_real_workspace(self):
+        for language, bank, guide, inbox in (("en", "03 Accounts/Bank", "START-HERE.md", "01 Inbox"),
+                                             ("ru", "03 Учёт/Банк", "НАЧНИТЕ-ЗДЕСЬ.md", "01 Входящие")):
+            with self.subTest(language=language):
+                demo = self.base / ("demo-" + language)
+                real = self.base / ("real-" + language)
+                result = workspace.create_demo(demo, year=2026, language=language)
+                workspace.start_workspace(real, year=2026, language=language)
+                visible = lambda root: sorted(p.name for p in root.iterdir() if p.is_dir())
+                self.assertEqual(visible(demo), visible(real))
+                self.assertEqual(workspace.workspace_folders(demo)["layout"], "localized")
+                self.assertTrue((demo / bank / "demo-bank.csv").is_file())
+                self.assertEqual(result["guide"], guide)
+                text = (demo / guide).read_text(encoding="utf-8")
+                self.assertIn("12", text)  # The demo's unmatched synthetic outflow.
+                self.assertIn(inbox, text)  # The ordinary localized folder guide.
+                self.assertEqual(workspace.verify_workspace(demo)["status"], "ok")
+                self.assertEqual(workspace.start_workspace(demo)["action"], "resumed")
+
     def test_doctor_checks_local_health_without_inventing_host_capabilities(self):
         (self.root / workspace.LOCK).write_text("active writer", encoding="utf-8")
         result = workspace.diagnose_workspace(self.root)

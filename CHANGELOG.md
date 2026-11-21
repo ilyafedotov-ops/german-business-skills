@@ -8,6 +8,7 @@ milestones are first published on 2026-10-26; their original commits are retaine
 
 ## Unreleased
 
+- Keep assistant-generated files out of the user's inbox: folder previews and documented assistant input files now use the internal `00_admin/work` folder in every layout (created on first use in existing workspaces), and `workspace.py demo` creates the same localized folders as `start`. Existing files are not moved. This is Phase 0 of the [workspace layout v2 plan](docs/research/workspace-layout-review-2026-11-21.md).
 - Add an offline EN/RU/DE guided setup page (`installer/`) for beginners: assistant choice with plan requirements, official sign-up and per-system download links, the existing Claude marketplace and Codex project-skill routes with copyable text, and four fictional first-task demos. It never downloads or runs installers and never collects credentials; provider links and plans were checked on 2026-11-20. It is not yet published at a web address or as a release asset.
 
 ## 0.11.0-preview.1

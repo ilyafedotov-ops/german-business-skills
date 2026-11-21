@@ -4,6 +4,7 @@
     "en": {
       "paths": {
         "00_admin/inbox": "01 Inbox",
+        "00_admin/work": ".business-kit/admin/work",
         "00_admin": ".business-kit/admin",
         "01_profile": ".business-kit/profile",
         "02_registration": "05 Business/Registration",
@@ -26,6 +27,7 @@
     "ru": {
       "paths": {
         "00_admin/inbox": "01 Входящие",
+        "00_admin/work": ".business-kit/admin/work",
         "00_admin": ".business-kit/admin",
         "01_profile": ".business-kit/profile",
         "02_registration": "05 Бизнес/Регистрация",
@@ -48,6 +50,7 @@
     "de": {
       "paths": {
         "00_admin/inbox": "01 Eingang",
+        "00_admin/work": ".business-kit/admin/work",
         "00_admin": ".business-kit/admin",
         "01_profile": ".business-kit/profile",
         "02_registration": "05 Unternehmen/Anmeldung",

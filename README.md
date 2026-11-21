@@ -173,7 +173,7 @@ My business/
 ├── 05 Business/
 │   ├── Registration/     Launch plans, registration and activity changes
 │   └── Correspondence/   Customer cases, letters and other service comparisons
-├── .business-kit/        Saved profile, tasks, questions, decisions and history
+├── .business-kit/        Saved profile, tasks, questions, decisions, history and assistant working files
 └── .workspace-layout.json  Internal folder-language mapping
 ```
 

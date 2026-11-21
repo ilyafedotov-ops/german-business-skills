@@ -127,6 +127,25 @@ class FolderIntakeTests(CaseFixture):
         with self.assertRaises(ws.WorkspaceError):
             self.report(other)
 
+    def test_preview_reports_go_to_the_assistant_work_folder_not_the_user_inbox(self):
+        source = self.source_folder()
+        (source / "invoice.pdf").write_bytes(b"Synthetic")
+        localized = self.base / "localized"
+        ws.start_workspace(localized, 2026, "en")
+        older = self.base / "older"
+        ws.start_workspace(older, 2026, "ru")
+        work = older / ".business-kit/admin/work"
+        if work.exists():
+            work.rmdir()  # A workspace created before the work folder existed.
+        for root, inbox, work_folder in ((self.root, "00_admin/inbox", "00_admin/work"),
+                                         (localized, "01 Inbox", ".business-kit/admin/work"),
+                                         (older, "01 Входящие", ".business-kit/admin/work")):
+            with self.subTest(root=root.name):
+                result = folders.scan(root, source)
+                self.assertEqual(Path(result["path"]).parent.as_posix(), work_folder)
+                self.assertTrue((root / result["path"]).is_file())
+                self.assertEqual(list((root / inbox).iterdir()), [])
+
     def test_cli_saves_private_preview_and_returns_no_import_claim(self):
         source = self.source_folder()
         (source / "invoice.pdf").write_bytes(b"Synthetic")

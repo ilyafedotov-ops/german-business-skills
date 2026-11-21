@@ -414,7 +414,7 @@ try {
         if ($Layout -eq 'localized') { WriteNew (Join-Path $rootPath '.workspace-layout.json') (BytesJson @{schema_version=1; language=$Language}) }
         $seed = ReadJson (Join-Path $kitRoot 'assets/workspace-seed.json')
         foreach ($property in $seed.PSObject.Properties) { WriteNew (WorkspacePath $property.Name) (BytesJson $property.Value) }
-        foreach ($dir in @('00_admin/inbox','02_registration','03_banking','04_accounting',"05_tax/$Year",'06_bookkeeping','07_exports','08_correspondence','09_audit/history')) { [void][IO.Directory]::CreateDirectory((WorkspacePath $dir)) }
+        foreach ($dir in @('00_admin/inbox','00_admin/work','02_registration','03_banking','04_accounting',"05_tax/$Year",'06_bookkeeping','07_exports','08_correspondence','09_audit/history')) { [void][IO.Directory]::CreateDirectory((WorkspacePath $dir)) }
         WriteNew (WorkspacePath '09_audit/events.json') (BytesJson @((Event 'workspace_initialized' @{year=$Year; language=$Language; mode=$Mode; runtime='powershell'})))
         # Marker last: interrupted initialization must never look complete.
         $newMarker = @{schema='german-business-workspace'; schema_version=1; workspace_id=[guid]::NewGuid().ToString(); created_at=(Now); initial_year=$Year; language=$Language; mode=$Mode}

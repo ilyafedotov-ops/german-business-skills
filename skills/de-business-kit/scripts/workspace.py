@@ -799,7 +799,7 @@ def init_workspace(root: PathInput, year: int, language: str = "en", mode: str =
             raise WorkspaceError("Initialization requires an empty directory.")
         if layout == "localized":
             _atomic_json(location / LAYOUT, {"schema_version": 1, "language": language})
-        directories = ["00_admin", "00_admin/inbox", "01_profile", "02_registration",
+        directories = ["00_admin", "00_admin/inbox", "00_admin/work", "01_profile", "02_registration",
                        "03_banking", "04_accounting", f"05_tax/{year}", "06_bookkeeping", "07_exports",
                        "08_correspondence", "09_audit/history"]
         for relative in directories:
@@ -1369,8 +1369,10 @@ def unlock_workspace(root: PathInput, expected_sha256: str, confirmed_no_writer:
 def create_demo(root: PathInput, year: int = 2026, language: str = "en") -> Dict[str, Any]:
     if language not in {"en", "ru"}:
         raise WorkspaceError("The demo supports en and ru.")
-    init_workspace(root, year, language, "bookkeeping")
+    # The demo shows the same localized folders that start creates for real work.
+    init_workspace(root, year, language, "bookkeeping", layout="localized")
     location = _workspace(root)
+    words = _layout(location)[1]
     period = f"{year}-01"
     bank = ("transaction_id,booking_date,amount,currency\n"
             f"DEMO-1,{period}-05,-105.00,EUR\nDEMO-2,{period}-06,500.00,EUR\n"
@@ -1383,8 +1385,8 @@ def create_demo(root: PathInput, year: int = 2026, language: str = "en") -> Dict
         marker = _load(_inside(location, MARKER))
         marker["purpose"] = "synthetic_demo"
         _atomic_json(_inside(location, MARKER), marker, replace=True)
-        _write_exclusive(location / "03_banking/demo-bank.csv", bank.encode("utf-8"))
-        _write_exclusive(location / "04_accounting/demo-ledger.csv", ledger.encode("utf-8"))
+        _write_exclusive(_inside(location, "03_banking/demo-bank.csv"), bank.encode("utf-8"))
+        _write_exclusive(_inside(location, "04_accounting/demo-ledger.csv"), ledger.encode("utf-8"))
     for source in ("03_banking/demo-bank.csv", "04_accounting/demo-ledger.csv"):
         ingest_document(location, source, period)
     reconciliation = reconcile(location, "03_banking/demo-bank.csv", "04_accounting/demo-ledger.csv", period)
@@ -1400,12 +1402,19 @@ def create_demo(root: PathInput, year: int = 2026, language: str = "en") -> Dict
             "The EUR 12 outflow is unlinked and needs review. Currencies remain separate.\n\n"
             "Next: open the report, inspect the unmatched outflow, then ask to continue this demonstration. "
             "Matching amounts do not establish tax correctness. Nothing was posted or submitted.\n")
+    guide = location / words["guide_name"]
     with _locked(location):
         _check_audit(location)
-        _write_exclusive(location / "START-HERE.md", (text + "\n" + reconciliation["report"] + "\n").encode("utf-8"))
+        if _read_regular(guide) != words["guide"].encode("utf-8"):
+            raise WorkspaceError("The new demo guide changed unexpectedly; preserve it for review.")
+        # Put the demo note above the ordinary folder guide without a partially written file.
+        temporary = location / (".demo-guide-" + uuid.uuid4().hex + ".tmp")
+        _write_exclusive(temporary, (text + "\n" + reconciliation["report"] + "\n\n" + words["guide"]).encode("utf-8"))
+        temporary.replace(guide)
+        _sync_directory(location)
         _audit(location, "synthetic_demo_created", {"period": period})
-    return {"status": "demo_created", "guide": "START-HERE.md", "reconciliation": reconciliation,
-            "next_action": "Open START-HERE.md; use start to resume without reinitializing."}
+    return {"status": "demo_created", "guide": words["guide_name"], "reconciliation": reconciliation,
+            "next_action": f"Open {words['guide_name']}; use start to resume without reinitializing."}
 
 
 def main(argv: Optional[List[str]] = None) -> int:
