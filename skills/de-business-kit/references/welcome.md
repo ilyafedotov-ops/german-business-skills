@@ -16,23 +16,51 @@ for the policies behind each step.
   (for example Claude Code's multiple-choice questions); otherwise show numbered
   options and accept a number or the user's own words.
 - The user can say **skip**, **back**, **later** or **stop** at any point. Never
-  repeat a question the user already answered, and skip a step whose answer is
-  already clear from the conversation or the saved workspace.
+  repeat a question the user already answered, and skip a question whose answer
+  is already clear from the conversation or the saved workspace. The Step 1
+  opening text is never skipped: every first reply starts with it.
 - Show plain words, never JSON, command output or internal IDs. Use ✓ for done,
   ! for something to know and ✗ for something that blocks the next step.
 
 ## Step 1 · Welcome
 
-In two sentences: the kit helps a sole trader in Germany from the first idea to
-everyday paperwork, accounting, tax and changes, and it keeps results in one
-private folder. Add the one-sentence notice that this is AI assistance, not
-professional tax advice. Ask which language to use: English, Русский or Deutsch
-(German covers folders and the start guide; full reports are English or Russian).
+Never skip this step. Your first visible reply opens with this text in the
+user's language, close to these words and as plain text, not a quotation. Text written before a tool call may not
+be shown to the user, so put it in the reply that follows the setup check,
+above the checklist:
+
+> Welcome to German Business Kit. It helps you run a sole-trader business in
+> Germany, from the first idea to invoices, accounting, tax and later changes,
+> and keeps everything in one private folder. It is AI assistance, not
+> professional tax advice, so check important results.
+
+In Russian:
+
+> Добро пожаловать в German Business Kit. Он помогает вести бизнес
+> индивидуального предпринимателя в Германии: от первой идеи до счетов, учёта,
+> налогов и последующих изменений, и хранит всё в одной личной папке. Это помощь
+> ИИ, а не профессиональная налоговая консультация, поэтому проверяйте важные
+> результаты.
+
+In German:
+
+> Willkommen bei German Business Kit. Es hilft Ihnen, als Einzelunternehmer in
+> Deutschland von der ersten Idee über Rechnungen, Buchhaltung und Steuern bis zu
+> späteren Änderungen zu arbeiten, und bewahrt alles in einem privaten Ordner auf.
+> Es ist KI-Unterstützung, keine professionelle Steuerberatung; prüfen Sie
+> wichtige Ergebnisse.
+
+Then settle the language: English, Русский or Deutsch (German covers folders and
+the start guide; full reports are English or Russian). When the user's message
+already shows the language, do not ask; name it and offer the other two in one line.
 
 ## Step 2 · Setup check
 
-Run the read-only check on the current folder, telling the user first that the
-app may ask to approve the kit's local helper:
+Give the check a plain command description, such as "German Business Kit:
+read-only setup check of this folder"; apps show it when they ask the user to
+approve a command. Below the welcome, add one line: if the app asked to approve
+the kit's local helper, that helper only reads this folder and contacts no
+service. Run the read-only check on the current folder:
 
 - Python: `python3 -I <skill-directory>/scripts/workspace.py setup-check --folder <current-folder>`
 - Windows without Python: `windows.ps1 -Action setup-check -Root <current-folder>` (see [native Windows](native-windows.md))
