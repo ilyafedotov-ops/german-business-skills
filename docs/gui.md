@@ -10,6 +10,9 @@ The `gui/` application connects a browser interface to the real workspace writer
 - Open/create a private workspace and use English, Russian or German navigation.
 - Import selected PDFs, XML, images and CSVs; see per-file results and review
   catalog details alongside a safe text/image preview or original download.
+- List files waiting in the workspace inbox and import selected ones in place;
+  the server accepts only names from its own inbox listing and the canonical
+  import moves each file to the Imported folder.
 - Choose local or external authoritative accounting explicitly. Post reviewed
   cash entries with split lines, line VAT as stated, optional links to approved proposals and
   evidence; reverse/correct without rewriting history.

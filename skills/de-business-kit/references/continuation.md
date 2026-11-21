@@ -7,7 +7,13 @@ accounting choice merely to reopen a formation plan or letter.
 
 ## With an existing workspace
 
-1. Resolve folders and identity using [workspace](workspace.md). Inspect the
+1. Reopen it with `workspace.py start --root <folder>` (native `-Action start`):
+   it resumes without reinitializing and reports health, preferences and open
+   counts. Check originals with `workspace.py verify` (native `-Action verify`)
+   instead of hashing files with other tools, and read a task with
+   `workspace.py entry --collection tasks --id <ID>`. Compare the latest saved
+   readable note with the document index: an import after the note means the
+   note is out of date. Resolve folders and identity using [workspace](workspace.md). Inspect the
    relevant task by ID and its evidence health; reuse saved language and the
    explicitly chosen authoritative system. Do not infer facts from filenames.
    For invoicing tasks, use `desk.py invoice-list` across all periods and

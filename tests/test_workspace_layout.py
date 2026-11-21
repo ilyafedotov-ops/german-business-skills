@@ -243,6 +243,25 @@ class ManagedInboxTests(CaseFixture):
             with self.subTest(source=internal.name), self.assertRaises(ws.WorkspaceError):
                 folders.scan(self.root, internal)
 
+    def test_waiting_files_are_listed_with_the_preview_rules_and_nothing_is_written(self):
+        self.drop("receipt.pdf", b"new")
+        self.drop("October/bank.csv", b"date,amount\n")
+        self.drop("notes.docx", b"unsupported")
+        self.drop(".DS_Store", b"hidden")
+        self.drop("Imported/2026-10/old.pdf", b"old")
+        before = sorted(p.relative_to(self.root).as_posix() for p in self.root.rglob("*"))
+        events = (self.root / ".business-kit/audit/events.json").read_bytes()
+        listing = folders.inbox(self.root)
+        self.assertEqual(listing["folder"], "01 Inbox")
+        rows = {row["path"]: row for row in listing["entries"]}
+        self.assertEqual(set(rows), {"receipt.pdf", "October/bank.csv", "notes.docx"})
+        self.assertEqual((rows["receipt.pdf"]["status"], rows["receipt.pdf"]["size_bytes"]), ("candidate", 3))
+        self.assertEqual(rows["October/bank.csv"]["status"], "candidate")
+        self.assertEqual((rows["notes.docx"]["status"], rows["notes.docx"]["reason"]), ("skipped", "unsupported_format"))
+        self.assertFalse(listing["truncated"])
+        self.assertEqual(sorted(p.relative_to(self.root).as_posix() for p in self.root.rglob("*")), before)
+        self.assertEqual((self.root / ".business-kit/audit/events.json").read_bytes(), events)
+
     def test_an_import_from_the_inbox_files_the_source_without_overwriting(self):
         first = ws.ingest_document(self.root, self.drop("Rechnung.pdf", b"one"), "2026-10")
         self.assertEqual(first["source_moved_to"], "01 Inbox/Imported/2026-10/Rechnung.pdf")

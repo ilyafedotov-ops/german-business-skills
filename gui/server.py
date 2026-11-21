@@ -25,14 +25,14 @@ sys.path.insert(0, str(SCRIPTS))
 import workspace as ws
 import workflows as wf
 import recovery
-from casefiles import accounting, documents, overview, storage, summary
+from casefiles import accounting, documents, folders, overview, storage, summary
 
 ASSETS = BASE / 'gui'
 MAX_REQUEST = 18 * 1024 * 1024
 MAX_UPLOAD = 12 * 1024 * 1024
 DRAFT_PATH = '00_admin/gui-drafts.json'
 READ_OPS = {'context', 'status', 'file', 'verify-backup', 'select-folder', 'lock-status'}
-MUTATIONS = {'open', 'receive', 'document-save', 'configuration', 'entry-post', 'entry-reverse',
+MUTATIONS = {'open', 'receive', 'receive-inbox', 'document-save', 'configuration', 'entry-post', 'entry-reverse',
              'filing-create', 'filing-action', 'report', 'overview', 'backup', 'restore', 'draft-save', 'unlock'}
 FILE_TYPES = ws.EXTENSIONS | {'.md', '.txt', '.json', '.html'}
 
@@ -132,6 +132,8 @@ class Application:
             return self.snapshot(args.get('period', date.today().strftime('%Y-%m')))
         if op == 'receive':
             return self.receive(args)
+        if op == 'receive-inbox':
+            return self.receive_inbox(args)
         if op == 'document-save':
             return documents.save(root, args['record'], args.get('expected_sha256'))
         if op == 'configuration':
@@ -255,7 +257,7 @@ class Application:
                     'configuration_sha256': storage.digest(state['configuration']) if state['configuration'] else None,
                     'entries': list(state['entries'].values()), 'filings': filings,
                     'proposals': accounting.linkable(self.root)}, 'overview': view,
-                    'files': self.files(), 'drafts': drafts, 'drafts_sha256': checksum,
+                    'files': self.files(), 'inbox': folders.inbox(self.root), 'drafts': drafts, 'drafts_sha256': checksum,
                     'forms': wf.catalog()['forms'], 'capabilities': {'local_writes': True, 'transmission': False,
                     'tax_calculation': False, 'report_languages': ['en', 'ru']}}
 
@@ -280,6 +282,28 @@ class Application:
                     source.write_bytes(data)
                     received.append(documents.receive(self.root, source, args['period'], args['received_on'], args.get('type', 'unknown')))
             except (ws.WorkspaceError, ValueError, OSError, KeyError, TypeError, binascii.Error) as exc:
+                errors.append({'name': name, 'error': str(exc)})
+        return {'received': received, 'errors': errors}
+
+    def receive_inbox(self, args):
+        """Import files already waiting in the inbox in place, so they move to Imported like an assistant import."""
+        ws._period(args['period'])
+        ws._day(args['received_on'])
+        names = args['files']
+        if (not isinstance(names, list) or not 1 <= len(names) <= 30
+                or not all(isinstance(name, str) for name in names) or len(set(names)) != len(names)):
+            raise ws.WorkspaceError('Select between 1 and 30 different inbox files per import.')
+        # Only names from the server's own current listing are accepted, never a path supplied by the page.
+        waiting = {row['path'] for row in folders.inbox(self.root)['entries'] if row['status'] == 'candidate'}
+        base = ws._path(self.root, '00_admin/inbox')
+        received, errors = [], []
+        for name in names:
+            try:
+                if name not in waiting:
+                    raise ws.WorkspaceError('Choose a supported file that is still waiting in the inbox.')
+                received.append(documents.receive(self.root, base.joinpath(*name.split('/')), args['period'],
+                                                  args['received_on'], args.get('type', 'unknown')))
+            except (ws.WorkspaceError, ValueError, OSError, KeyError, TypeError) as exc:
                 errors.append({'name': name, 'error': str(exc)})
         return {'received': received, 'errors': errors}
 

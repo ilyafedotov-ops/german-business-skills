@@ -543,6 +543,25 @@ finally:
     await page.locator('#language').selectOption('en');
     await selectWorkspace(root);
 
+    // Files put straight into the workspace inbox are listed, imported in place and filed under Imported.
+    const inbox=path.join(root,'01 Inbox');
+    await fs.writeFile(path.join(inbox,'inbox-receipt.csv'),'date,amount\n2026-10-21,12.00\n');
+    await fs.writeFile(path.join(inbox,'later-receipt.csv'),'date,amount\n2026-10-22,8.00\n');
+    await fs.writeFile(path.join(inbox,'notes.docx'),'unsupported');
+    await page.locator('nav a[data-route="documents"]').click();
+    await click(page,'Check inbox again');
+    const inboxPanel=page.locator('section[aria-labelledby="inbox-title"]');
+    await inboxPanel.getByText('later-receipt.csv',{exact:true}).waitFor();
+    await inboxPanel.getByText('unsupported format; use PDF, XML, images or CSV',{exact:true}).waitFor();
+    await inboxPanel.getByRole('checkbox',{name:/later-receipt\.csv/}).uncheck();
+    await page.locator('#inbox-period').fill('2026-10');
+    await click(page,'Import selected inbox files');
+    await inboxPanel.getByRole('checkbox',{name:/inbox-receipt\.csv/}).waitFor({state:'detached'});
+    assert.equal(await fs.readFile(path.join(inbox,'Imported','2026-10','inbox-receipt.csv'),'utf8'),'date,amount\n2026-10-21,12.00\n');
+    await assert.rejects(fs.access(path.join(inbox,'inbox-receipt.csv')),'Imported inbox file left the inbox');
+    assert.equal(await inboxPanel.getByRole('checkbox').count(),1,'Only the unselected file is still waiting');
+    await page.locator('#document-list').getByText('inbox-receipt.csv',{exact:true}).first().waitFor();
+
     for (const lang of ['en','ru','de']) {
       await page.locator('#language').selectOption(lang);
       for (const destination of ['home','documents','month','taxes','accounts','settings']) {
@@ -583,7 +602,7 @@ finally:
     assert.equal(untouched.drafts.entry,undefined,'Stale tab did not write into the newly selected workspace');
     await otherTab.close();
     assert.deepEqual(issues, []);
-    console.log(`GUI ${browserName}: task-first empty/undated/blocked/evidence/XSS/cross-month journeys, real import/review/configuration/draft/post/reversal/filing lifecycle/recovery/stale-tab journeys, and 54 localized route-width checks plus 6 task-home checks passed; ${screenshotDiagnostics} screenshot-only WebKit CSP diagnostics.`);
+    console.log(`GUI ${browserName}: task-first empty/undated/blocked/evidence/XSS/cross-month journeys, real import/inbox import/review/configuration/draft/post/reversal/filing lifecycle/recovery/stale-tab journeys, and 54 localized route-width checks plus 6 task-home checks passed; ${screenshotDiagnostics} screenshot-only WebKit CSP diagnostics.`);
     await context.close();
   } catch (error) {
     failure = error;

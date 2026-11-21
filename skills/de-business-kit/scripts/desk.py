@@ -3,7 +3,12 @@
 import argparse
 from datetime import date
 import json
+import os
 import sys
+
+# Isolated mode (python -I) leaves this folder off the import path; the helpers live beside this file.
+if os.path.dirname(os.path.abspath(__file__)) not in sys.path:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import workspace as ws
 from casefiles import accounting, invoicing, invoice_payments, payment_followup, lexware

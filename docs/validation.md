@@ -4,6 +4,47 @@
 
 Evidence index updated **2026-11-21**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## Onboarding live trials and fixes — 2026-11-21
+
+Live trials used `main` at `fa7f785`, built with `tools/build_package.py` and loaded through
+`claude -p --plugin-dir` (Claude Code 2.1.329, Claude Opus 5.5, High effort) in fresh sessions
+without user settings, user instructions or MCP servers. Prompts were copied from the guides;
+all data was fictional. Six sessions cost about USD 2.84 in total.
+
+- The English and Russian first-task requests and "show me how to use this" gave one small step
+  or three copyable requests without setup. The English first answer omitted the first-use AI
+  notice that the Russian one included.
+- Private-folder setup created the documented layout and saved facts, questions and tasks
+  through the validated writers; `verify` reported `ok`.
+- The start guide's inbox request imported both files without waiting for a choice, and its first
+  `desk.py scan-folder` under `python3 -I` failed with `ModuleNotFoundError` before the model
+  retried. Resuming read internal JSON and could not finish a manual hash check. The records app
+  did not show files waiting in the inbox.
+- The checkout installer's copy matched the packaged Codex skills byte for byte and refused a
+  second install; the records app created the documented layout on first run.
+
+Branch `claude/onboarding-fixes` addresses these, checked on macOS arm64:
+
+- Red/green regressions: the helper programs start under `python3 -I` from another folder; the
+  records app lists waiting inbox files read-only with the preview's skip rules and imports only
+  names from that listing, which then move to Imported; the demo also runs in German and keeps
+  its inputs in storage-year folders.
+- 515 unit tests passed (11 skipped; those 11 and 8 related tests passed under PowerShell 7
+  through the local stand-in), and the four native smoke scripts passed under PowerShell 7.
+  `npm run test:gui` passed in **Chromium** and **WebKit**, including the inbox journey and the
+  narrow-screen checks in EN/RU/DE; the 320 px Documents page first overflowed on a long result
+  path, now wrapped. `tools/check_package.py` (clean copy), `tools/check_doc_links.py` (518 links),
+  `tools/release.py check` and `git diff --check` passed.
+- Retrials with the rebuilt bundle: the new inbox request previewed both files under `python3 -I`,
+  mentioned the approval prompt, imported nothing and asked for the files and storage month.
+  Resuming used `start` and `verify`, finished the integrity check and saved a new note version
+  instead of editing the outdated one. In both, the very first shell command (before reading the
+  references) was still a compound one; `SKILL.md` now states the plain-command rule too, not yet
+  retested.
+
+Not run: Cowork or Codex desktop apps, the native Windows route with a model, and Russian or
+German folder setup by a model. Hosted CI for this branch is pending.
+
 ## Current record formats only — 2026-11-21
 
 Local branch `claude/workspace-layout-phase0` after `ee283ff` removes read compatibility for record

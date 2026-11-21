@@ -156,8 +156,10 @@ class OnboardingTests(unittest.TestCase):
         self.assertEqual(report.read_bytes(), before)
 
     def test_demo_shows_the_same_folders_as_a_real_workspace(self):
-        for language, bank, guide, inbox in (("en", "03 Accounts/Bank", "START-HERE.md", "01 Inbox"),
-                                             ("ru", "03 Учёт/Банк", "НАЧНИТЕ-ЗДЕСЬ.md", "01 Входящие")):
+        for language, bank, records, guide, inbox, note in (
+                ("en", "03 Accounts/Bank", "03 Accounts/Records", "START-HERE.md", "01 Inbox", "practice folder"),
+                ("ru", "03 Учёт/Банк", "03 Учёт/Записи", "НАЧНИТЕ-ЗДЕСЬ.md", "01 Входящие", "учебная папка"),
+                ("de", "03 Buchhaltung/Bank", "03 Buchhaltung/Unterlagen", "HIER-STARTEN.md", "01 Eingang", "Übungsordner")):
             with self.subTest(language=language):
                 demo = self.base / ("demo-" + language)
                 real = self.base / ("real-" + language)
@@ -166,9 +168,12 @@ class OnboardingTests(unittest.TestCase):
                 visible = lambda root: sorted(p.name for p in root.iterdir() if p.is_dir())
                 self.assertEqual(visible(demo), visible(real))
                 self.assertEqual(json.loads((demo / workspace.LAYOUT).read_text())["schema_version"], 2)
-                self.assertTrue((demo / bank / "demo-bank.csv").is_file())
+                # Inputs sit in the storage-year folders the guides describe.
+                self.assertTrue((demo / bank / "2026" / "demo-bank.csv").is_file())
+                self.assertTrue((demo / records / "2026" / "demo-ledger.csv").is_file())
                 self.assertEqual(result["guide"], guide)
                 text = (demo / guide).read_text(encoding="utf-8")
+                self.assertIn(note, text)
                 self.assertIn("12", text)  # The demo's unmatched synthetic outflow.
                 self.assertIn(inbox, text)  # The ordinary folder guide.
                 self.assertEqual(workspace.verify_workspace(demo)["status"], "ok")
