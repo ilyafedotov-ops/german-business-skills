@@ -189,6 +189,17 @@ class InstallerContentTests(unittest.TestCase):
             self.assertTrue((INSTALLER / reference).is_file(), reference)
         for key in ("prototype", "screenshot"):
             self.assertTrue((INSTALLER / self.links["local"][key]).resolve().is_file(), key)
+        # Real-app screenshots for every step, assistant and language.
+        results = self.links["local"]["results"]
+        self.assertEqual(set(results), {"skills", "first"})
+        for step, providers in results.items():
+            self.assertEqual(set(providers), {"claude", "openai"})
+            for provider, files in providers.items():
+                self.assertEqual(set(files), set(LANGUAGES))
+                for language, file in files.items():
+                    with self.subTest(step=step, provider=provider, language=language):
+                        self.assertTrue((INSTALLER / file).is_file(), file)
+                        self.assertLess((INSTALLER / file).stat().st_size, 400_000, "Keep screenshots small")
 
 
 if __name__ == "__main__":
