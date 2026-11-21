@@ -35,6 +35,7 @@ Each pin of the Claude marketplace moved only after these checks on freshly down
 
 | Release | Tag commit | Published (UTC) | Release run and verification |
 | --- | --- | --- | --- |
+| [0.13.0-preview.2](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.13.0-preview.2) | `656715e` | 2026-11-21 12:59 | Run 44906156351; all 8 assets passed with GitHub CLI 2.105.0; both skill ZIPs matched a local rebuild byte for byte |
 | [0.13.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.13.0-preview.1) | `01eb044` | 2026-11-21 11:08 | Run 44897078006; all 8 assets passed with GitHub CLI 2.105.0; both skill ZIPs matched a local rebuild byte for byte |
 | [0.12.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.12.0-preview.1) | `e6c78c0` | 2026-11-21 10:39 | Run 44894885649; all 8 assets passed with GitHub CLI 2.105.0; both skill ZIPs matched a local rebuild |
 | [0.11.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.11.0-preview.1) | `9e2bc4c` | 2026-10-27 16:32 | Run 40538907997, 16 jobs; all 8 assets passed with GitHub CLI 2.103.2; skill ZIPs, metadata and notes matched the exact-tag rehearsal |
