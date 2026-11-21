@@ -202,7 +202,8 @@ work, service setup and closure do not need separate top-level workspaces.
 > Use de-business-kit. Show the folders in my selected business workspace, explain what belongs where, and link the last result and next action. Keep existing files and folder names unchanged.
 
 One entrepreneur keeps one shared profile across activities and years. Folder
-language is separate from conversation language; existing layouts are preserved.
+language is separate from conversation language and never renames folders. Folders
+from previews before 0.12 are not opened; start a new workspace and import the originals.
 A folder name does not prove review, payment or submission. Include hidden files
 and `.business-kit` in a full backup, stored separately; **Reports is not a backup**.
 You do not need to edit JSON or remember these paths.

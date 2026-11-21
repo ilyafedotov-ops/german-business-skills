@@ -2,102 +2,13 @@
 
 [English](project-status.md) · [Русский](project-status.ru.md) · [Technical documentation](index.md)
 
-Reviewed against source on **2026-10-26**. German Business Kit is a seven-skill system for a natural-person entrepreneur in Germany: preparation, formation, everyday work, accounting, reporting, changes and closure. Users can ask a question before creating a workspace or choosing accounting software. Self-managed accounting remains a supported goal; consultation and sharing with an accountant are optional.
-
-All seven skills now share a [cost check before setup](../skills/de-business-kit/references/assisted-services.md#check-costs-before-setup):
-verify current-plan entitlement, explain added costs/unknowns before paid setup,
-and preserve no-upgrade decisions while continuing available work. This is a
-portable instruction safeguard, not a billing-enforcement mechanism.
-
-All seven also require a [screenshot privacy check](../skills/de-business-kit/references/privacy.md#check-screenshots-before-sharing)
-before sharing, including owner chat: minimized text by default, a separately
-redacted and verified image when needed, and private preservation of necessary
-original evidence. This is an instruction safeguard, not an automatic redactor.
-
-The **2026-11-05** filed-return guidance update separates missing evidence,
-uncertain treatment and recognized errors with possible tax shortfalls. It checks
-filing state/deadlines and separates prompt notification from later quantification
-when required; it adds no tax calculator or submission capability. See the
-[portable rule](../skills/de-business-kit/references/tax-consultant.md#check-a-possible-error-in-a-filed-return)
-and [validation](validation.md) for bounded trial evidence.
+Updated **2026-11-21**: onboarding, the workspace folder structure and the releases were checked against source that day; the other capability statements were reviewed on **2026-10-26** and **2026-10-27**. German Business Kit is a seven-skill system for a natural-person entrepreneur in Germany: preparation, formation, everyday work, accounting, reporting, changes and closure. Users can ask a question before creating a workspace or choosing accounting software. Self-managed accounting remains a supported goal; consultation and sharing with an accountant are optional.
 
 ## Primary user journey
 
-Use Claude Desktop/Cowork or Codex as the interface, and one private business
-folder for records, confirmed facts, open questions and continuation. The separate
-GUI is an optional adapter for existing local operations; it is not a prerequisite
-for onboarding, daily work or self-managed reporting. Keep its existing safeguards;
-prioritize observed assistant journeys before adding GUI scope. The README starts with an assistant-led installation request and offers lifecycle, document, integration and edge-case examples. Requested usage help provides relevant copyable prompts; installation and connection success still require actual observation.
+Use Claude Code, the Claude app (Cowork) or Codex as the interface, and one private business folder for records, confirmed facts, open questions and continuation. After installation, a [welcome wizard](../skills/de-business-kit/references/welcome.md) in the chat runs a read-only setup check and guides a new user one step at a time through language, situation, business folder, data handling and a first task. The separate GUI is an optional adapter for existing local operations, not a prerequisite for onboarding, daily work or self-managed reporting; prioritize observed assistant journeys before adding GUI scope. Installation and connection success still require actual observation.
 
-All seven skills share task-specific prerequisite checks, targeted follow-ups,
-reuse of relevant saved facts and explicit persistence through existing writers.
-Tax/accounting instructions now allow bounded calculations from inspected
-applicable rules, executable arithmetic and separately evidenced checks. These
-are instruction-level capabilities over available host tools, not a bundled
-complete tax engine, guaranteed independent reviewer or new filing approval gate.
-See [source-led calculations](../skills/de-business-kit/references/tax-estimates.md)
-and [validation](validation.md) for actual trials and remaining limits.
-
-Local implementation on **2026-10-27** adds primary-source recovery and a
-[saved income-tax prepayment request workflow](../skills/de-business-kit/references/tax-consultant.md#prepare-or-revise-an-income-tax-prepayment-request)
-to the product skills. It prepares a German recipient draft, separate EN/RU
-review, calculation evidence and a continuation point; corrected forecasts retain
-earlier versions. This is host-executed preparation, with no new tax engine,
-protected writer or ELSTER transport. Receipt-to-period preparation now also has
-an explicit saved workflow, separating payment/profit and VAT timing while keeping
-unknown treatment open. Filing continuation uses the existing writers with added
-preparation-source dependency freezing and freshness/readiness checks. These
-changes preserve the chosen accounting system and filing history. Further FAQ
-expansion is not the current priority; actual acceptance is in validation.
-
-Customer payment continuation now preserves invoice-stated prepaid and rounding
-amounts in UBL/CII inspection and draft proposals. The operations skill saves
-separate recipient replies and private comparisons, distinguishing already included
-receipts from later payments and retaining revised versions. This adds no invoice
-issuance, settlement engine, payment allocation or technical e-invoice validation.
-
-Local EU goods guidance now includes [checks before ordering and after a VAT invoice arrives](../skills/de-business-kit/references/international.md#before-ordering-goods-from-another-eu-country),
-including Kleinunternehmer ID-use consequences, conditional supplier correction
-and the distinction between foreign VAT and German acquisition/destination VAT.
-Operations, accounting and tax skills share this source. It adds no tax engine,
-election, refund or filing operation; [validation](validation.md) records live acceptance.
-
-The optional Python invoicing workflow now records reviewed drafts, issue/correction
-attempts, actual issued artifacts, dispatch and receipt evidence through protected
-writers. It supports historical issued/sent documents, linked corrections, explicit
-failure/retry and all-period continuation. The opt-in Lexware Office adapter now
-creates a provider draft, preserves its ID and reads it back; final artifact
-downloads check provider version stability. It binds browser finalization/sending
-to that same object and protected attempt. No API finalization/send endpoint is
-invented; those actions require the actual authorized host/browser/manual route.
-One authorized live browser journey now covers zero-value draft creation/readback,
-same-object finalization, PDF inspection, sending and recipient acknowledgement.
-The sent-history PDF matched the reviewed file byte-for-byte. This used an existing
-business company, not an isolated sandbox. A separate current-plan browser test
-also verified saving/reopening a zero-value draft, correcting its introduction and retaining its UUID, number, VAT setting
-and total while leaving it unissued/unsent. Live API adapter acceptance, nonzero
-invoices, provider-linked/nonzero corrections, native-only and GUI invoicing controls remain open.
-The current-plan browser route also exported a draft PDF using the explicit
-**Als Entwurf drucken** option and verified the same object remained a draft.
-The default **Fertigstellen + drucken** must not be used for draft-only export.
-A separate manual zero-value correction draft now has live save/reopen, persisted
-text-edit, preview and draft-PDF checks. Its original reference is textual; local
-linkage does not establish provider linkage. With explicit authorization, the same
-correction was finalized, independently read back as **offen**, and its final PDF
-verified; it remains unsent. The original stayed sent and not cancelled. Nonzero
-credit/refund, provider-linked correction and cancellation acceptance remain open.
-
-**Lexware browser integration: E2E validated and accepted by the user on
-2026-10-27**, on the existing Office L tariff with zero-value test documents.
-Accepted scope: draft creation/readback, finalization, final PDF retrieval, sending
-and acknowledged email/PDF receipt; draft correction/export; manual correction
-finalization and final PDF retrieval with the correction deliberately unsent.
-This accepts the browser route; the API adapter and nonzero/provider-linked
-correction, refund and cancellation journeys remain outside this acceptance.
-
-Local customer-payment reconciliation now saves a protected, readable EN/RU comparison of an issued invoice with explicitly identified bank receipts. It excludes already-included prepayments, handles partial receipts/refunds across periods, preserves frozen sources and checks report freshness against invoice/correction history. Uncertain coverage, currency or correction effects leave the comparison unresolved. It performs no provider allocation, paid-status update or collection action; live nonzero settlement acceptance remains open.
-
-Customer payment follow-up now produces a DE/EN/RU recipient query and separate EN/RU private review from the saved comparison. Positive, current and unblocked comparisons support a factual difference query; unresolved comparisons support amount-free clarification. Protected freshness/integrity checks bind each draft to its evidence. No automated sending, legal reminder/default claim, fee or provider mutation is implemented.
+All seven skills share task-specific prerequisite checks, targeted follow-ups, reuse of saved facts and persistence through existing writers, a [cost check before setup](../skills/de-business-kit/references/assisted-services.md#check-costs-before-setup) and a [screenshot privacy check](../skills/de-business-kit/references/privacy.md#check-screenshots-before-sharing). Tax and accounting work may use [bounded source-led calculations](../skills/de-business-kit/references/tax-estimates.md) from inspected rules, with executed arithmetic and separately evidenced checks. These are instruction-level safeguards over the host's tools, not a bundled tax engine, billing enforcement or automatic redactor; [validation](validation.md) records actual trials and limits.
 
 ## Source and published release
 
@@ -108,8 +19,12 @@ Customer payment follow-up now produces a DE/EN/RU recipient query and separate 
 | Area | Available now | Boundary |
 | --- | --- | --- |
 | Skills and lifecycle | Optional router plus six directly usable domain skills; shared profile, EN/RU worksheets and continuation | Guidance/preparation does not establish registration, contract, hire or closure |
-| Access and assisted services | Host connector/browser/manual discovery; bounded opt-in Lexware draft/readback API and exact-object browser handoff; authorized draft entry and export checks | Lexware Office L browser integration E2E validated and user-accepted (2026-10-27), within the scope above; API adapter remains synthetic-only. Nonzero invoices/corrections and ELSTER acceptance remain open |
+| Onboarding | Welcome wizard after installation with a read-only setup check (`setup-check` in Python and native Windows) of the kit, other installed copies, the helper and the chosen folder | Hosts' interactive question tools and the Claude and Codex apps are not yet observed; see [validation](validation.md) |
+| Workspace folders | One structure in EN/RU/DE: five visible areas, a root overview page, internal records in `.business-kit`, a managed inbox whose imported files move to Imported, numbered readable originals, storage-year folders and a procedure documentation draft ([rationale](research/workspace-layout-review-2026-11-21.md)) | Folders from previews before 0.12 are refused without changes; retention class, document direction and e-invoice grouping remain data-model work |
+| Access and assisted services | Host connector/browser/manual discovery; bounded opt-in Lexware draft/readback API and exact-object browser handoff; authorized draft entry and export checks | Lexware Office L browser route validated end to end and accepted by the user on 2026-10-27 with zero-value documents: draft creation and readback, finalization, final PDF, sending and acknowledged receipt, draft correction and draft-PDF export, and finalization of a manual correction left unsent. The API adapter remains synthetic-only; nonzero invoices, provider-linked corrections, refunds, cancellations and ELSTER remain open |
 | Intake and documents | Preserved originals, hashes, catalog, reviewed proposals, bank mapping/reconciliation and bounded standalone UBL Invoice/CreditNote/CII inspection | No complete OCR, embedded-PDF XML or technical e-invoice validation pipeline |
+| Customer work | Protected invoicing records: reviewed drafts, issue/correction attempts, issued artifacts, dispatch and receipt evidence, historical documents and retries; comparison of an issued invoice with identified bank receipts; DE/EN/RU payment follow-up drafts with a separate EN/RU review | No automated sending, legal reminder or default claim, fee or provider mutation; prepaid and rounding amounts are read from UBL/CII, but there is no technical e-invoice validation |
+| Tax preparation | [Income-tax prepayment request](../skills/de-business-kit/references/tax-consultant.md#prepare-or-revise-an-income-tax-prepayment-request), [filed-return error check](../skills/de-business-kit/references/tax-consultant.md#check-a-possible-error-in-a-filed-return), [EU goods VAT checks](../skills/de-business-kit/references/international.md#before-ordering-goods-from-another-eu-country), receipt-to-period preparation and filing continuation with frozen sources | Host-executed preparation; no tax engine, election, refund or ELSTER transport |
 | Accounting | Explicit local/external choice; limited reviewed EÜR cash entries, splits, line VAT as stated with links to approved proposals, reversals/corrections, period reports and account CSVs | Existing software stays authoritative when selected. No complete statutory ledger or bundled tax formulas; stated-VAT sums are not a Voranmeldung; eligibility is not inferred |
 | Filing evidence | Frozen versions, preflight, review/authorization, uncertain attempts, observed receipts and authority responses | Tracks local evidence; calculates no statutory return and sends nothing to ELSTER |
 | Continuation and overview | Active tasks across periods, undated work, dependencies and changed evidence; EN/RU HTML/Markdown/JSON | Read-only projection, not approval, task completion or automatic reminder |
@@ -127,7 +42,7 @@ P1–P7 are **partially accepted**, not a completed end-to-end lifecycle. This t
 
 | Package | Delivered foundation | Remaining acceptance or implementation |
 | --- | --- | --- |
-| P1 — Welcome and routing | Task-first onboarding, direct domain skills, shared continuation; fresh Codex/Claude trials | Ordinary-user first conversation and continuation across supported hosts; avoid forced setup |
+| P1 — Welcome and routing | Task-first onboarding, a welcome wizard with a read-only setup check, direct domain skills, shared continuation; fresh Claude Code and Codex trials | Ordinary-user first conversation in the Claude and Codex apps, including their question tools; continuation across supported hosts; avoid forced setup |
 | P2 — Preparation and formation | Launch/classification research, form worksheets and assisted draft workflow | Verify selected authority/form/year, real authentication, field review and separately evidenced registration outcomes |
 | P3 — Daily work and questions | Proposals, invoices, letters, saved receipt comparisons, correction/partial-payment evidence and follow-up | Lexware browser issue/delivery/download accepted above; next: live customer-payment allocation/readback and representative nonzero/correction journeys |
 | P4 — Accounting and reporting | Limited local cash journal, external-system route, monthly/annual preparation and filing evidence | Representative complete period through selected calculation/form tools and manual ELSTER; criteria below |
@@ -135,50 +50,9 @@ P1–P7 are **partially accepted**, not a completed end-to-end lifecycle. This t
 | P6 — Service access | Needs-led comparison, supplied-export inspection and capability/setup discovery | Real operation-scoped access/readback in selected products; account/edition permissions and source coverage. Lexware Office L browser E2E is user-accepted within the scope above; broader operations and live API acceptance remain open |
 | P7 — Delivery and usability | Illustrated installation, complete-bundle packaging, local GUI, verified preview release and an offline EN/RU/DE [guided setup page](gui.md#guided-setup-page) (source only, 2026-11-20) | Publish the guided setup page at a stable address or as a release asset; nontechnical Windows/macOS first launch, install/update/continuation and error-recovery trials, starting with Cowork and Codex skill invocation, useful result and same-folder continuation; ambiguous requests, saved-fact reuse and calculation checks; other host routes; real installation screenshots/video after those journeys are observed |
 
-The [FAQ evaluation map](../evals/faq-coverage.json), reviewed on **2026-10-27**,
-links 60 external question numbers to task owners and existing cases. At baseline
-`085489d`, central-concern coverage is 2 covered, 29 partial, 24 missing dedicated
-cases and 5 complete outcomes outside current scope. Twenty-nine new synthetic cases
-and nine changed-fact follow-ups are defined; [validation](validation.md) owns their
-observed results. This does not expand legal, insurance or residence capabilities.
-The separate opt-in [research runner](../tools/run_research_evals.py) now captures
-visible arithmetic and source metadata, freezes complete review criteria and binds
-independent assessments to exact artifacts. Its thirty-two-case/forty-three-session selection
-has fake-host regression coverage; live outcomes are recorded in validation.
-The second batch covers family cover, pension contribution options, parental and
-child benefits, work permission and startup support, with dated official sources.
-The third batch adds small-invoice boundaries, ordinary invoice fields and the
-2026 e-invoice transition, home-working expense arithmetic and quarterly VAT
-deadlines with an extension correction. The fourth batch adds GWG/computer
-asset treatment, mixed phone/car costs and ordinary EU consultancy with a consumer
-correction. The fifth batch covers US business/consumer advice, French property
-services and automated digital sales crossing the EU threshold, with a consumer
-location correction. The sixth batch covers no-sales VAT returns, annual loss/return
-duties and income-tax prepayment adjustment, with a private-expense correction.
-Those six FAQ batches left the original ten-case runner and product skills unchanged. Remaining FAQ
-priorities include record retention, business banking, contracts and other
-country/service variants; other expense and asset variants remain
-bounded gaps rather than inferred support.
-These bounded cases do not cover all benefit variants, residence titles or individual
-insurer/authority decisions. Specialized entity/residence outcomes remain preparation and
-routing tasks. Acceptance requires criterion-level source/action evidence and
-retests of demonstrated failures, not agreement with a secondary FAQ answer.
+The [FAQ evaluation map](../evals/faq-coverage.json), reviewed on **2026-10-27**, links 60 external question numbers to task owners and cases. At baseline `085489d`, 2 are covered, 29 partial, 24 lack a dedicated case and 5 are complete outcomes outside current scope. Trials through the opt-in [research runner](../tools/run_research_evals.py) are summarized in [validation](validation.md). Remaining FAQ priorities are record retention, business banking, contracts and other country or service variants. Bounded cases do not cover all benefit variants, residence titles or individual insurer and authority decisions; acceptance requires criterion-level source and action evidence and retests of demonstrated failures, not agreement with a secondary FAQ answer.
 
 Automatic reminders require a defined authorized scheduler and verified delivery; no such service exists. Additional connectors, statutory ledger features and e-invoice validation should be selected for a concrete journey, not required for every user. Do not replace the chosen accounting system just to complete the roadmap.
-
-**Workspace folder structure** (plan approved 2026-11-21 and narrowed at Phase 3 to one
-structure; [dated review](research/workspace-layout-review-2026-11-21.md)). In source for
-Python, native Windows, the GUI and the demo: five visible areas, a root overview page
-and internal records in `.business-kit`; assistant files in a work folder instead of the
-inbox; originals numbered per storage year with readable names; imported inbox sources
-filed under Imported, also when imported from the GUI, which lists waiting inbox files; issued-invoice copies under Outgoing invoices; storage-year folders
-for bank and correspondence files; an internal accounting register; and a procedure
-documentation (Verfahrensdokumentation) draft written at setup. The earlier layouts and
-the layout options were removed. Because the preview had no users, folders created by
-earlier previews are refused without changes instead of migrated. Hosted CI, including
-Windows PowerShell 5.1, passed on these changes before they were merged (PR #36,
-2026-11-21). Remaining data-model work: retention class and document
-direction in the index, and grouping of e-invoice parts.
 
 ## Accounting acceptance
 

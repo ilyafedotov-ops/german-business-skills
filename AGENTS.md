@@ -112,8 +112,9 @@ new approval gate for ordinary local preparation.
 
 Keep validation summaries concise, with dates, source revisions and unresolved
 limits. Git history preserves earlier results; do not maintain separate history
-documents. Preserve dated research and record new checks without relabelling old
-runs; never change an old source-check date merely because implementation
+documents. Keep only research that current documents rely on and delete
+superseded research; Git history keeps it. Record new checks without relabelling
+old runs; never change an old source-check date merely because implementation
 documentation was edited. Distinguish local source, package build,
 published release, hosted CI and native desktop acceptance. Do not assert a
 current provider/UI/legal fact solely because it appears in a dated source map.
