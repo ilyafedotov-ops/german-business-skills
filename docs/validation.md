@@ -44,6 +44,22 @@ Each pin of the Claude marketplace moved only after these checks on freshly down
 
 These are automated platform checks, not ordinary-user desktop acceptance, tax certification or live service operations. GitHub provenance is not Windows Authenticode or Apple notarization.
 
+## Documentation cleanup and 0.13.0-preview.2 preparation — 2026-11-21
+
+Branch `claude/docs-cleanup` (merged as `0c1f572`) removed four superseded research notes, kept these
+pages to current evidence, rewrote the project status and shortened the release page. Branch
+`claude/release-0.13.0-preview.2` sets `VERSION` to 0.13.0-preview.2. Since the 0.13.0-preview.1
+tag, packaged files changed only in the install guides' release links and one contradictory sentence
+of the native Windows reference; no helper program, schema or test changed.
+
+- `tools/release.py check` accepted 0.13.0-preview.2 in `VERSION`, both manifests, `assets/version.json`
+  and both changelogs; `git diff --check` was clean.
+- The full unit suite passed (523 tests; 12 skipped because they need Windows).
+- `tools/check_package.py` passed on a clean export of the branch.
+
+Not run locally: the native PowerShell checks, which the release workflow runs on Windows, and live
+skill trials, since skill behaviour did not change.
+
 ## Welcome wizard and setup check — 2026-11-21
 
 Branch `claude/welcome-wizard` adds the welcome wizard (`references/welcome.md`), `setup-check` in

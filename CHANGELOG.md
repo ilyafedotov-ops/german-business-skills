@@ -6,6 +6,13 @@ Versions follow Semantic Versioning. All releases below are previews, not a
 certification of accounting correctness or desktop compatibility. Historical
 milestones are first published on 2026-10-26; their original commits are retained.
 
+## 0.13.0-preview.2
+
+A documentation release: skill behaviour, helper programs and record formats are unchanged.
+
+- The packaged install guides link the manual Codex download to the 0.13.0-preview.1 release instead of 0.12.0-preview.1. The native Windows reference no longer says that existing layouts stay unchanged, which contradicted its refusal of folders from earlier previews; the README likewise says that folders from previews before 0.12 are not opened.
+- Superseded research notes were removed (the October architecture review, the GUI design sources and recommendation, and the host installation sources); Git history keeps them. The validation pages now keep evidence for current behaviour only, with the open gaps and a table of published releases; the project status lists the current scope and remaining work; the release page's sections on application archives and desktop signing are shorter.
+
 ## 0.13.0-preview.1
 
 - **Welcome wizard after installation.** A new user who has just installed the kit, or asks to start, gets a guided welcome in the chat itself (Claude Code, the Claude app or Codex): a read-only setup check, then one short step at a time for language, situation, business folder, data handling and a first task, ending with a summary and a saved task for anything unfinished. Steps use the app's multiple-choice questions where available and numbered options otherwise.

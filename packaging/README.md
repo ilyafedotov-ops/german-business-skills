@@ -1,4 +1,4 @@
-# German Business Kit — local preview 0.13.0-preview.1
+# German Business Kit — local preview 0.13.0-preview.2
 
 **First-time installation:** open `skills/de-business-kit/guides/install.en.md` inside this plugin folder. It explains installing through the Claude plugin marketplace or into a Codex project, and your first fictional task. [Online guide](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.13.0-preview.1/skills/de-business-kit/guides/install.en.md).
 
