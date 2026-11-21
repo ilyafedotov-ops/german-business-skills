@@ -99,7 +99,7 @@ reuse saved information, ask targeted questions and explain any specific blocker
 
 | Your situation | Example request |
 | --- | --- |
-| You have an idea | Use de-business-start. I want to offer translation services alongside my job. What should I clarify first? Give me one manageable next step. |
+| You have an idea | Use de-business-start. I want to build websites for small companies alongside my job. What should I clarify first? Give me one manageable next step. |
 | You have a general question | Use de-business-kit. Explain the difference between Freiberufler and Gewerbe in simple English. Which facts about my work matter? |
 | You are ready to register | Use de-business-start. Help me prepare registration for this activity. Use the facts already saved and ask for what is missing. |
 | You are choosing services | Use de-business-services. I expect clients in Germany and abroad. Help compare bank accounts, insurance and software for my needs and budget. |

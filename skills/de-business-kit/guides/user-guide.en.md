@@ -32,7 +32,7 @@ connections come first; ordinary questions and file work do not need screen acce
 
 Try this without private documents or a business folder:
 
-> Use de-business-kit. This is a fictional example: I want to start working as a translator in Germany. Help me choose one small first step. Ask only what you need for that step.
+> Use de-business-kit. I am trying the assistant with a fictional example: I am a programmer and want to start freelancing in Germany, building websites and apps for small companies. I do not know where to begin. Help me choose one small first step. Ask only what you need for that step.
 
 **You get:** one understandable action and the facts needed to take it. You can say “I don't know” or “Explain that more simply.”
 

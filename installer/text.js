@@ -295,12 +295,12 @@ window.INSTALLER_TEXT = {
         "title": "Add German Business Kit to Claude",
         "lead": "Ask Claude to install the kit for you. It takes one request.",
         "short": [
-          "Open Claude, switch to **Cowork** and start a new task.",
+          "Open Claude and start a new task. In older versions, switch to **Cowork** first.",
           "Copy this request, paste it into the task and send it:",
           "Follow Claude's answer. When it asks, select **Install** or confirm the action yourself."
         ],
         "steps": [
-          "Open the Claude app, switch to **Cowork** and start a new task.",
+          "Open the Claude app and start a new task. In older versions of the app, switch to **Cowork** first.",
           "Copy the request below, paste it into the task and send it.",
           "Follow Claude's answer. When it asks you to select **Install** in **Plugins** or to confirm an action, do it yourself: Claude tells you where, but cannot click for you.",
           "Start a **new task** and check that the seven skills below are available: open German Business Kit and its **Skills** tab, or ask Claude which German Business Kit skills it can use."
@@ -313,7 +313,7 @@ window.INSTALLER_TEXT = {
           "caption": "The real Claude app on 21 November 2026. Your version may look different."
         },
         "manualSteps": [
-          "In the Claude app, open **Customize** in the sidebar, then **Plugins**. If your version shows a separate **Cowork** selector, switch to Cowork first.",
+          "In the Claude app, open **Plugins** in the sidebar. In some versions it is under **Customize → Plugins**, and older versions need a switch to **Cowork** first.",
           "Select **Add**, then **Add marketplace**. If offered, choose **Add from a repository**. Paste the address below and select **Sync**.",
           "Find **German Business Kit** in the list (look under **Discover** if needed) and select **Install**. Some versions say **Add**.",
           "Open German Business Kit and its **Skills** tab. Check that the seven skills below are listed."
@@ -323,7 +323,7 @@ window.INSTALLER_TEXT = {
         "review": "Anthropic reviews plugins in its own directory, not plugins added by address. This address installs the project's verified release.",
         "shotAlt": "Claude desktop dialog for adding a marketplace, with the project address entered and the Sync button",
         "shotCaption": "The real Claude app on 21 November 2026, before selecting Sync. Labels may differ in your version.",
-        "diagram": ["Cowork", "Paste request", "Install", "New task"]
+        "diagram": ["Claude app", "Paste request", "Install", "New task"]
       },
       "openai": {
         "title": "Add German Business Kit to Codex",
@@ -435,7 +435,7 @@ window.INSTALLER_TEXT = {
           "time": "About 10 minutes",
           "prepare": [
             "Create a new, empty folder called **Practice business**. Keep it outside the Business Assistant folder.",
-            "Claude: start a new task in Cowork and select this folder. Codex: keep your Business Assistant project open and allow access to the practice folder when asked."
+            "Claude: start a new task and select this folder under **Project or folder** (in older versions, in Cowork). Codex: keep your Business Assistant project open and allow access to the practice folder when asked."
           ],
           "prompt": "Use de-business-accounting. This is a fictional practice exercise. Use only my selected folder Practice business. Create three made-up receipts from November 2026 for a freelance programmer: a USB-C cable EUR 19.90, a train ticket to a client EUR 49.00 and a cloud hosting subscription EUR 11.90. Organize them for my first month, show what is still unclear and save a short readable summary with the next step. Do not use real data or connect any service.",
           "answers": "This is practice. In this example I am a Kleinunternehmer and have not chosen accounting software. Keep anything uncertain as an open question.",
@@ -777,12 +777,12 @@ window.INSTALLER_TEXT = {
         "title": "Добавьте German Business Kit в Claude",
         "lead": "Попросите Claude установить набор за вас. Для этого нужен один запрос.",
         "short": [
-          "Откройте Claude, перейдите в **Cowork** и начните новую задачу.",
+          "Откройте Claude и начните новую задачу. В старых версиях сначала перейдите в **Cowork**.",
           "Скопируйте этот запрос, вставьте его в задачу и отправьте:",
           "Следуйте ответу Claude. Когда он попросит, нажмите **Install** или подтвердите действие сами."
         ],
         "steps": [
-          "Откройте приложение Claude, перейдите в **Cowork** и начните новую задачу.",
+          "Откройте приложение Claude и начните новую задачу. В старых версиях приложения сначала перейдите в **Cowork**.",
           "Скопируйте запрос ниже, вставьте его в задачу и отправьте.",
           "Следуйте ответу Claude. Когда он попросит выбрать **Install** в разделе **Plugins** или подтвердить действие, сделайте это сами: Claude подскажет, где это, но нажать за вас не может.",
           "Начните **новую задачу** и проверьте, что доступны семь скиллов из списка ниже: откройте German Business Kit и вкладку **Skills** или спросите Claude, какие скиллы German Business Kit ему доступны."
@@ -795,7 +795,7 @@ window.INSTALLER_TEXT = {
           "caption": "Настоящее приложение Claude, 21 ноября 2026 года. В вашей версии всё может выглядеть иначе."
         },
         "manualSteps": [
-          "В приложении Claude откройте **Customize** на боковой панели, затем **Plugins**. Если в вашей версии есть отдельный переключатель **Cowork**, сначала перейдите в Cowork.",
+          "В приложении Claude откройте **Plugins** на боковой панели. В некоторых версиях это **Customize → Plugins**, а в старых версиях сначала нужно перейти в **Cowork**.",
           "Выберите **Add**, затем **Add marketplace**. Если предложено, выберите **Add from a repository**. Вставьте адрес ниже и выберите **Sync**.",
           "Найдите **German Business Kit** в списке (при необходимости в разделе **Discover**) и выберите **Install**. В некоторых версиях кнопка называется **Add**.",
           "Откройте German Business Kit и вкладку **Skills**. Проверьте, что там семь скиллов из списка ниже."
@@ -805,7 +805,7 @@ window.INSTALLER_TEXT = {
         "review": "Anthropic проверяет плагины из своего каталога, но не плагины, добавленные по адресу. Этот адрес устанавливает проверенный выпуск проекта.",
         "shotAlt": "Окно Claude для добавления маркетплейса с введённым адресом проекта и кнопкой Sync",
         "shotCaption": "Настоящее приложение Claude, 21 ноября 2026 года, до нажатия Sync. В вашей версии названия могут отличаться.",
-        "diagram": ["Cowork", "Вставить запрос", "Install", "Новая задача"]
+        "diagram": ["Приложение Claude", "Вставить запрос", "Install", "Новая задача"]
       },
       "openai": {
         "title": "Добавьте German Business Kit в Codex",
@@ -917,7 +917,7 @@ window.INSTALLER_TEXT = {
           "time": "Около 10 минут",
           "prepare": [
             "Создайте новую пустую папку **Учебный бизнес**. Держите её отдельно от папки Business Assistant.",
-            "Claude: начните новую задачу в Cowork и выберите эту папку. Codex: оставьте открытым проект Business Assistant и разрешите доступ к учебной папке, когда приложение спросит."
+            "Claude: начните новую задачу и выберите эту папку в **Project or folder** (в старых версиях — в Cowork). Codex: оставьте открытым проект Business Assistant и разрешите доступ к учебной папке, когда приложение спросит."
           ],
           "prompt": "Используй de-business-accounting. Это вымышленное учебное упражнение. Используй только выбранную папку Учебный бизнес. Создай три вымышленных чека за ноябрь 2026 года для программиста-фрилансера: кабель USB-C 19,90 EUR, билет на поезд к клиенту 49,00 EUR и подписка на облачный хостинг 11,90 EUR. Разбери их для моего первого месяца, покажи, что ещё неясно, и сохрани короткую понятную сводку со следующим шагом. Не используй настоящие данные и не подключай никакие сервисы.",
           "answers": "Это упражнение. В этом примере я Kleinunternehmer и ещё не выбрал(а) бухгалтерскую программу. Всё неясное оставь открытым вопросом.",
@@ -1259,12 +1259,12 @@ window.INSTALLER_TEXT = {
         "title": "Fügen Sie German Business Kit zu Claude hinzu",
         "lead": "Bitten Sie Claude, das Kit für Sie zu installieren. Dafür reicht eine Anfrage.",
         "short": [
-          "Öffnen Sie Claude, wechseln Sie zu **Cowork** und starten Sie eine neue Aufgabe.",
+          "Öffnen Sie Claude und starten Sie eine neue Aufgabe. In älteren Versionen wechseln Sie zuerst zu **Cowork**.",
           "Kopieren Sie diese Anfrage, fügen Sie sie in die Aufgabe ein und senden Sie sie:",
           "Folgen Sie der Antwort von Claude. Wählen Sie selbst **Install** oder bestätigen Sie die Aktion, wenn Claude darum bittet."
         ],
         "steps": [
-          "Öffnen Sie die Claude-App, wechseln Sie zu **Cowork** und starten Sie eine neue Aufgabe.",
+          "Öffnen Sie die Claude-App und starten Sie eine neue Aufgabe. In älteren Versionen der App wechseln Sie zuerst zu **Cowork**.",
           "Kopieren Sie die Anfrage unten, fügen Sie sie in die Aufgabe ein und senden Sie sie.",
           "Folgen Sie der Antwort von Claude. Wenn Claude Sie bittet, unter **Plugins** **Install** zu wählen oder eine Aktion zu bestätigen, tun Sie das selbst: Claude zeigt Ihnen, wo, kann aber nicht für Sie klicken.",
           "Starten Sie eine **neue Aufgabe** und prüfen Sie, dass die sieben Skills unten verfügbar sind: Öffnen Sie German Business Kit und den Reiter **Skills** oder fragen Sie Claude, welche Skills von German Business Kit verfügbar sind."
@@ -1277,7 +1277,7 @@ window.INSTALLER_TEXT = {
           "caption": "Die echte Claude-App am 21. November 2026. In Ihrer Version kann es anders aussehen."
         },
         "manualSteps": [
-          "Öffnen Sie in der Claude-App in der Seitenleiste **Customize** und dann **Plugins**. Zeigt Ihre Version einen eigenen **Cowork**-Umschalter, wechseln Sie zuerst zu Cowork.",
+          "Öffnen Sie in der Claude-App **Plugins** in der Seitenleiste. In manchen Versionen finden Sie das unter **Customize → Plugins**, in älteren Versionen wechseln Sie zuerst zu **Cowork**.",
           "Wählen Sie **Add** und dann **Add marketplace**. Falls angeboten, wählen Sie **Add from a repository**. Fügen Sie die Adresse unten ein und wählen Sie **Sync**.",
           "Suchen Sie **German Business Kit** in der Liste (falls nötig unter **Discover**) und wählen Sie **Install**. Manche Versionen zeigen **Add**.",
           "Öffnen Sie German Business Kit und den Reiter **Skills**. Prüfen Sie, dass die sieben Skills unten aufgeführt sind."
@@ -1287,7 +1287,7 @@ window.INSTALLER_TEXT = {
         "review": "Anthropic prüft Plugins im eigenen Verzeichnis, nicht per Adresse hinzugefügte Plugins. Diese Adresse installiert die geprüfte Veröffentlichung des Projekts.",
         "shotAlt": "Claude-Dialog zum Hinzufügen eines Marketplace mit eingetragener Projektadresse und der Schaltfläche Sync",
         "shotCaption": "Die echte Claude-App am 21. November 2026 vor dem Auswählen von Sync. Bezeichnungen können in Ihrer Version abweichen.",
-        "diagram": ["Cowork", "Anfrage einfügen", "Install", "Neue Aufgabe"]
+        "diagram": ["Claude-App", "Anfrage einfügen", "Install", "Neue Aufgabe"]
       },
       "openai": {
         "title": "Fügen Sie German Business Kit zu Codex hinzu",
@@ -1399,7 +1399,7 @@ window.INSTALLER_TEXT = {
           "time": "Etwa 10 Minuten",
           "prepare": [
             "Legen Sie einen neuen, leeren Ordner **Übungsfirma** an. Er liegt nicht im Ordner Business Assistant.",
-            "Claude: Starten Sie eine neue Aufgabe in Cowork und wählen Sie diesen Ordner. Codex: Lassen Sie Ihr Projekt Business Assistant geöffnet und erlauben Sie den Zugriff auf den Übungsordner, wenn danach gefragt wird."
+            "Claude: Starten Sie eine neue Aufgabe und wählen Sie diesen Ordner unter **Project or folder** (in älteren Versionen in Cowork). Codex: Lassen Sie Ihr Projekt Business Assistant geöffnet und erlauben Sie den Zugriff auf den Übungsordner, wenn danach gefragt wird."
           ],
           "prompt": "Nutze de-business-accounting. Das ist eine erfundene Übung. Verwende nur meinen ausgewählten Ordner Übungsfirma. Lege drei erfundene Belege aus November 2026 für eine freiberufliche Programmiertätigkeit an: USB-C-Kabel 19,90 EUR, Bahnfahrt zu einem Kunden 49,00 EUR und ein Cloud-Hosting-Abo 11,90 EUR. Ordne sie für meinen ersten Monat, zeige, was noch unklar ist, und speichere eine kurze lesbare Zusammenfassung mit dem nächsten Schritt. Verwende keine echten Daten und verbinde keinen Dienst.",
           "answers": "Das ist eine Übung. In diesem Beispiel bin ich Kleinunternehmer und habe noch keine Buchhaltungssoftware gewählt. Lass Unklares als offene Frage stehen.",

@@ -13,6 +13,7 @@ milestones are first published on 2026-10-26; their original commits are retaine
 - Make the guided setup page's kit-installation step start with one copyable request to Claude or Codex, the same one the README recommends; the Claude marketplace and Codex ZIP routes move into a collapsed "install manually" section.
 - Shorten the guided setup page for beginners: each step shows a few short instructions with details under "More…", nothing needs ticking, the training setting moves to the app step, and the finish page offers one fictional first task with more examples on demand. The data step now reads like a licence agreement that must be answered with “I have read and understand” before the kit step; the share check becomes an optional self-test. Only paid plans are recommended (Claude Pro or ChatGPT Plus or higher), and phones are told that setup runs on a computer.
 - Replace the guided setup page's translator demos with a freelance programmer, add a first step for an Instagram/YouTube content creator, offer both on the finish page, and add "What it looks like…" screenshots of the real Claude and Codex apps (EN/RU/DE, fictional examples, 2026-11-21).
+- Match the current Claude app, where Chat and Cowork share one view: the setup page and install guides now say to start a new task and switch to Cowork only in older versions, and to open **Plugins** in the sidebar (**Customize → Plugins** in some versions). The install and user guides and the README use the freelance programmer example instead of the translator.
 
 ## 0.11.0-preview.1
 
