@@ -82,16 +82,10 @@ button:hover,.button-link:hover{background:#edf3ec}
 .flow-icon svg{width:30px;height:30px;fill:none;stroke:var(--green);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .flow figcaption{margin-top:6px;font-size:.8rem}
 
-.checklist{display:grid;gap:10px;list-style:none;counter-reset:step;margin:0 0 16px;padding:0}
-.checklist>li{counter-increment:step;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:#fff}
-.checklist>li>:not(.check-row){margin:12px 0 0 34px}
 .check-row{display:flex;align-items:flex-start;gap:12px}
 .check-row input{flex:none;width:22px;height:22px;margin:2px 0 0;accent-color:var(--green)}
 .check-row label{cursor:pointer}
-.checklist .check-row label::before{content:counter(step) ". ";font-weight:700}
 .tried{margin-top:8px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:#fff}
-.check-count{margin:-4px 0 16px;color:var(--muted);font-size:.9rem;font-weight:600}
-.check-count.complete{display:inline-block;padding:4px 10px;border-radius:7px;background:#e3ece0;color:#184f38}
 
 h3{margin:0 0 6px;font-size:1.02rem;line-height:1.35}
 .risks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:12px;list-style:none;margin:0 0 18px;padding:0}
@@ -132,7 +126,7 @@ textarea{width:100%;padding:10px 12px;border:1px solid #c5d0c8;border-radius:10p
 .lightbox-body{flex:1;min-height:0;overflow:auto}
 .lightbox-body img{display:block;width:100%;height:auto;border:0;border-radius:0;cursor:auto}
 .lightbox-body.zoomed img{width:200%;max-width:none}
-.skill-list{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin:0}
+.skill-list{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin:0 0 12px}
 .skill-list dd{margin:0}
 
 footer{padding:18px clamp(16px,4vw,40px);border-top:1px solid var(--line);background:#fcfcf9;color:var(--muted);font-size:.85rem}
@@ -145,7 +139,6 @@ footer p{max-width:1080px;margin:0 auto 6px}
   .progress a{justify-content:center;padding:6px 0;border-radius:8px}
   .progress-label{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .progress .hint{margin:0;font-size:.78rem}
-  .checklist>li>:not(.check-row){margin-left:0}
 }
 @media (max-width:520px){
   body{hyphens:auto}
@@ -159,3 +152,22 @@ footer p{max-width:1080px;margin:0 auto 6px}
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important}
 }
+/* Short pages: numbered steps, details one click away, the data notes as an agreement. */
+.steps{margin:0 0 14px;padding-left:1.4rem}
+.steps>li{margin:0 0 10px}
+.steps>li>p{margin:0 0 6px}
+.more{padding:12px clamp(16px,3vw,24px)}
+.more>summary{cursor:pointer;font-weight:700;color:var(--green)}
+.more[open]>summary{margin-bottom:14px}
+.more h2{margin-top:18px}
+.more>summary+h2,.more>summary+*>h2:first-child{margin-top:0}
+.warnings{display:grid;gap:10px;list-style:none;margin:0 0 14px;padding:0}
+.warnings li{display:flex;align-items:center;gap:12px}
+.license{max-height:15rem;overflow:auto;margin:0 0 16px;padding:14px 16px;border:1px solid #bac8be;border-radius:10px;background:#fff;font-size:.92rem}
+.license h3{margin-top:12px}
+.license p,.license ul{margin:0 0 10px}
+.accept{margin:0 0 8px;padding:0;border:0}
+.accept legend{margin-bottom:10px;padding:0;font-weight:700}
+.accept .check-row{margin-bottom:8px}
+.accept input{accent-color:var(--green);width:20px;height:20px}
+button:disabled{opacity:.5;cursor:not-allowed}
