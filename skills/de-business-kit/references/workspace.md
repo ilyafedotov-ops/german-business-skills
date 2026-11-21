@@ -26,36 +26,57 @@ All relative input paths below are relative to `--root`, not the current shell d
 
 ## Files and state
 
-New CLI `init` and `start` use five everyday folders in `en`, `ru` or `de`, plus `.business-kit` for internal records and a localized root start guide. Folder language is pinned separately in `.workspace-layout.json` and the workspace marker. Include both the internal area and descriptor in backups. New workspaces use layout version 2 by default; `--layout localized` selects version 1 and `--layout legacy` the old numbered folders. Existing workspaces resume unchanged. No automatic migration is implemented.
+`init` and `start` create one folder structure in the chosen folder language (`en`, `ru` or `de`): five everyday folders, a root start guide, the root overview page once generated, and the hidden `.business-kit` area for internal records. `.workspace-layout.json` (descriptor `schema_version` 2) pins the folder language and must match the marker; include it and `.business-kit` in backups. Folders created by earlier previews (numbered `00_admin`… folders or a version-1 descriptor) are refused without any change: create a new workspace and import the originals again. A newer descriptor version asks for a kit update.
 
-In layout version 2 (descriptor `schema_version` 2) the HTML overview is one localized page at the workspace root (`OVERVIEW.html`, `ОБЗОР.html`, `ÜBERSICHT.html`) refreshed by the Python and native overviews; the accounting register is internal (`.business-kit/admin/accounting-register.json`); `04_accounting/procedure` is reserved for procedure documentation; and bank normalization and correspondence writers save new files under a storage-year folder (`03_banking/<year>/…`, `08_correspondence/<year>/…`). Originals get a running number per storage year and a readable name, such as `2026-00007_invoice.pdf`; the index keeps the hash and exact original name. Copies of issued invoices are kept in `06_bookkeeping/<year>/<month>/issued/` by issue date, and other invoice evidence under the correspondence year. A file imported from the managed inbox moves to `00_admin/inbox/imported/<YYYY-MM>/` afterwards, never overwriting; sources elsewhere stay untouched. A storage year is not a tax-period determination. Kits that know only version 1 refuse a v2 workspace instead of misreading it. Check `layout_version` in the `folders` output before choosing a destination.
+```text
+<workspace>/                        en / ru / de
+├── START-HERE.md                   НАЧНИТЕ-ЗДЕСЬ.md / HIER-STARTEN.md
+├── OVERVIEW.html                   ОБЗОР.html / ÜBERSICHT.html (after the first overview)
+├── 01 Inbox/                       01 Входящие / 01 Eingang
+│   └── Imported/<YYYY-MM>/         Импортировано / Importiert
+├── 02 Documents/<YYYY>/<MM>/       02 Документы / 02 Dokumente
+│   ├── Originals/                  Оригиналы / Originale
+│   ├── Outgoing invoices/          Исходящие счета / Ausgangsrechnungen
+│   └── Processed/                  Обработанные / Aufbereitet
+├── 03 Accounts/                    03 Учёт / 03 Buchhaltung
+│   ├── Bank/<YYYY>/                Банк / Bank
+│   ├── Records/                    Записи / Unterlagen
+│   ├── Reports/<YYYY-MM>/          Отчёты / Berichte
+│   └── Procedure documentation/    Описание процессов / Verfahrensdokumentation
+├── 04 Taxes/<YYYY>/                04 Налоги / 04 Steuern
+├── 05 Business/                    05 Бизнес / 05 Unternehmen
+│   ├── Registration/               Регистрация / Anmeldung
+│   └── Correspondence/<YYYY>/      Переписка / Schriftverkehr
+└── .business-kit/                  admin, profile, audit (internal records)
+```
 
-The table below lists **stable logical references**, not necessarily physical paths. Before using ordinary file tools, run `workspace.py folders --root <private-folder>` (or native `-Action folders`) and translate the longest matching prefix. Under the document archive, `originals`, `derived` and `proposals` also have translated names. Prefer the actual paths returned by operations. Never create old English directories alongside a localized workspace. See `assets/folder-layouts.json` for the shared mapping. The low-level Python `init_workspace` API retains its legacy default for existing callers; `start_workspace` defaults to localized folders.
+Records store **stable logical references** (left column below), not physical paths. Before using ordinary file tools, run `workspace.py folders --root <private-folder>` (or native `-Action folders`) and translate the longest matching prefix; prefer the actual paths returned by operations. Never create folders named after logical references. See `assets/folder-layouts.json` for the mapping.
 
-| File / directory | Meaning |
+| Logical reference | Meaning |
 |---|---|
 | `00_admin/workspace.json` | Workspace UUID, schema version, initial year, language and working mode |
 | `00_admin/runtime.json` | Actual host/provider/plan/data-processing configuration |
-| `00_admin/documents.json` | Index of original bytes and storage periods |
-| `00_admin/tasks.json` | Task array, with dependencies and completion evidence |
-| `00_admin/questions.json` | Question array, with fact blocked and requested evidence |
-| `00_admin/decisions.json` | Decision array, with effective date, reviewer and evidence |
+| `00_admin/documents.json` | Index of originals: document number, SHA-256, original name, size, storage period and import time |
+| `00_admin/tasks.json`, `questions.json`, `decisions.json` | Task, question and decision registers |
 | `00_admin/inbox/` | The user's unsorted files awaiting selected import; never write assistant files here |
-| `00_admin/work/` | Assistant input/answer files and folder previews; older workspaces gain it when first needed |
+| `00_admin/inbox/imported/YYYY-MM/` | Sources filed after their import from the inbox |
+| `00_admin/work/` | Assistant input/answer files and folder previews |
+| `00_admin/overview.html` | The root overview page, refreshed by the Python and native overviews |
 | `01_profile/business.json` | Canonical profile; flat `facts` mapping |
 | `02_registration/`, `05_tax/YYYY/` | Draft worksheets, official receipts and responses; tax consultations in `05_tax/YYYY/consultations/` |
-| `03_banking/`, `04_accounting/` | Provider requirements, statements/normalized files, workflow agreements |
-| `06_bookkeeping/YYYY/MM/originals/` | Immutable-by-workflow original copies; no legal immutability guarantee |
-| `06_bookkeeping/YYYY/MM/issued/` | v2: copies of issued invoices, by issue date |
+| `03_banking/YYYY/`, `04_accounting/` | Statements and normalized files by statement year; accounting-system notes and working agreements |
+| `04_accounting/register.json` | Internal accounting register (journal and filings); not evidence |
+| `04_accounting/procedure/` | Procedure documentation (GoBD Verfahrensdokumentation) draft for the user to complete |
+| `06_bookkeeping/YYYY/MM/originals/` | Immutable-by-workflow original copies named `<YYYY>-<NNNNN>_<readable name>`; no legal immutability guarantee |
+| `06_bookkeeping/YYYY/MM/issued/` | Copies of issued invoices, by issue date |
 | `06_bookkeeping/YYYY/MM/derived/` | OCR, extracted facts and normalized data |
-| `06_bookkeeping/YYYY/MM/proposals/` | Legacy proposal files; new validated records use `00_admin/casework.json` |
 | `07_exports/YYYY-MM/` | Generated reconciliation and optional records archives |
-| `08_correspondence/` | Relevant correspondence |
-| `09_audit/events.json`, `09_audit/history/` | Local events and before/after profile snapshots |
+| `08_correspondence/YYYY/` | Correspondence, customer cases and saved reports, by the year they were saved |
+| `09_audit/events.json`, `09_audit/history/` | Local events and before/after snapshots |
 
-The initializer leaves the document archive empty. Intake creates only the selected storage month; derived files and proposals get directories when an operation needs them. Existing empty month folders are preserved. A folder period is not a tax-period determination. Keep invoice, service, receipt and payment dates in extracted records. Missing values stay unknown.
+The initializer leaves the document archive empty and writes the start guide and the procedure documentation draft. Intake creates only the selected storage month; derived files get directories when an operation needs them. Existing empty month folders are preserved. Originals get a running number per storage year and a readable, Windows-safe name; the number is never reused and gaps stay visible to `verify`. A file imported from the inbox moves to its Imported month afterwards and is never overwritten; sources elsewhere stay untouched. A folder year or month is a storage period, not a tax-period determination. Keep invoice, service, receipt and payment dates in extracted records. Missing values stay unknown.
 
-The task/question/decision files start as empty arrays. Use the validated `entry` command below to preserve IDs, transitions, locks and history. Legacy untyped records are flagged for reviewed conversion; never silently clear or migrate them. A due date in a file does not create an actual reminder.
+The task/question/decision files start as empty arrays. Use the validated `entry` command below to preserve IDs, transitions, locks and history. Untyped records from earlier previews are flagged for reviewed conversion; never silently clear or migrate them. A due date in a file does not create an actual reminder.
 
 ## Guided start and demonstration
 
@@ -128,10 +149,10 @@ Evidence paths are relative private files; mutable administration files cannot s
 
 ## Route readable results by task
 
-Keep the five existing visible areas. Do not add mandatory lifecycle-stage roots,
-create a workspace per request/year/activity, or change mappings to improve labels:
-existing localized descriptors pin the language, and mapping changes can reinterpret
-already stored paths. Ordinary questions stay in chat unless persistence is needed.
+Keep the five visible areas. Do not add mandatory lifecycle-stage roots, create a
+workspace per request/year/activity, or change mappings to improve labels: the
+descriptor pins the language, and mapping changes can reinterpret stored paths.
+Ordinary questions stay in chat unless persistence is needed.
 
 Before writing, obtain the actual paths with `folders`/native `-Action folders`.
 Reuse the existing task/case and stored report location first. For a new readable
@@ -140,20 +161,19 @@ result use the logical destination below, translated through that mapping:
 | Result | Logical destination |
 | --- | --- |
 | Launch plan, registration worksheet, change/hiring/pause/closure plan | `02_registration/<case>/` |
-| Customer proposal/contract/invoice draft, ordinary letter or saved general business answer | `08_correspondence/<case>/` |
-| Bank comparison or statement working files | `03_banking/` |
+| Customer proposal/contract/invoice draft, ordinary letter or saved general business answer | `08_correspondence/<year>/<case>/` |
+| Bank comparison or statement working files | `03_banking/<year>/` |
 | Accounting-system comparison or working agreement | `04_accounting/` |
-| Insurance/other-service comparison or readable connection assessment | `08_correspondence/<services>/<case>/` |
+| Insurance/other-service comparison or readable connection assessment | `08_correspondence/<year>/<services>/<case>/` |
 | Tax research/estimate/form, Finanzamt reply or annual preparation | `05_tax/<year>/` (existing consultation/filing writers retain their own paths) |
 | Accounting reconciliation/report/export | `07_exports/<period>/` (use the generating writer's returned path) |
-| Original documents | Existing intake/catalog writers, normally `06_bookkeeping/<year>/<month>/originals/`; no manual relocation |
+| Original documents | Intake/catalog writers only: `06_bookkeeping/<year>/<month>/originals/`; no manual relocation |
+| Copy of an issued invoice | The invoicing writer files it in `06_bookkeeping/<year>/<month>/issued/` |
 
 `<case>` is a short, non-sensitive task identifier or title; create a subfolder only
 when useful. Use understandable dated/versioned filenames, preserve earlier
 reviewed/sent versions, and keep recipient files apart from private notes.
-In a v2 workspace (`layout_version` 2), put new correspondence and service cases
-under the current year: `08_correspondence/<year>/<case>/`. Leave earlier files
-where they are.
+`<year>` is the year the file is saved, not a tax year.
 `<services>` means a readable category name such as `Services`, `Услуги` or
 `Dienstleistungen` in the folder language, not a schema key or literal placeholder.
 Reuse an existing equivalent folder rather than duplicating it.
@@ -170,7 +190,7 @@ where the readable result was saved and how to resume from the same workspace.
 
 ## Language and working mode
 
-`workspace.json` stores `language` (`en` or `ru`; legacy `de` accepted) and `mode` (`general`, `bookkeeping` or `tax-consultant`). A v0.1 workspace without `mode` is read as `general`; its files are not rewritten during status checks and schema version stays 1. Both languages and modes share the existing profile and evidence.
+`workspace.json` stores `language` (`en`, `ru` or `de`) and `mode` (`general`, `bookkeeping` or `tax-consultant`). A v0.1 workspace without `mode` is read as `general`; its files are not rewritten during status checks and schema version stays 1. Both languages and modes share the existing profile and evidence.
 
 ```bash
 python3 <skill-directory>/scripts/workspace.py configure --root /absolute/private-workspace --language en --mode tax-consultant
@@ -232,7 +252,7 @@ python3 <skill-directory>/scripts/workspace.py verify --root /absolute/private-w
 python3 <skill-directory>/scripts/workspace.py status --root /absolute/private-workspace
 ```
 
-Intake accepts regular PDF, XML, PNG, JPG/JPEG, TIF/TIFF and CSV files, at most 50 MiB. It reads bytes without executing, OCRing or parsing active content, names the stored copy by its SHA-256 (layouts before v2) or by a running document number and readable name (v2), and indexes original name, size, hash, storage period and import time. Originals are not overwritten. Identical bytes reuse an indexed document only after integrity verification; this is not a conclusion about business duplicates. Different scans of the same invoice still need business-level review.
+Intake accepts regular PDF, XML, PNG, JPG/JPEG, TIF/TIFF and CSV files, at most 50 MiB. It reads bytes without executing, OCRing or parsing active content, names the stored copy by its running document number and a readable name, and indexes the document number, SHA-256, original name, size, storage period and import time. Originals are not overwritten. A source taken from the workspace inbox then moves to its Imported month; sources elsewhere stay untouched. Identical bytes reuse an indexed document only after integrity verification; this is not a conclusion about business duplicates. Different scans of the same invoice still need business-level review.
 
 `verify` checks indexed original integrity and reports unexpected original files requiring review. It does not validate tax treatment, completeness of received documents, XML business rules, legal retention or the integrity of the audit history itself. The user can alter files and their index; this is not a tamper-proof archive. Never label a successful hash check GoBD certification.
 
@@ -296,6 +316,6 @@ Use [document workflow](document-workflow.md) for `desk.py` commands and additiv
 
 ## Creation defaults and lock evidence
 
-New `init` and `start` workspaces default to English unless a language is explicitly selected. The low-level Python `init_workspace` API retains its legacy layout default for existing callers; Python `start_workspace` and CLI `init`/`start` default to layout v2. Resuming a workspace preserves its language and physical folders. Never rename existing folders to align defaults.
+New `init` and `start` workspaces default to English unless a language is explicitly selected. Resuming a workspace preserves its language and physical folders. Never rename existing folders to align defaults.
 
 Python unlock preserves the exact captured lock bytes as a `.lock` history file as well as readable metadata. Native diagnosis/recovery is described in [native Windows](native-windows.md#diagnose-and-recover-a-remaining-lock).

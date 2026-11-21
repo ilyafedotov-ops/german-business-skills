@@ -63,7 +63,7 @@ object/attempt; they do not establish that finalization or sending occurred.
 | Profile fact | A typed assertion about the business, with provenance and effective time | `value`, `status`, `source`, `recorded_at`, `effective_from`, `note`; evidence fingerprints for supported updates |
 | Workspace preference | Default language and work mode | `00_admin/workspace.json`; independent of business facts |
 | Runtime assessment | Recorded host, processing configuration and assessment evidence | `00_admin/runtime.json`; describes assessed configuration, not an access-control service |
-| Original document | Preserved received bytes with stable identity and integrity metadata | `00_admin/documents.json`, plus a file under `06_bookkeeping/YYYY/MM/originals/` |
+| Original document | Preserved received bytes with stable identity and integrity metadata | `00_admin/documents.json`, plus a file `<YYYY>-<NNNNN>_<name>` under `06_bookkeeping/YYYY/MM/originals/` |
 | Document catalog record | Human title, type, dates, periods, review status and links for an original | `casework.json` → `documents`, keyed by `document_id` |
 | Receipt event | One occasion on which a document was received | `casework.json` → `receipts`; repeated receipt can refer to the same original |
 | Extracted field | A candidate value from a specific source location | `raw`, `value`, `location`, `status`, `reviewer`, `note`; embedded in proposals or inspection reports |

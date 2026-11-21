@@ -19,7 +19,7 @@ class OverviewTests(CaseFixture):
     def view(self, language="en"):
         result = overview.generate(self.root, "2026-10", "2026-10-26", language)
         snapshot = ws._load(ws._inside(self.root, "00_admin/overview.json"))
-        return snapshot, (self.root / result["html_path"]).read_text(encoding="utf-8")
+        return snapshot, (ws._path(self.root, result["html_path"])).read_text(encoding="utf-8")
 
     def test_actual_journal_filing_blocker_and_question_are_visible_and_read_only(self):
         self.configure()
@@ -27,7 +27,7 @@ class OverviewTests(CaseFixture):
         self.filing(unresolved_items=["Check VAT evidence <script>unsafe</script>"])
         ws.save_entry(self.root, "questions", {"schema_version": 1, "id": "vat-question",
                       "title": "Clarify the invoice country", "owner": "owner", "status": "open"})
-        before = (self.root / ac.STATE).read_bytes()
+        before = (ws._path(self.root, ac.STATE)).read_bytes()
         for language in ("en", "ru"):
             snapshot, html = self.view(language)
             self.assertEqual(snapshot["accounting"]["accounting_system"], "local")
@@ -40,8 +40,8 @@ class OverviewTests(CaseFixture):
             self.assertIn("return-1", html)
             self.assertIn("&lt;script&gt;unsafe&lt;/script&gt;", html)
             self.assertNotIn("<script>", html)
-            self.assertIn("Clarify the invoice country", (self.root / "00_admin/overview.md").read_text())
-        self.assertEqual((self.root / ac.STATE).read_bytes(), before)
+            self.assertIn("Clarify the invoice country", (ws._path(self.root, "00_admin/overview.md")).read_text())
+        self.assertEqual((ws._path(self.root, ac.STATE)).read_bytes(), before)
 
     def test_unconfirmed_previous_period_is_never_hidden_by_month_filter(self):
         self.configure("external")
@@ -66,7 +66,7 @@ class OverviewTests(CaseFixture):
     def test_missing_or_changed_accounting_state_cannot_look_healthy(self):
         self.configure()
         self.filing()
-        (self.root / ac.STATE).unlink()
+        (ws._path(self.root, ac.STATE)).unlink()
         snapshot, _ = self.view()
         self.assertEqual(snapshot["health"], "needs_review")
         self.assertEqual(snapshot["next_action"], "repair")
@@ -75,7 +75,7 @@ class OverviewTests(CaseFixture):
     def test_changed_filing_source_keeps_actual_preflight_blocker_in_view(self):
         self.configure("external")
         self.filing()
-        (self.root / "05_tax/2026/draft.json").write_text("changed")
+        (ws._path(self.root, "05_tax/2026/draft.json")).write_text("changed")
         snapshot, _ = self.view()
         self.assertIn("source_changed", {row["code"] for row in snapshot["filings"][0]["issues"]})
         self.assertEqual(snapshot["next_action"], "resolve_filing")

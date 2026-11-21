@@ -18,7 +18,7 @@ def run(root, language='en'):
         return relative
 
     def input_file(name, value):
-        return write('00_admin/inbox/' + name, json.dumps(value, ensure_ascii=False, indent=2))
+        return write('00_admin/work/' + name, json.dumps(value, ensure_ascii=False, indent=2))
 
     proof = write('08_correspondence/synthetic-case.md',
                   'Synthetic test only: the chosen authority is Example Books / web. '

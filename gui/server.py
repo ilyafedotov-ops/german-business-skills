@@ -113,7 +113,7 @@ class Application:
                 raise ws.WorkspaceError('Choose explicitly whether to create or open a workspace.')
             if args['create']:
                 # Create must never silently resume someone else's existing records.
-                ws.init_workspace(path, args.get('year', date.today().year), args.get('language', 'en'), layout='v2')
+                ws.init_workspace(path, args.get('year', date.today().year), args.get('language', 'en'))
             self.root = ws._workspace(path)
             self.workspace_id = secrets.token_urlsafe(18)
             return {'root': str(self.root), 'name': self.root.name, 'id': self.workspace_id}
@@ -176,7 +176,7 @@ class Application:
         result = []
         scanned = 0
         for directory, names, files in os.walk(self.root, followlinks=False):
-            names[:] = sorted(name for name in names if not name.startswith('.') and name not in {'00_admin', '01_profile', '09_audit'})
+            names[:] = sorted(name for name in names if not name.startswith('.'))
             for name in names:
                 ws._check_chain(Path(directory) / name)
             for name in sorted(files):

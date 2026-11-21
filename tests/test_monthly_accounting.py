@@ -16,7 +16,7 @@ class MonthlyAccountingTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             base = Path(temp).resolve()
             root = base / "private"
-            ws.init_workspace(root, 2026, "ru", layout="localized")
+            ws.init_workspace(root, 2026, "ru")
             proof = "08_correspondence/review.md"
             ws._inside(root, proof).write_text("Synthetic owner review only; no legal assessment.", encoding="utf-8")
             config = ac.template("configuration")

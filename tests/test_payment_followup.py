@@ -1,8 +1,9 @@
 """Customer-safe drafts stay separate from private reconciliation evidence."""
+from datetime import date
 import json
 from test_casework import CaseFixture
 import test_invoice_payments as fixtures
-from casefiles import invoice_payments as pay, payment_followup as follow
+from casefiles import invoice_payments as pay, invoicing as inv, payment_followup as follow
 import workspace as ws
 
 
@@ -98,6 +99,20 @@ class FollowupTests(CaseFixture):
             with self.assertRaises(ws.WorkspaceError):
                 self.prepare()
             self.request[key]=old
+
+    def test_saved_reports_use_the_year_they_were_saved(self):
+        folder = "05 Business/Correspondence/" + str(date.today().year) + "/"
+        self.assertTrue(self.comparison["path"].startswith(folder + "payment-comparisons/"), self.comparison["path"])
+        self.assertTrue(self.prepare()["path"].startswith(folder + "payment-followups/"))
+        self.assertTrue(inv.export(self.root, "invoice-1")["path"].startswith(folder + "invoice-status-"))
+
+    def test_issued_invoice_copy_is_kept_with_the_documents_of_its_issue_month(self):
+        record = inv.show(self.root, "invoice-1")["record"]
+        issued = record["issued"]["document"]["path"]
+        self.assertTrue(issued.startswith("02 Documents/2026/10/Outgoing invoices/NUMBER-invoice-1_"), issued)
+        self.assertTrue(issued.endswith(".md"))
+        draft = record["draft"]["path"]
+        self.assertTrue(draft.startswith("05 Business/Correspondence/" + str(date.today().year) + "/invoice-evidence/"), draft)
 
     def test_recipient_languages_and_cli(self):
         from synthetic_journey import command

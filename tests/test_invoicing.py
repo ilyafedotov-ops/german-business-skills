@@ -55,7 +55,7 @@ class InvoicingTests(CaseFixture):
         self.issued()
         record = inv.show(self.root, "invoice-1")["record"]
         self.assertNotEqual(record["draft"]["sha256"], record["issued"]["document"]["sha256"])
-        self.assertTrue(record["issued"]["document"]["path"].startswith("08_correspondence/invoice-evidence/"))  # Earlier layouts.
+        self.assertTrue(record["issued"]["document"]["path"].startswith("02 Documents/2026/10/Outgoing invoices/"))
         attempt = self.begin_delivery()
         self.action("confirm-dispatched", attempt_id=attempt, external_id="message-1")
         self.assertEqual(inv.show(self.root, "invoice-1")["record"]["delivery"]["state"], "dispatched")

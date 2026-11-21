@@ -18,8 +18,9 @@ class PreparationFilingTests(unittest.TestCase):
         self.addCleanup(temporary.cleanup)
         self.root = Path(temporary.name).resolve() / "private"
         ws.init_workspace(self.root, 2026, "en")
-        self.proof = "08_correspondence/choice.md"
-        self.receipt = "08_correspondence/receipt.txt"
+        # Writers record physical paths; compare against the same form.
+        self.proof = ws._physical(self.root, "08_correspondence/choice.md")
+        self.receipt = ws._physical(self.root, "08_correspondence/receipt.txt")
         self.write(self.proof, "Synthetic explicit external-accounting choice and action evidence")
         self.write(self.receipt, "Synthetic receipt: net 100, VAT 19, gross 119")
         choice = ac.template("configuration")
@@ -28,7 +29,7 @@ class PreparationFilingTests(unittest.TestCase):
         ac.configure(self.root, choice)
 
     def write(self, name, value):
-        (self.root / name).write_text(value if isinstance(value, str) else json.dumps(value))
+        ws._path(self.root, name).write_text(value if isinstance(value, str) else json.dumps(value))
         return name
 
     def preparation(self, incomplete=False):
@@ -45,7 +46,7 @@ class PreparationFilingTests(unittest.TestCase):
         value["source_checks"] = [{"url": "https://example.test/synthetic-rule", "checked_on": "2026-10-27",
                                    "applicable_period": "2026-10", "conclusion": "Synthetic fixture",
                                    "evidence_ids": ["receipt"]}]
-        return wf.prepare(self.root, "elster", self.write("00_admin/inbox/preparation.json", value))["path"]
+        return wf.prepare(self.root, "elster", self.write("00_admin/work/preparation.json", value))["path"]
 
     def filing(self, report, identifier="return-1", **changes):
         value = ac.template("filing")
@@ -79,9 +80,9 @@ class PreparationFilingTests(unittest.TestCase):
         record = ac.get_filing(self.root, "return-1")["record"]
         frozen = {item["source"]["path"]: item for item in record["sources"]}
         self.assertIn(self.receipt, frozen)
-        self.assertIn("00_admin/inbox/preparation.json", frozen)
-        self.assertEqual((self.root / frozen[self.receipt]["path"]).read_bytes(),
-                         (self.root / self.receipt).read_bytes())
+        self.assertIn(ws._physical(self.root, "00_admin/work/preparation.json"), frozen)
+        self.assertEqual((ws._path(self.root, frozen[self.receipt]["path"])).read_bytes(),
+                         (ws._path(self.root, self.receipt)).read_bytes())
 
     def test_unresolved_preparation_and_preparation_payload_cannot_advance(self):
         report = self.preparation(incomplete=True)
@@ -115,8 +116,8 @@ class PreparationFilingTests(unittest.TestCase):
         self.filing(report)
         for action in ["review", "authorize", "begin"]:
             self.action(action)
-        (self.root / self.receipt).unlink()
-        (self.root / "00_admin/inbox/preparation.json").unlink()
+        (ws._path(self.root, self.receipt)).unlink()
+        (ws._path(self.root, "00_admin/work/preparation.json")).unlink()
         check = ac.check_filing(self.root, "return-1")
         self.assertEqual(check["next_step"], "resolve_submission_outcome")
         self.assertEqual(check["source_scope"], "frozen_evidence_only")
@@ -141,7 +142,7 @@ class PreparationFilingTests(unittest.TestCase):
 
     def test_incomplete_or_falsified_dependency_metadata_is_rejected_before_capture(self):
         report = self.preparation()
-        original = json.loads((self.root / report).read_text())
+        original = json.loads((ws._path(self.root, report)).read_text())
         variants = []
         omitted = json.loads(json.dumps(original))
         omitted["sources"].pop()
@@ -164,10 +165,10 @@ class PreparationFilingTests(unittest.TestCase):
 
     def test_nested_preparation_collects_shared_receipt_once(self):
         first = self.preparation()
-        value = json.loads((self.root / "00_admin/inbox/preparation.json").read_text())
+        value = json.loads((ws._path(self.root, "00_admin/work/preparation.json")).read_text())
         value["record_id"] = "outer"
         value["evidence"].append({"id": "inner", "path": first})
-        second = wf.prepare(self.root, "elster", self.write("00_admin/inbox/outer.json", value))["path"]
+        second = wf.prepare(self.root, "elster", self.write("00_admin/work/outer.json", value))["path"]
         self.filing(second)
         record = ac.get_filing(self.root, "return-1")["record"]
         paths = [item["source"]["path"] for item in record["sources"]]
@@ -215,9 +216,9 @@ class PreparationFilingTests(unittest.TestCase):
         ac.post(self.root, entry)
         cash = ac.export_report(self.root, "2026-10")
         self.preparation()
-        value = json.loads((self.root / "00_admin/inbox/preparation.json").read_text())
+        value = json.loads((ws._path(self.root, "00_admin/work/preparation.json")).read_text())
         value["evidence"].append({"id": "cash", "path": cash["path"]})
-        report = wf.prepare(self.root, "elster", self.write("00_admin/inbox/with-cash.json", value))["path"]
+        report = wf.prepare(self.root, "elster", self.write("00_admin/work/with-cash.json", value))["path"]
         self.filing(report)
         entry.update(entry_id="later", transaction_id="t2")
         ac.post(self.root, entry)
@@ -225,19 +226,19 @@ class PreparationFilingTests(unittest.TestCase):
 
     def test_dependency_depth_is_bounded_before_any_filing_is_saved(self):
         previous = self.preparation()
-        base = json.loads((self.root / "00_admin/inbox/preparation.json").read_text())
+        base = json.loads((ws._path(self.root, "00_admin/work/preparation.json")).read_text())
         for depth in range(18):
             value = json.loads(json.dumps(base))
             value["record_id"] = "nested-" + str(depth)
             value["evidence"].append({"id": "previous", "path": previous})
-            previous = wf.prepare(self.root, "elster", self.write("00_admin/inbox/nested-" + str(depth) + ".json", value))["path"]
+            previous = wf.prepare(self.root, "elster", self.write("00_admin/work/nested-" + str(depth) + ".json", value))["path"]
         with self.assertRaisesRegex(ws.WorkspaceError, "dependency limit"):
             self.filing(previous)
         self.assertEqual(ac.status(self.root)["filings"], [])
 
     def test_other_supported_preparations_are_frozen_and_checked(self):
         self.preparation()
-        base = json.loads((self.root / "00_admin/inbox/preparation.json").read_text())
+        base = json.loads((ws._path(self.root, "00_admin/work/preparation.json")).read_text())
         prior = None
         for kind in ["classification", "international"]:
             with self.subTest(kind=kind):
@@ -246,7 +247,7 @@ class PreparationFilingTests(unittest.TestCase):
                 for key, rule in wf.FIELDS[kind].items():
                     value["facts"][key] = (rule[0] if isinstance(rule, list) else False if rule is bool
                                            else {"date": "2026-10-20", "currency": "EUR", "money": "100.00"}.get(rule, "Synthetic reviewed fact"))
-                report = wf.prepare(self.root, kind, self.write("00_admin/inbox/" + kind + ".json", value))["path"]
+                report = wf.prepare(self.root, kind, self.write("00_admin/work/" + kind + ".json", value))["path"]
                 self.filing(report, kind, supersedes=prior)
                 self.assertEqual(ac.check_filing(self.root, kind)["next_step"], "review")
                 record = ac.get_filing(self.root, kind)["record"]

@@ -43,7 +43,9 @@ RUNTIME = "00_admin/runtime.json"
 LOCK = ".workspace.lock"
 LOCK_WAIT_SECONDS = 5.0  # Cooperating writers finish quickly; a longer lock needs inspection.
 LAYOUT = ".workspace-layout.json"
-LAYOUT_VERSIONS = {1, 2}
+LAYOUT_VERSION = 2  # Earlier preview layouts are refused, never migrated.
+EARLIER_LAYOUT = ("This folder uses an earlier preview folder layout that this version no longer opens; "
+                  "nothing was changed. Create a new workspace and import the originals again.")
 FIELDS = (
     "legal_form", "activity_classification", "activities", "existing_activities",
     "owner_name", "residence_address", "business_address", "residence_country", "business_country",
@@ -92,23 +94,26 @@ def _check_chain(path: Path, final_file: bool = False) -> None:
 
 
 def _layout(root: Path):
+    """The workspace's folder mapping, or None while the folder is not a workspace yet."""
     descriptor = root / LAYOUT
     if not descriptor.exists() and not descriptor.is_symlink():
+        if (root / MARKER).exists() or (root / MARKER).is_symlink():
+            raise WorkspaceError(EARLIER_LAYOUT)
         if (root / '.business-kit').exists():
-            raise WorkspaceError('Localized workspace layout is missing; preserve the existing files.')
+            raise WorkspaceError('The workspace folder mapping is missing; preserve the existing files.')
         return None
     record = _load(descriptor)
     if (not isinstance(record, dict) or set(record) != {'schema_version', 'language'}
-            or type(record['schema_version']) is not int or record['schema_version'] not in LAYOUT_VERSIONS
+            or type(record['schema_version']) is not int
             or not isinstance(record['language'], str) or record['language'] not in LANGUAGES):
         raise WorkspaceError('Unsupported folder layout; no automatic migration performed.')
-    words = dict(_load(Path(__file__).resolve().parents[1] / 'assets/folder-layouts.json')['languages'][record['language']])
-    if record['schema_version'] == 2:
-        # v2 adds file-level entries; longest-prefix matching lets them override their folder.
-        words['paths'] = {**words['paths'], **words['v2_paths']}
-        words['guide'] = words['guide'] + words['v2_guide_note']
+    if record['schema_version'] != LAYOUT_VERSION:
+        raise WorkspaceError(EARLIER_LAYOUT if record['schema_version'] < LAYOUT_VERSION
+                             else 'A newer kit created this workspace; update the kit before using it.')
+    words = _load(Path(__file__).resolve().parents[1] / 'assets/folder-layouts.json')['languages'][record['language']]
+    # Logical record names never appear as physical top-level folders in a workspace.
     if any((root / prefix.split('/')[0]).exists() for prefix in words['paths']):
-        raise WorkspaceError('Conflicting legacy and localized directories; preserve both for review.')
+        raise WorkspaceError('Folders named after internal records sit beside the workspace folders; preserve both for review.')
     return record, words
 
 
@@ -150,12 +155,6 @@ def _logical(root: Path, path: Path) -> str:
     return _mapped(relative, layout[1], reverse=True) if layout else relative
 
 
-def _layout_version(root: Path) -> Optional[int]:
-    """None for the unversioned legacy layout, otherwise the descriptor version."""
-    layout = _layout(root)
-    return layout[0]['schema_version'] if layout else None
-
-
 def _portable_text(text: str) -> str:
     """Readable, Windows-safe file name part; records keep the exact original value."""
     stem = re.sub(r'[<>:"/\\|?*\x00-\x1f\x7f]', "-", unicodedata.normalize("NFC", text))
@@ -179,20 +178,16 @@ def _next_document_number(registry: Dict[str, Any], year: str) -> str:
 
 
 def _original_name_matches(name: str, document: Dict[str, Any]) -> bool:
-    """Earlier layouts name originals by SHA-256; v2 by document number and a readable stem."""
+    """Originals are named by their document number and a readable stem."""
     stem = Path(name).stem
-    if stem == document.get("sha256"):
-        return True
     number, period = document.get("document_number"), document.get("period")
     return (isinstance(number, str) and isinstance(period, str) and re.fullmatch(r"[1-9][0-9]{3}-[0-9]{5}", number) is not None
             and number[:4] == period[:4] and stem.startswith(number + "_") and len(stem) > len(number) + 1)
 
 
 def _file_inbox_source(location: Path, source: Path, digest: str, period: str) -> Optional[str]:
-    """Layout v2: after a committed import, move a source taken from the managed inbox to
-    Imported/<period> so the inbox shows only pending files. Never overwrites or deletes."""
-    if _layout_version(location) != 2:
-        return None
+    """After a committed import, move a source taken from the managed inbox to Imported/<period>
+    so the inbox shows only pending files. Never overwrites or deletes."""
     inbox, imported = _path(location, "00_admin/inbox"), _path(location, "00_admin/inbox/imported")
     if inbox not in source.parents or source == imported or imported in source.parents:
         return None
@@ -217,11 +212,11 @@ def _file_inbox_source(location: Path, source: Path, digest: str, period: str) -
     return moved
 
 
-def _dated(root: Path, area: str, year: str, rest: str) -> str:
-    """Logical path for a new file; layout v2 keeps it under its storage year inside the area."""
-    if not re.fullmatch(r"[1-9]\d{3}", year):
+def _dated(area: str, year: str, rest: str) -> str:
+    """Logical path for a new file kept under its storage year inside an area."""
+    if not re.fullmatch(r"[1-9][0-9]{3}", year):
         raise WorkspaceError("A four-digit storage year is required.")
-    return f"{area}/{year}/{rest}" if _layout_version(root) == 2 else f"{area}/{rest}"
+    return f"{area}/{year}/{rest}"
 
 
 def _workspace_present(path: Path) -> bool:
@@ -490,7 +485,7 @@ def _workspace(value: PathInput) -> Path:
     except (KeyError, TypeError, ValueError) as exc:
         raise WorkspaceError("Workspace ID is invalid.") from exc
     layout = _layout(root)
-    if (layout and marker.get('folder_layout') != layout[0]) or (not layout and 'folder_layout' in marker):
+    if not layout or marker.get('folder_layout') != layout[0]:
         raise WorkspaceError('Folder layout does not match the workspace identity; preserve all files.')
     return root
 
@@ -856,19 +851,17 @@ def _preferences(marker: Dict[str, Any]) -> Dict[str, str]:
     language = marker.get("language", "ru")
     mode = marker.get("mode", "general")
     if not isinstance(language, str) or language not in LANGUAGES:
-        raise WorkspaceError("Language must be ru, en, or legacy de.")
+        raise WorkspaceError("Language must be en, ru or de.")
     if not isinstance(mode, str) or mode not in MODES:
         raise WorkspaceError("Mode must be general, bookkeeping, or tax-consultant.")
     return {"language": language, "mode": mode}
 
 
-def init_workspace(root: PathInput, year: int, language: str = "en", mode: str = "general", layout: str = "legacy") -> Dict[str, Any]:
+def init_workspace(root: PathInput, year: int, language: str = "en", mode: str = "general") -> Dict[str, Any]:
     if isinstance(year, bool) or not isinstance(year, int) or not 1900 <= year <= 9999:
         raise WorkspaceError("Year must be an integer between 1900 and 9999.")
     _preferences({"language": language, "mode": mode})
-    if layout not in {"legacy", "localized", "v2"}:
-        raise WorkspaceError("Folder layout must be legacy, localized or v2.")
-    descriptor = {"schema_version": 2 if layout == "v2" else 1, "language": language}
+    descriptor = {"schema_version": LAYOUT_VERSION, "language": language}
     location = _absolute(root)
     _check_chain(location)
     _private_boundary(location)
@@ -878,19 +871,19 @@ def init_workspace(root: PathInput, year: int, language: str = "en", mode: str =
     with _locked(location):
         if any(child.name != LOCK for child in location.iterdir()):
             raise WorkspaceError("Initialization requires an empty directory.")
-        if layout != "legacy":
-            _atomic_json(location / LAYOUT, descriptor)
+        _atomic_json(location / LAYOUT, descriptor)
         directories = ["00_admin", "00_admin/inbox", "00_admin/work", "01_profile", "02_registration",
-                       "03_banking", "04_accounting", f"05_tax/{year}", "06_bookkeeping", "07_exports",
-                       "08_correspondence", "09_audit/history"]
+                       "03_banking", "04_accounting", "04_accounting/procedure", f"05_tax/{year}", "06_bookkeeping",
+                       "07_exports", "08_correspondence", "09_audit/history"]
         for relative in directories:
             _mkdir(_path(location, relative))
         marker = {"schema": SCHEMA, "schema_version": VERSION, "workspace_id": str(uuid.uuid4()),
                   "created_at": _now(), "initial_year": year, "language": language, "mode": mode}
-        if layout != "legacy":
-            marker["folder_layout"] = descriptor
-            words = _layout(location)[1]
-            _write_exclusive(location / words["guide_name"], words["guide"].encode("utf-8"))
+        marker["folder_layout"] = descriptor
+        words = _layout(location)[1]
+        _write_exclusive(location / words["guide_name"], words["guide"].encode("utf-8"))
+        # A starter procedure documentation (GoBD Verfahrensdokumentation) for the user to complete.
+        _write_exclusive(_inside(location, "04_accounting/procedure/" + words["procedure_name"]), words["procedure"].encode("utf-8"))
         _atomic_json(_inside(location, MARKER), marker)
         _atomic_json(_inside(location, PROFILE), {"schema_version": VERSION, "facts": {field: _blank_fact() for field in FIELDS}})
         runtime = {"schema_version": VERSION, "assistant_product": None, "app_version": None,
@@ -1027,12 +1020,11 @@ def ingest_document(root: PathInput, source: PathInput, period: str) -> Dict[str
                 _audit(location, "document_content_seen_again", {"document_id": existing.get("document_id")})
                 seen = {"status": "existing_content", "document_id": existing.get("document_id"),
                         "review_note": "Identical bytes already indexed; this is not a tax duplicate determination."}
-                if _layout_version(location) == 2:
-                    seen["source_moved_to"] = _file_inbox_source(location, source_path, digest, period)
+                seen["source_moved_to"] = _file_inbox_source(location, source_path, digest, period)
                 return seen
-        # Layout v2 names originals readably with a running number; the hash stays in the index.
-        number = _next_document_number(registry, period[:4]) if _layout_version(location) == 2 else None
-        name = f"{number}_{_portable_stem(source_path.name)}{suffix}" if number else f"{digest}{suffix}"
+        # Originals get a readable name with a running number; the hash stays in the index.
+        number = _next_document_number(registry, period[:4])
+        name = f"{number}_{_portable_stem(source_path.name)}{suffix}"
         relative = f"06_bookkeeping/{period[:4]}/{period[5:]}/originals/{name}"
         destination = _inside(location, relative)
         _mkdir(destination.parent)
@@ -1041,9 +1033,7 @@ def ingest_document(root: PathInput, source: PathInput, period: str) -> Dict[str
         document = {"document_id": "doc-" + uuid.uuid4().hex, "sha256": digest,
                     "size_bytes": len(data), "original_name": source_path.name,
                     "path": relative, "period": period, "imported_at": _now(),
-                    "status": "imported", "provider_state": "unknown"}
-        if number:
-            document["document_number"] = number
+                    "status": "imported", "provider_state": "unknown", "document_number": number}
         registry["documents"].append(document)
         try:
             _atomic_json(_inside(location, DOCUMENTS), registry, replace=True)
@@ -1058,12 +1048,9 @@ def ingest_document(root: PathInput, source: PathInput, period: str) -> Dict[str
             raise
         _audit(location, "document_imported", {"document_id": document["document_id"], "sha256": digest})
         moved = _file_inbox_source(location, source_path, digest, period)
-    result = {"status": "imported", "document_id": document["document_id"], "size_bytes": len(data),
-              "path": _physical(location, relative),
-              "period_note": "Storage period only; no tax date or tax treatment inferred."}
-    if number:
-        result.update(document_number=number, source_moved_to=moved)
-    return result
+    return {"status": "imported", "document_id": document["document_id"], "size_bytes": len(data),
+            "path": _physical(location, relative), "document_number": number, "source_moved_to": moved,
+            "period_note": "Storage period only; no tax date or tax treatment inferred."}
 
 
 def _scan_originals(location: Path):
@@ -1376,33 +1363,28 @@ def workspace_status(root: PathInput) -> Dict[str, Any]:
             "verified_fact_evidence_issues": sorted(evidence_issues),
             "next_action": next_action,
             "language": preferences["language"], "mode": preferences["mode"],
-            "folder_language": _layout(location)[0]["language"] if _layout(location) else None,
-            "folder_layout": "localized" if _layout(location) else "legacy",
-            "folder_layout_version": _layout_version(location),
+            "folder_language": _layout(location)[0]["language"],
             "fact_status_counts": counts, "documents": len(_documents(location)["documents"]),
             "list_item_counts": lists, "locked": locked, "lock": lock}
 
 
 def start_workspace(root: PathInput, year: Optional[int] = None, language: str = "en",
-                    mode: str = "general", layout: str = "v2") -> Dict[str, Any]:
+                    mode: str = "general") -> Dict[str, Any]:
     location = _absolute(root)
     _check_chain(location)
     _private_boundary(location)
     exists = (_inside(location, MARKER)).exists()
     if not exists:
-        init_workspace(location, date.today().year if year is None else year, language, mode, layout)
+        init_workspace(location, date.today().year if year is None else year, language, mode)
     return {"action": "resumed" if exists else "created", **workspace_status(location)}
 
 
 def workspace_folders(root: PathInput) -> Dict[str, Any]:
     location = _workspace(root)
-    layout = _layout(location)
-    words = layout[1] if layout else _load(Path(__file__).resolve().parents[1] / 'assets/folder-layouts.json')['languages']['en']
-    return {'layout': 'localized' if layout else 'legacy',
-            'layout_version': layout[0]['schema_version'] if layout else None,
-            'folder_language': layout[0]['language'] if layout else None,
+    record, words = _layout(location)
+    return {'folder_language': record['language'],
             'paths': {key: _physical(location, key) for key in words['paths']},
-            'guide': layout[1]['guide_name'] if layout else None}
+            'guide': words['guide_name']}
 
 
 def diagnose_workspace(root: PathInput) -> Dict[str, Any]:
@@ -1470,7 +1452,7 @@ def create_demo(root: PathInput, year: int = 2026, language: str = "en") -> Dict
     if language not in {"en", "ru"}:
         raise WorkspaceError("The demo supports en and ru.")
     # The demo shows the same folders that start creates for real work.
-    init_workspace(root, year, language, "bookkeeping", layout="v2")
+    init_workspace(root, year, language, "bookkeeping")
     location = _workspace(root)
     words = _layout(location)[1]
     period = f"{year}-01"
@@ -1526,7 +1508,6 @@ def main(argv: Optional[List[str]] = None) -> int:
         command.add_argument("--year", type=int, default=date.today().year)
         command.add_argument("--language", choices=("en", "ru", "de") if name == "start" else ("en", "ru"), default="en")
         if name == "start":
-            command.add_argument("--layout", choices=("v2", "localized", "legacy"), default="v2")
             command.add_argument("--mode", choices=sorted(MODES), default="general")
     runtime = commands.add_parser("runtime", help="Record assessed processing configuration with local evidence")
     runtime.add_argument("--root", required=True)
@@ -1540,7 +1521,6 @@ def main(argv: Optional[List[str]] = None) -> int:
     entry.add_argument("--expected-sha256", help="Required current entry hash for an update")
     init = commands.add_parser("init", help="Create an empty private workspace outside Git and skill folders")
     init.add_argument("--root", required=True)
-    init.add_argument("--layout", choices=("v2", "localized", "legacy"), default="v2")
     init.add_argument("--year", required=True, type=int)
     init.add_argument("--language", choices=("ru", "en", "de"), default="en",
                       help="Assistant language preference; German report templates are not yet complete")
@@ -1574,7 +1554,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     args = parser.parse_args(argv)
     try:
         if args.command == "start":
-            result = start_workspace(args.root, args.year, args.language, args.mode, args.layout)
+            result = start_workspace(args.root, args.year, args.language, args.mode)
         elif args.command == "demo":
             result = create_demo(args.root, args.year, args.language)
         elif args.command == "runtime":
@@ -1594,7 +1574,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         elif args.command == "unlock":
             result = unlock_workspace(args.root, args.expected_sha256, args.confirmed_no_writer)
         elif args.command == "init":
-            result = init_workspace(args.root, args.year, args.language, args.mode, args.layout)
+            result = init_workspace(args.root, args.year, args.language, args.mode)
         elif args.command == "configure":
             result = configure_workspace(args.root, args.language, args.mode)
         elif args.command == "record":

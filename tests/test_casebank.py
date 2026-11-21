@@ -23,10 +23,10 @@ class BankMappingTests(CaseFixture):
         report = json.loads((self.root / preview["path"]).read_text())
         self.assertEqual([r["amount"] for r in report["rows"]], ["1234.56", "-5.00"])
         approved = bank.approve(self.root, preview["path"], preview["sha256"], "owner", self.evidence())
-        self.assertTrue(approved["csv_path"].startswith("03_banking/normalized/"))  # Earlier layouts stay flat.
+        self.assertTrue(approved["csv_path"].startswith("03 Accounts/Bank/2026/normalized/"))
         rows = list(csv.DictReader(io.StringIO((self.root / approved["csv_path"]).read_text())))
         self.assertNotEqual(rows[0]["transaction_id"], "1")
-        ledger = self.root / "04_accounting/ledger.csv"
+        ledger = ws._path(self.root, "04_accounting/ledger.csv")
         ledger.write_text("entry_id,transaction_id,amount,currency\n" + "\n".join(
             f"e{i},{r['transaction_id']},{r['amount']},{r['currency']}" for i, r in enumerate(rows)) + "\n")
         self.assertEqual(ws.reconcile(self.root, approved["csv_path"], ledger, "2026-10")["status"], "matched")
@@ -89,7 +89,7 @@ class BankMappingTests(CaseFixture):
         doc = self.receive("private.csv", b"ID;Buchungstag;Betrag;Text\n1;02.10.2026;10,00;EXCLUDED-PRIVATE-MEMO\n", "bank_statement")
         preview = bank.preview(self.root, doc["document_id"], self.mapping(), "2026-10")
         approved = bank.approve(self.root, preview["path"], preview["sha256"], "owner", self.evidence())
-        ledger = self.root / "04_accounting/ledger.csv"
+        ledger = ws._path(self.root, "04_accounting/ledger.csv")
         ledger.write_text("entry_id,transaction_id,amount,currency\n")
         ws.reconcile(self.root, approved["csv_path"], ledger, "2026-10")
         record = documents.get(self.root, doc["document_id"])
@@ -107,7 +107,7 @@ class BankMappingTests(CaseFixture):
         doc = self.receive("bank.csv", b"ID;Buchungstag;Betrag;Text\n1;02.10.2026;10,00;Synthetic\n", "bank_statement")
         preview = bank.preview(self.root, doc["document_id"], self.mapping(), "2026-10")
         approved = bank.approve(self.root, preview["path"], preview["sha256"], "owner", self.evidence())
-        ledger = self.root / "04_accounting/ledger.csv"
+        ledger = ws._path(self.root, "04_accounting/ledger.csv")
         ledger.write_text("entry_id,transaction_id,amount,currency\ne1,other,10.00,EUR\n")
         result = ws.reconcile(self.root, approved["csv_path"], ledger, "2026-10")
         path = self.root / result["report"]

@@ -4,6 +4,40 @@
 
 Evidence index updated **2026-11-21**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## Single workspace folder structure and 0.12.0-preview.1 preparation — 2026-11-21
+
+Local branch `claude/workspace-layout-phase0` after `fdcdd90` replaces the earlier layouts with one
+folder structure (see the [folder-structure review](research/workspace-layout-review-2026-11-21.md)),
+removes the layout options and hash-named originals, adds a procedure documentation draft at
+setup, and sets `VERSION` to 0.12.0-preview.1. Checks ran on macOS arm64:
+
+- The full unit suite passed (500 tests; 11 skipped because they require Windows or a configured
+  PowerShell container image). The new `tests/test_workspace_layout.py` covers the EN/RU/DE tree,
+  start guides and procedure draft, a one-to-one reversible mapping, refusal of earlier-preview
+  folders (numbered folders, a version-1 or newer descriptor) without changes, numbered originals,
+  inbox filing, the root overview, the internal register and bank year folders. The former
+  layout test modules were folded into it; tests now resolve paths through the mapping and put
+  assistant inputs in the work folder, and the case-insensitive evidence-alias test runs again.
+- `tools/check_package.py` passed on a clean copy; `tools/check_doc_links.py` (512
+  links/anchors, 33 files), `git diff --check` and `tools/release.py check` (0.12.0-preview.1)
+  passed, as did the release, packaging and installer tests.
+- `npm run test:gui` and `npm run test:overview` passed in **Chromium** and **WebKit**; the
+  overview fixture builder was ported after its first run failed on a legacy path. `npm test`
+  and `npm run test:documents` passed.
+- Under PowerShell 7 on macOS (`TMPDIR` on a non-symlinked path), `windows-smoke.ps1` (single
+  layout, procedure draft, numbering, inbox filing, refusal of earlier-preview folders),
+  `overview-smoke.ps1`, `recovery-smoke.ps1` and `lock-smoke.ps1` passed. The Windows-gated
+  interop tests (native lock recovery, native task overview, native/Python workspace and recovery
+  interop) also passed through local PowerShell 7 with a scratch `docker` stand-in that runs
+  `pwsh` on the same paths.
+- A CLI run of a new English workspace showed the documented tree, filed the inbox source under
+  `01 Inbox/Imported/2026-10/`, stored `2026-00001_Supplier invoice 42.pdf` and wrote
+  `OVERVIEW.html`; a folder with an earlier-preview marker was refused with "nothing was changed".
+
+Not run: hosted Windows CI and Windows PowerShell 5.1, the packaged GUI smoke, fresh-session
+`evals/scenarios.json` trials and any release publication; 0.12.0-preview.1 is not tagged or
+published, and the marketplace still pins 0.11.0-preview.1.
+
 ## Workspace layout Phase 2 (v2 default) — 2026-11-21
 
 Local branch `claude/workspace-layout-phase0` after `cec4088` completes layout v2 and makes it

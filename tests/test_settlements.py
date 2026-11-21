@@ -61,7 +61,7 @@ class SettlementTests(ProposalLinkTests):
         self.proposal("proposal-1")
         ac.post(self.root, self.paid())
         report = ac.export_report(self.root, "2026-11")
-        payload = self.root / "05_tax/2026/synthetic.txt"
+        payload = ws._path(self.root, "05_tax/2026/synthetic.txt")
         payload.write_text("Synthetic external output", encoding="utf-8")
         filing = ac.template("filing")
         filing.update(filing_id="filing", form="ustva", form_version="2026", period="2026-11", recipient="synthetic",
@@ -86,7 +86,7 @@ class SettlementTests(ProposalLinkTests):
     def test_changed_prior_period_evidence_blocks_settlement(self):
         self.proposal("proposal-1")
         ac.post(self.root, self.paid())
-        (self.root / self.proof).write_text("Changed payment proof", encoding="utf-8")
+        ws._path(self.root, self.proof).write_text("Changed payment proof", encoding="utf-8")
         with self.assertRaises(ws.WorkspaceError):
             ac.period_report(self.root, "2026-11")
 

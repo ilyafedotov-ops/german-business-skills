@@ -15,7 +15,7 @@ import workspace as ws
 
 
 class FolderIntakeTests(CaseFixture):
-    def test_localized_or_interrupted_workspaces_are_not_reimported_as_sources(self):
+    def test_existing_or_interrupted_workspaces_are_not_reimported_as_sources(self):
         source = self.base / 'source-collection'
         source.mkdir()
         existing = source / 'other-workspace'
@@ -36,7 +36,7 @@ class FolderIntakeTests(CaseFixture):
 
     def report(self, source, **options):
         result = folders.scan(self.root, source, **options)
-        return json.loads((self.root / result["path"]).read_text())
+        return json.loads((ws._path(self.root, result["path"])).read_text())
 
     def test_mixed_folder_preview_preserves_source_and_does_not_import(self):
         source = self.source_folder()
@@ -119,7 +119,7 @@ class FolderIntakeTests(CaseFixture):
             self.assertTrue(all(row["reason"] == "hidden_entry" for row in report["entries"]))
 
     def test_workspace_overlap_and_existing_workspace_source_are_rejected(self):
-        for source in (self.root, self.root / "00_admin", self.base):
+        for source in (self.root, ws._path(self.root, "00_admin"), self.base):
             with self.subTest(source=source), self.assertRaises(ws.WorkspaceError):
                 self.report(source)
         other = self.base / "other-workspace"
@@ -130,15 +130,15 @@ class FolderIntakeTests(CaseFixture):
     def test_preview_reports_go_to_the_assistant_work_folder_not_the_user_inbox(self):
         source = self.source_folder()
         (source / "invoice.pdf").write_bytes(b"Synthetic")
-        localized = self.base / "localized"
-        ws.start_workspace(localized, 2026, "en")
+        english = self.base / "english"
+        ws.start_workspace(english, 2026, "en")
         older = self.base / "older"
         ws.start_workspace(older, 2026, "ru")
         work = older / ".business-kit/admin/work"
         if work.exists():
             work.rmdir()  # A workspace created before the work folder existed.
-        for root, inbox, work_folder in ((self.root, "00_admin/inbox", "00_admin/work"),
-                                         (localized, "01 Inbox", ".business-kit/admin/work"),
+        for root, inbox, work_folder in ((self.root, "01 Inbox", ".business-kit/admin/work"),
+                                         (english, "01 Inbox", ".business-kit/admin/work"),
                                          (older, "01 Входящие", ".business-kit/admin/work")):
             with self.subTest(root=root.name):
                 result = folders.scan(root, source)
@@ -154,7 +154,7 @@ class FolderIntakeTests(CaseFixture):
         payload = json.loads(result.stdout)
         self.assertEqual(payload["status"], "preview")
         self.assertEqual(payload["counts"]["candidate"], 1)
-        self.assertTrue((self.root / payload["path"]).is_file())
+        self.assertTrue((ws._path(self.root, payload["path"])).is_file())
 
 
 if __name__ == "__main__":

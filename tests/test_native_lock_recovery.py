@@ -24,7 +24,7 @@ class NativeLockRecoveryTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name).resolve() / 'Private [workspace]'
         ws.start_workspace(self.root, 2026, 'ru')
-        self.lock = self.root / ws.LOCK
+        self.lock = ws._path(self.root, ws.LOCK)
         self.events = ws._path(self.root, ws.EVENTS)
         process = subprocess.Popen([sys.executable, '-c', 'pass'])
         process.wait()

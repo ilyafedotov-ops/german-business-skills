@@ -28,7 +28,7 @@ class LockFixture(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name).resolve() / "private"
         ws.init_workspace(self.root, 2026, "en")
-        self.lock = self.root / ws.LOCK
+        self.lock = ws._path(self.root, ws.LOCK)
 
     def leave_lock(self, pid, host=None, text=None):
         content = text if text is not None else json.dumps(
@@ -87,7 +87,7 @@ class UnlockTests(LockFixture):
         data = b"legacy-token-\xff\x00"
         self.lock.write_bytes(data)
         result = ws.unlock_workspace(self.root, hashlib.sha256(data).hexdigest(), confirmed_no_writer=True)
-        self.assertEqual((self.root / "09_audit/history" / (result["history_id"] + ".lock")).read_bytes(), data)
+        self.assertEqual((ws._path(self.root, "09_audit/history") / (result["history_id"] + ".lock")).read_bytes(), data)
 
     def test_stale_lock_is_removed_with_history_and_writes_resume(self):
         pid = finished_pid()
@@ -98,9 +98,9 @@ class UnlockTests(LockFixture):
         result = json.loads(run.stdout)
         self.assertEqual(result["status"], "removed")
         self.assertFalse(self.lock.exists())
-        history = json.loads((self.root / "09_audit/history" / (result["history_id"] + ".json")).read_text(encoding="utf-8"))
+        history = json.loads((ws._path(self.root, "09_audit/history") / (result["history_id"] + ".json")).read_text(encoding="utf-8"))
         self.assertEqual((history["lock"]["pid"], history["lock_sha256"]), (pid, digest))
-        events = json.loads((self.root / ws.EVENTS).read_text(encoding="utf-8"))
+        events = json.loads((ws._path(self.root, ws.EVENTS)).read_text(encoding="utf-8"))
         self.assertEqual(events[-1]["action"], "stale_lock_removed")
         ws.configure_workspace(self.root, language="ru")
 

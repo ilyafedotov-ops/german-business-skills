@@ -19,9 +19,9 @@ class RecoveryTests(unittest.TestCase):
         self.base = Path(self.temp.name).resolve()
         self.root = self.base / 'private'
         ws.start_workspace(self.root, 2026, 'ru')
-        (self.root / 'Личные заметки').mkdir()
-        (self.root / 'Личные заметки/Проверка.txt').write_text('Synthetic user notes', encoding='utf-8')
-        (self.root / 'Пустая папка').mkdir()
+        (ws._path(self.root, 'Личные заметки')).mkdir()
+        (ws._path(self.root, 'Личные заметки/Проверка.txt')).write_text('Synthetic user notes', encoding='utf-8')
+        (ws._path(self.root, 'Пустая папка')).mkdir()
         source = self.base / 'original.csv'
         source.write_bytes(b'amount,currency\n119.80,EUR\n')
         ws.ingest_document(self.root, source, '2026-10')
@@ -30,7 +30,7 @@ class RecoveryTests(unittest.TestCase):
     def files(self, root):
         return {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob('*') if p.is_file()}
 
-    def test_roundtrip_restores_all_records_empty_folders_and_localized_identity(self):
+    def test_roundtrip_restores_all_records_empty_folders_and_folder_identity(self):
         original = self.files(self.root)
         created = recovery.backup_workspace(self.root, self.backup)
         self.assertEqual(created['status'], 'verified')
@@ -60,7 +60,7 @@ class RecoveryTests(unittest.TestCase):
 
     @mock.patch.object(ws, 'LOCK_WAIT_SECONDS', 0)  # Refusal, not the wait, is under test.
     def test_refuses_overwrite_nested_destination_and_active_workspace(self):
-        for destination in (self.root, self.root / 'nested', self.base):
+        for destination in (self.root, ws._path(self.root, 'nested'), self.base):
             with self.assertRaises(ws.WorkspaceError):
                 recovery.backup_workspace(self.root, destination)
         with ws._locked(self.root):
@@ -112,7 +112,7 @@ class RecoveryTests(unittest.TestCase):
 
     def test_source_change_stops_completion_and_preserves_the_original_change(self):
         original_file = recovery._file
-        changed = self.root / 'Личные заметки/Проверка.txt'
+        changed = ws._path(self.root, 'Личные заметки/Проверка.txt')
         def copy_then_change(path, destination=None):
             result = original_file(path, destination)
             if destination is not None and path == changed:
@@ -123,11 +123,11 @@ class RecoveryTests(unittest.TestCase):
                 recovery.backup_workspace(self.root, self.backup)
         self.assertEqual(changed.read_text(), 'Concurrent user correction')
         self.assertFalse((self.backup / 'manifest.json').exists())
-        self.assertFalse((self.root / ws.LOCK).exists())
+        self.assertFalse((ws._path(self.root, ws.LOCK)).exists())
 
     def test_linked_paths_are_not_followed(self):
         outside = self.base / 'outside.txt'; outside.write_text('Outside')
-        link = self.root / 'linked.txt'
+        link = ws._path(self.root, 'linked.txt')
         try: link.symlink_to(outside)
         except (OSError, NotImplementedError): self.skipTest('Symlink creation unavailable')
         with self.assertRaises(ws.WorkspaceError): recovery.backup_workspace(self.root, self.backup)
@@ -149,7 +149,7 @@ class NativeRecoveryInteropTests(unittest.TestCase):
         self.repo = Path(__file__).resolve().parents[1]
         self.root = self.base / 'Private [workspace]'
         ws.start_workspace(self.root, 2026, 'de')
-        (self.root / 'Synthetic notes.txt').write_text('Complete workspace', encoding='utf-8')
+        (ws._path(self.root, 'Synthetic notes.txt')).write_text('Complete workspace', encoding='utf-8')
 
     def native(self, action, expect_success=True, **options):
         image = os.environ.get('GBK_TEST_DOCKER_IMAGE')

@@ -112,15 +112,21 @@ Export coverage is a readable projection of supplied evidence: the selected rout
 
 ## Readable files and workspace folders
 
-The physical EN/RU/DE folder map remains unchanged: five visible areas with
-internal records in `.business-kit`. The workspace reference owns
-[task-based destinations](../skills/de-business-kit/references/workspace.md#route-readable-results-by-task)
-for launch plans, customer cases, service comparisons, changes and saved answers.
-New insurance/other-service reports use visible correspondence cases; existing
-hidden reports retain their location. Case folders are created only when needed,
-link canonical evidence/tasks and never establish workflow state. This is an
-agent authoring convention, not a migration or automatic organizer. Localized
-start guides explain folder roles; an update does not overwrite an existing guide.
+Every workspace uses one folder structure, listed with its EN/RU/DE names in the
+[workspace reference](../skills/de-business-kit/references/workspace.md#files-and-state):
+five visible areas, a root overview page and internal records in `.business-kit`.
+Records keep stable logical references such as `06_bookkeeping/…`, which
+`assets/folder-layouts.json` maps to physical names; `.workspace-layout.json`
+(version 2) pins the folder language. Folders from earlier previews are refused
+without changes, not migrated. Originals are numbered per storage year with readable
+names while the index keeps the SHA-256 and original name; imported inbox sources
+are filed under Imported, issued-invoice copies under Outgoing invoices, and new
+bank and correspondence files under storage-year folders. Setup writes a localized
+start guide and a procedure-documentation (Verfahrensdokumentation) draft. The
+workspace reference also owns
+[task-based destinations](../skills/de-business-kit/references/workspace.md#route-readable-results-by-task).
+Case folders are created only when needed, link canonical evidence/tasks and never
+establish workflow state.
 
 ## Seven entry points, shared state
 
@@ -229,7 +235,7 @@ These components describe code present in this source snapshot. `SKILL.md` route
 | [bank.py](../skills/de-business-kit/scripts/casefiles/bank.py) | Explicit CSV mapping, review preview, normalization and overlapping-ID checks | Preview, normalized CSV and bank-import record |
 | [invoice_xml.py](../skills/de-business-kit/scripts/casefiles/invoice_xml.py) | Bounded standalone UBL Invoice / CreditNote / CII header and preceding-reference inspection | Derived report and inspection record |
 | [summary.py](../skills/de-business-kit/scripts/casefiles/summary.py) | Read-only projection of documents, open reviews, deadlines and reconciliation evidence | In-memory snapshot consumed by overview/archive |
-| [overview.py](../skills/de-business-kit/scripts/casefiles/overview.py) | English/Russian static HTML, Markdown and JSON generation | `00_admin/overview.*`, initial `START-HERE.md` |
+| [overview.py](../skills/de-business-kit/scripts/casefiles/overview.py) | English/Russian static HTML, Markdown and JSON generation | Root overview page (`00_admin/overview.html`), internal Markdown/JSON, initial start guide |
 | [archive.py](../skills/de-business-kit/scripts/casefiles/archive.py) | Select linked records/evidence, build a manifest, verify directory and ZIP | Unique `07_exports/YYYY-MM/archive-*` artifacts |
 | [accounting.py](../skills/de-business-kit/scripts/casefiles/accounting.py) | Accounting choice, reviewed cash movements with stated line VAT and proposal links, filing-evidence lifecycle/preflight | `04_accounting/register.json`, frozen files and history |
 | [windows-overview.ps1](../skills/de-business-kit/scripts/windows-overview.ps1) | Native saved-state and local-evidence inspection under the workspace lock | Separate `00_admin/native-overview.*` projections |

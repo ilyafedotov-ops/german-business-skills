@@ -181,7 +181,7 @@ def approve(root, preview_path, expected, reviewer, evidence_file):
             if reference.lstrip().startswith(("=", "+", "-", "@")):
                 safe["source_reference"] = "'" + reference
             writer.writerow(safe)
-        relative = ws._dated(root, "03_banking", report["period"][:4], f"normalized/{identity}.csv")
+        relative = ws._dated("03_banking", report["period"][:4], f"normalized/{identity}.csv")
         path = ws._inside(root, relative)
         ws._mkdir(path.parent)
         ws._write_exclusive(path, stream.getvalue().encode("utf-8"))

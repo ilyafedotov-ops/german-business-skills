@@ -163,11 +163,11 @@ class PackagingTests(unittest.TestCase):
                         [sys.executable, "-B", str(skill / "scripts/workspace.py"), "folders", "--root", str(private)],
                         cwd=self.base, capture_output=True, text=True, encoding="utf-8")
                     self.assertEqual(folders.returncode, 0, folders.stderr)
-                    inbox = json.loads(folders.stdout)["paths"]["00_admin/inbox"]
-                    (private / inbox / "request.json").write_text(json.dumps(request), encoding="utf-8")
+                    work = json.loads(folders.stdout)["paths"]["00_admin/work"]
+                    (private / work / "request.json").write_text(json.dumps(request), encoding="utf-8")
                     prepared = subprocess.run(
                         [sys.executable, "-B", str(skill / "scripts/workflows.py"), "prepare", "--root", str(private),
-                         "--kind", "classification", "--input", "00_admin/inbox/request.json"],
+                         "--kind", "classification", "--input", "00_admin/work/request.json"],
                         cwd=self.base, capture_output=True, text=True, encoding="utf-8")
                     self.assertEqual(prepared.returncode, 0, prepared.stderr)
                     result = json.loads(prepared.stdout)

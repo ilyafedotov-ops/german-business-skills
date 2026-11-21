@@ -83,7 +83,7 @@ def _edit(root, action):
 
 
 def _snapshot(root, relative, issued=None):
-    """Freeze evidence. In layout v2 the issued invoice copy (issue date, number) stays with the documents."""
+    """Freeze evidence. An issued invoice copy (issue date, number) is kept with the documents of its issue month."""
     source = st.evidence(root, relative)
     data = ws._read_regular(ws._inside(root, source["path"]))
     if hashlib.sha256(data).hexdigest() != source["sha256"]:
@@ -91,13 +91,13 @@ def _snapshot(root, relative, issued=None):
     suffix = Path(relative).suffix.lower()
     if suffix not in {".md", ".txt", ".json", ".xml", ".pdf", ".html", ".csv", ".png", ".jpg", ".eml"}:
         raise ws.WorkspaceError("Unsupported invoice evidence format; never supply credentials.")
-    if issued and ws._layout_version(root) == 2 and re.fullmatch(r"[1-9][0-9]{3}-[0-9]{2}-[0-9]{2}", issued[0]):
+    if issued and re.fullmatch(r"[1-9][0-9]{3}-[0-9]{2}-[0-9]{2}", issued[0]):
         name = ws._portable_text(issued[1]) + "_" + source["sha256"][:8]
         destination = f"06_bookkeeping/{issued[0][:4]}/{issued[0][5:7]}/issued/{name}{suffix}"
         if ws._inside(root, destination).exists():
             destination = destination[:-len(suffix)] + "-" + uuid.uuid4().hex[:8] + suffix
     else:
-        destination = ws._dated(root, "08_correspondence", str(date.today().year), "invoice-evidence/" + uuid.uuid4().hex + suffix)
+        destination = ws._dated("08_correspondence", str(date.today().year), "invoice-evidence/" + uuid.uuid4().hex + suffix)
     target = ws._inside(root, destination)
     ws._mkdir(target.parent)
     ws._write_exclusive(target, data)
@@ -525,7 +525,7 @@ def export(root, identifier, language="en"):
         if identifier not in state["invoices"]:
             raise ws.WorkspaceError("Invoice not found.")
         view = _view(root, state["invoices"][identifier], state, language)
-        relative = ws._dated(root, "08_correspondence", str(date.today().year), "invoice-status-" + uuid.uuid4().hex + ".md")
+        relative = ws._dated("08_correspondence", str(date.today().year), "invoice-status-" + uuid.uuid4().hex + ".md")
         target = ws._inside(root, relative)
         ws._mkdir(target.parent)
         ws._write_exclusive(target, view["markdown"].encode("utf-8"))

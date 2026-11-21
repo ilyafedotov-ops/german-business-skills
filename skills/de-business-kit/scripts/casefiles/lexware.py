@@ -96,7 +96,7 @@ def template():
 
 
 def _save(root, data, suffix=".json"):
-    relative = ws._dated(root, "08_correspondence", str(date.today().year), "invoice-evidence/lexware-" + uuid.uuid4().hex + suffix)
+    relative = ws._dated("08_correspondence", str(date.today().year), "invoice-evidence/lexware-" + uuid.uuid4().hex + suffix)
     path = ws._inside(root, relative)
     ws._mkdir(path.parent)
     ws._write_exclusive(path, data)

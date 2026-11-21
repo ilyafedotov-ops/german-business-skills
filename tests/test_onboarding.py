@@ -22,7 +22,7 @@ class OnboardingTests(unittest.TestCase):
         workspace.init_workspace(self.root, 2026, "en")
 
     def read(self, name):
-        return json.loads((self.root / name).read_text(encoding="utf-8"))
+        return json.loads(workspace._path(self.root, name).read_text(encoding="utf-8"))
 
     def fact(self, field, value):
         return {"field": field, "value": value, "status": "declared",
@@ -38,7 +38,7 @@ class OnboardingTests(unittest.TestCase):
                       client_data_mode="review_recorded",
                       review={"reviewed_by": "Synthetic owner", "reviewed_at": "2026-10-25",
                               "scope": "Synthetic bookkeeping workflow", "evidence_file": "00_admin/review.md"})
-        (self.root / "00_admin/review.md").write_text("Synthetic assessment, not a legal certification.", encoding="utf-8")
+        (workspace._path(self.root, "00_admin/review.md")).write_text("Synthetic assessment, not a legal certification.", encoding="utf-8")
         return record
 
     def test_fresh_workspace_is_usable_for_demo_but_setup_incomplete(self):
@@ -51,7 +51,7 @@ class OnboardingTests(unittest.TestCase):
 
     def test_missing_and_corrupt_runtime_are_actionable_without_profile_leak(self):
         workspace.record_fact(self.root, self.fact("owner_name", "Private Synthetic Owner"))
-        path = self.root / "00_admin/runtime.json"
+        path = workspace._path(self.root, "00_admin/runtime.json")
         for payload in (None, b"{broken", b"[]"):
             with self.subTest(payload=payload):
                 if payload is None:
@@ -65,13 +65,13 @@ class OnboardingTests(unittest.TestCase):
 
     def test_runtime_review_requires_evidence_and_records_history(self):
         record = self.runtime()
-        before = (self.root / "00_admin/runtime.json").read_bytes()
+        before = (workspace._path(self.root, "00_admin/runtime.json")).read_bytes()
         invalid = dict(record, review={**record["review"], "evidence_file": "00_admin/missing.md"})
         with self.assertRaises(workspace.WorkspaceError):
             workspace.configure_runtime(self.root, invalid)
-        self.assertEqual((self.root / "00_admin/runtime.json").read_bytes(), before)
+        self.assertEqual((workspace._path(self.root, "00_admin/runtime.json")).read_bytes(), before)
         result = workspace.configure_runtime(self.root, record)
-        self.assertTrue((self.root / f"09_audit/history/{result['history_id']}.json").is_file())
+        self.assertTrue((workspace._path(self.root, f"09_audit/history/{result['history_id']}.json")).is_file())
         status = workspace.workspace_status(self.root)
         self.assertEqual(status["data_processing_review"], "recorded")
         self.assertEqual(status["status"], "configured")
@@ -79,13 +79,13 @@ class OnboardingTests(unittest.TestCase):
 
     def test_review_evidence_change_invalidates_recorded_review(self):
         workspace.configure_runtime(self.root, self.runtime())
-        (self.root / "00_admin/review.md").write_text("Replaced assessment", encoding="utf-8")
+        (workspace._path(self.root, "00_admin/review.md")).write_text("Replaced assessment", encoding="utf-8")
         status = workspace.workspace_status(self.root)
         self.assertEqual(status["status"], "needs_attention")
         self.assertIn("runtime_invalid", status["issues"])
 
     def test_invalid_fact_values_do_not_mutate_profile_or_audit(self):
-        before = [(self.root / p).read_bytes() for p in (workspace.PROFILE, workspace.EVENTS)]
+        before = [(workspace._path(self.root, p)).read_bytes() for p in (workspace.PROFILE, workspace.EVENTS)]
         invalid = [("vat_current_regime", {"invalid": ["anything"]}),
                    ("vat_current_regime", "automatically exempt"), ("employees", "yes"),
                    ("business_start_date", "2026-02-30"), ("vat_prior_year", True),
@@ -96,7 +96,7 @@ class OnboardingTests(unittest.TestCase):
             with self.subTest(field=field, value=value):
                 with self.assertRaises(workspace.WorkspaceError):
                     workspace.record_fact(self.root, self.fact(field, value))
-        self.assertEqual([(self.root / p).read_bytes() for p in (workspace.PROFILE, workspace.EVENTS)], before)
+        self.assertEqual([(workspace._path(self.root, p)).read_bytes() for p in (workspace.PROFILE, workspace.EVENTS)], before)
 
     def test_valid_typed_facts_and_unknown_remain_supported(self):
         records = [("vat_current_regime", "Regelbesteuerung"), ("employees", False),
@@ -109,7 +109,7 @@ class OnboardingTests(unittest.TestCase):
         workspace.record_fact(self.root, {"field": "employees", "value": None, "status": "unknown"})
 
     def test_legacy_malformed_fact_is_flagged_without_rewriting_it(self):
-        path = self.root / workspace.PROFILE
+        path = workspace._path(self.root, workspace.PROFILE)
         profile = self.read(workspace.PROFILE)
         profile["facts"]["vat_current_regime"].update(value={"old": "unsupported"}, status="declared")
         path.write_text(json.dumps(profile), encoding="utf-8")
@@ -121,12 +121,12 @@ class OnboardingTests(unittest.TestCase):
 
     def test_start_resumes_existing_workspace_without_resetting_preferences(self):
         workspace.configure_workspace(self.root, language="ru", mode="tax-consultant")
-        before = {p: (self.root / p).read_bytes() for p in (workspace.PROFILE, workspace.MARKER, workspace.EVENTS)}
+        before = {p: (workspace._path(self.root, p)).read_bytes() for p in (workspace.PROFILE, workspace.MARKER, workspace.EVENTS)}
         result = workspace.start_workspace(self.root, year=2027, language="en", mode="general")
         self.assertEqual(result["action"], "resumed")
         self.assertEqual(result["language"], "ru")
         self.assertEqual(result["mode"], "tax-consultant")
-        self.assertEqual({p: (self.root / p).read_bytes() for p in before}, before)
+        self.assertEqual({p: (workspace._path(self.root, p)).read_bytes() for p in before}, before)
 
     def test_start_creates_only_empty_private_workspace(self):
         target = self.base / "New business"
@@ -155,7 +155,7 @@ class OnboardingTests(unittest.TestCase):
             workspace.create_demo(target, year=2026)
         self.assertEqual(report.read_bytes(), before)
 
-    def test_demo_shows_the_same_localized_folders_as_a_real_workspace(self):
+    def test_demo_shows_the_same_folders_as_a_real_workspace(self):
         for language, bank, guide, inbox in (("en", "03 Accounts/Bank", "START-HERE.md", "01 Inbox"),
                                              ("ru", "03 Учёт/Банк", "НАЧНИТЕ-ЗДЕСЬ.md", "01 Входящие")):
             with self.subTest(language=language):
@@ -165,22 +165,22 @@ class OnboardingTests(unittest.TestCase):
                 workspace.start_workspace(real, year=2026, language=language)
                 visible = lambda root: sorted(p.name for p in root.iterdir() if p.is_dir())
                 self.assertEqual(visible(demo), visible(real))
-                self.assertEqual(workspace.workspace_folders(demo)["layout"], "localized")
+                self.assertEqual(json.loads((demo / workspace.LAYOUT).read_text())["schema_version"], 2)
                 self.assertTrue((demo / bank / "demo-bank.csv").is_file())
                 self.assertEqual(result["guide"], guide)
                 text = (demo / guide).read_text(encoding="utf-8")
                 self.assertIn("12", text)  # The demo's unmatched synthetic outflow.
-                self.assertIn(inbox, text)  # The ordinary localized folder guide.
+                self.assertIn(inbox, text)  # The ordinary folder guide.
                 self.assertEqual(workspace.verify_workspace(demo)["status"], "ok")
                 self.assertEqual(workspace.start_workspace(demo)["action"], "resumed")
 
     def test_doctor_checks_local_health_without_inventing_host_capabilities(self):
-        (self.root / workspace.LOCK).write_text("active writer", encoding="utf-8")
+        (workspace._path(self.root, workspace.LOCK)).write_text("active writer", encoding="utf-8")
         result = workspace.diagnose_workspace(self.root)
         self.assertEqual(result["status"], "needs_attention")
         self.assertIn("workspace_locked", result["issues"])
         self.assertEqual(result["host_capabilities"], "not_probed")
-        self.assertEqual((self.root / workspace.LOCK).read_text(), "active writer")
+        self.assertEqual((workspace._path(self.root, workspace.LOCK)).read_text(), "active writer")
 
     def test_start_cli_outputs_machine_readable_next_action(self):
         with redirect_stdout(io.StringIO()) as output:
@@ -190,7 +190,7 @@ class OnboardingTests(unittest.TestCase):
         self.assertTrue(result["next_action"])
 
     def test_corrupt_audit_is_diagnosed_before_claiming_usable_workspace(self):
-        (self.root / workspace.EVENTS).write_text("{}", encoding="utf-8")
+        (workspace._path(self.root, workspace.EVENTS)).write_text("{}", encoding="utf-8")
         result = workspace.diagnose_workspace(self.root)
         self.assertEqual(result["workspace_health"], "needs_attention")
         self.assertIn("audit_invalid", result["issues"])
@@ -206,7 +206,7 @@ class OnboardingTests(unittest.TestCase):
         workspace.configure_runtime(self.root, self.runtime())
         runtime = self.read(workspace.RUNTIME)
         runtime["model_provider"] = "Another provider"
-        (self.root / workspace.RUNTIME).write_text(json.dumps(runtime), encoding="utf-8")
+        (workspace._path(self.root, workspace.RUNTIME)).write_text(json.dumps(runtime), encoding="utf-8")
         self.assertEqual(workspace.workspace_status(self.root)["data_processing_review"], "invalid")
 
 

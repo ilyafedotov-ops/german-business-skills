@@ -11,10 +11,9 @@ function Reject([scriptblock]$operation) {
 }
 $utf8 = New-Object Text.UTF8Encoding($false)
 try {
-    foreach ($run in @(@('localized','en'),@('localized','ru'),@('localized','de'),@('v2','en'),@('v2','ru'),@('v2','de'))) {
-        $layout=$run[0]; $language=$run[1]
-        $root=Join-Path $base ($layout+'-'+$language)
-        & $kit -Action start -Root $root -Year 2026 -Language $language -Layout $layout | Out-Null
+    foreach ($language in @('en','ru','de')) {
+        $root=Join-Path $base $language
+        & $kit -Action start -Root $root -Year 2026 -Language $language | Out-Null
         $folders=& $kit -Action folders -Root $root | ConvertFrom-Json
         $admin=Join-Path $root $folders.paths.'00_admin'
         $empty=& $kit -Action overview -Root $root -Period '2026-10' | ConvertFrom-Json
@@ -52,8 +51,7 @@ try {
         Reject { & $kit -Action overview -Root $root -Period '2026-10' }
         Assert ([IO.File]::ReadAllText((Join-Path $root '.workspace.lock')) -eq 'other writer') 'Other lock removed'
         [IO.File]::Delete((Join-Path $root '.workspace.lock'))
-        $registerEntry=$folders.paths.PSObject.Properties['04_accounting/register.json']
-        $register=Join-Path $root $(if ($null -ne $registerEntry) { $registerEntry.Value } else { $folders.paths.'04_accounting'+'/register.json' })
+        $register=Join-Path $root $folders.paths.'04_accounting/register.json'
         [IO.File]::WriteAllText($register,'{"schema_version":99}',$utf8)
         $broken=& $kit -Action overview -Root $root -Period '2026-10' | ConvertFrom-Json
         Assert ($broken.health -eq 'needs_review') 'Broken accounting hidden'
@@ -63,29 +61,30 @@ try {
         Reject { & $kit -Action overview -Root $root -Period '2026-10' }
         Assert ([IO.File]::ReadAllText((Join-Path $root $view.html_path)) -eq 'USER OWNED FILE') 'Non-generated view overwritten'
     }
-    # Layout v2: one page at the workspace root, refreshed by either runtime.
-    $root=Join-Path $base 'v2'
-    & $kit -Action start -Root $root -Year 2026 -Language en -Layout v2 | Out-Null
-    $v2=& $kit -Action overview -Root $root -Period '2026-10' | ConvertFrom-Json
-    Assert ($v2.html_path -eq 'OVERVIEW.html' -and $v2.json_path.StartsWith('.business-kit/admin/')) 'v2 overview page is not at the root'
+    # One page at the workspace root, refreshed by either runtime.
+    $root=Join-Path $base 'Root page'
+    & $kit -Action start -Root $root -Year 2026 -Language en | Out-Null
+    $rootView=& $kit -Action overview -Root $root -Period '2026-10' | ConvertFrom-Json
+    Assert ($rootView.html_path -eq 'OVERVIEW.html' -and $rootView.json_path.StartsWith('.business-kit/admin/')) 'Overview page is not at the root'
     $page=Join-Path $root 'OVERVIEW.html'
     $nativeMark='<!-- German Business Kit native overview v1 -->'
-    Assert ([IO.File]::ReadAllText($page,$utf8).StartsWith($nativeMark)) 'v2 native page missing'
+    Assert ([IO.File]::ReadAllText($page,$utf8).StartsWith($nativeMark)) 'Native root page missing'
     [IO.File]::WriteAllText($page,"<!-- German Business Kit generated overview v1 -->`n<p>python</p>",$utf8)
     & $kit -Action overview -Root $root -Period '2026-10' | Out-Null
     Assert ([IO.File]::ReadAllText($page,$utf8).StartsWith($nativeMark)) 'Python-generated page was not refreshed'
-    Assert (-not (Test-Path -LiteralPath (Join-Path $root '.business-kit/admin/native-overview.html'))) 'v2 kept a second hidden page'
+    Assert (-not (Test-Path -LiteralPath (Join-Path $root '.business-kit/admin/native-overview.html'))) 'A second hidden page was kept'
     [IO.File]::WriteAllText($page,'USER OWNED FILE',$utf8)
     Reject { & $kit -Action overview -Root $root -Period '2026-10' }
     Assert ([IO.File]::ReadAllText($page,$utf8) -eq 'USER OWNED FILE') 'User-owned root page overwritten'
     # Static, Python-fingerprinted synthetic fixtures: serializer independence matters.
     $root=Join-Path $base 'Accounting response fixture'
-    & $kit -Action start -Root $root -Year 2026 -Language en -Layout legacy | Out-Null
-    $proof=Join-Path $root '08_correspondence/proof.txt'
+    & $kit -Action start -Root $root -Year 2026 -Language en | Out-Null
+    $folders=& $kit -Action folders -Root $root | ConvertFrom-Json
+    $proof=Join-Path $root ($folders.paths.'08_correspondence'+'/proof.txt')
     [IO.File]::WriteAllText($proof,'synthetic proof',$utf8)
-    $register=Join-Path $root '04_accounting/register.json'
-    $history=Join-Path $root '09_audit/history/accounting-smoke.json'
-    $audit=Join-Path $root '09_audit/events.json'
+    $register=Join-Path $root $folders.paths.'04_accounting/register.json'
+    $history=Join-Path $root ($folders.paths.'09_audit'+'/history/accounting-smoke.json')
+    $audit=Join-Path $root ($folders.paths.'09_audit'+'/events.json')
     $originalAudit=Get-Content -LiteralPath $audit -Raw -Encoding UTF8 | ConvertFrom-Json
     foreach ($fixture in @(
         '{"schema_version": 1, "configuration": {"system": "external", "method": "E\u00dcR", "product": "O''Brien <\u0440\u0443\u0441\u0441\u043a\u0438\u0439> \ud83d\ude00", "account_reference": "business-one", "reviewer": "O''Brien", "evidence_file": "08_correspondence/proof.txt", "evidence": {"path": "08_correspondence/proof.txt", "sha256": "1e11b98fdf50fd2d1a606752ae13e0dc4538ca861fbc87c658c558bea39a8826"}}, "entries": {"one": {"entry_id": "one", "date": "2026-09-10", "evidence": {"path": "08_correspondence/proof.txt", "sha256": "1e11b98fdf50fd2d1a606752ae13e0dc4538ca861fbc87c658c558bea39a8826"}, "note": "2026-10-26T12:00:00.123400+00:00"}}, "filings": {}, "checksum": "1e474c4cae48c11dd4f60f470df286cd389f78e9b32b2b90ab8a9de831133518"}',

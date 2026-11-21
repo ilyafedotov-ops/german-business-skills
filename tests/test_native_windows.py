@@ -21,7 +21,7 @@ class NativeSeedTests(unittest.TestCase):
             root = Path(folder).resolve() / 'private'
             ws.init_workspace(root, 2026, 'en', 'general')
             for relative, record in seed.items():
-                self.assertEqual(record, json.loads((root / relative).read_text()), relative)
+                self.assertEqual(record, json.loads(ws._path(root, relative).read_text()), relative)
             self.assertEqual(set(seed['01_profile/business.json']['facts']), set(ws.FIELDS))
 
 
@@ -51,27 +51,27 @@ class NativeInteropTests(unittest.TestCase):
         return json.loads(result.stdout)
 
     def test_native_workspace_and_intake_are_readable_by_python_without_migration(self):
-        self.assertEqual(self.run_native('start', Year=2026, Language='ru', Layout='legacy')['status'], 'initialized')
+        self.assertEqual(self.run_native('start', Year=2026, Language='ru')['status'], 'initialized')
         source = self.base / 'invoice [1] ü.csv'
         source.write_bytes(b'amount,currency\n12.34,EUR\n')
         self.run_native('ingest', Source=source, Period='2026-10')
-        index = json.loads((self.root / ws.DOCUMENTS).read_text(encoding='utf-8'))
+        index = json.loads((ws._path(self.root, ws.DOCUMENTS)).read_text(encoding='utf-8'))
         self.assertEqual(index['documents'][0]['original_name'], source.name)
         self.assertEqual(ws.verify_workspace(self.root)['status'], 'ok')
         self.assertEqual(ws.workspace_status(self.root)['language'], 'ru')
         self.assertEqual(ws.ingest_document(self.root, source, '2026-10')['status'], 'existing_content')
         self.assertEqual(self.run_native('verify')['indexed_documents'], 1)
-        events = json.loads((self.root / '09_audit/events.json').read_text())
+        events = json.loads((ws._path(self.root, '09_audit/events.json')).read_text())
         self.assertEqual(len(events), 3)
         self.assertTrue(all(isinstance(event, dict) and 'action' in event for event in events))
 
     def test_native_resumes_python_workspace_preserves_facts_and_detects_orphan(self):
         ws.init_workspace(self.root, 2026, 'en', 'bookkeeping')
-        before = (self.root / ws.PROFILE).read_bytes()
+        before = (ws._path(self.root, ws.PROFILE)).read_bytes()
         result = self.run_native('start', Language='ru', Mode='general')
         self.assertEqual((result['language'], result['mode']), ('en', 'bookkeeping'))
-        self.assertEqual((self.root / ws.PROFILE).read_bytes(), before)
-        original = self.root / '06_bookkeeping/2026/10/originals/orphan.csv'
+        self.assertEqual((ws._path(self.root, ws.PROFILE)).read_bytes(), before)
+        original = ws._path(self.root, '06_bookkeeping/2026/10/originals/orphan.csv')
         original.parent.mkdir(parents=True)
         original.write_bytes(b'unindexed')
         result = self.run_native('verify')
@@ -79,18 +79,21 @@ class NativeInteropTests(unittest.TestCase):
         self.assertEqual(result['unindexed_originals'], 1)
         self.assertEqual(original.read_bytes(), b'unindexed')
 
-    def test_localized_layouts_share_paths_and_integrity_in_both_runtimes(self):
+    def test_both_runtimes_share_paths_numbering_and_integrity(self):
         for language, inbox, archive in [('ru', '01 Входящие', '02 Документы'), ('de', '01 Eingang', '02 Dokumente')]:
             with self.subTest(language=language):
                 self.root = self.base / language
                 self.run_native('start', Language=language, Year=2026)
-                self.assertTrue((self.root / inbox).is_dir())
-                self.assertTrue((self.root / archive).is_dir())
-                source = self.root / inbox / 'example.csv'
+                self.assertTrue((ws._path(self.root, inbox)).is_dir())
+                self.assertTrue((ws._path(self.root, archive)).is_dir())
+                source = ws._path(self.root, inbox) / 'example.csv'
                 source.write_bytes(b'amount,currency\n12.34,EUR\n')
-                self.run_native('ingest', Source=source, Period='2026-10')
+                filed = self.run_native('ingest', Source=source, Period='2026-10')
+                self.assertEqual(filed['document_number'], '2026-00001')
+                self.assertFalse(source.exists())
                 self.assertEqual(ws.verify_workspace(self.root)['status'], 'ok')
-                self.assertEqual(ws.ingest_document(self.root, source, '2026-10')['status'], 'existing_content')
+                again = ws.ingest_document(self.root, self.root / filed['source_moved_to'], '2026-10')
+                self.assertEqual((again['status'], again['source_moved_to']), ('existing_content', None))
                 ws.configure_workspace(self.root, language='en')
                 self.assertEqual(self.run_native('start', Language='de')['language'], 'en')
                 self.assertEqual(self.run_native('verify')['status'], 'ok')

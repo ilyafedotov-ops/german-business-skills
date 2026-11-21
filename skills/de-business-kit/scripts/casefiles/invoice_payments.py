@@ -142,7 +142,7 @@ def prepare(root, input_path, expected, language="en"):
                       comparison_remaining=None if remaining is None else format(remaining, "f"),
                       compared_net=None if issues else format(net, "f"),
                       unselected_bank_rows=len(bank)-len(seen), language=language)
-        relative = ws._dated(root, "08_correspondence", str(date.today().year), "payment-comparisons/" + uuid.uuid4().hex)
+        relative = ws._dated("08_correspondence", str(date.today().year), "payment-comparisons/" + uuid.uuid4().hex)
         path = ws._inside(root, relative + ".json")
         ws._mkdir(path.parent)
         markdown = render(report)
