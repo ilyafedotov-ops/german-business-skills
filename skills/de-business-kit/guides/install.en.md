@@ -20,7 +20,7 @@ This guide takes you from installing the kit to your first useful answer in abou
 
 The quickest start: in Claude Code, the Claude app or Codex, paste:
 
-> Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills. Follow the repository's installation instructions for my app and use the published release, not a copy of the repository's current files. Check that all seven skills are installed, then tell me how to start a fresh session and try one small example.
+> Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills. Follow the repository's installation instructions for my app and use the published release, not a copy of the repository's current files. Check that all seven skills are installed, then tell me how to start a fresh session and begin the welcome setup.
 
 The assistant should inspect the repository instructions and your actual app/tools,
 then use the supported installation route below. Where a folder choice or plugin
@@ -41,7 +41,9 @@ The sections below are the manual routes if you prefer to do it yourself.
 
 After installation, start a new task/chat and ask:
 
-> Use de-business-kit. Show me how to use this for my situation. Give me three requests I can copy and help me choose one small first task.
+> Use de-business-kit. I just installed the kit. Start the welcome setup: check that everything works and guide me step by step.
+
+The welcome checks the kit, its helper and your folder, then guides you one short step at a time to a private folder and a first task. You can stop or skip a step at any time.
 
 Before installation, your existing assistant reads this guide; the kit cannot
 install itself before its instructions are available. Once available, its general

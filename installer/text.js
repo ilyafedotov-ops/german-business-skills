@@ -306,7 +306,7 @@ window.INSTALLER_TEXT = {
           "Start a **new task** and check that the seven skills below are available: open German Business Kit and its **Skills** tab, or ask Claude which German Business Kit skills it can use."
         ],
         "promptLabel": "Request for Claude",
-        "prompt": "Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills. Follow the repository's installation instructions for my app and use the published release, not a copy of the repository's current files. Check that all seven skills are installed, then tell me how to start a fresh session and try one small example.",
+        "prompt": "Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills. Follow the repository's installation instructions for my app and use the published release, not a copy of the repository's current files. Check that all seven skills are installed, then tell me how to start a fresh session and begin the welcome setup.",
         "manualTitle": "Install manually…",
         "result": {
           "alt": "German Business Kit page in the Claude app after Add: status Added and the kit's skills",
@@ -341,7 +341,7 @@ window.INSTALLER_TEXT = {
           "Start a **new chat in the same project**. Open **Skills** in the sidebar and check that the seven skills below are listed. If they are missing, close and reopen the app."
         ],
         "promptLabel": "Request for Codex",
-        "prompt": "Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills. Follow the repository's installation instructions for my app and use the published release, not a copy of the repository's current files. Check that all seven skills are installed, then tell me how to start a fresh session and try one small example.",
+        "prompt": "Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills. Follow the repository's installation instructions for my app and use the published release, not a copy of the repository's current files. Check that all seven skills are installed, then tell me how to start a fresh session and begin the welcome setup.",
         "manualTitle": "Install manually…",
         "result": {
           "alt": "Codex lists the seven German Business Kit skills in a table",
@@ -788,7 +788,7 @@ window.INSTALLER_TEXT = {
           "Начните **новую задачу** и проверьте, что доступны семь скиллов из списка ниже: откройте German Business Kit и вкладку **Skills** или спросите Claude, какие скиллы German Business Kit ему доступны."
         ],
         "promptLabel": "Запрос для Claude",
-        "prompt": "Установи German Business Kit из https://github.com/ilyafedotov-ops/german-business-skills. Следуй инструкции по установке из репозитория для моего приложения и используй опубликованный выпуск, а не копию текущих файлов репозитория. Проверь, что установлены все семь скиллов, затем скажи, как начать новый сеанс и попробовать небольшой пример.",
+        "prompt": "Установи German Business Kit из https://github.com/ilyafedotov-ops/german-business-skills. Следуй инструкции по установке из репозитория для моего приложения и используй опубликованный выпуск, а не копию текущих файлов репозитория. Проверь, что установлены все семь скиллов, затем скажи, как начать новый сеанс и пройти приветственную настройку.",
         "manualTitle": "Установить вручную…",
         "result": {
           "alt": "Страница German Business Kit в приложении Claude после нажатия Add: статус Added и скиллы набора",
@@ -823,7 +823,7 @@ window.INSTALLER_TEXT = {
           "Начните **новый разговор в том же проекте**. Откройте **Skills** на боковой панели и проверьте, что там семь скиллов из списка ниже. Если их нет, закройте и снова откройте приложение."
         ],
         "promptLabel": "Запрос для Codex",
-        "prompt": "Установи German Business Kit из https://github.com/ilyafedotov-ops/german-business-skills. Следуй инструкции по установке из репозитория для моего приложения и используй опубликованный выпуск, а не копию текущих файлов репозитория. Проверь, что установлены все семь скиллов, затем скажи, как начать новый сеанс и попробовать небольшой пример.",
+        "prompt": "Установи German Business Kit из https://github.com/ilyafedotov-ops/german-business-skills. Следуй инструкции по установке из репозитория для моего приложения и используй опубликованный выпуск, а не копию текущих файлов репозитория. Проверь, что установлены все семь скиллов, затем скажи, как начать новый сеанс и пройти приветственную настройку.",
         "manualTitle": "Установить вручную…",
         "result": {
           "alt": "Codex показывает семь скиллов German Business Kit в таблице",
@@ -1270,7 +1270,7 @@ window.INSTALLER_TEXT = {
           "Starten Sie eine **neue Aufgabe** und prüfen Sie, dass die sieben Skills unten verfügbar sind: Öffnen Sie German Business Kit und den Reiter **Skills** oder fragen Sie Claude, welche Skills von German Business Kit verfügbar sind."
         ],
         "promptLabel": "Anfrage für Claude",
-        "prompt": "Installiere German Business Kit von https://github.com/ilyafedotov-ops/german-business-skills. Folge den Installationsanweisungen des Repositorys für meine App und verwende die veröffentlichte Version, keine Kopie der aktuellen Repository-Dateien. Prüfe, ob alle sieben Skills installiert sind, und sag mir dann, wie ich eine neue Sitzung starte und ein kleines Beispiel ausprobiere.",
+        "prompt": "Installiere German Business Kit von https://github.com/ilyafedotov-ops/german-business-skills. Folge den Installationsanweisungen des Repositorys für meine App und verwende die veröffentlichte Version, keine Kopie der aktuellen Repository-Dateien. Prüfe, ob alle sieben Skills installiert sind, und sag mir dann, wie ich eine neue Sitzung starte und die Willkommens-Einrichtung beginne.",
         "manualTitle": "Manuell installieren…",
         "result": {
           "alt": "Seite von German Business Kit in der Claude-App nach Add: Status Added und die Skills des Kits",
@@ -1305,7 +1305,7 @@ window.INSTALLER_TEXT = {
           "Starten Sie einen **neuen Chat im selben Projekt**. Öffnen Sie **Skills** in der Seitenleiste und prüfen Sie, dass die sieben Skills unten aufgeführt sind. Fehlen sie, schließen Sie die App und öffnen Sie sie erneut."
         ],
         "promptLabel": "Anfrage für Codex",
-        "prompt": "Installiere German Business Kit von https://github.com/ilyafedotov-ops/german-business-skills. Folge den Installationsanweisungen des Repositorys für meine App und verwende die veröffentlichte Version, keine Kopie der aktuellen Repository-Dateien. Prüfe, ob alle sieben Skills installiert sind, und sag mir dann, wie ich eine neue Sitzung starte und ein kleines Beispiel ausprobiere.",
+        "prompt": "Installiere German Business Kit von https://github.com/ilyafedotov-ops/german-business-skills. Folge den Installationsanweisungen des Repositorys für meine App und verwende die veröffentlichte Version, keine Kopie der aktuellen Repository-Dateien. Prüfe, ob alle sieben Skills installiert sind, und sag mir dann, wie ich eine neue Sitzung starte und die Willkommens-Einrichtung beginne.",
         "manualTitle": "Manuell installieren…",
         "result": {
           "alt": "Codex zeigt die sieben Skills von German Business Kit in einer Tabelle",

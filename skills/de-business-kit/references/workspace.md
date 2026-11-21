@@ -81,13 +81,14 @@ The task/question/decision files start as empty arrays. Use the validated `entry
 ## Guided start and demonstration
 
 ```bash
+python3 <skill-directory>/scripts/workspace.py setup-check --folder <folder-to-check>
 python3 <skill-directory>/scripts/workspace.py start --root <private-folder> --year 2026 --language en --mode general
 python3 <skill-directory>/scripts/workspace.py demo --root <new-private-demo-folder> --year 2026 --language ru
 python3 <skill-directory>/scripts/workspace.py doctor --root <private-folder>
 python3 <skill-directory>/scripts/workspace.py unlock --root <private-folder> --expected-sha256 <lock.sha256 from doctor>
 ```
 
-Use [onboarding](onboarding.md) to guide the user instead of making them type commands. `start` resumes an existing workspace without changing preferences or year; arguments select defaults only for a new workspace. `demo` (`en`, `ru` or `de`) requires a new/empty folder and creates the same localized folders as `start`, with synthetic CSVs in the bank and records year folders, preserved originals, a real reconciliation and a demo note above the ordinary localized start guide. It never fills a real business profile. Inspect interrupted demonstrations with `start`/`doctor`; do not rerun initialization over them.
+Use [onboarding](onboarding.md) and the [welcome wizard](welcome.md) to guide the user instead of making them type commands. `setup-check` writes nothing: it reports the kit version, missing sibling skills, other installations, the helper runtime and the folder's state (missing, empty, workspace, unsupported workspace or has files), privacy, sync and write access, with one next action. `start` resumes an existing workspace without changing preferences or year; arguments select defaults only for a new workspace. `demo` (`en`, `ru` or `de`) requires a new/empty folder and creates the same localized folders as `start`, with synthetic CSVs in the bank and records year folders, preserved originals, a real reconciliation and a demo note above the ordinary localized start guide. It never fills a real business profile. Inspect interrupted demonstrations with `start`/`doctor`; do not rerun initialization over them.
 
 ## Runtime review and diagnostics
 

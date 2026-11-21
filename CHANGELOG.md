@@ -6,6 +6,12 @@ Versions follow Semantic Versioning. All releases below are previews, not a
 certification of accounting correctness or desktop compatibility. Historical
 milestones are first published on 2026-10-26; their original commits are retained.
 
+## 0.13.0-preview.1
+
+- **Welcome wizard after installation.** A new user who has just installed the kit, or asks to start, gets a guided welcome in the chat itself (Claude Code, the Claude app or Codex): a read-only setup check, then one short step at a time for language, situation, business folder, data handling and a first task, ending with a summary and a saved task for anything unfinished. Steps use the app's multiple-choice questions where available and numbered options otherwise.
+- **Setup check.** `workspace.py setup-check` and the native `windows.ps1 -Action setup-check` report the kit version, missing skills, a second installed copy, the helper runtime and whether the chosen folder is missing, empty, an existing or unsupported workspace or a folder of files, and whether it is private, synced or writable, with one next action. Both write nothing. The installed skill now knows its version (`assets/version.json`, kept equal to `VERSION` by the release check).
+- The install request now ends by starting the welcome, and the first message after installing is the welcome request in English, Russian and German. Helper commands get a plain description that apps show when they ask for approval.
+
 ## 0.12.0-preview.1
 
 - **New private-workspace folder structure** (breaking for workspaces from earlier previews, which this version refuses without changing them; create a new workspace and import the originals again). One structure in English, Russian or German, created the same way by Python, native Windows, the GUI and the demo:

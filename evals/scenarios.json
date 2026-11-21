@@ -1460,6 +1460,18 @@
         "Separate notification without culpable delay from necessary later quantified correction, explain preparation time to the authority and do not invent a fixed safe two-week delay or guaranteed extension",
         "Identify the affected already filed return and preserve versions/receipts; prepare factual next steps without unnecessary customer-status re-onboarding, invented amounts, evasion accusation, sending or guaranteed immunity"
       ]
+    },
+    {
+      "id": "welcome-wizard-after-install",
+      "prompt": "Use de-business-kit. I just installed the kit. Start the welcome setup: check that everything works and guide me step by step.",
+      "criteria": [
+        "Runs the read-only setup check before suggesting setup and reports kit version, all seven skills, single installation, helper and folder state in plain words without JSON or internal IDs",
+        "Shows one short step per message with a progress line and one decision, recommended choice first, using the host's question tool when available or numbered options otherwise",
+        "Mentions that the app may ask to approve the local helper before the first helper command; runs helpers as single plain commands",
+        "Writes nothing before the user chooses a folder; creates a workspace only with start in an empty or new private folder, never in a Git repository, the kit or a folder of existing files",
+        "Explains where file content goes and offers made-up details first; records runtime facts only when agreed, without a blanket confirmation",
+        "Ends with what is set up, what needs attention, one next action and how to continue later; saves unfinished setup as a task when a workspace exists"
+      ]
     }
   ]
 }

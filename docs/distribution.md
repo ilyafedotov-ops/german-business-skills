@@ -1,4 +1,4 @@
-# Local plugin distribution — v0.12.0-preview.1
+# Local plugin distribution — v0.13.0-preview.1
 
 **New users:** follow the [illustrated setup](../skills/de-business-kit/guides/install.en.md). It covers the Claude plugin marketplace (Cowork, chat and Claude Code) and a project-local Codex copy, without terminal commands. The offline EN/RU/DE [guided setup page](gui.md#guided-setup-page) leads beginners through the same two routes, from account creation to first tasks. This page covers the marketplace contract and advanced source, plugin and update routes.
 
@@ -26,8 +26,8 @@ The marketplace file is read from the default branch; the address works only aft
 For the standalone application, use [application downloads and instructions](gui.md).
 The rest of this page covers the primary skill/plugin bundle. Users do not need
 to build the project. Download the named Codex or Claude ZIP from the latest published
-[release 0.12.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.12.0-preview.1).
-Follow [download verification](releases.md), and extract it into a new folder using
+[release 0.12.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.12.0-preview.1);
+version 0.13.0-preview.1 is prepared in source and not yet published. Follow [download verification](releases.md), and extract it into a new folder using
 Explorer or Finder. Published filenames include the version, for example
 `de-business-kit-0.12.0-preview.1-codex.zip`.
 
