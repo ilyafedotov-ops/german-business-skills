@@ -1485,13 +1485,16 @@ def unlock_workspace(root: PathInput, expected_sha256: str, confirmed_no_writer:
 
 
 def create_demo(root: PathInput, year: int = 2026, language: str = "en") -> Dict[str, Any]:
-    if language not in {"en", "ru"}:
-        raise WorkspaceError("The demo supports en and ru.")
+    if language not in {"en", "ru", "de"}:
+        raise WorkspaceError("The demo supports en, ru and de.")
     # The demo shows the same folders that start creates for real work.
     init_workspace(root, year, language, "bookkeeping")
     location = _workspace(root)
     words = _layout(location)[1]
     period = f"{year}-01"
+    # Inputs sit in the storage-year folders the guides describe for bank files and records.
+    bank_file = _dated("03_banking", str(year), "demo-bank.csv")
+    ledger_file = _dated("04_accounting", str(year), "demo-ledger.csv")
     bank = ("transaction_id,booking_date,amount,currency\n"
             f"DEMO-1,{period}-05,-105.00,EUR\nDEMO-2,{period}-06,500.00,EUR\n"
             f"DEMO-3,{period}-07,-100.00,USD\nDEMO-4,{period}-08,-12.00,EUR\n")
@@ -1503,23 +1506,34 @@ def create_demo(root: PathInput, year: int = 2026, language: str = "en") -> Dict
         marker = _load(_inside(location, MARKER))
         marker["purpose"] = "synthetic_demo"
         _atomic_json(_inside(location, MARKER), marker, replace=True)
-        _write_exclusive(_inside(location, "03_banking/demo-bank.csv"), bank.encode("utf-8"))
-        _write_exclusive(_inside(location, "04_accounting/demo-ledger.csv"), ledger.encode("utf-8"))
-    for source in ("03_banking/demo-bank.csv", "04_accounting/demo-ledger.csv"):
+        _mkdir(_inside(location, bank_file).parent)
+        _mkdir(_inside(location, ledger_file).parent)
+        _write_exclusive(_inside(location, bank_file), bank.encode("utf-8"))
+        _write_exclusive(_inside(location, ledger_file), ledger.encode("utf-8"))
+    for source in (bank_file, ledger_file):
         ingest_document(location, source, period)
-    reconciliation = reconcile(location, "03_banking/demo-bank.csv", "04_accounting/demo-ledger.csv", period)
-    text = ("# Демонстрация на вымышленных данных\n\n"
-            "Это учебная папка. Храните реальные документы отдельно.\n\n"
-            "Сверены 3 группы: EUR 105 с комиссией EUR 5, поступление EUR 500 и расход USD 100. "
-            "Расход EUR 12 не связан с записью: требуется проверка. Валюты не суммируются.\n\n"
-            "Далее: откройте отчёт, найдите несвязанный расход, затем попросите продолжить эту демонстрацию. "
-            "Совпадение сумм не подтверждает налоговую правильность. Ничего не отправлено и не проведено.\n"
-            if language == "ru" else
-            "# Synthetic demonstration\n\nThis is a practice folder. Keep real documents elsewhere.\n\n"
-            "Three groups match: EUR 105 split into expense and EUR 5 fee, EUR 500 income, and USD 100 expense. "
-            "The EUR 12 outflow is unlinked and needs review. Currencies remain separate.\n\n"
-            "Next: open the report, inspect the unmatched outflow, then ask to continue this demonstration. "
-            "Matching amounts do not establish tax correctness. Nothing was posted or submitted.\n")
+    reconciliation = reconcile(location, bank_file, ledger_file, period)
+    text = {
+        "ru": ("# Демонстрация на вымышленных данных\n\n"
+               "Это учебная папка. Храните реальные документы отдельно.\n\n"
+               "Сверены 3 группы: EUR 105 с комиссией EUR 5, поступление EUR 500 и расход USD 100. "
+               "Расход EUR 12 не связан с записью: требуется проверка. Валюты не суммируются.\n\n"
+               "Далее: откройте отчёт, найдите несвязанный расход, затем попросите продолжить эту демонстрацию. "
+               "Совпадение сумм не подтверждает налоговую правильность. Ничего не отправлено и не проведено.\n"),
+        "de": ("# Demonstration mit erfundenen Daten\n\n"
+               "Dies ist ein Übungsordner. Bewahren Sie echte Unterlagen getrennt auf.\n\n"
+               "Drei Gruppen stimmen überein: EUR 105 aufgeteilt in Ausgabe und EUR 5 Gebühr, EUR 500 Einnahme "
+               "und USD 100 Ausgabe. Die Ausgabe von EUR 12 ist keinem Eintrag zugeordnet und muss geprüft werden. "
+               "Währungen werden nicht zusammengerechnet.\n\n"
+               "Weiter: Öffnen Sie den Bericht, prüfen Sie die nicht zugeordnete Ausgabe und bitten Sie dann darum, "
+               "diese Demonstration fortzusetzen. Übereinstimmende Beträge belegen keine steuerliche Richtigkeit. "
+               "Nichts wurde gebucht oder übermittelt.\n"),
+        "en": ("# Synthetic demonstration\n\nThis is a practice folder. Keep real documents elsewhere.\n\n"
+               "Three groups match: EUR 105 split into expense and EUR 5 fee, EUR 500 income, and USD 100 expense. "
+               "The EUR 12 outflow is unlinked and needs review. Currencies remain separate.\n\n"
+               "Next: open the report, inspect the unmatched outflow, then ask to continue this demonstration. "
+               "Matching amounts do not establish tax correctness. Nothing was posted or submitted.\n"),
+    }[language]
     guide = location / words["guide_name"]
     with _locked(location):
         _check_audit(location)
@@ -1542,7 +1556,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         command = commands.add_parser(name, help="Create/resume private work" if name == "start" else "Create a NEW synthetic practice workspace")
         command.add_argument("--root", required=True)
         command.add_argument("--year", type=int, default=date.today().year)
-        command.add_argument("--language", choices=("en", "ru", "de") if name == "start" else ("en", "ru"), default="en")
+        command.add_argument("--language", choices=("en", "ru", "de"), default="en")
         if name == "start":
             command.add_argument("--mode", choices=sorted(MODES), default="general")
     runtime = commands.add_parser("runtime", help="Record assessed processing configuration with local evidence")

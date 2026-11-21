@@ -44,7 +44,7 @@ Primary sources: [EStG §18](https://www.gesetze-im-internet.de/estg/__18.html);
 
 ## 4. Build the registration plan and dependencies
 
-Create tasks in `00_admin/tasks.json` using the workspace's actual schema. If necessary, keep the detailed dependency plan in a Markdown draft under `02_registration/` and link it from the tasks. Each task needs a responsible person, evidence of completion, dependency, status and a sourced deadline or an explicit unresolved deadline.
+Create tasks with `workspace.py entry --collection tasks` (the native-only route has no register writer: keep the plan in the readable Markdown draft described next and say which tasks were not saved), following the [register contract](workspace.md#task-question-and-decision-registers); never edit the register JSON directly. If necessary, keep the detailed dependency plan in a Markdown draft under `02_registration/` and link it from the tasks. Each task needs a responsible person, evidence of completion, dependency, status and a sourced deadline or an explicit unresolved deadline.
 
 | Work item | Dependency / evidence | Completion evidence |
 |---|---|---|
@@ -96,6 +96,6 @@ Before a consequential external action, produce a concrete review containing the
 
 After an authorised submission, check the portal's result and preserve the receipt or Transferticket. Do not infer success from a click, disappearing dialog or locally completed draft. Distinguish `draft`, `submitted` and the later authority outcome in the existing task/state schema. If the response is ambiguous, verify submission history before attempting a duplicate.
 
-Keep form drafts and registration receipts under `02_registration/` or `05_tax/` as applicable. Register evidence in `00_admin/documents.json`. Put original bookkeeping evidence in `06_bookkeeping/YYYY/MM/originals/`, with derived data elsewhere; the chosen folder structure is not an archival compliance certification. Never alter an original document to align with the form.
+Keep form drafts and registration receipts under `02_registration/` or `05_tax/` as applicable. Import evidence files with `desk.py receive` or `workspace.py ingest` (native `-Action ingest`), which copy the exact bytes into the numbered originals folder and register them in the document index; never write the index by hand. Derived data stays elsewhere; the chosen folder structure is not an archival compliance certification. Never alter an original document to align with the form.
 
-Update `01_profile/business.json` only with verified outcomes and clearly labelled user decisions. Link outstanding authority questions in `00_admin/questions.json`, record the next task and report what was prepared, what was actually submitted and what evidence is still outstanding.
+Record verified outcomes and clearly labelled user decisions with `workspace.py record`. Save outstanding authority questions with `workspace.py entry --collection questions`, record the next task and report what was prepared, what was actually submitted and what evidence is still outstanding.

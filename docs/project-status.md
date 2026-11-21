@@ -171,12 +171,13 @@ structure; [dated review](research/workspace-layout-review-2026-11-21.md)). In s
 Python, native Windows, the GUI and the demo: five visible areas, a root overview page
 and internal records in `.business-kit`; assistant files in a work folder instead of the
 inbox; originals numbered per storage year with readable names; imported inbox sources
-filed under Imported; issued-invoice copies under Outgoing invoices; storage-year folders
+filed under Imported, also when imported from the GUI, which lists waiting inbox files; issued-invoice copies under Outgoing invoices; storage-year folders
 for bank and correspondence files; an internal accounting register; and a procedure
 documentation (Verfahrensdokumentation) draft written at setup. The earlier layouts and
 the layout options were removed. Because the preview had no users, folders created by
-earlier previews are refused without changes instead of migrated. Hosted Windows CI has
-not yet run on these changes. Remaining data-model work: retention class and document
+earlier previews are refused without changes instead of migrated. Hosted CI, including
+Windows PowerShell 5.1, passed on these changes before they were merged (PR #36,
+2026-11-21). Remaining data-model work: retention class and document
 direction in the index, and grouping of e-invoice parts.
 
 ## Accounting acceptance

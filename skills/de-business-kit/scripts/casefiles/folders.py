@@ -22,6 +22,76 @@ def directory(path):
             raise ws.WorkspaceError("Linked or reparse-point source paths require a separately inspected physical/export location.")
 
 
+def skip_reason(path, info, imported=None):
+    """Shared skip rules for folder previews; None means a supported file or a folder to enter."""
+    if linked(info):
+        return "link_or_reparse_point"
+    if path == imported:
+        return "already_imported"
+    if (path.name.startswith(".")
+            or getattr(info, "st_file_attributes", 0) & getattr(stat, "FILE_ATTRIBUTE_HIDDEN", 2)
+            or getattr(info, "st_flags", 0) & getattr(stat, "UF_HIDDEN", 0x8000)):
+        return "hidden_entry"
+    if path.suffix.lower() in KEY_SUFFIXES:
+        return "credential_or_key"
+    if stat.S_ISDIR(info.st_mode):
+        return "existing_workspace" if ws._workspace_present(path) else None
+    if not stat.S_ISREG(info.st_mode):
+        return "non_regular_file"
+    if path.suffix.lower() not in ws.EXTENSIONS:
+        return "unsupported_format"
+    if info.st_size > ws.MAX_BYTES:
+        return "file_too_large"
+    return None
+
+
+def inbox(root, max_entries=500, max_depth=4):
+    """Read-only list of files waiting in the workspace inbox; writes no report or history."""
+    root = ws._workspace(root)
+    base = ws._path(root, "00_admin/inbox")
+    imported = ws._path(root, "00_admin/inbox/imported")
+    result = {"folder": ws._physical(root, "00_admin/inbox"), "imported_folder": ws._physical(root, "00_admin/inbox/imported"),
+              "entries": [], "truncated": False}
+    if not base.is_dir():
+        return result
+    pending = [(base, 0)]
+    while pending:
+        parent, depth = pending.pop()
+        try:
+            directory(parent)
+            with os.scandir(parent) as listing:
+                children = sorted(listing, key=lambda item: item.name)
+        except (OSError, ws.WorkspaceError):
+            result["truncated"] = True  # Unreadable or changed folder: show what is known, never fail the view.
+            continue
+        for child in children:
+            path = Path(child.path)
+            try:
+                info = child.stat(follow_symlinks=False)
+            except OSError:
+                result["truncated"] = True
+                continue
+            reason = skip_reason(path, info, imported)
+            if reason in {"hidden_entry", "already_imported"}:
+                continue
+            if reason is None and stat.S_ISDIR(info.st_mode):
+                if depth < max_depth:
+                    pending.append((path, depth + 1))
+                else:
+                    result["truncated"] = True
+                continue
+            if len(result["entries"]) >= max_entries:
+                result["truncated"] = True
+                pending.clear()
+                break
+            row = {"path": path.relative_to(base).as_posix(), "status": "skipped" if reason else "candidate", "reason": reason}
+            if stat.S_ISREG(info.st_mode) and not linked(info):
+                row["size_bytes"] = info.st_size
+            result["entries"].append(row)
+    result["entries"].sort(key=lambda row: row["path"])
+    return result
+
+
 def scan(root, source, max_entries=1000, max_depth=10):
     root = ws._workspace(root)
     source = ws._absolute(source)
@@ -52,35 +122,20 @@ def scan(root, source, max_entries=1000, max_depth=10):
                     entries.append(row)
                     try:
                         info = child.stat(follow_symlinks=False)
-                        if linked(info):
-                            row["reason"] = "link_or_reparse_point"
-                        elif path == imported:
-                            row["reason"] = "already_imported"
-                        elif (child.name.startswith(".")
-                              or getattr(info, "st_file_attributes", 0) & getattr(stat, "FILE_ATTRIBUTE_HIDDEN", 2)
-                              or getattr(info, "st_flags", 0) & getattr(stat, "UF_HIDDEN", 0x8000)):
-                            row["reason"] = "hidden_entry"
-                        elif path.suffix.lower() in KEY_SUFFIXES:
-                            row["reason"] = "credential_or_key"
+                        reason = skip_reason(path, info, imported)
+                        if reason in {None, "unsupported_format", "file_too_large"} and stat.S_ISREG(info.st_mode):
+                            row.update(size_bytes=info.st_size, modified_ns=info.st_mtime_ns)
+                        if reason:
+                            row["reason"] = reason
                         elif stat.S_ISDIR(info.st_mode):
-                            if ws._workspace_present(path):
-                                row["reason"] = "existing_workspace"
-                            elif depth >= max_depth:
+                            if depth >= max_depth:
                                 row["reason"] = "depth_limit"
                                 warnings.add("depth_limit")
                             else:
                                 row["status"] = "directory"
                                 pending.append((path, depth + 1))
-                        elif not stat.S_ISREG(info.st_mode):
-                            row["reason"] = "non_regular_file"
                         else:
-                            row.update(size_bytes=info.st_size, modified_ns=info.st_mtime_ns)
-                            if path.suffix.lower() not in ws.EXTENSIONS:
-                                row["reason"] = "unsupported_format"
-                            elif info.st_size > ws.MAX_BYTES:
-                                row["reason"] = "file_too_large"
-                            else:
-                                row["status"] = "candidate"
+                            row["status"] = "candidate"
                     except OSError:
                         row["reason"] = "unreadable_entry"
                         warnings.add("unreadable_entry")

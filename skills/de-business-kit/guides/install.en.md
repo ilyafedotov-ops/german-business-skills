@@ -159,6 +159,7 @@ A simple question needs no folder. For ongoing work such as receipts, letters or
 > Use de-business-kit. Use my selected business folder. Save a readable result, confirmed facts, open questions and the next action there. Before using real personal documents, explain what content will be sent to the AI service.
 
 - Claude processes the content of the files it reads. Decide what to share before you use real documents.
+- When the assistant saves or imports files, the app may ask you to allow a command such as `python3 …/workspace.py` or, on Windows, `windows.ps1`. This is the kit's own local helper: it works only in your selected folder and contacts no service. Allow it for this task; decline anything that installs software or changes security settings.
 - A cloud-synced Documents or Desktop folder may be less private than you expect.
 - If you already use accounting software, it stays your main record. A question does not force that choice.
 
@@ -246,6 +247,7 @@ Business Assistant/
 | Installed, but Claude does not use it | Start a new task. Check that the plugin is turned on in **Customize → Plugins**, or type **/** and select **de-business-kit**. |
 | Skills appear twice | An older manual copy may also be installed. Keep one installation; never delete your business folder. |
 | The assistant wants to install Python or change security settings | Stop that step. Installing and using the kit needs neither. |
+| The app asks to allow `workspace.py`, `desk.py` or `windows.ps1` | That is the kit's local helper for your selected folder. Allow it for this task. |
 | No access to bank, email or Lexware | Installing the kit does not connect services. Continue with a fictional example or an exported file, and connect each service separately. |
 | Codex: no skills after installation | Check the selected project, the hidden `.agents/skills` folder, all seven folders and a fresh chat. Avoid a nested `skills/skills`. |
 | Something else fails | Note the message, app version, operating system and step number. Remove personal details before asking for help publicly. |

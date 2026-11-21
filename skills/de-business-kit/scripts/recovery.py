@@ -11,6 +11,10 @@ import sys
 import unicodedata
 import uuid
 
+# Isolated mode (python -I) leaves this folder off the import path; the helpers live beside this file.
+if os.path.dirname(os.path.abspath(__file__)) not in sys.path:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 import workspace as ws
 
 SCHEMA = 'german-business-backup'

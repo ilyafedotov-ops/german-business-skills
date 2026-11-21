@@ -7,9 +7,9 @@
   const today = () => new Date().toISOString().slice(0,10);
   let language = 'en', period = today().slice(0,7), snapshot = null, drafts = {}, draftHash = null;
   let route = 'home', editor = null, dirty = false, busy = false, preview = null, pendingConfirm = null;
-  let selectedFiles = [], importOutcome = null, reportOutcome = null, recoveryOutcome = null, snapshotUnavailable = false;
+  let selectedFiles = [], importOutcome = null, inboxOutcome = null, reportOutcome = null, recoveryOutcome = null, snapshotUnavailable = false;
   const requests = new Map();
-  const mutationOps = new Set(['open','receive','document-save','configuration','entry-post','entry-reverse','filing-create','filing-action','report','overview','backup','restore','unlock','draft-save']);
+  const mutationOps = new Set(['open','receive','receive-inbox','document-save','configuration','entry-post','entry-reverse','filing-create','filing-action','report','overview','backup','restore','unlock','draft-save']);
   const routes = new Set(['home','documents','month','taxes','accounts','settings']);
   const icons = {home:'M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9',documents:'M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h7',month:'M4 5h16v16H4zM8 3v4M16 3v4M4 10h16M8 14h3M14 14h2',taxes:'M4 5h16v14H4zM4 6l8 6 8-6',accounts:'M3 7h17l-4-4M21 17H4l4 4'};
   let token = '';
@@ -217,8 +217,21 @@
     const target=errors?'refresh':hasDraft?'resume-work':filingAttention?'inspect-next-filing':tasks.length||empty?'help':pending.length?'review-next':!config?'accounts':'month';
     return intro('homeTitle','homeText')+`<section class="next-step"><h2>${nextTask&&!hasDraft&&!filingAttention?esc(nextTask.title):label(key)}</h2><p>${label(errors?'taskRepair':hasDraft||filingAttention?'coverage':tasks.length?'taskContinueHint':empty?'askTaskHint':'coverage')}</p><div class="actions">${action(button,target,'primary')}${errors?'':action('refresh','refresh')}</div></section>${taskList(tasks)}<dl class="facts"><div><dt>${label('received')}</dt><dd>${docs.length}</dd></div><div><dt>${label('reviewed')}</dt><dd>${docs.filter(item=>item.record.review_status==='reviewed').length}</dd></div><div><dt>${label('recorded')}</dt><dd>${snapshot.accounting?.entries?.length ?? '—'}</dd></div><div><dt>${label('filingCount')}</dt><dd>${snapshot.accounting?.filings?.length ?? '—'}</dd></div></dl><section class="section"><h2>${label('attention')}</h2>${issues()}</section>`;
   }
+  function fileSize(bytes) {
+    if (typeof bytes!=='number') return '';
+    return bytes<1024?`${bytes} B`:bytes<1048576?`${(bytes/1024).toFixed(1)} KiB`:`${(bytes/1048576).toFixed(1)} MiB`;
+  }
+  function inboxPanel() {
+    // Files the user put in the workspace inbox; importing them here files them under Imported, like the assistant does.
+    const box=snapshot.inbox||{entries:[]}, waiting=box.entries.filter(row=>row.status==='candidate'), skipped=box.entries.filter(row=>row.status!=='candidate');
+    const folder=`<strong>${esc(box.folder||'')}</strong>`, imported=`<strong>${esc(box.imported_folder||'')}</strong>`;
+    const body=waiting.length?`<form id="inbox-form"><fieldset class="inbox-files"><legend>${label('inboxChoose')}</legend>${waiting.map(row=>`<label><input type="checkbox" name="inbox-file" value="${esc(row.path)}" checked> <span>${esc(row.path)}</span> <span class="muted">${esc(fileSize(row.size_bytes))}</span></label>`).join('')}</fieldset><div class="grid">${field('inbox-period','storageMonth',period,'month')}${field('inbox-received-on','receivedOn',today(),'date')}</div><button type="submit" class="primary">${label('importInbox')}</button></form>`
+      :`<p class="muted">${label('inboxEmpty').replace('{folder}',folder)}</p>`;
+    const reason=row=>label('skip-'+(['unsupported_format','file_too_large'].includes(row.reason)?row.reason:'other'));
+    return `<section class="panel" aria-labelledby="inbox-title"><h2 id="inbox-title">${label('inboxTitle')}</h2><p class="hint">${label('inboxHint').replace('{folder}',folder).replace('{imported}',imported)}</p>${body}${box.truncated?`<p class="hint">${label('inboxMore')}</p>`:''}${skipped.length?`<div class="section"><h3>${label('inboxSkipped')}</h3><ul>${skipped.map(row=>`<li>${esc(row.path)} <span class="muted">${reason(row)}</span></li>`).join('')}</ul></div>`:''}${inboxOutcome?`<div class="section"><h3>${label('importResult')}</h3>${formatResult(inboxOutcome)}</div>`:''}<div class="actions">${action('checkInbox','refresh')}</div></section>`;
+  }
   function documentsPage() {
-    return intro('documentsTitle','documentsText')+`<section class="panel"><form id="import-form"><div class="field"><label for="document-files">${label('chooseFiles')}</label><input id="document-files" type="file" multiple accept=".pdf,.xml,.png,.jpg,.jpeg,.tif,.tiff,.csv"><p class="hint">${label('importHint')}</p><p id="selected-files" class="hint">${selectedFiles.map(file=>esc(file.name)).join(', ')}</p></div><div class="grid">${field('import-period','storageMonth',period,'month')}${field('received-on','receivedOn',today(),'date')}</div><button type="submit" class="primary">${label('importFiles')}</button></form>${importOutcome?`<div class="section"><h3>${label('importResult')}</h3>${formatResult(importOutcome)}</div>`:''}</section><div class="search">${field('search','search','','search','',false)}</div><div id="document-list">${documentList('')}</div>`;
+    return intro('documentsTitle','documentsText')+inboxPanel()+`<section class="panel"><form id="import-form"><div class="field"><label for="document-files">${label('chooseFiles')}</label><input id="document-files" type="file" multiple accept=".pdf,.xml,.png,.jpg,.jpeg,.tif,.tiff,.csv"><p class="hint">${label('importHint')}</p><p id="selected-files" class="hint">${selectedFiles.map(file=>esc(file.name)).join(', ')}</p></div><div class="grid">${field('import-period','storageMonth',period,'month')}${field('received-on','receivedOn',today(),'date')}</div><button type="submit" class="primary">${label('importFiles')}</button></form>${importOutcome?`<div class="section"><h3>${label('importResult')}</h3>${formatResult(importOutcome)}</div>`:''}</section><div class="search">${field('search','search','','search','',false)}</div><div id="document-list">${documentList('')}</div>`;
   }
   function documentList(query) {
     const docs=(snapshot.documents||[]).filter(item=>(item.record.title+' '+item.original_name).toLocaleLowerCase().includes(query.toLocaleLowerCase()));
@@ -348,6 +361,7 @@
     event.preventDefault();const form=event.target;
     if(form.id==='open-form'){perform(()=>openWorkspace(false));return;}
     if(form.id==='import-form'){perform(importFiles);return;}
+    if(form.id==='inbox-form'){perform(importInbox);return;}
     if(form.id==='backup-form'){perform(async()=>{recoveryOutcome=await api('backup',{destination:$('backup-destination').value});render();notice(t('complete'));});return;}
     if(form.id==='restore-form') {const backup=$('backup-path').value,destination=$('restore-destination').value;confirm(t('restore'),summary([['backupPath',backup],['restoreDestination',destination]]),()=>perform(async()=>{recoveryOutcome=await api('restore',{backup,destination});render();notice(t('complete'));}));return;}
     captureForm(); const value=formValue(form), kind=form.dataset.form;
@@ -389,6 +403,12 @@
     importOutcome=await api('receive',{files,period:$('import-period').value,received_on:$('received-on').value,type:'unknown'});
     if(!(importOutcome.errors||[]).length)selectedFiles=[];
     await refresh();notice((importOutcome.errors||[]).length?t('error'):t('saved'));
+  }
+  async function importInbox() {
+    const files=[...document.querySelectorAll('#inbox-form input[name="inbox-file"]:checked')].map(input=>input.value);
+    if(!files.length)throw new Error(t('noSelection'));
+    inboxOutcome=await api('receive-inbox',{files,period:$('inbox-period').value,received_on:$('inbox-received-on').value,type:'unknown'});
+    await refresh();notice((inboxOutcome.errors||[]).length?t('error'):t('saved'));
   }
   document.addEventListener('click',event=>{
     const link=event.target.closest('a[data-route]');

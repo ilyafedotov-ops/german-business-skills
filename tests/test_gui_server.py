@@ -202,6 +202,40 @@ class GuiTests(unittest.TestCase):
             self.assertTrue(result['errors'])
         self.assertEqual(self.call('status', period='2026-10')['documents'], [])
 
+    def test_inbox_files_are_listed_and_imported_into_the_documents(self):
+        inbox = gui.ws._path(self.app.root, '00_admin/inbox')
+        (inbox / 'scan.pdf').write_bytes(b'%PDF synthetic')
+        (inbox / 'notes.docx').write_bytes(b'unsupported')
+        waiting = self.call('status', period='2026-10')['inbox']
+        self.assertEqual(waiting['folder'], '01 Входящие')
+        self.assertEqual({row['path']: row['status'] for row in waiting['entries']},
+                         {'scan.pdf': 'candidate', 'notes.docx': 'skipped'})
+        result = self.call('receive-inbox', period='2026-10', received_on='2026-10-20', type='unknown', files=['scan.pdf'])
+        self.assertEqual(result['errors'], [])
+        self.assertEqual(result['received'][0]['source_moved_to'], '01 Входящие/Импортировано/2026-10/scan.pdf')
+        self.assertFalse((inbox / 'scan.pdf').exists())
+        status = self.call('status', period='2026-10')
+        self.assertEqual([item['original_name'] for item in status['documents']], ['scan.pdf'])
+        self.assertEqual([row['path'] for row in status['inbox']['entries']], ['notes.docx'])
+
+    def test_inbox_import_accepts_only_listed_waiting_files(self):
+        inbox = gui.ws._path(self.app.root, '00_admin/inbox')
+        (inbox / 'scan.pdf').write_bytes(b'%PDF synthetic')
+        (inbox / 'notes.docx').write_bytes(b'unsupported')
+        imported = gui.ws._path(self.app.root, '00_admin/inbox/imported')
+        (imported / '2026-09').mkdir(parents=True)
+        (imported / '2026-09/old.pdf').write_bytes(b'%PDF old')
+        (self.base / 'outside.pdf').write_bytes(b'%PDF outside')
+        names = ['notes.docx', '../../outside.pdf', 'Импортировано/2026-09/old.pdf', str(self.base / 'outside.pdf'), 'missing.pdf']
+        result = self.call('receive-inbox', period='2026-10', received_on='2026-10-20', type='unknown', files=names)
+        self.assertEqual(([row['name'] for row in result['errors']], result['received']), (names, []))
+        for invalid in ([], ['scan.pdf', 'scan.pdf'], 'scan.pdf'):
+            with self.subTest(files=invalid), self.assertRaises(gui.ws.WorkspaceError):
+                self.call('receive-inbox', period='2026-10', received_on='2026-10-20', type='unknown', files=invalid)
+        self.assertEqual(self.call('status', period='2026-10')['documents'], [])
+        self.assertTrue((self.base / 'outside.pdf').exists())
+        self.assertTrue((imported / '2026-09/old.pdf').exists())
+
     def test_http_requires_session_and_same_origin_and_never_serves_workspace(self):
         server = gui.create_server(self.app)
         thread = threading.Thread(target=server.serve_forever, daemon=True)

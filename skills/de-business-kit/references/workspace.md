@@ -60,7 +60,7 @@ Records store **stable logical references** (left column below), not physical pa
 | `00_admin/tasks.json`, `questions.json`, `decisions.json` | Task, question and decision registers |
 | `00_admin/inbox/` | The user's unsorted files awaiting selected import; never write assistant files here |
 | `00_admin/inbox/imported/YYYY-MM/` | Sources filed after their import from the inbox |
-| `00_admin/work/` | Assistant input/answer files and folder previews |
+| `00_admin/work/` | Assistant input/answer files and folder previews. Delete an input for `record`, `entry`, `runtime`, `catalog-save` or `proposal-save` after the writer succeeds: the record and its history keep the content. Keep inputs that a preparation (`workflows.py`, `payments.py`, payment follow-up) lists as a source, because later checks re-read them. |
 | `00_admin/overview.html` | The root overview page, refreshed by the Python and native overviews |
 | `01_profile/business.json` | Canonical profile; flat `facts` mapping |
 | `02_registration/`, `05_tax/YYYY/` | Draft worksheets, official receipts and responses; tax consultations in `05_tax/YYYY/consultations/` |
@@ -87,7 +87,7 @@ python3 <skill-directory>/scripts/workspace.py doctor --root <private-folder>
 python3 <skill-directory>/scripts/workspace.py unlock --root <private-folder> --expected-sha256 <lock.sha256 from doctor>
 ```
 
-Use [onboarding](onboarding.md) to guide the user instead of making them type commands. `start` resumes an existing workspace without changing preferences or year; arguments select defaults only for a new workspace. `demo` (`en` or `ru`) requires a new/empty folder and creates the same localized folders as `start`, with synthetic CSVs, preserved originals, a real reconciliation and a demo note above the ordinary localized start guide. It never fills a real business profile. Inspect interrupted demonstrations with `start`/`doctor`; do not rerun initialization over them.
+Use [onboarding](onboarding.md) to guide the user instead of making them type commands. `start` resumes an existing workspace without changing preferences or year; arguments select defaults only for a new workspace. `demo` (`en`, `ru` or `de`) requires a new/empty folder and creates the same localized folders as `start`, with synthetic CSVs in the bank and records year folders, preserved originals, a real reconciliation and a demo note above the ordinary localized start guide. It never fills a real business profile. Inspect interrupted demonstrations with `start`/`doctor`; do not rerun initialization over them.
 
 ## Runtime review and diagnostics
 

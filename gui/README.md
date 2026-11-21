@@ -22,7 +22,9 @@ to be installed for the packaged application.
    Continue with your assistant prepares a request to copy into your assistant;
    it does not open an AI session or mark the task complete. For a document task,
    add a small batch of PDF, XML, image or CSV documents (up to 30 files and 12 MiB
-   per batch) and inspect the per-file results.
+   per batch) and inspect the per-file results. Files you put in the workspace's
+   `01 Inbox` folder are listed on the Documents page; importing them there moves
+   each one to `01 Inbox/Imported`, just as an import by the assistant does.
 3. When the task involves accounting, choose where authoritative accounts are kept. Existing software remains
    authoritative; local entry posting requires an explicit local EÜR choice.
 4. For document/accounting work, review documents, save unfinished forms as drafts,

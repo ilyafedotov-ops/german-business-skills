@@ -12,6 +12,8 @@ description: >-
 
 A bundle of seven skills supports the lifecycle of a natural-person entrepreneur
 in Germany. Read the [shared context and execution contract](references/shared-context.md).
+Read references with file tools; run each helper script as one plain command,
+without shell variables or chained commands.
 One profile covers the person's activities, decisions and evidence; selecting a
 skill never creates another profile or changes tax facts. Start with the user's
 requested result; no GUI, workspace or accounting choice is required for a simple
