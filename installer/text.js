@@ -322,7 +322,7 @@ window.INSTALLER_TEXT = {
         "github": "This is the project's public page on GitHub. You do not need a GitHub account.",
         "review": "Anthropic reviews plugins in its own directory, not plugins added by address. This address installs the project's verified release.",
         "shotAlt": "Claude desktop dialog for adding a marketplace, with the project address entered and the Sync button",
-        "shotCaption": "Actual Claude desktop app 3.6556.2 on macOS, captured on 26 October 2026 before selecting Sync. Labels may differ in your version.",
+        "shotCaption": "The real Claude app on 21 November 2026, before selecting Sync. Labels may differ in your version.",
         "diagram": ["Cowork", "Paste request", "Install", "New task"]
       },
       "openai": {
@@ -804,7 +804,7 @@ window.INSTALLER_TEXT = {
         "github": "Это публичная страница проекта на GitHub. Аккаунт GitHub не нужен.",
         "review": "Anthropic проверяет плагины из своего каталога, но не плагины, добавленные по адресу. Этот адрес устанавливает проверенный выпуск проекта.",
         "shotAlt": "Окно Claude для добавления маркетплейса с введённым адресом проекта и кнопкой Sync",
-        "shotCaption": "Настоящее приложение Claude 3.6556.2 на macOS, снимок от 26 октября 2026 года до нажатия Sync. В вашей версии названия могут отличаться.",
+        "shotCaption": "Настоящее приложение Claude, 21 ноября 2026 года, до нажатия Sync. В вашей версии названия могут отличаться.",
         "diagram": ["Cowork", "Вставить запрос", "Install", "Новая задача"]
       },
       "openai": {
@@ -1286,7 +1286,7 @@ window.INSTALLER_TEXT = {
         "github": "Das ist die öffentliche Projektseite auf GitHub. Ein GitHub-Konto brauchen Sie nicht.",
         "review": "Anthropic prüft Plugins im eigenen Verzeichnis, nicht per Adresse hinzugefügte Plugins. Diese Adresse installiert die geprüfte Veröffentlichung des Projekts.",
         "shotAlt": "Claude-Dialog zum Hinzufügen eines Marketplace mit eingetragener Projektadresse und der Schaltfläche Sync",
-        "shotCaption": "Echte Claude-Desktop-App 3.6556.2 unter macOS, aufgenommen am 26. Oktober 2026 vor dem Auswählen von Sync. Bezeichnungen können in Ihrer Version abweichen.",
+        "shotCaption": "Die echte Claude-App am 21. November 2026 vor dem Auswählen von Sync. Bezeichnungen können in Ihrer Version abweichen.",
         "diagram": ["Cowork", "Anfrage einfügen", "Install", "Neue Aufgabe"]
       },
       "openai": {

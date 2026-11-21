@@ -418,8 +418,8 @@
 
   function screenshot(info) {
     const source = LINKS.local.screenshot;
-    const image = h('img', { src: source, alt: info.shotAlt, width: '4096', height: '2076', decoding: 'async' });
-    const large = h('img', { src: source, alt: info.shotAlt, width: '4096', height: '2076', decoding: 'async' });
+    const image = h('img', { src: source, alt: info.shotAlt, width: '1100', height: '786', decoding: 'async' });
+    const large = h('img', { src: source, alt: info.shotAlt, width: '1100', height: '786', decoding: 'async' });
     const body = h('div', { class: 'lightbox-body' }, large);
     const zoom = h('button', { type: 'button', 'aria-pressed': 'false', onclick: () => {
       const zoomed = zoom.getAttribute('aria-pressed') !== 'true';
