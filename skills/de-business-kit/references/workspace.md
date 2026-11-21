@@ -26,9 +26,9 @@ All relative input paths below are relative to `--root`, not the current shell d
 
 ## Files and state
 
-New CLI `init` and `start` use five everyday folders in `en`, `ru` or `de`, plus `.business-kit` for internal records and a localized root start guide. Folder language is pinned separately in `.workspace-layout.json` and the workspace marker. Include both the internal area and descriptor in backups. `--layout legacy` explicitly selects the old layout; existing workspaces resume unchanged. No automatic migration is implemented.
+New CLI `init` and `start` use five everyday folders in `en`, `ru` or `de`, plus `.business-kit` for internal records and a localized root start guide. Folder language is pinned separately in `.workspace-layout.json` and the workspace marker. Include both the internal area and descriptor in backups. New workspaces use layout version 2 by default; `--layout localized` selects version 1 and `--layout legacy` the old numbered folders. Existing workspaces resume unchanged. No automatic migration is implemented.
 
-`--layout v2` opts in to the next layout version (descriptor `schema_version` 2); it is not the default yet. In v2 the HTML overview is one localized page at the workspace root (`OVERVIEW.html`, `ОБЗОР.html`, `ÜBERSICHT.html`) refreshed by the Python and native overviews; the accounting register is internal (`.business-kit/admin/accounting-register.json`); `04_accounting/procedure` is reserved for procedure documentation; and bank normalization and correspondence writers save new files under a storage-year folder (`03_banking/<year>/…`, `08_correspondence/<year>/…`). A storage year is not a tax-period determination. Kits that know only version 1 refuse a v2 workspace instead of misreading it. Check `layout_version` in the `folders` output before choosing a destination.
+In layout version 2 (descriptor `schema_version` 2) the HTML overview is one localized page at the workspace root (`OVERVIEW.html`, `ОБЗОР.html`, `ÜBERSICHT.html`) refreshed by the Python and native overviews; the accounting register is internal (`.business-kit/admin/accounting-register.json`); `04_accounting/procedure` is reserved for procedure documentation; and bank normalization and correspondence writers save new files under a storage-year folder (`03_banking/<year>/…`, `08_correspondence/<year>/…`). Originals get a running number per storage year and a readable name, such as `2026-00007_invoice.pdf`; the index keeps the hash and exact original name. Copies of issued invoices are kept in `06_bookkeeping/<year>/<month>/issued/` by issue date, and other invoice evidence under the correspondence year. A file imported from the managed inbox moves to `00_admin/inbox/imported/<YYYY-MM>/` afterwards, never overwriting; sources elsewhere stay untouched. A storage year is not a tax-period determination. Kits that know only version 1 refuse a v2 workspace instead of misreading it. Check `layout_version` in the `folders` output before choosing a destination.
 
 The table below lists **stable logical references**, not necessarily physical paths. Before using ordinary file tools, run `workspace.py folders --root <private-folder>` (or native `-Action folders`) and translate the longest matching prefix. Under the document archive, `originals`, `derived` and `proposals` also have translated names. Prefer the actual paths returned by operations. Never create old English directories alongside a localized workspace. See `assets/folder-layouts.json` for the shared mapping. The low-level Python `init_workspace` API retains its legacy default for existing callers; `start_workspace` defaults to localized folders.
 
@@ -46,6 +46,7 @@ The table below lists **stable logical references**, not necessarily physical pa
 | `02_registration/`, `05_tax/YYYY/` | Draft worksheets, official receipts and responses; tax consultations in `05_tax/YYYY/consultations/` |
 | `03_banking/`, `04_accounting/` | Provider requirements, statements/normalized files, workflow agreements |
 | `06_bookkeeping/YYYY/MM/originals/` | Immutable-by-workflow original copies; no legal immutability guarantee |
+| `06_bookkeeping/YYYY/MM/issued/` | v2: copies of issued invoices, by issue date |
 | `06_bookkeeping/YYYY/MM/derived/` | OCR, extracted facts and normalized data |
 | `06_bookkeeping/YYYY/MM/proposals/` | Legacy proposal files; new validated records use `00_admin/casework.json` |
 | `07_exports/YYYY-MM/` | Generated reconciliation and optional records archives |
@@ -231,7 +232,7 @@ python3 <skill-directory>/scripts/workspace.py verify --root /absolute/private-w
 python3 <skill-directory>/scripts/workspace.py status --root /absolute/private-workspace
 ```
 
-Intake accepts regular PDF, XML, PNG, JPG/JPEG, TIF/TIFF and CSV files, at most 50 MiB. It reads bytes without executing, OCRing or parsing active content, gives the stored copy a SHA-256 filename, and indexes original name, size, hash, storage period and import time. Originals are not overwritten. Identical bytes reuse an indexed document only after integrity verification; this is not a conclusion about business duplicates. Different scans of the same invoice still need business-level review.
+Intake accepts regular PDF, XML, PNG, JPG/JPEG, TIF/TIFF and CSV files, at most 50 MiB. It reads bytes without executing, OCRing or parsing active content, names the stored copy by its SHA-256 (layouts before v2) or by a running document number and readable name (v2), and indexes original name, size, hash, storage period and import time. Originals are not overwritten. Identical bytes reuse an indexed document only after integrity verification; this is not a conclusion about business duplicates. Different scans of the same invoice still need business-level review.
 
 `verify` checks indexed original integrity and reports unexpected original files requiring review. It does not validate tax treatment, completeness of received documents, XML business rules, legal retention or the integrity of the audit history itself. The user can alter files and their index; this is not a tamper-proof archive. Never label a successful hash check GoBD certification.
 
@@ -295,6 +296,6 @@ Use [document workflow](document-workflow.md) for `desk.py` commands and additiv
 
 ## Creation defaults and lock evidence
 
-New `init` and `start` workspaces default to English unless a language is explicitly selected. The low-level Python `init_workspace` API retains its legacy layout default for existing callers; CLI `init` and `start` default to localized folders. Resuming a workspace preserves its language and physical folders. Never rename existing folders to align defaults.
+New `init` and `start` workspaces default to English unless a language is explicitly selected. The low-level Python `init_workspace` API retains its legacy layout default for existing callers; Python `start_workspace` and CLI `init`/`start` default to layout v2. Resuming a workspace preserves its language and physical folders. Never rename existing folders to align defaults.
 
 Python unlock preserves the exact captured lock bytes as a `.lock` history file as well as readable metadata. Native diagnosis/recovery is described in [native Windows](native-windows.md#diagnose-and-recover-a-remaining-lock).

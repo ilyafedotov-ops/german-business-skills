@@ -11,9 +11,10 @@ function Reject([scriptblock]$operation) {
 }
 $utf8 = New-Object Text.UTF8Encoding($false)
 try {
-    foreach ($language in @('en','ru','de')) {
-        $root=Join-Path $base $language
-        & $kit -Action start -Root $root -Year 2026 -Language $language | Out-Null
+    foreach ($run in @(@('localized','en'),@('localized','ru'),@('localized','de'),@('v2','en'),@('v2','ru'),@('v2','de'))) {
+        $layout=$run[0]; $language=$run[1]
+        $root=Join-Path $base ($layout+'-'+$language)
+        & $kit -Action start -Root $root -Year 2026 -Language $language -Layout $layout | Out-Null
         $folders=& $kit -Action folders -Root $root | ConvertFrom-Json
         $admin=Join-Path $root $folders.paths.'00_admin'
         $empty=& $kit -Action overview -Root $root -Period '2026-10' | ConvertFrom-Json
@@ -51,7 +52,8 @@ try {
         Reject { & $kit -Action overview -Root $root -Period '2026-10' }
         Assert ([IO.File]::ReadAllText((Join-Path $root '.workspace.lock')) -eq 'other writer') 'Other lock removed'
         [IO.File]::Delete((Join-Path $root '.workspace.lock'))
-        $register=Join-Path $root ($folders.paths.'04_accounting'+'/register.json')
+        $registerEntry=$folders.paths.PSObject.Properties['04_accounting/register.json']
+        $register=Join-Path $root $(if ($null -ne $registerEntry) { $registerEntry.Value } else { $folders.paths.'04_accounting'+'/register.json' })
         [IO.File]::WriteAllText($register,'{"schema_version":99}',$utf8)
         $broken=& $kit -Action overview -Root $root -Period '2026-10' | ConvertFrom-Json
         Assert ($broken.health -eq 'needs_review') 'Broken accounting hidden'

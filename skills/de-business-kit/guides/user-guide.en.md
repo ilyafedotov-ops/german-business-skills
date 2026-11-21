@@ -138,7 +138,7 @@ For ongoing work, choose a private permanent folder such as **My business**, sep
 
 The assistant manages the supporting records. Ask it to link the saved result; you should not have to edit technical files or remember internal IDs. It should distinguish facts you supplied, checked facts and assumptions, and ask before treating an uncertain interpretation as a lasting fact. When a fact changes, give the effective date if you know it.
 
-A new folder has everyday areas for **Inbox, Documents, Accounts, Taxes and Business**. Folder names can be English, Russian or German. Keep an existing folder layout and its original files intact; ask the assistant to find documents by name, date or purpose. Changing conversation language does not rename folders. The Inbox is only for your files: the assistant keeps previews and prepared inputs in the internal `.business-kit` folder.
+A new folder has everyday areas for **Inbox, Documents, Accounts, Taxes and Business**. Folder names can be English, Russian or German. Keep an existing folder layout and its original files intact; ask the assistant to find documents by name, date or purpose. Changing conversation language does not rename folders. The Inbox is only for your files: the assistant keeps previews and prepared inputs in the internal `.business-kit` folder. In new workspaces, `OVERVIEW.html` shows the latest saved overview, imported files move to `01 Inbox/Imported/`, and saved originals get a running number such as `2026-00007_invoice.pdf`. Older workspaces keep their earlier folders.
 
 ## Where results are saved
 
@@ -151,10 +151,10 @@ their location; the assistant should link them rather than reorganize them.
 | --- | --- |
 | Ask a general question | Answer in chat. If you ask to save it, keep the note with the related topic below. |
 | Plan a business or fill registration forms | `05 Business/Registration/`, with a small case folder only when needed. |
-| Prepare a proposal, contract, invoice draft or customer reply | `05 Business/Correspondence/<case>/`; recipient files and private review notes are separate. Issued documents remain in the chosen invoicing system and preserved evidence. |
-| Import receipts or supplied originals | `01 Inbox/` for initial selection, then preserved copies in `02 Documents/<year>/<month>/Originals/` through the import workflow. Processed copies appear separately when needed. |
+| Prepare a proposal, contract, invoice draft or customer reply | `05 Business/Correspondence/<year>/<case>/`; recipient files and private review notes are separate. Issued documents remain in the chosen invoicing system; a preserved copy of each issued invoice is kept in `02 Documents/<year>/<month>/Outgoing invoices/`. |
+| Import receipts or supplied originals | `01 Inbox/` for initial selection, then numbered preserved copies in `02 Documents/<year>/<month>/Originals/` through the import workflow; the imported file moves to `01 Inbox/Imported/<year>-<month>/`. Processed copies appear separately when needed. |
 | Compare banks or work with statements | `03 Accounts/Bank/`; accounting-system comparisons/working notes use `03 Accounts/Records/`. |
-| Compare insurance/software other than accounting, or plan a connection | `05 Business/Correspondence/Services/<case>/`; readable findings only, never passwords or API keys. Existing service/source records are reused. |
+| Compare insurance/software other than accounting, or plan a connection | `05 Business/Correspondence/<year>/Services/<case>/`; readable findings only, never passwords or API keys. Existing service/source records are reused. |
 | Ask a tax question, estimate, prepare a return or answer Finanzamt | `04 Taxes/<year>/`; link the relevant original, sources, draft and observed receipt where available. |
 | Reconcile or prepare accounting reports/exports | `03 Accounts/Reports/`; these reports do not replace the chosen ledger or a full backup. |
 | Change, hire, pause or close | Keep a plan in `05 Business/Registration/<case>/`, related letters in Correspondence and tax material in the relevant tax year. Link the parts from one existing task. |

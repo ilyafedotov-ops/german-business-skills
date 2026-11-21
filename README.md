@@ -161,18 +161,22 @@ or German folder names during setup. This example shows the English layout:
 ```text
 My business/
 ├── START-HERE.md          Where to begin and how to continue
+├── OVERVIEW.html         Latest saved overview; ask the assistant to refresh it
 ├── 01 Inbox/             Unsorted files awaiting selected import
+│   └── Imported/2026-10/   Files moved here after their import
 ├── 02 Documents/         Preserved source documents
-│   └── 2026/10/Originals/  Created when October documents are imported
+│   └── 2026/10/
+│       ├── Originals/          Numbered copies, e.g. 2026-00007_invoice.pdf
+│       └── Outgoing invoices/  Copies of invoices you issued
 ├── 03 Accounts/
-│   ├── Bank/             Statements, bank comparisons and working files
-│   ├── Records/          Accounting records and accounting-system notes
+│   ├── Bank/2026/        Statements, bank comparisons and working files
+│   ├── Records/          Accounting-system notes and working agreements
 │   └── Reports/          Reconciliation results, reports and selected exports
 ├── 04 Taxes/
 │   └── 2026/             Tax questions, estimates, forms and filing evidence
 ├── 05 Business/
 │   ├── Registration/     Launch plans, registration and activity changes
-│   └── Correspondence/   Customer cases, letters and other service comparisons
+│   └── Correspondence/2026/  Customer cases, letters and other service comparisons
 ├── .business-kit/        Saved profile, tasks, questions, decisions, history and assistant working files
 └── .workspace-layout.json  Internal folder-language mapping
 ```

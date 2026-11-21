@@ -24,6 +24,7 @@ import stat
 import sys
 import time
 from typing import Any, Dict, List, Optional, Union
+import unicodedata
 import uuid
 
 
@@ -105,6 +106,7 @@ def _layout(root: Path):
     if record['schema_version'] == 2:
         # v2 adds file-level entries; longest-prefix matching lets them override their folder.
         words['paths'] = {**words['paths'], **words['v2_paths']}
+        words['guide'] = words['guide'] + words['v2_guide_note']
     if any((root / prefix.split('/')[0]).exists() for prefix in words['paths']):
         raise WorkspaceError('Conflicting legacy and localized directories; preserve both for review.')
     return record, words
@@ -152,6 +154,67 @@ def _layout_version(root: Path) -> Optional[int]:
     """None for the unversioned legacy layout, otherwise the descriptor version."""
     layout = _layout(root)
     return layout[0]['schema_version'] if layout else None
+
+
+def _portable_text(text: str) -> str:
+    """Readable, Windows-safe file name part; records keep the exact original value."""
+    stem = re.sub(r'[<>:"/\\|?*\x00-\x1f\x7f]', "-", unicodedata.normalize("NFC", text))
+    stem = re.sub(r"\s+", " ", stem).strip(" .-")[:60].rstrip(" .-")
+    return stem or "document"
+
+
+def _portable_stem(name: str) -> str:
+    return _portable_text(Path(name).stem)
+
+
+def _next_document_number(registry: Dict[str, Any], year: str) -> str:
+    """Running number per storage year; gaps or duplicates stay visible to verify."""
+    used = [int(item["document_number"][5:]) for item in registry["documents"]
+            if isinstance(item.get("document_number"), str) and re.fullmatch(r"[0-9]{4}-[0-9]{5}", item["document_number"])
+            and item["document_number"][:4] == year]
+    number = max(used, default=0) + 1
+    if number > 99999:
+        raise WorkspaceError("The yearly document number range is exhausted; review the index.")
+    return f"{year}-{number:05d}"
+
+
+def _original_name_matches(name: str, document: Dict[str, Any]) -> bool:
+    """Earlier layouts name originals by SHA-256; v2 by document number and a readable stem."""
+    stem = Path(name).stem
+    if stem == document.get("sha256"):
+        return True
+    number, period = document.get("document_number"), document.get("period")
+    return (isinstance(number, str) and isinstance(period, str) and re.fullmatch(r"[1-9][0-9]{3}-[0-9]{5}", number) is not None
+            and number[:4] == period[:4] and stem.startswith(number + "_") and len(stem) > len(number) + 1)
+
+
+def _file_inbox_source(location: Path, source: Path, digest: str, period: str) -> Optional[str]:
+    """Layout v2: after a committed import, move a source taken from the managed inbox to
+    Imported/<period> so the inbox shows only pending files. Never overwrites or deletes."""
+    if _layout_version(location) != 2:
+        return None
+    inbox, imported = _path(location, "00_admin/inbox"), _path(location, "00_admin/inbox/imported")
+    if inbox not in source.parents or source == imported or imported in source.parents:
+        return None
+    try:
+        if hashlib.sha256(_read_regular(source)).hexdigest() != digest:
+            return None  # Changed after it was read; leave it for review.
+        folder = imported / period
+        _mkdir(folder)
+        for count in range(1, 1000):
+            target = folder / (source.name if count == 1 else f"{source.stem} ({count}){source.suffix}")
+            if not target.exists() and not target.is_symlink():
+                break
+        else:
+            return None
+        os.rename(source, target)  # Same folder tree; Windows refuses an existing target.
+        _sync_directory(source.parent)
+        _sync_directory(folder)
+    except (OSError, WorkspaceError):
+        return None  # The import stands; the source simply stays in the inbox.
+    moved = target.relative_to(location).as_posix()
+    _audit(location, "inbox_source_filed", {"to": moved})
+    return moved
 
 
 def _dated(root: Path, area: str, year: str, rest: str) -> str:
@@ -962,9 +1025,15 @@ def ingest_document(root: PathInput, source: PathInput, period: str) -> Dict[str
                 if len(saved) != existing.get("size_bytes") or hashlib.sha256(saved).hexdigest() != digest:
                     raise WorkspaceError("Existing indexed original failed integrity verification; no bytes were overwritten.")
                 _audit(location, "document_content_seen_again", {"document_id": existing.get("document_id")})
-                return {"status": "existing_content", "document_id": existing.get("document_id"),
+                seen = {"status": "existing_content", "document_id": existing.get("document_id"),
                         "review_note": "Identical bytes already indexed; this is not a tax duplicate determination."}
-        relative = f"06_bookkeeping/{period[:4]}/{period[5:]}/originals/{digest}{suffix}"
+                if _layout_version(location) == 2:
+                    seen["source_moved_to"] = _file_inbox_source(location, source_path, digest, period)
+                return seen
+        # Layout v2 names originals readably with a running number; the hash stays in the index.
+        number = _next_document_number(registry, period[:4]) if _layout_version(location) == 2 else None
+        name = f"{number}_{_portable_stem(source_path.name)}{suffix}" if number else f"{digest}{suffix}"
+        relative = f"06_bookkeeping/{period[:4]}/{period[5:]}/originals/{name}"
         destination = _inside(location, relative)
         _mkdir(destination.parent)
         created = _write_exclusive(destination, data)
@@ -973,6 +1042,8 @@ def ingest_document(root: PathInput, source: PathInput, period: str) -> Dict[str
                     "size_bytes": len(data), "original_name": source_path.name,
                     "path": relative, "period": period, "imported_at": _now(),
                     "status": "imported", "provider_state": "unknown"}
+        if number:
+            document["document_number"] = number
         registry["documents"].append(document)
         try:
             _atomic_json(_inside(location, DOCUMENTS), registry, replace=True)
@@ -986,8 +1057,13 @@ def ingest_document(root: PathInput, source: PathInput, period: str) -> Dict[str
                 pass
             raise
         _audit(location, "document_imported", {"document_id": document["document_id"], "sha256": digest})
-    return {"status": "imported", "document_id": document["document_id"], "size_bytes": len(data),
-            "period_note": "Storage period only; no tax date or tax treatment inferred."}
+        moved = _file_inbox_source(location, source_path, digest, period)
+    result = {"status": "imported", "document_id": document["document_id"], "size_bytes": len(data),
+              "path": _physical(location, relative),
+              "period_note": "Storage period only; no tax date or tax treatment inferred."}
+    if number:
+        result.update(document_number=number, source_moved_to=moved)
+    return result
 
 
 def _scan_originals(location: Path):
@@ -1033,7 +1109,7 @@ def verify_workspace(root: PathInput) -> Dict[str, Any]:
     location = _workspace(root)
     registry = _documents(location)
     errors = []
-    ids, paths = set(), set()
+    ids, paths, numbers = set(), set(), set()
     for number, document in enumerate(registry["documents"], 1):
         identifier = document.get("document_id")
         label = identifier if isinstance(identifier, str) else f"registry-entry-{number}"
@@ -1050,8 +1126,12 @@ def verify_workspace(root: PathInput) -> Dict[str, Any]:
                 raise WorkspaceError("Indexed path must be relative.")
             path = _inside(location, relative)
             expected_parent = _path(location, f"06_bookkeeping/{period[:4]}/{period[5:]}/originals")
-            if path.parent != expected_parent or path.stem != digest or path.suffix not in EXTENSIONS:
+            if path.parent != expected_parent or path.suffix not in EXTENSIONS or not _original_name_matches(path.name, document):
                 raise WorkspaceError("Indexed original path does not match the document metadata.")
+            if "document_number" in document:
+                if document["document_number"] in numbers:
+                    raise WorkspaceError("Duplicate document number.")
+                numbers.add(document["document_number"])
             canonical = path.relative_to(location).as_posix()
             if canonical in paths:
                 raise WorkspaceError("Duplicate indexed path.")
@@ -1304,7 +1384,7 @@ def workspace_status(root: PathInput) -> Dict[str, Any]:
 
 
 def start_workspace(root: PathInput, year: Optional[int] = None, language: str = "en",
-                    mode: str = "general", layout: str = "localized") -> Dict[str, Any]:
+                    mode: str = "general", layout: str = "v2") -> Dict[str, Any]:
     location = _absolute(root)
     _check_chain(location)
     _private_boundary(location)
@@ -1389,8 +1469,8 @@ def unlock_workspace(root: PathInput, expected_sha256: str, confirmed_no_writer:
 def create_demo(root: PathInput, year: int = 2026, language: str = "en") -> Dict[str, Any]:
     if language not in {"en", "ru"}:
         raise WorkspaceError("The demo supports en and ru.")
-    # The demo shows the same localized folders that start creates for real work.
-    init_workspace(root, year, language, "bookkeeping", layout="localized")
+    # The demo shows the same folders that start creates for real work.
+    init_workspace(root, year, language, "bookkeeping", layout="v2")
     location = _workspace(root)
     words = _layout(location)[1]
     period = f"{year}-01"
@@ -1446,7 +1526,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         command.add_argument("--year", type=int, default=date.today().year)
         command.add_argument("--language", choices=("en", "ru", "de") if name == "start" else ("en", "ru"), default="en")
         if name == "start":
-            command.add_argument("--layout", choices=("localized", "legacy", "v2"), default="localized")
+            command.add_argument("--layout", choices=("v2", "localized", "legacy"), default="v2")
             command.add_argument("--mode", choices=sorted(MODES), default="general")
     runtime = commands.add_parser("runtime", help="Record assessed processing configuration with local evidence")
     runtime.add_argument("--root", required=True)
@@ -1460,7 +1540,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     entry.add_argument("--expected-sha256", help="Required current entry hash for an update")
     init = commands.add_parser("init", help="Create an empty private workspace outside Git and skill folders")
     init.add_argument("--root", required=True)
-    init.add_argument("--layout", choices=("localized", "legacy", "v2"), default="localized")
+    init.add_argument("--layout", choices=("v2", "localized", "legacy"), default="v2")
     init.add_argument("--year", required=True, type=int)
     init.add_argument("--language", choices=("ru", "en", "de"), default="en",
                       help="Assistant language preference; German report templates are not yet complete")

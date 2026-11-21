@@ -4,6 +4,40 @@
 
 Evidence index updated **2026-11-21**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## Workspace layout Phase 2 (v2 default) — 2026-11-21
+
+Local branch `claude/workspace-layout-phase0` after `cec4088` completes layout v2 and makes it
+the default for new workspaces, per the [workspace layout review](research/workspace-layout-review-2026-11-21.md). Checks ran on macOS arm64:
+
+- `tests/test_layout_v2.py` (26 tests) passed, adding: running document numbers per
+  storage year with readable, Windows-safe names (forbidden characters, 120-character and
+  empty names); identical bytes are not renumbered; `verify` flags a renamed original;
+  legacy stays hash-named; issued-invoice copies land in `Outgoing invoices` by issue
+  month while other invoice evidence uses the correspondence year; the workspace inbox
+  can be previewed with `Imported` skipped and internal folders still refused; an inbox
+  import files the source without overwriting (`Rechnung (2).pdf`), including identical
+  content, and leaves outside sources and v1 inboxes untouched; v2 is the default for
+  `start`, the CLI and the demo, with the v2 note only in v2 start guides. A legacy
+  issued-invoice path assertion was added to `tests/test_invoicing.py`, and two packaging
+  checks now use the returned overview `json_path` instead of deriving it from the page.
+- The full unit suite passed (515 tests; 11 skipped because they require Windows or a
+  configured PowerShell container image). `tools/check_package.py` passed on a clean copy;
+  `tools/check_doc_links.py` (510 links/anchors, 33 files) and `git diff --check` passed.
+- `npm run test:gui` and `npm run test:overview` passed in **Chromium** and **WebKit**
+  with GUI-created workspaces now on v2.
+- Under PowerShell 7 on macOS (`TMPDIR` on a non-symlinked path), `windows-smoke.ps1`
+  (numbered native import, duplicate, managed-inbox preview and filing, refusal of the
+  workspace root), `overview-smoke.ps1` (now EN/RU/DE on both `localized` and `v2`),
+  `recovery-smoke.ps1` and `lock-smoke.ps1` (both now on the v2 default) passed.
+- Cross-runtime numbering continued across engines (Python `2026-00001`, native
+  `2026-00002` with `<>` sanitized) and both verifiers accepted the shared index. A CLI
+  run of the default workspace previewed its own inbox, received the file as
+  `2026-00001_Supplier invoice 42.pdf`, filed the source under `01 Inbox/Imported/2026-10/`
+  and wrote `OVERVIEW.html` at the root.
+
+Not run: hosted Windows CI and Windows PowerShell 5.1, the packaged GUI smoke and
+fresh-session `evals/scenarios.json` trials. Existing workspaces are not migrated.
+
 ## Workspace layout Phase 1 (opt-in v2) — 2026-11-21
 
 Local branch `claude/workspace-layout-phase0` after `905b0a6` adds the opt-in layout v2 of the

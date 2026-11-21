@@ -206,4 +206,5 @@ def _generate(root, period, as_of, language):
     start = ws._inside(root, layout[1]['guide_name'] if layout else "START-HERE.md")
     if not start.exists():
         ws._write_exclusive(start, ("# " + words["title"] + "\n\n[" + words["overview"] + "](" + quote(ws._physical(root, "00_admin/overview.html")) + ") · [Markdown](" + quote(ws._physical(root, "00_admin/overview.md")) + ")\n\n" + words["snapshot"] + "\n").encode("utf-8"))
-    return {"html_path": ws._physical(root, "00_admin/overview.html"), "markdown_path": ws._physical(root, "00_admin/overview.md"), "counts": counts, "health": result["health"], "errors": errors}
+    return {"html_path": ws._physical(root, "00_admin/overview.html"), "markdown_path": ws._physical(root, "00_admin/overview.md"),
+            "json_path": ws._physical(root, "00_admin/overview.json"), "counts": counts, "health": result["health"], "errors": errors}

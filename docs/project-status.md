@@ -167,16 +167,18 @@ retests of demonstrated failures, not agreement with a secondary FAQ answer.
 Automatic reminders require a defined authorized scheduler and verified delivery; no such service exists. Additional connectors, statutory ledger features and e-invoice validation should be selected for a concrete journey, not required for every user. Do not replace the chosen accounting system just to complete the roadmap.
 
 **Workspace layout v2** (plan approved 2026-11-21; [dated review](research/workspace-layout-review-2026-11-21.md)).
-Phases 0 and 1 are in source. Phase 0: assistant input files and folder previews use
+Phases 0–2 are in source. Phase 0: assistant input files and folder previews use
 `00_admin/work` instead of the user's inbox in every layout, and `demo` creates the
-same localized folders as `start`. Phase 1: an opt-in `--layout v2` / `-Layout v2` in
-Python and native Windows puts one overview page at the workspace root, keeps the
-accounting register internal, reserves a procedure-documentation folder and saves
-new bank normalizations and correspondence reports under a storage-year folder; kits
-that know only version 1 refuse a v2 workspace. Hosted Windows CI has not yet run
-for it. Remaining: Phase 2, readable original names with a running
-document number, issued-invoice copies under Documents, managed-inbox preview and
-post-import handling, then v2 as the default for new workspaces; Phase 3, an opt-in,
+same folders as `start`. Phase 1: layout v2 in Python and native Windows puts one
+overview page at the workspace root, keeps the accounting register internal, reserves
+a procedure-documentation folder and saves new bank normalizations and correspondence
+reports under a storage-year folder; kits that know only version 1 refuse a v2
+workspace. Phase 2: v2 numbers originals per storage year with readable names, keeps
+issued-invoice copies under Documents by issue month, lets the workspace inbox be
+previewed and files imported inbox sources under its Imported folder, and is now the
+default for new workspaces in Python, native Windows, the GUI and the demo
+(`--layout localized` keeps version 1). Hosted Windows CI has not yet run for Phases
+1–2. Remaining: Phase 3, an opt-in,
 hash-planned v1→v2 migration after a verified full backup. Retention class and
 direction, e-invoice grouping and generated procedure documentation are separate
 data-model work. Existing workspaces are never migrated silently.

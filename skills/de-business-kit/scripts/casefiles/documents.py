@@ -20,7 +20,7 @@ def original(root, identifier):
     period = ws._period(doc.get("period"))
     path = ws._inside(root, doc.get("path"))
     if (path.parent != ws._path(root, f"06_bookkeeping/{period[:4]}/{period[5:]}/originals")
-            or path.stem != doc.get("sha256") or path.suffix not in ws.EXTENSIONS):
+            or not ws._original_name_matches(path.name, doc) or path.suffix not in ws.EXTENSIONS):
         raise ws.WorkspaceError("Invalid indexed original path; run workspace verify.")
     data = ws._read_regular(path)
     if len(data) != doc.get("size_bytes") or hashlib.sha256(data).hexdigest() != doc.get("sha256"):

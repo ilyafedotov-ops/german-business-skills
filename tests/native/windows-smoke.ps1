@@ -63,6 +63,21 @@ try {
     Assert ($v2Folders.layout_version -eq 2 -and $v2Folders.paths.'00_admin/overview.html' -eq 'OVERVIEW.html' -and $v2Folders.paths.'04_accounting/register.json' -eq '.business-kit/admin/accounting-register.json' -and $v2Folders.paths.'00_admin/work' -eq '.business-kit/admin/work') 'v2 mapping missing'
     $v2Resume = & $kit -Action start -Root $v2Root | ConvertFrom-Json
     Assert ($v2Resume.status -eq 'resumed' -and $v2Resume.integrity.status -eq 'ok') 'v2 resume failed'
+    $v2Import = & $kit -Action ingest -Root $v2Root -Source $invoice -Period '2026-10' | ConvertFrom-Json
+    Assert ($v2Import.status -eq 'imported' -and $v2Import.document_number -eq '2026-00001' -and $v2Import.path.EndsWith('/Originals/2026-00001_invoice [1] ' + [char]0x00fc + '.csv')) 'v2 original not numbered readably'
+    $v2Again = & $kit -Action ingest -Root $v2Root -Source $invoice -Period '2026-11' | ConvertFrom-Json
+    Assert ($v2Again.status -eq 'existing_content') 'v2 duplicate content was numbered again'
+    Assert ((& $kit -Action verify -Root $v2Root | ConvertFrom-Json).status -eq 'ok') 'v2 numbered original failed verification'
+    $inbox = Join-Path $v2Root '01 Inbox'
+    $inboxFile = Join-Path $inbox 'inbox receipt.csv'
+    [IO.File]::WriteAllText($inboxFile, "amount,currency`n1.00,EUR`n", (New-Object Text.UTF8Encoding($false)))
+    Assert ((& $kit -Action scan -Root $v2Root -Source $inbox | ConvertFrom-Json).candidates -eq 1) 'Managed inbox preview failed'
+    $filed = & $kit -Action ingest -Root $v2Root -Source $inboxFile -Period '2026-10' | ConvertFrom-Json
+    Assert ($filed.source_moved_to -eq '01 Inbox/Imported/2026-10/inbox receipt.csv' -and -not (Test-Path -LiteralPath $inboxFile)) 'Imported inbox file was not filed'
+    $inboxAgain = & $kit -Action scan -Root $v2Root -Source $inbox | ConvertFrom-Json
+    Assert ($inboxAgain.candidates -eq 0 -and @($inboxAgain.entries | Where-Object { $_.reason -eq 'already_imported' }).Count -eq 1) 'Imported folder was offered again'
+    Reject { & $kit -Action scan -Root $v2Root -Source $v2Root }
+    Assert ((& $kit -Action verify -Root $v2Root | ConvertFrom-Json).status -eq 'ok') 'Filing the inbox source changed integrity'
     Reject { & $kit -Action start -Layout legacy -Root $source }
     Reject { & $kit -Action scan -Root $root -Source $base }
     Reject { & $kit -Action ingest -Root $root -Source (Join-Path $source 'certificate.pfx') -Period '2026-10' }

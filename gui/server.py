@@ -113,7 +113,7 @@ class Application:
                 raise ws.WorkspaceError('Choose explicitly whether to create or open a workspace.')
             if args['create']:
                 # Create must never silently resume someone else's existing records.
-                ws.init_workspace(path, args.get('year', date.today().year), args.get('language', 'en'), layout='localized')
+                ws.init_workspace(path, args.get('year', date.today().year), args.get('language', 'en'), layout='v2')
             self.root = ws._workspace(path)
             self.workspace_id = secrets.token_urlsafe(18)
             return {'root': str(self.root), 'name': self.root.name, 'id': self.workspace_id}

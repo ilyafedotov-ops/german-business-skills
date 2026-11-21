@@ -26,7 +26,10 @@ def scan(root, source, max_entries=1000, max_depth=10):
     root = ws._workspace(root)
     source = ws._absolute(source)
     directory(source)
-    if source == root or source in root.parents or root in source.parents:
+    # The workspace's own inbox is the one managed source inside it; files already filed there are skipped.
+    managed = source == ws._path(root, "00_admin/inbox")
+    imported = ws._path(root, "00_admin/inbox/imported") if managed else None
+    if not managed and (source == root or source in root.parents or root in source.parents):
         raise ws.WorkspaceError("Keep the existing source folder and destination workspace separate, without ancestor overlap.")
     if ws._workspace_present(source):
         raise ws.WorkspaceError("This source is an existing workspace; resume or review an explicit migration instead of importing it.")
@@ -51,6 +54,8 @@ def scan(root, source, max_entries=1000, max_depth=10):
                         info = child.stat(follow_symlinks=False)
                         if linked(info):
                             row["reason"] = "link_or_reparse_point"
+                        elif path == imported:
+                            row["reason"] = "already_imported"
                         elif (child.name.startswith(".")
                               or getattr(info, "st_file_attributes", 0) & getattr(stat, "FILE_ATTRIBUTE_HIDDEN", 2)
                               or getattr(info, "st_flags", 0) & getattr(stat, "UF_HIDDEN", 0x8000)):
