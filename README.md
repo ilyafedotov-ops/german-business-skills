@@ -19,13 +19,13 @@ German Business Kit application is required.
 
 ## Start here
 
-Open **Codex** or **Claude** and paste:
+Open **Claude Code**, the **Claude** app or **Codex** and paste:
 
-> Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills and show me how to use it. Follow the repository's installation instructions for my app, check that the complete kit is available, and help me try one small example.
+> Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills. Follow the repository's installation instructions for my app and use the published release, not a copy of the repository's current files. Check that all seven skills are installed, then tell me how to start a fresh session and try one small example.
 
-Your assistant can inspect the instructions and perform the setup its tools allow.
-If your app needs you to choose a folder or click **Install**, it should guide you
-through that step. **Done when:** the seven skills are available in a fresh task
+Your assistant can inspect the instructions and perform the setup its tools allow:
+Claude Code can run the plugin commands once you approve them, in the Claude app it
+guides you to **Install**, and Codex copies the released skills into your project. **Done when:** the seven skills are available in a fresh task
 or chat and you can try the example below. A chat response alone does not verify
 installation. [Detailed setup and troubleshooting](skills/de-business-kit/guides/install.en.md).
 
@@ -73,7 +73,16 @@ Return to that same folder next time. A simple question needs no folder or full 
 <details>
 <summary>Prefer to install manually?</summary>
 
-### Claude installation in three steps
+### Claude Code
+
+```bash
+claude plugin marketplace add ilyafedotov-ops/german-business-skills
+claude plugin install de-business-kit@german-business-kit
+```
+
+Then start a new `claude` session in your private business folder.
+
+### Claude app in three steps
 
 With an eligible Claude account, open **Cowork → Customize → Plugins** (some
 versions combine Chat and Cowork), then:
@@ -84,7 +93,7 @@ versions combine Chat and Cowork), then:
 
 ![Install in three steps: open Plugins, add the marketplace, install German Business Kit](skills/de-business-kit/guides/images/setup-map.en.svg)
 
-[Claude setup and account requirements](skills/de-business-kit/guides/install.en.md#install-in-claude) · [Codex setup](skills/de-business-kit/guides/install.en.md#install-in-codex)
+[Claude setup and account requirements](skills/de-business-kit/guides/install.en.md#install-in-claude) · [Claude Code setup](skills/de-business-kit/guides/install.en.md#install-in-claude-code) · [Codex setup](skills/de-business-kit/guides/install.en.md#install-in-codex)
 
 </details>
 

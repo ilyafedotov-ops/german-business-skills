@@ -4,6 +4,29 @@
 
 Evidence index updated **2026-11-21**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## Ask-to-install quick start — 2026-11-21
+
+Branch `claude/ask-to-install-first` after `06f1cec` makes one request to the assistant the first
+install route in both READMEs, both install guides, the German start guide and the guided setup
+page. The Claude app, Claude Code and Codex steps follow as manual routes; the Claude Code commands
+have their own section. The request now asks for the published release, checks all seven skills
+and ends with a fresh session.
+
+- `tests/test_installer.py` (8 tests, including the identical README and setup-page request),
+  `tests/test_packaging.py`, `tests/test_doc_links.py`, `tools/check_package.py` on a clean copy,
+  `tools/check_doc_links.py` (520 links), `tools/release.py check` and `git diff --check` passed.
+- `npm run test:installer` passed in **Chromium** and **WebKit**; the German Claude kit-step
+  screenshot shows the longer request without overflow.
+
+Not run: the request itself in Claude Code, the Claude app or Codex. In Claude Code it would change
+the tester's own plugin settings.
+
+Hosted Windows CI (Python 3.14, tests 2/2) then hit an intermittent `PermissionError` in
+`test_writer_waits_for_a_lock_that_another_writer_releases`: on Windows, creating the lock fails
+while the previous holder is still deleting it. The bounded wait now treats that like a held lock
+and re-raises a lasting refusal; two red/green regressions cover both cases, and the full unit
+suite passed again locally.
+
 ## Onboarding live trials and fixes — 2026-11-21
 
 Live trials used `main` at `fa7f785`, built with `tools/build_package.py` and loaded through

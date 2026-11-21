@@ -62,6 +62,33 @@ class BoundedWaitTests(LockFixture):
         self.assertGreaterEqual(time.monotonic() - started, 0.3)
         self.assertEqual(self.lock.read_text(encoding="utf-8"), "another operation")
 
+    def lock_open(self, refusals):
+        # Windows refuses to create a file whose previous copy another writer is still deleting.
+        real_open, calls = ws.os.open, []
+
+        def guarded(path, flags, *args):
+            if Path(path) == self.lock and flags & ws.os.O_EXCL:
+                calls.append(path)
+                if len(calls) <= refusals:
+                    raise PermissionError(13, "Permission denied", str(path))
+            return real_open(path, flags, *args)
+        return patch.object(ws.os, "open", guarded), calls
+
+    def test_writer_waits_while_a_released_lock_is_still_being_deleted(self):
+        guard, calls = self.lock_open(refusals=2)
+        with guard:
+            ws.configure_workspace(self.root, language="ru")
+        self.assertEqual(len(calls), 3)
+        self.assertEqual(ws.workspace_status(self.root)["language"], "ru")
+        self.assertFalse(self.lock.exists())
+
+    def test_lasting_permission_error_is_reported_as_such_after_the_wait(self):
+        guard, _ = self.lock_open(refusals=10**6)
+        with guard, patch.object(ws, "LOCK_WAIT_SECONDS", 0.3):
+            with self.assertRaises(PermissionError):
+                ws.configure_workspace(self.root, language="ru")
+        self.assertEqual(ws.workspace_status(self.root)["language"], "en")
+
 
 class LockDiagnosisTests(LockFixture):
     def test_lock_left_by_a_finished_process_on_this_computer_is_stale(self):
