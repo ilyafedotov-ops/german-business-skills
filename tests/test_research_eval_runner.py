@@ -42,9 +42,10 @@ if 'incomplete' not in mode: print(json.dumps({'type':'turn.completed'}))
 ''')
         self.host.chmod(0o700)
 
-    def cli(self, *args):
+    def cli(self, *args, timeout=15):
+        # A hang guard, not a speed requirement: size it to the sessions run.
         return subprocess.run([sys.executable, '-B', str(RUNNER), *map(str, args)],
-                              capture_output=True, text=True, timeout=15)
+                              capture_output=True, text=True, timeout=timeout)
 
     def run_case(self, mode='fake-codex', case='faq-foreign-saas-2026', timeout=5):
         host = self.base / mode
@@ -182,7 +183,9 @@ if 'incomplete' not in mode: print(json.dumps({'type':'turn.completed'}))
 
     def test_full_pilot_runs_all_thirty_two_bases_and_eleven_replays(self):
         out = self.base / 'all-evidence'
-        r = self.cli('--all', '--output', out, '--codex', self.host, '--model', 'fixture')
+        # 43 sessions each copy and hash the skill tree: 7-10 s on hosted macOS,
+        # once over the 15 s single-case guard.
+        r = self.cli('--all', '--output', out, '--codex', self.host, '--model', 'fixture', timeout=120)
         self.assertEqual(r.returncode, 0, r.stderr)
         rows = self.load(out)['cases']
         self.assertEqual(len(rows), 43)
