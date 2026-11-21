@@ -20,13 +20,14 @@
 
 ## Начните здесь
 
-Откройте **Codex** или **Claude** и вставьте:
+Откройте **Claude Code**, приложение **Claude** или **Codex** и вставьте:
 
-> Установи German Business Kit из https://github.com/ilyafedotov-ops/german-business-skills и покажи, как им пользоваться. Следуй инструкции репозитория для моего приложения, проверь доступность полного набора и помоги попробовать один небольшой пример.
+> Установи German Business Kit из https://github.com/ilyafedotov-ops/german-business-skills. Следуй инструкции по установке из репозитория для моего приложения и используй опубликованный выпуск, а не копию текущих файлов репозитория. Проверь, что установлены все семь скиллов, затем скажи, как начать новый сеанс и попробовать небольшой пример.
 
 Ассистент может прочитать инструкции и выполнить настройку, которую позволяют его
-инструменты. Если нужно выбрать папку или нажать **Install** в приложении, он должен
-провести вас через этот шаг. **Готово, когда:** семь скиллов доступны в новой задаче
+инструменты: Claude Code выполнит команды плагина после вашего подтверждения, в
+приложении Claude ассистент проведёт вас до кнопки **Install**, а Codex скопирует
+скиллы из опубликованного выпуска в ваш проект. **Готово, когда:** семь скиллов доступны в новой задаче
 или чате и можно попробовать пример ниже. Одного сообщения об успехе недостаточно
 для проверки установки. [Подробная установка и помощь](skills/de-business-kit/guides/install.ru.md).
 
@@ -74,7 +75,16 @@ web search; обычному вопросу или локальному доку
 <details>
 <summary>Предпочитаете установить вручную?</summary>
 
-### Установка в Claude в три шага
+### Claude Code
+
+```bash
+claude plugin marketplace add ilyafedotov-ops/german-business-skills
+claude plugin install de-business-kit@german-business-kit
+```
+
+Затем начните новый сеанс `claude` в личной папке бизнеса.
+
+### Приложение Claude в три шага
 
 С подходящим аккаунтом Claude откройте **Cowork → Customize → Plugins** (некоторые
 версии объединяют Chat и Cowork), затем:
@@ -85,7 +95,7 @@ web search; обычному вопросу или локальному доку
 
 ![Установка в три шага: открыть Plugins, добавить маркетплейс, установить German Business Kit](skills/de-business-kit/guides/images/setup-map.ru.svg)
 
-[Установка Claude и требования к аккаунту](skills/de-business-kit/guides/install.ru.md#установка-в-claude) · [Установка Codex](skills/de-business-kit/guides/install.ru.md#установка-в-codex)
+[Установка Claude и требования к аккаунту](skills/de-business-kit/guides/install.ru.md#установка-в-claude) · [Установка в Claude Code](skills/de-business-kit/guides/install.ru.md#установка-в-claude-code) · [Установка Codex](skills/de-business-kit/guides/install.ru.md#установка-в-codex)
 
 </details>
 

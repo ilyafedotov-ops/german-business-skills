@@ -12,15 +12,15 @@ This guide takes you from installing the kit to your first useful answer in abou
 
 ![Ask to install, follow the steps for your app, then verify seven skills in a new chat](images/assisted-install.en.svg)
 
-[Install in Claude](#install-in-claude) · [First task](#try-your-first-task) · [Private folder](#keep-your-work-in-a-private-folder) · [Updates](#updates) · [Codex](#install-in-codex) · [Help](#if-you-get-stuck)
+[Ask your assistant](#ask-your-assistant-to-help-install) · Manual: [Claude app](#install-in-claude) · [Claude Code](#install-in-claude-code) · [Codex](#install-in-codex) · [First task](#try-your-first-task) · [Private folder](#keep-your-work-in-a-private-folder) · [Updates](#updates) · [Help](#if-you-get-stuck)
 
 **Prefer a click-through guide?** A guided setup page in English, Russian and German takes you from choosing Claude or ChatGPT/Codex, through creating the account and installing the app on the official pages, to adding the kit and trying fictional first tasks. On the [project page](https://github.com/ilyafedotov-ops/german-business-skills) choose **Code → Download ZIP**, extract the ZIP and open `installer/index.html` in your browser. That copy only shows the guide; install the kit with the steps the page shows. The page itself sends nothing and never asks for passwords, payment details or codes.
 
 ## Ask your assistant to help install
 
-In Codex or Claude, paste:
+The quickest start: in Claude Code, the Claude app or Codex, paste:
 
-> Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills and show me how to use it. Follow the repository's installation instructions for my app, check that the complete kit is available, and help me try one small example.
+> Install German Business Kit from https://github.com/ilyafedotov-ops/german-business-skills. Follow the repository's installation instructions for my app and use the published release, not a copy of the repository's current files. Check that all seven skills are installed, then tell me how to start a fresh session and try one small example.
 
 The assistant should inspect the repository instructions and your actual app/tools,
 then use the supported installation route below. Where a folder choice or plugin
@@ -30,6 +30,14 @@ seven-skill set together, and distinguish files copied from skills discovered in
 a fresh session. The request does not require a separate records app or a new
 business workspace. If the assistant cannot access the repository or installation
 controls, use the steps below; it should tell you exactly what remains.
+
+What happens in each app:
+
+- **Claude Code** can run the two plugin commands from [Install in Claude Code](#install-in-claude-code) for you; approve them when asked. Then exit and start `claude` again, ideally in your private business folder.
+- **The Claude app (Cowork)** cannot click for you: it guides you through **Customize → Plugins** as in [Install in Claude](#install-in-claude).
+- **Codex** copies the seven released skills into your project as in [Install in Codex](#install-in-codex).
+
+The sections below are the manual routes if you prefer to do it yourself.
 
 After installation, start a new task/chat and ask:
 
@@ -128,6 +136,19 @@ Find **German Business Kit** in the plugin list (look under **Discover** if it i
 The plugin is saved to your Claude account, so it also works in Claude chat and in Claude Code when you sign in with the same account. The seven skills share one business context; you never set them up separately.
 
 Anthropic reviews plugins listed in its own directory, not plugins added by address. This address installs the verified release pinned by this project’s marketplace. The marketplace pin advances only after publication and asset verification.
+
+## Install in Claude Code
+
+In a terminal, run:
+
+```bash
+claude plugin marketplace add ilyafedotov-ops/german-business-skills
+claude plugin install de-business-kit@german-business-kit
+```
+
+Inside a running Claude Code session, type the same as `/plugin marketplace add ilyafedotov-ops/german-business-skills` and `/plugin install de-business-kit@german-business-kit`. If you installed the plugin in the Claude app, Claude Code already receives it when signed in with the same Claude account (not an API key); do not install it twice.
+
+**Done when:** a new `claude` session lists the seven skills, for example `/de-business-kit:de-business-kit`. Start it in your private business folder, not in a Git repository or the downloaded kit.
 
 ## Try your first task
 
@@ -232,7 +253,6 @@ Business Assistant/
 
 ## Other ways to install
 
-- **Claude Code in a terminal:** run `claude plugin marketplace add ilyafedotov-ops/german-business-skills`, then `claude plugin install de-business-kit@german-business-kit`. If you installed the plugin in the desktop app, Claude Code already receives it when signed in with the same Claude account (not an API key).
 - **Developers and technical helpers:** source builds, local marketplaces and archive verification are covered in the [distribution guide](https://github.com/ilyafedotov-ops/german-business-skills/blob/main/docs/distribution.md).
 - Install the kit only once per app. Having both the plugin and a manually copied set of the same skills causes duplicates.
 
