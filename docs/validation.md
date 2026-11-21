@@ -4,6 +4,25 @@
 
 Evidence index updated **2026-11-21**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. Old results do not validate newer source automatically.
 
+## 0.12.0-preview.1 publication — 2026-11-21
+
+The annotated tag `v0.12.0-preview.1` points to `e6c78c0ce9e441a0b20b5bf39f54fb6b9c21b0a2` (the merge of PR #38). No signing key is
+configured, so the tag is annotated, not signed. Before pushing it, `tools/release.py check --tag`
+passed and a local `release.py prepare`/`verify` rehearsal built both skill ZIPs. Release run
+`44894885649` succeeded and published the release at 10:39 UTC as an immutable pre-release with
+eight assets: the Claude and Codex skill ZIPs, three application archives (Windows x64, macOS
+arm64, macOS x86_64), `release.json`, `release-notes.md` and `SHA256SUMS`.
+
+With GitHub CLI 2.105.0, on freshly downloaded assets: `SHA256SUMS` matched every file;
+`gh release verify` passed; `gh release verify-asset` and `gh attestation verify` with
+`--source-ref refs/tags/v0.12.0-preview.1`, `--source-digest e6c78c0ce9e441a0b20b5bf39f54fb6b9c21b0a2` and
+`--deny-self-hosted-runners` passed for all eight assets. Both skill ZIPs were byte-identical to
+the local rehearsal build. Only then did `.claude-plugin/marketplace.json` move to this tag and
+commit, together with the Codex download links in the guides and the setup page.
+
+Not checked: installing the pinned release through the Claude app, Claude Code's marketplace
+commands or the Codex app after this change.
+
 ## Ask-to-install quick start — 2026-11-21
 
 Branch `claude/ask-to-install-first` after `06f1cec` makes one request to the assistant the first
