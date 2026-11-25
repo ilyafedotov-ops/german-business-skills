@@ -1,6 +1,6 @@
 {
   "name": "german-business-kit",
-  "description": "German Business Kit: seven connected skills for starting and running a sole-trader business in Germany, in English and Russian.",
+  "description": "German Business Kit: seven connected skills for starting and running a sole-trader business in Germany, in English, Russian and German.",
   "owner": {
     "name": "German Business Kit contributors",
     "url": "https://github.com/ilyafedotov-ops/german-business-skills"
@@ -9,14 +9,14 @@
     {
       "name": "de-business-kit",
       "displayName": "German Business Kit",
-      "description": "Seven skills for the German sole-trader lifecycle: formation, daily operations, accounting, tax preparation, services and business changes, with shared context in English and Russian.",
+      "description": "Seven skills for the German sole-trader lifecycle: formation, daily operations, accounting, tax preparation, services and business changes, with shared context in English, Russian and German.",
       "license": "MIT",
       "homepage": "https://github.com/ilyafedotov-ops/german-business-skills",
       "source": {
         "source": "github",
         "repo": "ilyafedotov-ops/german-business-skills",
-        "ref": "v0.13.0-preview.2",
-        "sha": "656715e1527b0953976f258de86097f63dd4778c"
+        "ref": "v0.14.0-preview.1",
+        "sha": "ba4f974413019df8e1419e6f1c233d5cdc274eca"
       }
     }
   ]

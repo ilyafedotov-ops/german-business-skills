@@ -34,25 +34,25 @@ minor, совместимые исправления — patch, несовмес
 ## Скачать и проверить
 
 На [странице выпусков](https://github.com/ilyafedotov-ops/german-business-skills/releases)
-выберите [версию 0.13.0-preview.2](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.13.0-preview.2) и найдите отметку **Immutable**. Доступность требует завершённой
+выберите [версию 0.14.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.14.0-preview.1) и найдите отметку **Immutable**. Доступность требует завершённой
 публикации и проверки. Скачайте нужный ZIP Codex или Claude и `SHA256SUMS` в новую папку.
 Выпуски до 0.13.0-preview.2 также содержали архивы прежнего локального приложения GUI
 для Windows/macOS; с 0.14 оно прекращено, а уже опубликованные файлы не меняются.
 Примеры ниже проверяют ZIP Codex. Windows проверяет хеш без Python:
 
 ```powershell
-Get-FileHash .\de-business-kit-0.13.0-preview.2-codex.zip -Algorithm SHA256
+Get-FileHash .\de-business-kit-0.14.0-preview.1-codex.zip -Algorithm SHA256
 ```
 
-В macOS: `shasum -a 256 de-business-kit-0.13.0-preview.2-codex.zip`. Сравните результат
+В macOS: `shasum -a 256 de-business-kit-0.14.0-preview.1-codex.zip`. Сравните результат
 с нужной строкой `SHA256SUMS`. Хеш из того же недоверенного источника не подтверждает
 автора. При наличии актуального необязательного GitHub CLI проверьте происхождение
 архива (исторические проверки использовали 2.103.2; 2.80 не смог прочитать те аттестации):
 
 ```sh
-gh release verify v0.13.0-preview.2 -R ilyafedotov-ops/german-business-skills
-gh release verify-asset v0.13.0-preview.2 de-business-kit-0.13.0-preview.2-codex.zip -R ilyafedotov-ops/german-business-skills
-gh attestation verify de-business-kit-0.13.0-preview.2-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.13.0-preview.2 --deny-self-hosted-runners
+gh release verify v0.14.0-preview.1 -R ilyafedotov-ops/german-business-skills
+gh release verify-asset v0.14.0-preview.1 de-business-kit-0.14.0-preview.1-codex.zip -R ilyafedotov-ops/german-business-skills
+gh attestation verify de-business-kit-0.14.0-preview.1-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.14.0-preview.1 --deny-self-hosted-runners
 ```
 
 Для строгой фиксации добавьте `--source-digest` с полным ожидаемым коммитом тега.
@@ -89,7 +89,7 @@ gh attestation verify de-business-kit-0.13.0-preview.2-codex.zip --repo ilyafedo
 Локальная репетиция после создания точного тега:
 
 ```sh
-python3 -B tools/release.py prepare --tag v0.13.0-preview.2 --output /absolute/new/release-assets
+python3 -B tools/release.py prepare --tag v0.14.0-preview.1 --output /absolute/new/release-assets
 python3 -B tools/release.py verify --directory /absolute/new/release-assets
 ```
 

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Channel art</title>
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wdth,wght@75..112.5,300..800&display=block" rel="stylesheet">
+<link rel="stylesheet" href="receipt.css">
+<style>
+  body { margin: 0; }
+  /* Profile picture: YouTube crops it to a circle, so the receipt sits inside the centre. */
+  #avatar { width: 800px; height: 800px; }
+  #avatar .lift { left: 190px; top: 222px; width: 420px; transform: rotate(-4deg); }
+  #avatar .receipt { padding: 64px 46px 70px; text-align: center; }
+  #avatar .mark { font-size: 132px; line-height: 1; font-variation-settings: 'wdth' 112.5; font-weight: 800; letter-spacing: -.02em; }
+  #avatar .ok { margin-top: 26px; font-size: 54px; line-height: 1; font-weight: 800; color: var(--red); font-variation-settings: 'wdth' 112.5; }
+  /* Banner: 2560x1440; text and receipt stay inside the 1546x423 area that every device shows. */
+  #banner { width: 2560px; height: 1440px; background: linear-gradient(180deg, #343a9a 0%, var(--carbon) 50%, var(--carbon-deep) 100%); }
+  #banner .safe { position: absolute; left: 507px; top: 508px; width: 1546px; height: 423px; display: flex; align-items: center; gap: 70px; }
+  #banner .head { flex: 1; color: #fff; }
+  #banner .head .dh { font-size: 92px; color: #fff; line-height: 1.04; }
+  #banner .head .sub { margin-top: 26px; font-size: 32px; color: var(--carbon-ink); font-variation-settings: 'wdth' 87.5; font-weight: 600; }
+  #banner .lift { position: relative; width: 470px; transform: rotate(3deg); }
+  #banner .receipt { padding: 40px 40px 48px; }
+  #banner .row.t { font-size: 30px; }
+  #banner .row.dw { font-size: 40px; }
+</style>
+</head>
+<body>
+<section id="avatar" class="R">
+  <div class="lift"><div class="receipt white">
+    <div class="mark">GBK</div>
+    <div class="ok">OK</div>
+  </div></div>
+</section>
+<section id="banner" class="R">
+  <div class="safe">
+    <div class="head">
+      <div class="dh">Every answer comes with its receipt.</div>
+      <div class="sub">German Business Kit · 7 open-source AI skills for Claude &amp; Codex · EN · DE · RU</div>
+    </div>
+    <div class="lift"><div class="receipt white">
+      <div class="row t"><span class="k">Registration</span><span class="dots"></span><span class="v">OK</span></div>
+      <div class="row t"><span class="k">Invoices</span><span class="dots"></span><span class="v">OK</span></div>
+      <div class="row t"><span class="k">Finanzamt</span><span class="dots"></span><span class="v">OK</span></div>
+      <div class="rule dbl"></div>
+      <div class="row dw"><span class="k">SENT BY</span><span class="dots"></span><span class="v red">YOU</span></div>
+    </div></div>
+  </div>
+</section>
+</body>
+</html>
