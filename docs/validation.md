@@ -226,6 +226,16 @@ Not run: hosted Windows CI and Windows PowerShell 5.1, the packaged GUI smoke, f
 `evals/scenarios.json` trials and any release publication; 0.12.0-preview.1 is not tagged or
 published, and the marketplace still pins 0.11.0-preview.1.
 
+## Research-runner hang guard — 2026-11-20
+
+`test_research_eval_runner`'s 43-session `--all` test failed once on hosted macOS
+Python 3.10 ([run 44813481586](https://github.com/ilyafedotov-ops/german-business-skills/actions/runs/44813481586))
+because its CLI call shared the 15 s hang guard of single-case calls. Its observed
+hosted durations were 7.1–10.2 s on Python 3.10 and 4.6–9.3 s on 3.14 (3.4 s
+locally); the work is session copies, integrity digests and host processes, with
+no sleep or poll. That call now has a 120 s guard; its assertions are unchanged.
+A hosted 50 MiB read there costs 14–23 µs, so the Windows read fix does not apply.
+
 ## Guided setup data and AI-risk step — 2026-11-20
 
 Local branch work based on `4407107` adds a **Data & risks** step and usability
