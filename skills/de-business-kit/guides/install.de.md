@@ -210,9 +210,9 @@ In der Codex-Desktop-App kommen Plugins aus dem Verzeichnis von OpenAI oder aus 
 
 ### 2. Das Kit herunterladen
 
-Öffnen Sie die [Version 0.14.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.14.0-preview.1), klappen Sie bei Bedarf **Assets** auf und laden Sie zwei Dateien in denselben Ordner herunter:
+Öffnen Sie die [Version 0.14.0-preview.2](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.14.0-preview.2), klappen Sie bei Bedarf **Assets** auf und laden Sie zwei Dateien in denselben Ordner herunter:
 
-- **`de-business-kit-0.14.0-preview.1-codex.zip`**
+- **`de-business-kit-0.14.0-preview.2-codex.zip`**
 - **`SHA256SUMS`**, die Prüfsummenliste, die einen beschädigten oder veränderten Download erkennt
 
 ### 3. Codex die Skills installieren lassen
@@ -221,7 +221,7 @@ Geben Sie Codex mit seiner Dateizugriffs-Steuerung Zugriff auf die beiden Dateie
 
 > Ich richte German Business Kit in diesem lokalen Projekt Business Assistant in Codex ein. Meine ZIP-Datei liegt unter [vollständiger ZIP-Pfad] und SHA256SUMS unter [vollständiger Pfad der Prüfsummendatei]. Prüfe die ZIP-Datei gegen ihre Prüfsumme und brich ab, wenn sie nicht passt. Entpacke sie in einen neuen Ordner und kopiere dann alle sieben vollständigen Skill-Ordner in .agents/skills dieses Projekts. Nutze native Dateiwerkzeuge, erhalte vorhandene Dateien und brich ab, wenn ein Ziel bereits existiert. Installiere keine Laufzeitumgebungen, ändere keine Sicherheitseinstellungen und keine globale App-Konfiguration. Nenne mir die sieben installierten Namen und wie ich eine neue Sitzung starte.
 
-Prüfen Sie, dass jede Anfrage zum Dateizugriff Ihren Download und das Projekt **Business Assistant** nennt. Eine passende Prüfsumme zeigt, dass die Datei unbeschädigt ist; wer sie veröffentlicht hat, prüft ein eigener Schritt, beschrieben unter [Download prüfen](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.14.0-preview.1/docs/releases.md#download-and-verify).
+Prüfen Sie, dass jede Anfrage zum Dateizugriff Ihren Download und das Projekt **Business Assistant** nennt. Eine passende Prüfsumme zeigt, dass die Datei unbeschädigt ist; wer sie veröffentlicht hat, prüft ein eigener Schritt, beschrieben unter [Download prüfen](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.14.0-preview.2/docs/releases.md#download-and-verify).
 
 ### 4. Einen neuen Chat starten
 

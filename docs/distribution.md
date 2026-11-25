@@ -25,11 +25,10 @@ The marketplace file is read from the default branch; the address works only aft
 
 This page covers the skill/plugin bundle. Users do not need
 to build the project. Download the named Codex or Claude ZIP from the latest published
-[release 0.14.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.14.0-preview.1);
-version 0.14.0-preview.2 is prepared in source and not yet published.
+[release 0.14.0-preview.2](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.14.0-preview.2).
 Follow [download verification](releases.md), and extract it into a new folder using
 Explorer or Finder. Published filenames include the version, for example
-`de-business-kit-0.14.0-preview.1-codex.zip`.
+`de-business-kit-0.14.0-preview.2-codex.zip`.
 
 Inside the extracted folder, `codex` or `claude` is the marketplace root. Skip the
 build section and go to [host installation](#optional-host-installation-after-review).
