@@ -35,7 +35,7 @@ the current preview's named packages for the attested distribution.
 ## Download and verify
 
 On the repository's [Releases page](https://github.com/ilyafedotov-ops/german-business-skills/releases),
-choose [version 0.14.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.14.0-preview.1) and confirm the **Immutable** marker. Availability requires completed
+choose [version 0.14.0-preview.2](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.14.0-preview.2) and confirm the **Immutable** marker. Availability requires completed
 publication and verification. Download the Codex or Claude ZIP you need, plus
 `SHA256SUMS`, into a new folder. Releases up to 0.13.0-preview.2 also carried
 Windows/macOS archives of the former local GUI application; it is discontinued
@@ -43,18 +43,18 @@ from 0.14 and those published assets stay unchanged. The examples below verify
 the Codex ZIP. On Windows, native PowerShell can compute the hash without Python:
 
 ```powershell
-Get-FileHash .\de-business-kit-0.14.0-preview.1-codex.zip -Algorithm SHA256
+Get-FileHash .\de-business-kit-0.14.0-preview.2-codex.zip -Algorithm SHA256
 ```
 
-On macOS use `shasum -a 256 de-business-kit-0.14.0-preview.1-codex.zip`. Compare with
+On macOS use `shasum -a 256 de-business-kit-0.14.0-preview.2-codex.zip`. Compare with
 the matching line of `SHA256SUMS`. A checksum from the same untrusted source is
 not authentication. With a current optional GitHub CLI, verify the downloaded archive
 (historical validation used 2.103.2; 2.80 could not read those attestation bundles):
 
 ```sh
-gh release verify v0.14.0-preview.1 -R ilyafedotov-ops/german-business-skills
-gh release verify-asset v0.14.0-preview.1 de-business-kit-0.14.0-preview.1-codex.zip -R ilyafedotov-ops/german-business-skills
-gh attestation verify de-business-kit-0.14.0-preview.1-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.14.0-preview.1 --deny-self-hosted-runners
+gh release verify v0.14.0-preview.2 -R ilyafedotov-ops/german-business-skills
+gh release verify-asset v0.14.0-preview.2 de-business-kit-0.14.0-preview.2-codex.zip -R ilyafedotov-ops/german-business-skills
+gh attestation verify de-business-kit-0.14.0-preview.2-codex.zip --repo ilyafedotov-ops/german-business-skills --signer-workflow ilyafedotov-ops/german-business-skills/.github/workflows/release.yml --source-ref refs/tags/v0.14.0-preview.2 --deny-self-hosted-runners
 ```
 
 For stricter pinning add `--source-digest` with the expected full Git commit from
@@ -92,7 +92,7 @@ Python installation or automatic update is required.
 Local rehearsal after creating the exact tag:
 
 ```sh
-python3 -B tools/release.py prepare --tag v0.14.0-preview.1 --output /absolute/new/release-assets
+python3 -B tools/release.py prepare --tag v0.14.0-preview.2 --output /absolute/new/release-assets
 python3 -B tools/release.py verify --directory /absolute/new/release-assets
 ```
 

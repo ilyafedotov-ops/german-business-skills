@@ -24,9 +24,9 @@ window.INSTALLER_LINKS = {
     "aiAct": "https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers"
   },
   "release": {
-    "page": "https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.14.0-preview.1",
-    "codexZip": "https://github.com/ilyafedotov-ops/german-business-skills/releases/download/v0.14.0-preview.1/de-business-kit-0.14.0-preview.1-codex.zip",
-    "checksums": "https://github.com/ilyafedotov-ops/german-business-skills/releases/download/v0.14.0-preview.1/SHA256SUMS"
+    "page": "https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.14.0-preview.2",
+    "codexZip": "https://github.com/ilyafedotov-ops/german-business-skills/releases/download/v0.14.0-preview.2/de-business-kit-0.14.0-preview.2-codex.zip",
+    "checksums": "https://github.com/ilyafedotov-ops/german-business-skills/releases/download/v0.14.0-preview.2/SHA256SUMS"
   },
   "docs": {
     "en": {

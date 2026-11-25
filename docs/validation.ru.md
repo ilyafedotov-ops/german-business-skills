@@ -36,6 +36,7 @@ GitHub provenance не даёт подпись Windows Authenticode или Apple
 
 | Выпуск | Коммит тега | Опубликован (UTC) | Запуск выпуска и проверка |
 | --- | --- | --- | --- |
+| [0.14.0-preview.2](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.14.0-preview.2) | `ed95607` | 2026-11-25 16:33 | Запуск 45653932342; все 5 файлов прошли с GitHub CLI 2.105.0; все 5 файлов побайтно совпали с локальной репетицией по точному тегу |
 | [0.14.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.14.0-preview.1) | `ba4f974` | 2026-11-25 15:09 | Запуск 45639015635; все 5 файлов прошли с GitHub CLI 2.105.0; оба ZIP скиллов побайтно совпали с локальной сборкой |
 | [0.13.0-preview.2](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.13.0-preview.2) | `656715e` | 2026-11-21 12:59 | Запуск 44906156351; все 8 файлов прошли с GitHub CLI 2.105.0; оба ZIP скиллов побайтно совпали с локальной сборкой |
 | [0.13.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.13.0-preview.1) | `01eb044` | 2026-11-21 11:08 | Запуск 44897078006; все 8 файлов прошли с GitHub CLI 2.105.0; оба ZIP скиллов побайтно совпали с локальной сборкой |
