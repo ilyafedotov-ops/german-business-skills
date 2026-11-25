@@ -1,7 +1,7 @@
-"""Generates the Beleg-world carousels (EN, DE) and the YouTube scenes (EN) from one content model.
+"""Generates the Beleg-world carousels and YouTube scenes (EN, DE, RU) from one content model.
 
-Example slides summarize the real answers in post/real-examples.md (EN) and post/real-examples.de.md (DE);
-every source line names a page that session actually fetched (qa-transcripts/*.jsonl).
+Example slides summarize the real answers in post/real-examples.md (EN), .de.md (DE) and .ru.md (RU);
+every source line names a page that session actually fetched (session logs are kept outside Git).
 """
 import html, os
 
@@ -291,6 +291,109 @@ def slides_de():
     return S
 
 
+FOOT_RU = 'Настоящий ответ · Claude Code + German Business Kit 0.14 · 25.11.2026 · вымышленный человек · кратко · не налоговая консультация'
+
+# Real Russian answers (fresh sessions, released v0.14.0-preview.1); see post/real-examples.ru.md.
+RU_EXAMPLES = {
+    'r05': dict(id='r05', k=0.95, paper='white', lines=[
+        dh('Freiberufler или Gewerbe?'), t('Берлин · переводчик · 800 € в месяц', 'faded'), rule(),
+        lbl('Проверено: открытые официальные страницы'),
+        row('§ 18 EStG «Übersetzer»', 'OK', 'faded'), row('§ 138 AO, срок месяц', 'OK', 'faded'),
+        row('service.berlin.de Gewerbe', 'OK', 'faded'), row('elster.de Gründung', 'OK', 'faded'),
+        row('+ 3 официальные страницы', 'OK', 'faded'),
+        dbl(), dw('FREIBERUFLER<span class="stamp inl">ПРОВЕРЕНО 25.11.</span>'),
+        row('Регистрация', 'Finanzamt · ELSTER'), row('Срок', '1 месяц после начала'), row('Gewerbeanmeldung', 'не нужна'), rule(),
+        t('Пункт о соцстраховании прямо помечен как непроверенный.', 'mid'),
+        dbl(), roww('ОТПРАВЛЯЕТЕ', 'ВЫ'), foot(FOOT_RU)]),
+    'r06': dict(id='r06', paper='blue', lines=[
+        dh('Нужно ли брать НДС?'), t('Гамбург · веб-дизайнер · 22 000 €, первый год', 'faded'), rule(),
+        lbl('Проверено: открытые официальные страницы'),
+        row('§ 19 UStG Kleinunternehmer', 'OK', 'faded'), row('§ 18 UStG декларации', 'OK', 'faded'),
+        row('Письмо BMF от 18.03.2025', 'OK', 'faded'), row('finanzamt.hessen.de', 'OK', 'faded'),
+        dbl(), dw('KLEINUNTERNEHMER'),
+        row('Лимит первого года', '25 000 €'), row('Что считается', 'поступившие деньги'),
+        row('2027: 25–100 тыс. €', 'НДС с 1.1.2028'), row('Больше 100 000 €', 'НДС с этой сделки'), rule(),
+        t('Где в законе нет прямого примера, прямо говорит: это вывод.', 'red bold'),
+        dbl(), roww('ОТПРАВЛЯЕТЕ', 'ВЫ'), foot(FOOT_RU)]),
+    'r07': dict(id='r07', k=0.95, paper='yellow', lines=[
+        dh('Можно ли платить меньше авансов?'), t('Мюнхен · фотограф · 38 тыс. → ~21 тыс. €', 'faded'), rule(),
+        lbl('Проверено: открытые официальные страницы'),
+        row('§ 37 EStG авансы', 'OK', 'faded'), row('§ 32a EStG шкала 2026', 'OK', 'faded'), row('Форма ELSTER', 'OK', 'faded'),
+        dbl(), dw('СНИЗИТЬ: ДА'),
+        row('Примерный налог', '~1 819 €'), t('без вычетов · посчитано двумя способами', 'faded'),
+        row('До решения', 'старый Bescheid', '', 'red'), rule(),
+        letter('„Ich beantrage daher gemäß § 37 Abs. 3 EStG, … die Vorauszahlung zum 10.12.2026 auf 0 € herabzusetzen …“', 'ЧЕРНОВИК · НЕ ОТПРАВЛЕНО'),
+        dbl(), roww('ОТПРАВЛЯЕТЕ', 'ВЫ'), foot(FOOT_RU)]),
+}
+
+
+def slides_ru():
+    S = []
+    S.append(dict(id='r01', k=1.12, paper='white', copies=True, lines=[
+        hdr('GERMAN BUSINESS KIT', 'Claude Code · приложение Claude · Codex', '25.11.2026  21:47'),
+        rule(), dh('К каждому ответу прилагается чек.'), rule(),
+        t('7 открытых AI-скиллов для самозанятых в Германии.', 'mid'), rule(),
+        row('Регистрация', 'OK'), row('Счета и чеки', 'OK'), row('Налоги и Finanzamt', 'OK'), row('Официальные источники', 'OK'),
+        dbl(), roww('ОТПРАВЛЯЕТЕ', 'ВЫ'), barcode('GBK-0.14'), foot('Предварительная версия · помощь AI, не налоговая консультация · листайте →')]))
+    S.append(dict(id='r02', paper='white', lines=[
+        dh('До первого счёта:'), rule(),
+        row('Fragebogen steuerl. Erfassung', '1×'), t('анкета для налоговой регистрации', 'faded'),
+        row('Gewerbeanmeldung', 'если Gewerbe'), t('регистрация промысла', 'faded'),
+        row('Rechnungen', 'каждый заказ'), t('счета с обязательными реквизитами', 'faded'),
+        row('Belege · Kontoauszüge', 'каждый месяц'), t('чеки и выписки из банка', 'faded'),
+        row('Steuererklärungen', 'каждый год'), row('Post vom Finanzamt', 'в любой день'),
+        dbl(), t('Часто на языке, который вам не родной.', 'red bold')]))
+    S.append(dict(id='r03', k=1.12, paper='white', lines=[
+        dh('Не ещё одно приложение.'), t('Скиллы для ассистента, которым вы уже пользуетесь:', 'mid'), rule(),
+        row('Claude Code', 'OK'), row('Приложение Claude', 'OK'), row('Codex', 'OK'), rule(),
+        t('Скилл — это пакет инструкций, справочников и шаблонов, который ассистент загружает, когда это нужно для запроса.', 'mid'),
+        rule(), row('Языки', 'RU · DE · EN'), row('Руководства и отчёты', 'все три'),
+        dbl(), roww('НОВЫЙ СОФТ', 'НЕТ')]))
+    S.append(dict(id='r04', k=1.2, paper='white', lines=[
+        dh('Как идёт каждая задача'), rule(),
+        t('<span class="num">1</span>Вы спрашиваете своими словами.'), t('<span class="num">2</span>Он спрашивает только недостающее.'),
+        t('<span class="num">3</span>Готовит черновик и называет следующий шаг.'), t('<span class="num">4</span>Сохраняет факты в личной папке.'),
+        t('<span class="num">5</span>В следующем месяце продолжает оттуда.', 'mid'),
+        dbl(), roww('ОТПРАВЛЯЕТЕ', 'ВЫ')]))
+    for rid in ('r05', 'r06', 'r07'):
+        S.append(RU_EXAMPLES[rid])
+    S.append(dict(id='r08', k=1.16, paper='white', lines=[
+        dh('Семь скиллов на весь путь'), t('de-business-…', 'faded'), rule(),
+        group([row('kit', 'главный вход'), row('start', 'регистрация'), row('operations', 'счета, письма'),
+               row('accounting', 'чеки, банк'), row('tax', 'налоги, Finanzamt'), row('services', 'банк, страховка, ПО'),
+               row('changes', 'найм, пауза, закрытие')], spotlight=True),
+        dbl(), t('Смешанный вопрос? Набор сам направит.', 'bold')]))
+    S.append(dict(id='r09', k=1.08, paper='white', lines=[
+        dh('Одна личная папка'), rule(),
+        t('Мой бизнес/', 'bold'), row('01 Входящие', 'неразобранное'), row('02 Документы', 'оригиналы'),
+        row('03 Учёт', 'банк, отчёты'), row('04 Налоги', 'по годам'), row('05 Бизнес', 'регистрация, письма'),
+        dbl(), row('Один профиль', 'все годы'), row('Оригиналы', 'с контрольной суммой'),
+        row('Полная копия', 'проверена'), row('Имена папок', 'RU · DE · EN')]))
+    S.append(dict(id='r10', k=1.1, paper='white', lines=[
+        dh('Он готовит. Вы решаете и отправляете.'), rule(),
+        row('Исходный документ', 'сохранён'), row('Предложение', 'ассистент'), row('Проверка', 'ВЫ', '', 'red'),
+        row('Проводка', 'записана'), row('Черновик декларации', 'ассистент'), row('Разрешение', 'ВЫ', '', 'red'),
+        row('Отправка', 'ВЫ', '', 'red'), row('Ответ ведомства', 'подтверждение'), rule(),
+        t('В ELSTER и банк вы входите сами. Никаких паролей и TAN в чате.', 'mid'),
+        dbl(), roww('ПОСЛЕДНИЙ КЛИК', 'ВАШ')]))
+    S.append(dict(id='r11', paper='white', lines=[
+        dh('Честный статус: версия 0.14'), rule(), lbl('Работает сегодня'),
+        row('7 скиллов в Claude и Codex', 'OK'), row('Руководства, отчёты RU · DE · EN', 'OK'), row('Счета, чеки, кассовый журнал', 'OK'),
+        row('Lexware Office в браузере', 'проверено'), row('Копия и восстановление', 'проверено'), rule(), lbl('Не входит'),
+        row('Налоговая консультация', 'НЕТ', '', 'red'), row('Отправка в ELSTER', 'НЕТ', '', 'red'), row('Полный налоговый расчёт', 'НЕТ', '', 'red'),
+        row('Только локальный AI', 'НЕТ', '', 'red'), dbl(),
+        row('Коммитов с 25.10.', '190+'), row('Автотестов', '500+'), row('Лицензия', 'MIT')]))
+    S.append(dict(id='r12', k=1.05, paper='pink', copies=True, lines=[
+        dh('Попробуйте на вымышленном примере.'), rule(),
+        row('<span class="num">1</span>Откройте', 'Claude или Codex'),
+        row('<span class="num">2</span>Вставьте', 'запрос из README'),
+        t('<span class="num">3</span>Напишите:'), box('Используй de-business-kit. Начни настройку.'), rule(),
+        qr(REPO, 'github.com/<br>ilyafedotov-ops/<br>german-business-skills'),
+        dbl(), roww('ДАЛЬШЕ', 'ВАШ ХОД'),
+        foot('Бесплатно · MIT · помощь AI, не налоговая консультация · отзывы приветствуются')]))
+    return S
+
+
 FIT = '''
 <script>
   // Scale each landscape receipt to its box and centre it; the engine calls this before setup.
@@ -343,28 +446,41 @@ def portrait_slide(s, n, meta_left, lang):
             f'</section>\n')
 
 
-DEMO_PORTRAIT = '''<section class="slide R vonly" id="rdemo">
-  <div class="meta"><span><b>GERMAN BUSINESS KIT</b> · real apps</span><span>SCREENSHOTS</span></div>
-  <div class="dh demo-title" style="position:absolute;left:82px;right:82px;top:120px;color:#fff;font-size:76px">Ask in your own words.</div>
-  <div class="browser" style="position:absolute;left:82px;top:312px;width:916px"><div class="chrome"><i></i><i></i><i></i><span>Claude app</span></div><div class="vp" style="width:916px;height:740px"><img class="demo-img" alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div></div>
-  <div class="lift" style="left:82px;top:1128px;width:916px"><div class="receipt white" style="padding:30px 40px 34px"><div class="t mid" style="font-size:26px">Real Claude and Codex screenshots · fictional example · nothing is submitted</div></div></div>
-</section>
-'''
+DEMO_TEXT = {
+    'en': dict(meta='real apps', tag='SCREENSHOTS', title='Ask in your own words.', chrome='Claude app',
+               note='Real Claude and Codex screenshots · fictional example · nothing is submitted'),
+    'de': dict(meta='echte Apps', tag='BILDSCHIRMFOTOS', title='Fragen Sie in eigenen Worten.', chrome='Claude-App',
+               note='Echte Bildschirmfotos aus Claude und Codex · erfundenes Beispiel · nichts wird übermittelt'),
+    'ru': dict(meta='настоящие приложения', tag='СКРИНШОТЫ', title='Спросите своими словами.', chrome='Приложение Claude',
+               note='Настоящие скриншоты Claude и Codex · вымышленный пример · ничего не отправляется'),
+}
+
+
+def demo_portrait(lang):
+    d = DEMO_TEXT[lang]
+    return (f'<section class="slide R vonly" id="rdemo">\n'
+            f'  <div class="meta"><span><b>GERMAN BUSINESS KIT</b> · {d["meta"]}</span><span>{d["tag"]}</span></div>\n'
+            f'  <div class="dh demo-title" style="position:absolute;left:82px;right:82px;top:120px;color:#fff;font-size:76px">{d["title"]}</div>\n'
+            f'  <div class="browser" style="position:absolute;left:82px;top:312px;width:916px"><div class="chrome"><i></i><i></i><i></i><span>{d["chrome"]}</span></div><div class="vp" style="width:916px;height:740px"><img class="demo-img" alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div></div>\n'
+            f'  <div class="lift" style="left:82px;top:1128px;width:916px"><div class="receipt white" style="padding:30px 40px 34px"><div class="t mid" style="font-size:26px">{d["note"]}</div></div></div>\n'
+            f'</section>\n')
 
 
 def write_carousel(lang, slides):
-    meta = {'en': '', 'de': ''}[lang]
-    body = ''.join(portrait_slide(s, i, meta, lang) for i, s in enumerate(slides, 1))
-    if lang == 'en':
-        body += DEMO_PORTRAIT
+    body = ''.join(portrait_slide(s, i, '', lang) for i, s in enumerate(slides, 1))
+    body += demo_portrait(lang)
     path = os.path.join(BUILD, f'receipt-{lang}.html')
     open(path, 'w').write(HEAD.format(lang=lang, title=f'German Business Kit carousel {lang.upper()}') + body + SCRIPTS + '\n</body>\n</html>\n')
     return path
 
 
-# ── YouTube scenes (EN, 16:9): receipt on the left, headline and notes on the carbon ──
+# ── YouTube scenes (16:9): receipt on the left, headline and notes on the carbon ──
 def side(headline, sub=None, notes=(), small=None, top=170):
-    n = ''.join(f'<div data-cue="{html.escape(c)}">{txt}</div>' for txt, c in notes)
+    def note(i, item):
+        txt, cue = item if isinstance(item, tuple) else (item, None)
+        anim = f'data-cue="{html.escape(cue)}"' if cue else f'data-at="{0.15 + 0.7 * i / max(1, len(notes) - 1):.3f}"'
+        return f'<div {anim}>{txt}</div>'
+    n = ''.join(note(i, item) for i, item in enumerate(notes))
     return (f'<div class="side">'
             f'<div class="dh">{headline}</div>'
             + (f'<div class="t" style="margin-top:26px">{sub}</div>' if sub else '')
@@ -384,98 +500,211 @@ def strip_dh(lines):
     return [l for l in lines if l[0] != 'dh']
 
 
-def write_youtube(en):
-    by = {s['id']: s for s in en}
-    yq = {  # narration cues from post/scripts.md (Yq1..Yq3)
-        'r05': ('Berlin · translator · side job', [('Quotes the law that names translators', 'quotes the law'), ('One registration, one-month deadline', 'one registration'), ('Links the official pages it opened', 'official pages')]),
-        'r06': ('Hamburg · web designer · first year', [('First-year limit: €25,000', 'first-year limit'), ('What happens when a payment crosses it', 'crosses it'), ('Says what it couldn’t check', 'said so')]),
-        'r07': ('Munich · photographer · profit dropped', [('Estimate with this year’s tariff', 'estimates'), ('Arithmetic checked two ways', 'two ways'), ('Deadline flagged: 15 days', 'fifteen days'), ('German letter, marked as a draft', 'drafts')]),
-    }
+def no_cues(lines):
+    """Drop narration cues so lines print in sequence across the clip (DE/RU narration)."""
     out = []
-    # Y0 title
-    out.append(scene('y0', 'a walkthrough', strip_dh(by['r01']['lines']), 'white',
-                     side('Every answer comes with its receipt.', '7 open-source AI skills for freelancers and sole traders in Germany, for <b>Claude</b> and <b>Codex</b>.', small='A walkthrough: what it is, how it works, and what it won’t do.'), scale=0.74))
-    # Y1 problem + reveal
-    reveal = ('<div class="reveal" data-cue="So I built" style="position:absolute;inset:0;background:var(--carbon-deep);display:flex;align-items:center;justify-content:center">'
-              '<div class="lift" style="position:relative;width:1100px"><div class="receipt white" style="padding:70px 80px 80px">'
-              '<div class="hdr"><b>GERMAN BUSINESS KIT</b>Claude Code · Claude app · Codex</div><div class="rule"></div>'
-              '<div class="dh" style="font-size:92px">An assistant for all of it, one line at a time.</div><div class="rule dbl"></div>'
-              '<div class="row dw"><span class="k">SENT BY</span><span class="dots"></span><span class="v red">YOU</span></div></div></div></div>')
-    y1_lines = [l for l in by['r02']['lines'] if l[0] != 'dh']
-    y1_lines = [(k, p, {kk: vv for kk, vv in o.items() if kk != 'cue'}) for k, p, o in y1_lines]
-    y1_cues = ['questionnaire', None, 'invoices with', None, 'invoices with', None, 'receipts', None, 'bank statements', 'Finanzamt', None, 'language']
-    y1_lines = [(k, p, ({**o, 'cue': c} if c else o)) for (k, p, o), c in zip(y1_lines, y1_cues + [None] * 20)]
-    out.append(scene('y1', 'the problem', y1_lines, 'white', side('Before your first invoice, the paperwork starts.'), scale=0.8, extra=reveal))
-    # Y2 idea
-    y2 = [rule(), row('Claude Code', 'OK', cue='seven skills'), row('Claude app', 'OK', cue='for Claude'), row('Codex', 'OK', cue='Codex.'), rule(),
-          t('A skill is a package of instructions, references and templates the assistant loads when your request needs it.', 'mid', cue='A skill'),
-          rule(), row('Ask in', 'EN · DE · RU', cue='plain English'), row('Guides, reports', 'all three', cue='all three'), dbl(), roww('NEW APP', 'NONE', cue='no new app')]
-    out.append(scene('y2', 'what it is', y2, 'white', side('Seven skills for Claude and Codex.'), scale=0.82))
-    # Y3 how
-    y3 = [rule(), t('<span class="num">1</span>You ask in your own words.', '', cue='One:'), t('“Turn these agreed terms into a German proposal.”', 'faded', cue='For example'),
-          t('<span class="num">2</span>It reuses confirmed facts.', '', cue='Two:'), t('<span class="num">3</span>It asks only what’s missing.', '', cue='asks only'),
-          t('<span class="num">4</span>It drafts and names the next step.', '', cue='readable draft'), t('<span class="num">5</span>It saves results and open questions.', '', cue='Three:'),
-          t('<span class="num">6</span>Next month it continues there.', 'mid', cue='Next month'), dbl(), roww('SENT BY', 'YOU', cue='starting over')]
-    out.append(scene('y3', 'how it works', y3, 'white', side('Ask. Clarify. Continue.'), scale=0.84))
-    # Y4 skills (spotlight follows the narration)
-    y4 = [t('de-business-…', 'faded'), rule(),
-          group([row('start', 'registration', cue='Start helps'), row('operations', 'invoices, letters', cue='Operations'), row('accounting', 'receipts, bank, month', cue='Accounting'),
-                 row('tax', 'rules, estimates, returns', cue='Tax researches'), row('services', 'bank, insurance, software', cue='Services'),
-                 row('changes', 'activity, hire, pause, close', cue='Changes'), row('kit', 'the front door', cue='front door')], spotlight=True)]
-    out.append(scene('y4', 'the seven skills', y4, 'white', side('Seven skills, one business life.', 'Each one follows a stage in the life of a sole trader.'), scale=0.88, top=170))
-    # Y5 folder
-    y5 = [t('My business/', 'bold'), row('01 Inbox', 'unsorted', cue='inbox'), row('02 Documents', 'originals, numbered', cue='documents,'),
-          row('03 Accounts', 'bank, reports', cue='accounts'), row('04 Taxes', 'by year', cue='taxes'), row('05 Business', 'registration, letters', cue='and business'), dbl(),
-          row('Originals', 'kept, numbered', cue='Originals'), row('One profile', 'all activities, all years', cue='One profile'), row('Overview page', 'where you stand', cue='overview page'),
-          row('Full backup', 'verified', cue='verified backup')]
-    out.append(scene('y5', 'your business folder', y5, 'white', side('One private folder. Everything in its place.'), scale=0.84))
-    # Y6 demo: step receipt + browser
+    for k, p, o in lines:
+        o = {kk: vv for kk, vv in o.items() if kk != 'cue'}
+        out.append((k, [*no_cues(p)] if k == 'group' else p, o))
+    return out
+
+
+# Scene text per language. English keeps its narration cues; German and Russian lines print in sequence.
+YT = {
+ 'en': dict(
+    labels=dict(y0='a walkthrough', y1='the problem', y2='what it is', y3='how it works', y4='the seven skills', y5='your business folder',
+                demo='real apps', demo_tag='SCREENSHOTS', yq='real question {n}/3', y7='the principle', y8='install', y9='honest limits'),
+    y0=('Every answer comes with its receipt.', '7 open-source AI skills for freelancers and sole traders in Germany, for <b>Claude</b> and <b>Codex</b>.',
+        'A walkthrough: what it is, how it works, and what it won’t do.'),
+    y1_head='Before your first invoice, the paperwork starts.',
+    reveal=('Claude Code · Claude app · Codex', 'An assistant for all of it, one line at a time.', 'SENT BY', 'YOU'),
+    y1_cues=['questionnaire', None, 'invoices with', None, 'invoices with', None, 'receipts', None, 'bank statements', 'Finanzamt', None, 'language'],
+    y2=[rule(), row('Claude Code', 'OK', cue='seven skills'), row('Claude app', 'OK', cue='for Claude'), row('Codex', 'OK', cue='Codex.'), rule(),
+        t('A skill is a package of instructions, references and templates the assistant loads when your request needs it.', 'mid', cue='A skill'),
+        rule(), row('Ask in', 'EN · DE · RU', cue='plain English'), row('Guides, reports', 'all three', cue='all three'), dbl(), roww('NEW APP', 'NONE', cue='no new app')],
+    y2_head='Seven skills for Claude and Codex.',
+    y3=[rule(), t('<span class="num">1</span>You ask in your own words.', '', cue='One:'), t('“Turn these agreed terms into a German proposal.”', 'faded', cue='For example'),
+        t('<span class="num">2</span>It reuses confirmed facts.', '', cue='Two:'), t('<span class="num">3</span>It asks only what’s missing.', '', cue='asks only'),
+        t('<span class="num">4</span>It drafts and names the next step.', '', cue='readable draft'), t('<span class="num">5</span>It saves results and open questions.', '', cue='Three:'),
+        t('<span class="num">6</span>Next month it continues there.', 'mid', cue='Next month'), dbl(), roww('SENT BY', 'YOU', cue='starting over')],
+    y3_head='Ask. Clarify. Continue.',
+    y4=[t('de-business-…', 'faded'), rule(),
+        group([row('start', 'registration', cue='Start helps'), row('operations', 'invoices, letters', cue='Operations'), row('accounting', 'receipts, bank, month', cue='Accounting'),
+               row('tax', 'rules, estimates, returns', cue='Tax researches'), row('services', 'bank, insurance, software', cue='Services'),
+               row('changes', 'activity, hire, pause, close', cue='Changes'), row('kit', 'the front door', cue='front door')], spotlight=True)],
+    y4_head=('Seven skills, one business life.', 'Each one follows a stage in the life of a sole trader.'),
+    y5=[t('My business/', 'bold'), row('01 Inbox', 'unsorted', cue='inbox'), row('02 Documents', 'originals, numbered', cue='documents,'),
+        row('03 Accounts', 'bank, reports', cue='accounts'), row('04 Taxes', 'by year', cue='taxes'), row('05 Business', 'registration, letters', cue='and business'), dbl(),
+        row('Originals', 'kept, numbered', cue='Originals'), row('One profile', 'all activities, all years', cue='One profile'), row('Overview page', 'where you stand', cue='overview page'),
+        row('Full backup', 'verified', cue='verified backup')],
+    y5_head='One private folder. Everything in its place.',
+    steps=['Seven skills, ready', 'Ask in your own words', 'One small next step', 'In German, too'],
+    demo_hdr=('REAL APPS', 'fictional example · nothing submitted'), demo_note='Unedited screenshots from Claude and Codex with the kit installed.', demo_chrome='Codex',
+    yq={'r05': ('Berlin · translator · side job', [('Quotes the law that names translators', 'quotes the law'), ('One registration, one-month deadline', 'one registration'), ('Links the official pages it opened', 'official pages')]),
+        'r06': ('Hamburg · web designer · first year', [('First-year limit: €25,000', 'first-year limit'), ('What happens when a payment crosses it', 'crosses it'), ('Says what it couldn’t check', 'said so')]),
+        'r07': ('Munich · photographer · profit dropped', [('Estimate with this year’s tariff', 'estimates'), ('Arithmetic checked two ways', 'two ways'), ('Deadline flagged: 15 days', 'fifteen days'), ('German letter, marked as a draft', 'drafts')])},
+    foot=FOOT_EN,
+    y7_head=('It prepares. You decide and send.', 'A polished draft is never treated as a filed return.'),
+    y7_cues=[None, 'Extraction', 'proposal,', 'review,', 'booking', 'booking', 'authorization', 'submission', 'answer', None, 'You sign in', None, 'final click'],
+    y8=[lbl('Claude app', cue='Claude app'), t('Customize → Plugins → Add marketplace →', '', cue='Customize'), t('ilyafedotov-ops/german-business-skills', 'bold', cue='marketplace'),
+        t('→ Install German Business Kit', '', cue='install German'), rule(), lbl('Claude Code', cue='Claude Code,'),
+        t('claude plugin marketplace add ilyafedotov-ops/german-business-skills', 'mid', cue='two commands'), t('claude plugin install de-business-kit@german-business-kit', 'mid', cue='two commands'),
+        rule(), lbl('Codex', cue='In Codex'), t('Copy the released skills into your project.', '', cue='released skills'), rule(),
+        t('Or paste the install request from the README.', 'bold', cue='paste the install'), dbl(), box('Use de-business-kit. Start the welcome setup.', cue='fresh chat')],
+    y8_head='Install in a few minutes.',
+    y9=[lbl('Not included', cue='honest limits'), row('Tax advice', 'NO', '', 'red', cue='not professional'), row('ELSTER transmission', 'NO', '', 'red', cue='ELSTER'),
+        row('Complete tax engine', 'NO', '', 'red', cue='tax engine'), row('Local-only AI', 'NO', '', 'red', cue='AI provider'), rule(),
+        t('Start with a made-up example.', 'bold', cue='made-up'), dbl(), qr(REPO, 'github.com/<br>ilyafedotov-ops/<br>german-business-skills', cue='open source'),
+        dbl(), roww('NEXT STEP', 'YOURS', cue='what\'s missing')],
+    y9_head=('A few honest limits.', 'Early preview. AI can get calculations and deadlines wrong.', [('Tell me what’s missing', 'what\'s missing'), ('Danke, bis bald.', 'Danke')]),
+    y10=('7 open-source skills · Claude &amp; Codex · preview', 'NEXT STEP', 'YOURS')),
+ 'de': dict(
+    labels=dict(y0='ein Rundgang', y1='das Problem', y2='was es ist', y3='wie es funktioniert', y4='die sieben Skills', y5='Ihr Unternehmensordner',
+                demo='echte Apps', demo_tag='BILDSCHIRMFOTOS', yq='echte Frage {n}/3', y7='das Prinzip', y8='Installation', y9='ehrliche Grenzen'),
+    y0=('Zu jeder Antwort gibt es den Beleg.', '7 Open-Source-KI-Skills für Selbstständige in Deutschland, für <b>Claude</b> und <b>Codex</b>.',
+        'Ein Rundgang: was es ist, wie es funktioniert und was es nicht tut.'),
+    y1_head='Vor der ersten Rechnung beginnt der Papierkram.',
+    reveal=('Claude Code · Claude-App · Codex', 'Ein Assistent für all das, Zeile für Zeile.', 'SENDEN', 'SIE'),
+    y2=[rule(), row('Claude Code', 'OK'), row('Claude-App', 'OK'), row('Codex', 'OK'), rule(),
+        t('Ein Skill ist ein Paket aus Anweisungen, Referenzen und Vorlagen, das der Assistent lädt, wenn Ihre Anfrage es braucht.', 'mid'),
+        rule(), row('Sprachen', 'DE · EN · RU'), row('Anleitungen, Berichte', 'alle drei'), dbl(), roww('NEUE APP', 'KEINE')],
+    y2_head='Sieben Skills für Claude und Codex.',
+    y3=[rule(), t('<span class="num">1</span>Sie fragen in Ihren Worten.'), t('„Mach aus diesen Bedingungen ein Angebot.“', 'faded'),
+        t('<span class="num">2</span>Es nutzt bestätigte Angaben.'), t('<span class="num">3</span>Es fragt nur, was fehlt.'),
+        t('<span class="num">4</span>Es entwirft und nennt den nächsten Schritt.'), t('<span class="num">5</span>Es speichert Ergebnisse und offene Fragen.'),
+        t('<span class="num">6</span>Nächsten Monat geht es dort weiter.', 'mid'), dbl(), roww('SENDEN', 'SIE')],
+    y3_head='Fragen. Klären. Fortsetzen.',
+    y4=[t('de-business-…', 'faded'), rule(),
+        group([row('start', 'Anmeldung'), row('operations', 'Rechnungen, Briefe'), row('accounting', 'Belege, Bank, Monat'),
+               row('tax', 'Regeln, Schätzung, Erklärung'), row('services', 'Bank, Versicherung, Software'),
+               row('changes', 'Tätigkeit, Personal, Pause'), row('kit', 'der Einstieg')])],
+    y4_head=('Sieben Skills für den ganzen Weg.', 'Jeder folgt einer Etappe im Leben von Selbstständigen.'),
+    y5=[t('Mein Unternehmen/', 'bold'), row('01 Eingang', 'unsortiert'), row('02 Dokumente', 'Originale, nummeriert'),
+        row('03 Buchhaltung', 'Bank, Berichte'), row('04 Steuern', 'nach Jahr'), row('05 Unternehmen', 'Anmeldung, Briefe'), dbl(),
+        row('Originale', 'erhalten, nummeriert'), row('Ein Profil', 'alle Tätigkeiten und Jahre'), row('Übersichtsseite', 'wo Sie stehen'),
+        row('Vollsicherung', 'geprüft')],
+    y5_head='Ein privater Ordner. Alles an seinem Platz.',
+    steps=['Sieben Skills bereit', 'In eigenen Worten fragen', 'Ein kleiner erster Schritt', 'Auch in Codex'],
+    demo_hdr=('ECHTE APPS', 'erfundenes Beispiel · nichts übermittelt'), demo_note='Unbearbeitete Bildschirmfotos aus Claude und Codex mit installiertem Kit.', demo_chrome='Codex',
+    yq={'r05': ('Berlin · Übersetzer · Nebenjob', ['Zitiert das Gesetz, das Übersetzer nennt', 'Eine Anmeldung, Frist ein Monat', 'Verlinkt die geöffneten Amtsseiten']),
+        'r06': ('Hamburg · Webdesign · erstes Jahr', ['Grenze im Gründungsjahr: 25.000 €', 'Es zählt der Geldeingang', 'Sagt, was nicht abrufbar war']),
+        'r07': ('München · Fotograf · Gewinn gesunken', ['Herabsetzung: ja', 'Warnt vor Säumniszuschlägen', 'Schätzt erst mit allen Angaben', 'Antrag als Entwurf markiert'])},
+    foot=FOOT_DE,
+    y7_head=('Es bereitet vor. Sie entscheiden und senden.', 'Ein schöner Entwurf gilt nie als eingereichte Erklärung.'),
+    y8=[lbl('Claude-App'), t('Customize → Plugins → Add marketplace →'), t('ilyafedotov-ops/german-business-skills', 'bold'),
+        t('→ German Business Kit installieren'), rule(), lbl('Claude Code'),
+        t('claude plugin marketplace add ilyafedotov-ops/german-business-skills', 'mid'), t('claude plugin install de-business-kit@german-business-kit', 'mid'),
+        rule(), lbl('Codex'), t('Veröffentlichte Skills ins Projekt kopieren.'), rule(),
+        t('Oder die Installationsanfrage aus dem README einfügen.', 'bold'), dbl(), box('Nutze de-business-kit. Starte die Einrichtung.')],
+    y8_head='In wenigen Minuten installiert.',
+    y9=[lbl('Nicht enthalten'), row('Steuerberatung', 'NEIN', '', 'red'), row('ELSTER-Übermittlung', 'NEIN', '', 'red'),
+        row('Vollständige Steuerberechnung', 'NEIN', '', 'red'), row('Nur-lokale KI', 'NEIN', '', 'red'), rule(),
+        t('Beginnen Sie mit einem erfundenen Beispiel.', 'bold'), dbl(), qr(REPO, 'github.com/<br>ilyafedotov-ops/<br>german-business-skills'),
+        dbl(), roww('ALS NÄCHSTES', 'SIE')],
+    y9_head=('Ein paar ehrliche Grenzen.', 'Frühe Vorschau. KI kann sich bei Berechnungen und Fristen irren.', ['Sagen Sie mir, was fehlt', 'Danke und bis bald.']),
+    y10=('7 Open-Source-Skills · Claude &amp; Codex · Vorschau', 'ALS NÄCHSTES', 'SIE')),
+ 'ru': dict(
+    labels=dict(y0='обзор', y1='проблема', y2='что это', y3='как это работает', y4='семь скиллов', y5='ваша папка бизнеса',
+                demo='настоящие приложения', demo_tag='СКРИНШОТЫ', yq='настоящий вопрос {n}/3', y7='принцип', y8='установка', y9='честные ограничения'),
+    y0=('К каждому ответу прилагается чек.', '7 открытых AI-скиллов для самозанятых в Германии, для <b>Claude</b> и <b>Codex</b>.',
+        'Обзор: что это, как это работает и чего оно не делает.'),
+    y1_head='Бумаги начинаются ещё до первого счёта.',
+    reveal=('Claude Code · приложение Claude · Codex', 'Помощник для всего этого, строка за строкой.', 'ОТПРАВЛЯЕТЕ', 'ВЫ'),
+    y2=[rule(), row('Claude Code', 'OK'), row('Приложение Claude', 'OK'), row('Codex', 'OK'), rule(),
+        t('Скилл — это пакет инструкций, справочников и шаблонов, который ассистент загружает, когда это нужно для запроса.', 'mid'),
+        rule(), row('Языки', 'RU · DE · EN'), row('Руководства, отчёты', 'все три'), dbl(), roww('НОВЫЙ СОФТ', 'НЕТ')],
+    y2_head='Семь скиллов для Claude и Codex.',
+    y3=[rule(), t('<span class="num">1</span>Вы спрашиваете своими словами.'), t('«Преврати эти условия в предложение на немецком.»', 'faded'),
+        t('<span class="num">2</span>Он использует подтверждённые факты.'), t('<span class="num">3</span>Спрашивает только недостающее.'),
+        t('<span class="num">4</span>Готовит черновик и называет следующий шаг.'), t('<span class="num">5</span>Сохраняет результаты и открытые вопросы.'),
+        t('<span class="num">6</span>В следующем месяце продолжает оттуда.', 'mid'), dbl(), roww('ОТПРАВЛЯЕТЕ', 'ВЫ')],
+    y3_head='Спросить. Уточнить. Продолжить.',
+    y4=[t('de-business-…', 'faded'), rule(),
+        group([row('start', 'регистрация'), row('operations', 'счета, письма'), row('accounting', 'чеки, банк, месяц'),
+               row('tax', 'правила, оценки, декларации'), row('services', 'банк, страховка, ПО'),
+               row('changes', 'деятельность, найм, пауза'), row('kit', 'главный вход')])],
+    y4_head=('Семь скиллов на весь путь.', 'Каждый отвечает за этап жизни самозанятого.'),
+    y5=[t('Мой бизнес/', 'bold'), row('01 Входящие', 'неразобранное'), row('02 Документы', 'оригиналы с номерами'),
+        row('03 Учёт', 'банк, отчёты'), row('04 Налоги', 'по годам'), row('05 Бизнес', 'регистрация, письма'), dbl(),
+        row('Оригиналы', 'сохранены, с номерами'), row('Один профиль', 'все дела и годы'), row('Страница обзора', 'где вы сейчас'),
+        row('Полная копия', 'проверена')],
+    y5_head='Одна личная папка. Всё на своём месте.',
+    steps=['Семь скиллов готовы', 'Спросите своими словами', 'Один небольшой шаг', 'И в Codex тоже'],
+    demo_hdr=('НАСТОЯЩИЕ ПРИЛОЖЕНИЯ', 'вымышленный пример · ничего не отправлено'), demo_note='Неотредактированные скриншоты Claude и Codex с установленным набором.', demo_chrome='Codex',
+    yq={'r05': ('Берлин · переводчик · подработка', ['Цитирует закон, где назван переводчик', 'Одна регистрация, срок месяц', 'Ссылки на открытые официальные страницы']),
+        'r06': ('Гамбург · веб-дизайнер · первый год', ['Лимит первого года: 25 000 €', 'Считаются поступившие деньги', 'Отделяет закон от своего вывода']),
+        'r07': ('Мюнхен · фотограф · прибыль упала', ['Снизить авансы можно', 'Налог посчитан двумя способами', 'Старый Bescheid действует до решения', 'Письмо на немецком, помечено как черновик'])},
+    foot=FOOT_RU,
+    y7_head=('Он готовит. Вы решаете и отправляете.', 'Аккуратный черновик никогда не считается поданной декларацией.'),
+    y8=[lbl('Приложение Claude'), t('Customize → Plugins → Add marketplace →'), t('ilyafedotov-ops/german-business-skills', 'bold'),
+        t('→ установить German Business Kit'), rule(), lbl('Claude Code'),
+        t('claude plugin marketplace add ilyafedotov-ops/german-business-skills', 'mid'), t('claude plugin install de-business-kit@german-business-kit', 'mid'),
+        rule(), lbl('Codex'), t('Скопировать выпущенные скиллы в проект.'), rule(),
+        t('Или вставьте запрос на установку из README.', 'bold'), dbl(), box('Используй de-business-kit. Начни настройку.')],
+    y8_head='Установка за несколько минут.',
+    y9=[lbl('Не входит'), row('Налоговая консультация', 'НЕТ', '', 'red'), row('Отправка в ELSTER', 'НЕТ', '', 'red'),
+        row('Полный налоговый расчёт', 'НЕТ', '', 'red'), row('Только локальный AI', 'НЕТ', '', 'red'), rule(),
+        t('Начните с вымышленного примера.', 'bold'), dbl(), qr(REPO, 'github.com/<br>ilyafedotov-ops/<br>german-business-skills'),
+        dbl(), roww('ДАЛЬШЕ', 'ВАШ ХОД')],
+    y9_head=('Несколько честных ограничений.', 'Ранняя версия. AI может ошибаться в расчётах и сроках.', ['Расскажите, чего не хватает', 'Спасибо и до встречи.']),
+    y10=('7 открытых скиллов · Claude и Codex · предварительная версия', 'ДАЛЬШЕ', 'ВАШ ХОД')),
+}
+
+
+def write_youtube(lang, slides):
+    L = YT[lang]
+    en = lang == 'en'
+    by = {s['id']: s for s in slides}
+    lab = L['labels']
+    def body(lines, cues=None):
+        lines = strip_dh(lines) if lines and lines[0][0] == 'dh' else lines
+        lines = no_cues(lines)
+        if cues:
+            lines = [(k, p, ({**o, 'cue': c} if c else o)) for (k, p, o), c in zip(lines, cues + [None] * 40)]
+        return lines
+    out = []
+    y0h, y0s, y0small = L['y0']
+    out.append(scene('y0', lab['y0'], strip_dh(by['r01']['lines']), 'white', side(y0h, y0s, small=y0small), scale=0.74))
+    rh, rtitle, rk, rv = L['reveal']
+    reveal = ('<div class="reveal" data-cue="So I built" style="position:absolute;inset:0;background:var(--carbon-deep);display:flex;align-items:center;justify-content:center">' if en else
+              '<div class="reveal" data-at="0.86" style="position:absolute;inset:0;background:var(--carbon-deep);display:flex;align-items:center;justify-content:center">')
+    reveal += ('<div class="lift" style="position:relative;width:1100px"><div class="receipt white" style="padding:70px 80px 80px">'
+               f'<div class="hdr"><b>GERMAN BUSINESS KIT</b>{rh}</div><div class="rule"></div>'
+               f'<div class="dh" style="font-size:92px">{rtitle}</div><div class="rule dbl"></div>'
+               f'<div class="row dw"><span class="k">{rk}</span><span class="dots"></span><span class="v red">{rv}</span></div></div></div></div>')
+    out.append(scene('y1', lab['y1'], body(strip_dh(by['r02']['lines']), L.get('y1_cues')), 'white', side(L['y1_head']), scale=0.8, extra=reveal))
+    out.append(scene('y2', lab['y2'], L['y2'], 'white', side(L['y2_head']), scale=0.82))
+    out.append(scene('y3', lab['y3'], L['y3'], 'white', side(L['y3_head']), scale=0.84))
+    out.append(scene('y4', lab['y4'], L['y4'], 'white', side(*L['y4_head']), scale=0.88, top=170))
+    out.append(scene('y5', lab['y5'], L['y5'], 'white', side(L['y5_head']), scale=0.84))
     steps = ''.join(f'<div class="row t dstep" data-step="{i}"><span class="k"><span class="num">{i}</span>{txt}</span><span class="dots"></span>'
-                    f'<span class="v"><span class="pend">·</span><span class="now red">NOW</span><span class="ok">OK</span></span></div>'
-                    for i, txt in enumerate(['Seven skills, ready', 'Ask in your own words', 'One small next step', 'In German, too'], 1))
-    out.append('<section class="scene R" id="y6"><div class="meta"><span><b>GERMAN BUSINESS KIT</b> · real apps</span><span>SCREENSHOTS</span></div>'
+                    f'<span class="v"><span class="pend">·</span><span class="now red">{"NOW" if en else ("JETZT" if lang == "de" else "СЕЙЧАС")}</span><span class="ok">OK</span></span></div>'
+                    for i, txt in enumerate(L['steps'], 1))
+    dh1, dh2 = L['demo_hdr']
+    out.append(f'<section class="scene R" id="y6"><div class="meta"><span><b>GERMAN BUSINESS KIT</b> · {lab["demo"]}</span><span>{lab["demo_tag"]}</span></div>'
                '<div class="lift" style="left:80px;top:150px;width:600px;transform:scale(.86);transform-origin:0 0"><div class="receipt white">'
-               '<div class="hdr"><b>REAL APPS</b>fictional example · nothing submitted</div><div class="rule"></div>'
-               f'{steps}<div class="rule dbl"></div><div class="t mid" style="font-size:24px">Unedited screenshots from Claude and Codex with the kit installed.</div></div></div>'
-               '<div class="browser" style="position:absolute;left:640px;top:118px;width:1190px"><div class="chrome"><i></i><i></i><i></i><span>Codex</span></div>'
+               f'<div class="hdr"><b>{dh1}</b>{dh2}</div><div class="rule"></div>'
+               f'{steps}<div class="rule dbl"></div><div class="t mid" style="font-size:24px">{L["demo_note"]}</div></div></div>'
+               f'<div class="browser" style="position:absolute;left:640px;top:118px;width:1190px"><div class="chrome"><i></i><i></i><i></i><span>{L["demo_chrome"]}</span></div>'
                '<div class="vp" style="width:1190px;height:744px"><img class="demo-img" alt="" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div></div></section>\n')
-    # Yq examples
     for n, rid in enumerate(['r05', 'r06', 'r07'], 1):
         s = by[rid]
-        sub, notes = yq[rid]
-        lines = [(k, p, {kk: vv for kk, vv in o.items() if kk != 'cue'}) for k, p, o in strip_dh(s['lines'])]
+        sub, notes = L['yq'][rid]
+        lines = no_cues(strip_dh(s['lines']))
         lines = [l for l in lines if not (l[0] == 't' and 'faded' in l[1][1] and '·' in l[1][0] and l is lines[0])]
         q = [l for l in s['lines'] if l[0] == 'dh'][0][1]
-        stamp = ''
-        out.append(scene(f'yq{n}', f'real question {n}/3', lines, s['paper'],
-                         side(q, sub, notes, small='Real reply · Claude Code + German Business Kit 0.13 · 25.11.2026 · fictional person · summary · not tax advice', top=150),
-                         scale=0.72, top=110, extra=stamp))
-    # Y7 principle
-    y7 = [(k, p, {kk: vv for kk, vv in o.items() if kk != 'cue'}) for k, p, o in strip_dh(by['r10']['lines'])]
-    y7_cues = [None, 'Extraction', 'proposal,', 'review,', 'booking', 'booking', 'authorization', 'submission', 'answer', None, 'You sign in', None, 'final click']
-    y7 = [(k, p, ({**o, 'cue': c} if c else o)) for (k, p, o), c in zip(y7, y7_cues + [None] * 20)]
-    out.append(scene('y7', 'the principle', y7, 'white', side('It prepares. You decide and send.', 'A polished draft is never treated as a filed return.'), scale=0.84))
-    # Y8 install
-    y8 = [lbl('Claude app', cue='Claude app'), t('Customize → Plugins → Add marketplace →', '', cue='Customize'), t('ilyafedotov-ops/german-business-skills', 'bold', cue='marketplace'),
-          t('→ Install German Business Kit', '', cue='install German'), rule(), lbl('Claude Code', cue='Claude Code,'),
-          t('claude plugin marketplace add ilyafedotov-ops/german-business-skills', 'mid', cue='two commands'), t('claude plugin install de-business-kit@german-business-kit', 'mid', cue='two commands'),
-          rule(), lbl('Codex', cue='In Codex'), t('Copy the released skills into your project.', '', cue='released skills'), rule(),
-          t('Or paste the install request from the README.', 'bold', cue='paste the install'), dbl(), box('Use de-business-kit. Start the welcome setup.', cue='fresh chat')]
-    out.append(scene('y8', 'install', y8, 'white', side('Install in a few minutes.'), scale=0.78, top=96))
-    # Y9 limits + CTA
-    y9 = [lbl('Not included', cue='honest limits'), row('Tax advice', 'NO', '', 'red', cue='not professional'), row('ELSTER transmission', 'NO', '', 'red', cue='ELSTER'),
-          row('Complete tax engine', 'NO', '', 'red', cue='tax engine'), row('Local-only AI', 'NO', '', 'red', cue='AI provider'), rule(),
-          t('Start with a made-up example.', 'bold', cue='made-up'), dbl(), qr(REPO, 'github.com/<br>ilyafedotov-ops/<br>german-business-skills', cue='open source'),
-          dbl(), roww('NEXT STEP', 'YOURS', cue='what\'s missing')]
-    out.append(scene('y9', 'honest limits', y9, 'pink', side('A few honest limits.', 'Early preview. AI can get calculations and deadlines wrong.',
-                     notes=[('Tell me what’s missing', 'what\'s missing'), ('Danke, bis bald.', 'Danke')]), scale=0.86, top=110))
-    # Y10 end card
+        out.append(scene(f'yq{n}', lab['yq'].format(n=n), lines, s['paper'], side(q, sub, notes, small=L['foot'], top=150), scale=0.72, top=110))
+    out.append(scene('y7', lab['y7'], body(strip_dh(by['r10']['lines']), L.get('y7_cues')), 'white', side(*L['y7_head']), scale=0.84))
+    out.append(scene('y8', lab['y8'], L['y8'], 'white', side(L['y8_head']), scale=0.78, top=96))
+    h9, s9, n9 = L['y9_head']
+    out.append(scene('y9', lab['y9'], L['y9'], 'pink', side(h9, s9, notes=n9), scale=0.86, top=110))
+    t10, k10, v10 = L['y10']
     out.append('<section class="scene R" id="y10"><div class="lift" style="left:560px;top:120px;width:800px"><div class="receipt pink" style="text-align:left">'
-               '<div class="hdr"><b>GERMAN BUSINESS KIT</b>7 open-source skills · Claude &amp; Codex · preview</div><div class="rule"></div>'
+               f'<div class="hdr"><b>GERMAN BUSINESS KIT</b>{t10}</div><div class="rule"></div>'
                f'<div class="qrrow"><div class="qr" data-qr="{REPO}"></div><div class="t bold">github.com/<br>ilyafedotov-ops/<br>german-business-skills</div></div>'
-               '<div class="rule dbl"></div><div class="row dw"><span class="k">NEXT STEP</span><span class="dots"></span><span class="v red">YOURS</span></div></div></div></section>\n')
-    path = os.path.join(BUILD, 'scenes-receipt-yt.html')
-    head = HEAD.format(lang='en', title='German Business Kit walkthrough scenes').replace('@page {{ size: 1080px 1350px; margin: 0; }}', '')
+               f'<div class="rule dbl"></div><div class="row dw"><span class="k">{k10}</span><span class="dots"></span><span class="v red">{v10}</span></div></div></div></section>\n')
+    path = os.path.join(BUILD, f'scenes-receipt-yt-{lang}.html')
+    head = HEAD.format(lang=lang, title=f'German Business Kit walkthrough scenes {lang.upper()}').replace('@page {{ size: 1080px 1350px; margin: 0; }}', '')
     open(path, 'w').write(head.replace('<body>', '<body style="width:1920px;height:1080px;overflow:hidden">') + ''.join(out)
                           + '<style>.dstep .now,.dstep .ok{display:none}.dstep.on .pend,.dstep.done .pend{display:none}.dstep.on .now{display:inline}.dstep.done .ok{display:inline}.dstep.on .k{font-weight:800}.dstep:not(.on):not(.done) .k{color:var(--ink-faded)}</style>'
                           + SCRIPTS + FIT + '\n</body>\n</html>\n')
@@ -483,7 +712,10 @@ def write_youtube(en):
 
 
 if __name__ == '__main__':
-    en, de = slides_en(), slides_de()
-    print(write_carousel('en', en))
-    print(write_carousel('de', de))
-    print(write_youtube(en))
+    import sys
+    langs = sys.argv[1:] or ['en', 'de', 'ru']
+    builders = {'en': slides_en, 'de': slides_de, 'ru': slides_ru}
+    for lang in langs:
+        slides = builders[lang]()
+        print(write_carousel(lang, slides))
+        print(write_youtube(lang, slides))

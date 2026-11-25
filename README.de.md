@@ -231,7 +231,7 @@ Sicherung**. JSON bearbeiten oder diese Pfade kennen müssen Sie nicht.
 - **Es bereitet vor; Sie entscheiden und senden.** Der Assistent entwirft Formulare, Schreiben und Aufzeichnungen. Bei ELSTER, Ihrer Bank oder Ihrer Buchhaltungssoftware melden Sie sich selbst an und klicken selbst zum Abschluss.
 - **Erst recherchieren, dann rechnen; erst prüfen, dann verlassen.** Es klärt fehlende Angaben, recherchiert die Regeln für den maßgeblichen Zeitraum und kann begrenzte Schätzungen mit festgehaltenen Prüfungen berechnen. Eine vollständige gesetzliche Steuer-Engine und direkte ELSTER-Übermittlung sind nicht enthalten. Sie können Ihre Erklärungen selbst erledigen und bei konkreten Fragen fachliche Hilfe hinzuziehen.
 - **Über Ihre Daten entscheiden Sie.** Inhalte, die Ihr Assistent liest, können an seinen KI-Anbieter gesendet werden; lokale Ablage bedeutet keine rein lokale Verarbeitung. Probieren Sie zuerst ein erfundenes Beispiel, halten Sie echte Unterlagen in einem getrennten privaten Ordner und tippen Sie nie Passwörter oder TANs in den Chat.
-- **Dies ist eine Vorschauversion** (0.14.0-preview.1). Siehe [was heute funktioniert und was geplant ist](docs/project-status.md) (Englisch).
+- **Dies ist eine Vorschauversion** (0.14.0-preview.2). Siehe [was heute funktioniert und was geplant ist](docs/project-status.md) (Englisch).
 
 ## Mehr
 

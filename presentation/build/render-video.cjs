@@ -1,5 +1,5 @@
 // Renders the LinkedIn (4:5) or YouTube (16:9) video from HTML scenes + narration.
-// node render-video.cjs linkedin|youtube [--stills 1.5,12,30] [--fps 30]
+// node render-video.cjs linkedin|youtube [--lang en|de|ru] [--stills 1.5,12,30] [--fps 30]
 const path = require('node:path');
 const fs = require('node:fs');
 const fsp = require('node:fs/promises');
@@ -9,26 +9,55 @@ const playwright = require('playwright');
 
 const build = __dirname;
 const root = path.resolve(build, '..');
-const audioDir = path.join(root, 'audio');
 const outDir = path.join(root, 'video');
-// Real app screenshots from the guided setup page; paths are relative to the scene HTML in build/.
-const SHOTS = '../../installer/images/';
-const shot = (file, extra) => ({ img: SHOTS + file, imgW: 1400, ...extra });
 const format = process.argv[2];
 const argv = process.argv.slice(3);
 const opt = k => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : null; };
 const FPS = +(opt('--fps') || 30);
 const stills = opt('--stills');
+const lang = opt('--lang') || 'en';
+// English keeps the original file names; other languages get their own folder and suffix.
+const suffix = lang === 'en' ? '' : `-${lang}`;
+const audioDir = path.join(root, 'audio', lang === 'en' ? '' : lang);
+const musicFile = path.join(root, 'audio', 'music.mp3');
+
+// Real app screenshots from the guided setup page; paths are relative to the scene HTML in build/.
+const SHOTS = '../../installer/images/';
+const shot = (file, extra) => ({ img: SHOTS + file, imgW: 1400, ...extra });
+function jpegHeight(file) {
+  const b = fs.readFileSync(path.join(build, SHOTS, file));
+  for (let i = 2; i + 9 < b.length;) {
+    if (b[i] !== 0xFF) { i++; continue; }
+    const m = b[i + 1];
+    if (m >= 0xC0 && m <= 0xCF && ![0xC4, 0xC8, 0xCC].includes(m)) return b.readUInt16BE(i + 5);
+    i += 2 + b.readUInt16BE(i + 2);
+  }
+  throw new Error(`no JPEG size in ${file}`);
+}
+// Demo screenshots and labels per language. answerEnd: last used pixel row of the Claude answer.
+const DEMO = {
+  en: { claude: 'claude-first-en.jpg', answerEnd: 1299, skills: 'codex-skills-en.jpg', codex: 'codex-first-de.jpg', chrome: 'Claude app',
+    titles: ['Ask in your own words.', 'Get one small first step.', 'All seven skills, ready.', 'In German, too.'] },
+  de: { claude: 'claude-first-de.jpg', answerEnd: 1299, skills: 'codex-skills-de.jpg', codex: 'codex-first-de.jpg', chrome: 'Claude-App',
+    titles: ['Fragen Sie in eigenen Worten.', 'Ein kleiner erster Schritt.', 'Alle sieben Skills bereit.', 'Auch in Codex auf Deutsch.'] },
+  ru: { claude: 'claude-first-ru.jpg', answerEnd: 1225, skills: 'codex-skills-ru.jpg', codex: 'codex-first-ru.jpg', chrome: 'Приложение Claude',
+    titles: ['Спросите своими словами.', 'Получите один первый шаг.', 'Все семь скиллов готовы.', 'И в Codex по-русски.'] },
+}[lang];
+if (!DEMO) throw new Error(`unknown --lang ${lang}`);
 
 const dur = f => parseFloat(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', f]).toString());
 
 // Narration text per segment, parsed from the scripts file so captions match what was spoken.
-const scriptMd = fs.readFileSync(path.join(root, 'post/scripts.md'), 'utf8');
+const scriptMd = fs.readFileSync(path.join(root, `post/scripts${lang === 'en' ? '' : '.' + lang}.md`), 'utf8');
 const texts = {};
 for (const m of scriptMd.matchAll(/\*\*([LY]q?\d+[a-d]?) · [^*]+\*\*\n([^\n]+)/g)) texts[m[1]] = m[2].trim();
 
 // Break captions at punctuation, else before a connecting word, never leaving a dangling "into a".
-const JOIN = new Set(['and', 'or', 'but', 'so', 'into', 'in', 'to', 'for', 'with', 'that', 'until', 'from', 'of', 'on', 'then', 'instead', 'which', 'while', 'as', 'without', 'each', 'including', 'ready', 'often', 'when', 'where', 'because', 'if', 'asks', 'prepares', 'saves']);
+const JOIN = new Set({
+  en: ['and', 'or', 'but', 'so', 'into', 'in', 'to', 'for', 'with', 'that', 'until', 'from', 'of', 'on', 'then', 'instead', 'which', 'while', 'as', 'without', 'each', 'including', 'ready', 'often', 'when', 'where', 'because', 'if', 'asks', 'prepares', 'saves'],
+  de: ['und', 'oder', 'aber', 'sondern', 'denn', 'dass', 'ob', 'wenn', 'als', 'wie', 'weil', 'damit', 'statt', 'ohne', 'mit', 'für', 'von', 'zu', 'bei', 'nach', 'in', 'im', 'an', 'auf', 'über', 'bis', 'sowie', 'jeweils', 'dann', 'auch'],
+  ru: ['и', 'или', 'но', 'а', 'что', 'чтобы', 'если', 'когда', 'где', 'как', 'в', 'во', 'на', 'с', 'со', 'для', 'по', 'из', 'от', 'до', 'к', 'о', 'об', 'без', 'через', 'за', 'при', 'который', 'которые', 'которую', 'которой', 'потом', 'затем', 'поэтому', 'также', 'так', 'часто'],
+}[lang]);
 function chunkSentence(sentence, max) {
   if (sentence.length <= max * 1.2) return [sentence];
   const words = sentence.split(/\s+/);
@@ -37,22 +66,27 @@ function chunkSentence(sentence, max) {
   for (const w of words) {
     if (cur.length && len([...cur, w]) > max) {
       let k = -1;
-      for (let j = cur.length - 1; j >= 1; j--) if (/[,:;]$/.test(cur[j - 1]) && len(cur.slice(0, j)) >= max * 0.4) { k = j; break; }
+      // j = cur.length lets a line end on the comma right before the overflowing word.
+      for (let j = cur.length; j >= 1; j--) if (/[,:;]$/.test(cur[j - 1]) && len(cur.slice(0, j)) >= max * 0.4) { k = j; break; }
       if (k < 0) for (let j = cur.length - 1; j >= 1; j--) if (JOIN.has(cur[j].toLowerCase()) && len(cur.slice(0, j)) >= max * 0.4) { k = j; break; }
       if (k < 0) k = cur.length;
+      // Never end a line on a connecting word ("… gilt und"): carry it down with what follows.
+      while (k > 1 && JOIN.has(cur[k - 1].toLowerCase()) && len(cur.slice(0, k - 1)) >= max * 0.4) k--;
       out.push(cur.slice(0, k).join(' ')); cur = cur.slice(k);
     }
     cur.push(w);
   }
   if (cur.length) {
     // Fold a tiny remainder back into the previous line rather than flashing it alone.
-    if (out.length && len(cur) < 14 && out.at(-1).length + len(cur) + 1 <= max * 1.25) out[out.length - 1] += ' ' + cur.join(' ');
+    if (out.length && len(cur) < 16 && out.at(-1).length + len(cur) + 1 <= max * 1.25) out[out.length - 1] += ' ' + cur.join(' ');
     else out.push(cur.join(' '));
   }
   return out;
 }
+// German capitalises nouns after a colon, so DE/RU split only at sentence ends (colons stay soft breaks).
+const SENTENCE = lang === 'en' ? /(?<=[.?!:])\s+(?=[A-Z"“])/ : /(?<=[.?!])\s+(?=[\p{Lu}"“„«])/u;
 function chunk(text, max) {
-  return text.split(/(?<=[.?!:])\s+(?=[A-Z"“])/).flatMap(s => chunkSentence(s, max));
+  return text.split(SENTENCE).flatMap(s => chunkSentence(s, max));
 }
 function captions(text, audioDur, max) {
   const parts = chunk(text, max);
@@ -69,32 +103,40 @@ const CAPTION_CSS = { fontFamily: "'Martian Mono', monospace", fontVariationSett
 function timeline() {
   const W = format === 'linkedin' ? 1080 : 1920, H = format === 'linkedin' ? 1350 : 1080;
   const lead = 0.4, tail = 0.6;
+  // At full 1400-px width a viewport shows vis px of screenshot height. Shorter shots sit centred
+  // (negative y), taller ones pan down to their last row.
+  const at = (t, y, x = 0, w = 1400) => ({ at: t, x, y, w });
+  const centre = (file, vis) => Math.round((jpegHeight(file) - vis) / 2);
+  const panEnd = (file, vis) => Math.max(0, jpegHeight(file) - vis);
+  const { claude, skills, codex, chrome, titles, answerEnd } = DEMO;
   let scenes;
   if (format === 'linkedin') {
+    // Viewport 916x740: a 1400-px screenshot shows 1131 px of height at full width.
+    const vis = 740 * 1400 / 916;
     scenes = [
       { id: 'L1', el: 'r02', fadeIn: 0 }, { id: 'L2', el: 'r03' }, { id: 'L3', el: 'r04' }, { id: 'L3b', el: 'r05', tail: 1.2 }, { id: 'L4', el: 'r08' },
-      // Viewport 916x740: a 1400-px screenshot shows 1131 px of height at full width.
       { id: 'L5', el: 'rdemo', zoom: 0, demo: { segments: [
-        shot('claude-first-en.jpg', { dur: 3.0, title: 'Ask in your own words.', chrome: 'Claude app',
-          focus: [{ at: 0, x: 0, y: 0, w: 1400 }, { at: 1, x: 0, y: 0, w: 1400 }] }),
-        shot('claude-first-en.jpg', { dur: 3.0, title: 'Get one small first step.', chrome: 'Claude app',
-          focus: [{ at: 0, x: 0, y: 0, w: 1400 }, { at: 1, x: 0, y: 168, w: 1400 }] }),
-        shot('codex-skills-en.jpg', { dur: 2.6, title: 'All seven skills, ready.', chrome: 'Codex',
-          focus: [{ at: 0, x: 0, y: -48, w: 1400 }, { at: 1, x: 0, y: -48, w: 1400 }] }),
-        shot('codex-first-de.jpg', { dur: 99, title: 'In German, too.', chrome: 'Codex',
-          focus: [{ at: 0, x: 400, y: 70, w: 1000 }, { at: 0.75, x: 0, y: -158, w: 1400 }, { at: 1, x: 0, y: -158, w: 1400 }] }) ] } },
+        shot(claude, { dur: 3.0, title: titles[0], chrome, focus: [at(0, 0), at(1, 0)] }),
+        shot(claude, { dur: 3.0, title: titles[1], chrome, focus: [at(0, 0), at(1, Math.round(answerEnd - vis))] }),
+        shot(skills, { dur: 2.6, title: titles[2], chrome: 'Codex', focus: [at(0, centre(skills, vis)), at(1, centre(skills, vis))] }),
+        shot(codex, { dur: 99, title: titles[3], chrome: 'Codex',
+          focus: [at(0, 70, 400, 1000), at(0.75, centre(codex, vis)), at(1, centre(codex, vis))] }) ] } },
       { id: 'L6', el: 'r10' }, { id: 'L7', el: 'r12', tail: 3.0, fadeOut: 0.6 },
     ];
   } else {
     // Viewport 1190x744: a 1400-px screenshot shows 875 px of height at full width.
+    const vis = 744 * 1400 / 1190;
     const d6 = (id, step, seg, extra = {}) => ({ id, el: 'y6', clone: true, step, zoom: 0, fadeIn: 0, fadeOut: 0, noIntro: true, demo: { segments: [{ dur: 99, ...seg }] }, ...extra });
+    const skillsFocus = jpegHeight(skills) > vis
+      ? [at(0, 0), at(0.2, 0), at(1, Math.round(panEnd(skills, vis)))]
+      : [at(0, centre(skills, vis)), at(1, centre(skills, vis))];
     scenes = [
       { id: 'Y0', el: 'y0', fixed: 3.6, fadeIn: 0.6 },
       { id: 'Y1', el: 'y1' }, { id: 'Y2', el: 'y2' }, { id: 'Y3', el: 'y3' }, { id: 'Y4', el: 'y4' }, { id: 'Y5', el: 'y5', fadeOut: 0.3 },
-      d6('Y6a', 1, shot('codex-skills-en.jpg', { chrome: 'Codex', focus: [{ at: 0, x: 0, y: 0, w: 1400 }, { at: 0.2, x: 0, y: 0, w: 1400 }, { at: 1, x: 0, y: 159, w: 1400 }] }), { fadeIn: 0.35 }),
-      d6('Y6b', 2, shot('claude-first-en.jpg', { chrome: 'Claude app', focus: [{ at: 0, x: 0, y: 0, w: 1400 }, { at: 0.3, x: 0, y: 0, w: 1400 }, { at: 1, x: 0, y: 120, w: 1400 }] })),
-      d6('Y6c', 3, shot('claude-first-en.jpg', { chrome: 'Claude app', focus: [{ at: 0, x: 0, y: 290, w: 1400 }, { at: 1, x: 0, y: 424, w: 1400 }] }), { tail: 1.2 }),
-      d6('Y6d', 4, shot('codex-first-de.jpg', { chrome: 'Codex', focus: [{ at: 0, x: 400, y: 70, w: 1000 }, { at: 0.7, x: 0, y: -30, w: 1400 }, { at: 1, x: 0, y: -30, w: 1400 }] }), { tail: 1.2, fadeOut: 0.3 }),
+      d6('Y6a', 1, shot(skills, { chrome: 'Codex', focus: skillsFocus }), { fadeIn: 0.35 }),
+      d6('Y6b', 2, shot(claude, { chrome, focus: [at(0, 0), at(0.3, 0), at(1, 120)] })),
+      d6('Y6c', 3, shot(claude, { chrome, focus: [at(0, 290), at(1, Math.round(answerEnd - vis))] }), { tail: 1.2 }),
+      d6('Y6d', 4, shot(codex, { chrome: 'Codex', focus: [at(0, 70, 400, 1000), at(0.7, centre(codex, vis)), at(1, centre(codex, vis))] }), { tail: 1.2, fadeOut: 0.3 }),
       { id: 'Yq1', el: 'yq1', fadeIn: 0.35, tail: 1.4 }, { id: 'Yq2', el: 'yq2', tail: 1.4 }, { id: 'Yq3', el: 'yq3', tail: 1.6 },
       { id: 'Y7', el: 'y7', fadeIn: 0.35 }, { id: 'Y8', el: 'y8' }, { id: 'Y9', el: 'y9', tail: 1.4 },
       { id: 'Y10', el: 'y10', fixed: 5.5, fadeOut: 1.0 },
@@ -125,14 +167,14 @@ function timeline() {
 
 (async () => {
   const tl = timeline();
-  console.log(`${format}: ${tl.scenes.length} scenes, ${tl.total.toFixed(2)} s`);
+  console.log(`${format} ${lang}: ${tl.scenes.length} scenes, ${tl.total.toFixed(2)} s`);
   for (const s of tl.scenes) console.log(`  ${s.id.padEnd(4)} ${s.start.toFixed(2).padStart(7)} +${s.dur.toFixed(2)}  captions:${s.captions.length}`);
   if (process.env.CAPS) { for (const s of tl.scenes) for (const c of s.captions) console.log(`    ${s.id} | ${c.text}`); if (process.env.CAPS === 'only') return; }
 
   const browser = await playwright.chromium.launch();
   const page = await browser.newPage({ viewport: { width: tl.W, height: tl.H }, deviceScaleFactor: 1 });
   page.on('console', m => { if (m.type() === 'warning' || m.type() === 'error') console.log('page:', m.text()); });
-  const html = format === 'linkedin' ? 'receipt-en.html' : 'scenes-receipt-yt.html';
+  const html = format === 'linkedin' ? `receipt-${lang}.html` : `scenes-receipt-yt-${lang}.html`;
   await page.goto(pathToFileURL(path.join(build, html)).href, { waitUntil: 'networkidle' });
   await page.evaluate(() => document.fonts.ready);
   await page.evaluate(() => window.__fit && window.__fit());
@@ -147,7 +189,7 @@ function timeline() {
   await fsp.mkdir(outDir, { recursive: true });
 
   if (stills) {
-    const dir = path.join(outDir, `stills-${format}`);
+    const dir = path.join(outDir, `stills-${format}${suffix}`);
     await fsp.mkdir(dir, { recursive: true });
     for (const s of stills.split(',').map(Number)) {
       await page.evaluate(t => window.__render(t), s);
@@ -158,7 +200,7 @@ function timeline() {
     return;
   }
 
-  const silent = path.join(outDir, `${format}-silent.mp4`);
+  const silent = path.join(outDir, `${format}${suffix}-silent.mp4`);
   const t0 = Date.now();
   if (!(argv.includes('--mux-only') && fs.existsSync(silent))) {
     const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'mjpeg', '-i', '-',
@@ -178,7 +220,7 @@ function timeline() {
   // Narration placed at each scene's lead, music ducked under the voice.
   // Input 0 is the silent video, input 1 the music, inputs 2.. the narration clips.
   const voiced = tl.scenes.filter(s => s.audio);
-  const inputs = ['-i', path.join(audioDir, 'music.mp3'), ...voiced.flatMap(s => ['-i', s.audio])];
+  const inputs = ['-i', musicFile, ...voiced.flatMap(s => ['-i', s.audio])];
   const T = tl.total.toFixed(3);
   const parts = voiced.map((s, k) => `[${k + 2}:a]aresample=44100,adelay=${Math.round((s.start + s.lead) * 1000)}:all=1[v${k}]`);
   const filter = [
@@ -189,7 +231,7 @@ function timeline() {
     `[m][sc]sidechaincompress=threshold=0.03:ratio=8:attack=30:release=500[md]`,
     `[vo][md]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.95[out]`,
   ].join(';');
-  const final = path.join(outDir, format === 'linkedin' ? 'german-business-kit-linkedin.mp4' : 'german-business-kit-youtube.mp4');
+  const final = path.join(outDir, `german-business-kit-${format}${suffix}.mp4`);
   execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', silent, ...inputs, '-filter_complex', filter, '-map', '0:v', '-map', '[out]',
     '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', '-shortest', final], { stdio: 'inherit' });
   await fsp.rm(silent);

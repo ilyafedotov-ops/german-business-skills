@@ -4,10 +4,10 @@ LinkedIn allows one media type per post. Plan:
 
 1. **English launch post** with `carousel-en/german-business-kit-carousel-en.pdf` (12 slides; document title e.g. "German Business Kit: every answer comes with its receipt").
 2. **German launch post** with `carousel-de/german-business-kit-carousel-de.pdf` (12 slides, German answers; title e.g. „German Business Kit: Zu jeder Antwort gibt es den Beleg“). Post it on a different day, or the same day if your audience is mostly German-speaking.
-3. **Follow-up video post** with `video/german-business-kit-linkedin.mp4` (about 99 s, English, rebuilt locally; optional captions `video/german-business-kit-linkedin.srt`).
+3. **Follow-up video post** with `video/german-business-kit-linkedin.mp4` (about 99 s, English, rebuilt locally; optional captions `video/german-business-kit-linkedin.srt`). German and Russian cuts: `video/german-business-kit-linkedin-de.mp4` (about 1:50) and `video/german-business-kit-linkedin-ru.mp4` (about 1:47), each with its `.srt`.
 4. **Optional "real questions" post** with three images: `carousel-en/slides/05-r05.png`, `06-r06.png`, `07-r07.png` (or the `carousel-de` versions).
 
-The launch posts link the YouTube walkthrough (https://youtu.be/TUkzD0C6qio), the slides as PDF and the repository in the post body; the first comment repeats the quick start.
+The launch posts link the YouTube walkthrough in their language (English https://youtu.be/TUkzD0C6qio, German https://youtu.be/rY_VdGS7mPs, Russian https://youtu.be/sVlPgHtQ6zg), the slides as PDF and the repository in the post body; the first comment repeats the quick start.
 
 ---
 
@@ -36,6 +36,7 @@ Swipe for three real questions from Berlin, Hamburg and Munich: fictional people
 Honest status: early preview (0.14). Ask in English, German or Russian; guides and report templates come in all three. AI assistance, not tax advice. No ELSTER transmission, no complete tax engine. What the assistant reads goes to its AI provider, so start with a made-up example.
 
 ▶ 6-minute walkthrough on YouTube: https://youtu.be/TUkzD0C6qio
+▶ Also in German: https://youtu.be/rY_VdGS7mPs · and Russian: https://youtu.be/sVlPgHtQ6zg
 📄 These slides as PDF: https://github.com/ilyafedotov-ops/german-business-skills/blob/main/presentation/carousel-en/german-business-kit-carousel-en.pdf
 🔗 Repo, install steps and user guide: https://github.com/ilyafedotov-ops/german-business-skills
 
@@ -58,7 +59,8 @@ Im Karussell: drei echte Fragen aus Berlin, Hamburg und München, auf Deutsch ge
 
 Ehrlicher Stand: Vorschau 0.14. Fragen Sie auf Deutsch, Englisch oder Russisch; Anleitungen und Berichtsvorlagen gibt es in allen drei Sprachen. KI-Unterstützung, keine Steuerberatung. Keine ELSTER-Übermittlung, keine vollständige Steuerberechnung.
 
-▶ Video-Rundgang auf YouTube (Englisch, 6 Min.): https://youtu.be/TUkzD0C6qio
+▶ Video-Rundgang auf YouTube (Deutsch, 6 Min.): https://youtu.be/rY_VdGS7mPs
+▶ Auch auf Englisch: https://youtu.be/TUkzD0C6qio · und Russisch: https://youtu.be/sVlPgHtQ6zg
 📄 Die Folien als PDF: https://github.com/ilyafedotov-ops/german-business-skills/blob/main/presentation/carousel-de/german-business-kit-carousel-de.pdf
 🔗 Repo, Installation und Anleitung: https://github.com/ilyafedotov-ops/german-business-skills
 
@@ -76,6 +78,9 @@ Full walkthrough (about 6 min): https://youtu.be/TUkzD0C6qio
 
 **Deutsch:** Repo, Installation und Anleitung: https://github.com/ilyafedotov-ops/german-business-skills
 Schnellstart: Claude Code, die Claude-App oder Codex öffnen, die Installationsanfrage aus dem README einfügen, dann in einem neuen Chat: „Use de-business-kit. Starte die Einrichtung.“
+Video-Rundgang auf Deutsch (6 Min.): https://youtu.be/rY_VdGS7mPs
+
+**Русский:** видеообзор на русском (6 мин): https://youtu.be/sVlPgHtQ6zg
 
 ---
 

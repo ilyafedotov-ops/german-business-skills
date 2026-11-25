@@ -47,6 +47,27 @@ Each pin of the Claude marketplace moved only after these checks on freshly down
 
 These are automated platform checks, not ordinary-user desktop acceptance, tax certification or live service operations. GitHub provenance is not Windows Authenticode or Apple notarization.
 
+## German and Russian launch videos and 0.14.0-preview.2 preparation — 2026-11-25
+
+Branch `claude/de-ru-videos-0.14.0-preview.2` adds German and Russian versions of both launch videos,
+a Russian carousel and three real questions asked in Russian with the released 0.14.0-preview.1 kit,
+makes the video renderer language-aware, and sets `VERSION` to 0.14.0-preview.2. Skills, helper
+programs and record formats are unchanged.
+
+- `tools/release.py check` accepted 0.14.0-preview.2; `git diff --check` was clean.
+- The full unit suite passed (500 tests; 12 skipped because they need Windows).
+- `tools/check_package.py` passed on a clean copy of the tracked and new files (the main checkout
+  also scans a local, Git-excluded worktree). `tools/check_doc_links.py` checked 449 links and
+  anchors with no errors.
+- Renderer: before the caption-break fix, the English timelines and captions matched the published
+  English SRT files line for line; the fix changes six English caption groups for future renders only.
+  A browser measurement of every receipt row found two German rows overflowing; both were shortened
+  and re-measured. All 46 narration clips end in silence (no truncation); the four rendered videos
+  measured −15.6 to −15.9 LUFS integrated loudness.
+- Published: the German (https://youtu.be/rY_VdGS7mPs) and Russian (https://youtu.be/sVlPgHtQ6zg)
+  walkthroughs, each uploaded after a SHA-256 match with the local render, with its own captions;
+  both answered through YouTube's public oEmbed endpoint. This is not a check of viewing on every device.
+
 ## GUI removal, German parity and 0.14.0-preview.1 preparation — 2026-11-25
 
 Branch `claude/decommission-gui-german-parity` removes the local GUI application, the fictional

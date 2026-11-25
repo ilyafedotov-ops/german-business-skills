@@ -6,6 +6,14 @@ Versions follow Semantic Versioning. All releases below are previews, not a
 certification of accounting correctness or desktop compatibility. Historical
 milestones are first published on 2026-10-26; their original commits are retained.
 
+## 0.14.0-preview.2
+
+A launch-materials release: skills, helper programs and record formats are unchanged from 0.14.0-preview.1.
+
+- **German and Russian videos.** The LinkedIn video and the YouTube walkthrough now exist in German and Russian, with native narration, captions and on-screen receipts in each language. The walkthroughs are public ([German](https://youtu.be/rY_VdGS7mPs), [Russian](https://youtu.be/sVlPgHtQ6zg)), and all three walkthroughs link each other.
+- **Russian carousel and real questions.** A Russian LinkedIn carousel shows the three real questions asked in Russian, in fresh sessions with the released 0.14.0-preview.1 kit, labelled with that version and date; the full answers are in `presentation/post/real-examples.ru.md`.
+- The video renderer takes `--lang en|de|ru`, frames the real-app screenshots from their measured height and breaks German and Russian captions at sentence ends; narration scripts, YouTube copy and caption files exist per language. Rendered videos stay out of Git.
+
 ## 0.14.0-preview.1
 
 **Breaking:** the local GUI application and the fictional browser prototype are removed. The assistant app (Claude Code, the Claude app with Cowork, or Codex) is the interface; releases now contain only the Codex and Claude skill bundles. Earlier releases keep their published application archives.

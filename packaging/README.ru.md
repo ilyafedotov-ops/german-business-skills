@@ -1,4 +1,4 @@
-# German Business Kit — локальная предварительная версия 0.14.0-preview.1
+# German Business Kit — локальная предварительная версия 0.14.0-preview.2
 
 **Первая установка:** откройте `skills/de-business-kit/guides/install.ru.md` внутри этой папки плагина. Руководство объясняет установку через маркетплейс плагинов Claude или в проект Codex и первую вымышленную задачу. [Версия онлайн](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.14.0-preview.1/skills/de-business-kit/guides/install.ru.md).
 

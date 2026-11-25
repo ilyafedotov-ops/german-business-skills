@@ -18,6 +18,8 @@ The rule behind it: it prepares, you decide and send. You sign in to ELSTER, you
 The video includes three real questions, asked in fresh sessions with the released kit (0.13.0-preview.2): a translator in Berlin (Freiberufler or Gewerbe?), a web designer in Hamburg (Kleinunternehmerregelung) and a photographer in Munich (lowering tax prepayments). You see the actual answers, shortened, with the official sources they opened. The people are fictional; the answers are real.
 
 🔗 Repository, install steps and user guide: https://github.com/ilyafedotov-ops/german-business-skills
+🇩🇪 Deutsche Version: https://youtu.be/rY_VdGS7mPs
+🇷🇺 Русская версия: https://youtu.be/sVlPgHtQ6zg
 
 Chapters
 0:00 The paperwork problem
