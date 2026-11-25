@@ -50,8 +50,7 @@ def _captured_bytes(root, source):
 
 def prepare(root, input_path, expected, language="en"):
     root = ws._workspace(root)
-    if language not in {"en", "ru"}:
-        raise ws.WorkspaceError("Payment report language must be en or ru.")
+    st.report_language(language, "Payment report")
     with ws._locked(root):
         state = inv._load(root)
         input_source = st.evidence(root, input_path)
@@ -188,45 +187,66 @@ def check(root, report_path):
 
 
 def render(report):
-    ru = report["language"] == "ru"
+    i = st.REPORT_LANGUAGES.index(st.report_language(report["language"], "Payment report"))
+
+    def t(en, ru, de):
+        return (en, ru, de)[i]
     def safe(value):
         text = str(value).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", " ").replace("\r", " ")
         return re.sub(r"([\\`*_{}\[\]()#!|])", r"\\\1", text)
     value = report["input"]
-    lines = ["# " + ("Сверка оплаты" if ru else "Payment comparison"), "",
-             ("Счёт: " if ru else "Invoice: ") + safe(report["invoice_number"] or report["invoice_id"]),
-             ("На дату: " if ru else "As of: ") + value["as_of"],
-             ("Система: " if ru else "System: ") + safe(report["system"]),
-             ("Банковский счёт: " if ru else "Bank account: ") + safe(value["bank_account"]),
-             ("Сумма к оплате по документу (уже учитывает предоплату): " if ru else "Invoice-stated amount due (already includes prepayments): ") + safe(value["amount_due"]) + " " + report["currency"],
-             ("Остаток сравнения: " if ru else "Comparison remainder: ") + (report["comparison_remaining"] or ("не определён" if ru else "unresolved")) + " " + report["currency"], "",
-             ("Нет распределения платежей, изменения статуса у провайдера, требования оплаты, возврата или налоговой проводки. Нулевая разница не доказывает оплату."
-              if ru else "No payment allocation, provider status change, payment demand, refund or tax posting. A zero difference does not prove payment."), "",
-             ("Предоплата ниже уже включена в сумму документа и не вычитается повторно."
-              if ru else "Prepaid receipts below are already included in the document amount and are not subtracted again."), "",
-             "| " + ("Транзакция | Дата | Сумма | Валюта | Учёт |" if ru else "Transaction | Date | Amount | Currency | Treatment |"),
+    lines = ["# " + t("Payment comparison", "Сверка оплаты", "Zahlungsabgleich"), "",
+             t("Invoice: ", "Счёт: ", "Rechnung: ") + safe(report["invoice_number"] or report["invoice_id"]),
+             t("As of: ", "На дату: ", "Stand: ") + value["as_of"],
+             t("System: ", "Система: ", "System: ") + safe(report["system"]),
+             t("Bank account: ", "Банковский счёт: ", "Bankkonto: ") + safe(value["bank_account"]),
+             t("Invoice-stated amount due (already includes prepayments): ",
+               "Сумма к оплате по документу (уже учитывает предоплату): ",
+               "Laut Rechnung fälliger Betrag (Anzahlungen bereits berücksichtigt): ") + safe(value["amount_due"]) + " " + report["currency"],
+             t("Comparison remainder: ", "Остаток сравнения: ", "Differenz aus dem Abgleich: ")
+             + (report["comparison_remaining"] or t("unresolved", "не определён", "nicht bestimmt")) + " " + report["currency"], "",
+             t("No payment allocation, provider status change, payment demand, refund or tax posting. A zero difference does not prove payment.",
+               "Нет распределения платежей, изменения статуса у провайдера, требования оплаты, возврата или налоговой проводки. Нулевая разница не доказывает оплату.",
+               "Keine Zahlungszuordnung, keine Statusänderung beim Anbieter, keine Zahlungsaufforderung, keine Erstattung und keine steuerliche Buchung. "
+               "Eine Differenz von null beweist keine Zahlung."), "",
+             t("Prepaid receipts below are already included in the document amount and are not subtracted again.",
+               "Предоплата ниже уже включена в сумму документа и не вычитается повторно.",
+               "Die unten aufgeführten Anzahlungen sind im Rechnungsbetrag bereits berücksichtigt und werden nicht erneut abgezogen."), "",
+             "| " + t("Transaction | Date | Amount | Currency | Treatment |", "Транзакция | Дата | Сумма | Валюта | Учёт |",
+                   "Transaktion | Datum | Betrag | Währung | Behandlung |"),
              "| --- | --- | --- | --- | --- |"]
-    treatments = {"included_prepaid": ("Already included prepaid", "Уже включённая предоплата"),
-                  "later_receipt": ("Later receipt", "Последующее поступление"),
-                  "later_refund": ("Later refund", "Последующий возврат"),
-                  "uncertain": ("Uncertain allocation", "Неясное отнесение")}
+    treatments = {"included_prepaid": ("Already included prepaid", "Уже включённая предоплата", "Bereits berücksichtigte Anzahlung"),
+                  "later_receipt": ("Later receipt", "Последующее поступление", "Spätere Einnahme"),
+                  "later_refund": ("Later refund", "Последующий возврат", "Spätere Erstattung"),
+                  "uncertain": ("Uncertain allocation", "Неясное отнесение", "Unklare Zuordnung")}
     for item in report["payments"]:
-        lines.append("| " + " | ".join(safe(item[k]) for k in ("transaction_id", "booking_date", "amount", "currency")) + " | " + treatments[item["treatment"]][ru] + " |")
+        lines.append("| " + " | ".join(safe(item[k]) for k in ("transaction_id", "booking_date", "amount", "currency")) + " | " + treatments[item["treatment"]][i] + " |")
     issue_labels = {
-        "before_issue": ("Comparison date is earlier than recorded invoice issuance", "Дата сверки раньше записанной даты выставления счёта"),
-        "coverage_unconfirmed": ("Receipt/refund coverage has not been confirmed", "Полнота поступлений/возвратов не подтверждена"),
-        "correction_review_required": ("Review the invoice's correction family in the authoritative system", "Проверьте цепочку корректировок счёта в основной системе"),
-        "currency_mismatch": ("Receipt currency differs from invoice currency", "Валюта поступления отличается от валюты счёта"),
-        "after_as_of": ("Selected movement is after the comparison date", "Выбранное движение позже даты сверки"),
-        "allocation_uncertain": ("Invoice allocation remains uncertain", "Отнесение к счёту остаётся неясным")}
+        "before_issue": ("Comparison date is earlier than recorded invoice issuance", "Дата сверки раньше записанной даты выставления счёта",
+                         "Abgleichsdatum liegt vor der erfassten Rechnungsausstellung"),
+        "coverage_unconfirmed": ("Receipt/refund coverage has not been confirmed", "Полнота поступлений/возвратов не подтверждена",
+                                 "Vollständigkeit der Einnahmen/Erstattungen ist nicht bestätigt"),
+        "correction_review_required": ("Review the invoice's correction family in the authoritative system",
+                                       "Проверьте цепочку корректировок счёта в основной системе",
+                                       "Korrekturkette der Rechnung im maßgeblichen System prüfen"),
+        "currency_mismatch": ("Receipt currency differs from invoice currency", "Валюта поступления отличается от валюты счёта",
+                              "Währung der Einnahme weicht von der Rechnungswährung ab"),
+        "after_as_of": ("Selected movement is after the comparison date", "Выбранное движение позже даты сверки",
+                        "Ausgewählte Bewegung liegt nach dem Abgleichsdatum"),
+        "allocation_uncertain": ("Invoice allocation remains uncertain", "Отнесение к счёту остаётся неясным",
+                                 "Zuordnung zur Rechnung bleibt unklar")}
     explanations = []
     for issue in report["issues"]:
         code, _, identifier = issue.partition(":")
-        explanations.append(issue_labels[code][ru] + (": " + safe(identifier) if identifier else ""))
-    lines += ["", ("Проблемы для проверки: " if ru else "Review issues: ") + ("; ".join(explanations) or ("не выявлены в выбранном сравнении" if ru else "none identified in the selected comparison")),
-              ("Строк вне выбранного сравнения: " if ru else "Bank rows outside the selected comparison: ") + str(report["unselected_bank_rows"]),
-              ("Далее: проверить актуальность отчёта, затем сверить отнесение и остаток в выбранной системе."
-               if ru else "Next: check report freshness, then verify allocation and balance in the chosen system."), "",
-              "## " + ("Закрытые подтверждения" if ru else "Private evidence"), ""]
+        explanations.append(issue_labels[code][i] + (": " + safe(identifier) if identifier else ""))
+    lines += ["", t("Review issues: ", "Проблемы для проверки: ", "Zu prüfende Punkte: ")
+              + ("; ".join(explanations) or t("none identified in the selected comparison", "не выявлены в выбранном сравнении",
+                                              "im ausgewählten Abgleich keine festgestellt")),
+              t("Bank rows outside the selected comparison: ", "Строк вне выбранного сравнения: ",
+                "Bankzeilen außerhalb des ausgewählten Abgleichs: ") + str(report["unselected_bank_rows"]),
+              t("Next: check report freshness, then verify allocation and balance in the chosen system.",
+                "Далее: проверить актуальность отчёта, затем сверить отнесение и остаток в выбранной системе.",
+                "Als Nächstes: Aktualität des Berichts prüfen, dann Zuordnung und Saldo im gewählten System abgleichen."), "",
+              "## " + t("Private evidence", "Закрытые подтверждения", "Private Nachweise"), ""]
     lines += ["- " + safe(s["path"]) + " / SHA-256 " + s["sha256"] for s in report["sources"]]
     return "\n".join(lines) + "\n"

@@ -531,7 +531,6 @@
         providers.map(provider => h('p', {}, rich(demos.call[provider]))),
         h('p', { class: 'hint' }, `${demos.privacy} `, external(LINKS.docs[state.lang].risks, t.welcome.aiLink))),
       h('div', { class: 'grid demos' }, DEMOS.map(demoCard)),
-      h('section', { class: 'card' }, h('h2', {}, demos.prototype), h('p', {}, h('a', { href: LINKS.local.prototype }, demos.prototypeLink))),
       h('section', { class: 'card finish' }, h('h2', {}, demos.finishTitle), h('p', {}, demos.finish),
         h('p', {}, external(LINKS.docs[state.lang].guide, demos.guideLink))),
     ];

@@ -1,6 +1,6 @@
 # Help inside ELSTER and your accounting software
 
-**English** · [Русский](assisted-services.ru.md)
+**English** · [Русский](assisted-services.ru.md) · [Deutsch](assisted-services.de.md)
 
 You can ask the assistant to help operate a service, not just explain it. For
 example: **“Help me fill this draft; I will check and submit it myself.”** With

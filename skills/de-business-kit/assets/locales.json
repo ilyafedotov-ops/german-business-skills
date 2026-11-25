@@ -40,6 +40,25 @@
         "change_plan": "ru/change-plan.md",
         "connection_check": "ru/connection-check.md"
       }
+    },
+    "de": {
+      "label": "Deutsch",
+      "templates": {
+        "bookkeeping_workflow": "de/bookkeeping-workflow.md",
+        "month_close": "de/month-close.md",
+        "form_worksheet": "de/form-worksheet.md",
+        "tax_consultation": "de/tax-consultation.md",
+        "overview": "de/overview.md",
+        "source_map": "de/source-map.md",
+        "service_comparison": "de/service-comparison.md",
+        "readable_report": "de/readable-report.md",
+        "submission_review": "de/submission-review.md",
+        "launch_plan": "de/launch-plan.md",
+        "customer_case": "de/customer-case.md",
+        "annual_readiness": "de/annual-readiness.md",
+        "change_plan": "de/change-plan.md",
+        "connection_check": "de/connection-check.md"
+      }
     }
   }
 }

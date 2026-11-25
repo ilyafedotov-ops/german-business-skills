@@ -252,7 +252,7 @@ function ViewSave([string]$relative,[byte[]]$bytes) {
 }
 function NativeOverview {
     if ($Period -cnotmatch '^[1-9][0-9]{3}-(0[1-9]|1[0-2])$' -or [int]$Period.Substring(0,4) -lt 1900) { throw 'Overview period must be YYYY-MM, 1900-9999.' }
-    $language=$marker.language; if ($language -ceq 'de') { $language='en' }
+    $language=$marker.language
     $words=@{title='Business workspace';boundary='Saved records and local evidence only. Full filing preflight and tax correctness are not assessed by this native view. Ask the assistant to refresh after changes.';documents='Documents';questions='Open questions';tasks='Tasks with recorded dates';accounting='Accounting and filings';system='Chosen accounting system';entries='Cash records in selected month';filings='Saved filing versions';repair='Inspect the workspace issue before changing records.';review_questions='Resolve the open question with the assistant.';resolve_submission='Investigate the unconfirmed submission outcome before retrying.';review_filings='Review the saved filing and its unresolved items.';choose_accounting='Choose local cash accounting or your existing accounting software.';review_documents='Review documents and reconcile the month in the selected accounting system.';unknown='Not assessed';snapshot='Snapshot date';source='Recorded date / source';empty='No supplied records in this section.';errors='Workspace issues';next='Next useful action';undecided='Not chosen';local='Local cash journal';external='Existing software';draft='Draft';reviewed='Reviewed';authorized='Authorized';submission_unconfirmed='Submission outcome unconfirmed';submitted='Submission evidenced';cancelled='Cancelled';evidence='Evidence status';readiness='Full filing readiness';not_assessed='Not assessed';checked_local_hashes='Local file hashes checked';no_accounting_records='No accounting records';method='Method';product='Product'}
     if ($language -ceq 'ru') {
         # Unicode escapes keep this source compatible with Windows PowerShell 5.1 without BOM.
@@ -267,6 +267,16 @@ function NativeOverview {
             $map=@{tasks='tasks';source='task_date';snapshot='as_of';empty='empty_section';errors='error';next='next';repair='repair';unknown='not_assessed';not_assessed='not_assessed';review_documents='next_accounting'}
             $words[$key]=$ru.ru.PSObject.Properties[$map[$key]].Value
         }
+    } elseif ($language -ceq 'de') {
+        # Umlauts stay escaped: Windows PowerShell 5.1 reads BOM-less sources as ANSI.
+        $de=ReadJson (Join-Path $kitRoot 'assets/casework-messages.json')
+        $words.title=$de.de.title; $words.documents=$de.de.documents
+        $translations=@{
+            questions='Offene Fragen'; boundary='Nur gespeicherte Unterlagen und lokale Nachweise. Die vollst\u00e4ndige Vorpr\u00fcfung von Erkl\u00e4rungen und die steuerliche Richtigkeit bewertet diese native Ansicht nicht. Bitten Sie den Assistenten nach \u00c4nderungen um eine Aktualisierung.'; accounting='Buchhaltung und Erkl\u00e4rungen'; system='Gew\u00e4hltes Buchhaltungssystem'; entries='Kassenbuchungen im ausgew\u00e4hlten Monat'; filings='Gespeicherte Fassungen von Erkl\u00e4rungen'; resolve_submission='Kl\u00e4ren Sie das unbest\u00e4tigte \u00dcbermittlungsergebnis vor einem neuen Versuch.'; review_filings='Pr\u00fcfen Sie die gespeicherte Erkl\u00e4rung und ihre offenen Punkte.'; review_questions='Kl\u00e4ren Sie die offene Frage mit dem Assistenten.'; choose_accounting='W\u00e4hlen Sie das lokale Kassenbuch oder Ihre vorhandene Buchhaltungssoftware.'; evidence='Nachweisstatus'; readiness='Vollst\u00e4ndige Bereitschaft der Erkl\u00e4rung'; checked_local_hashes='Lokale Datei-Hashes gepr\u00fcft'; no_accounting_records='Keine Buchhaltungsunterlagen'; method='Methode'; product='Produkt'; undecided='Nicht gew\u00e4hlt'; local='Lokales Kassenbuch'; external='Vorhandene Software'; draft='Entwurf'; reviewed='Gepr\u00fcft'; authorized='Freigegeben'; submission_unconfirmed='\u00dcbermittlungsergebnis unbest\u00e4tigt'; submitted='\u00dcbermittlung belegt'; cancelled='Verworfen'
+        }
+        foreach ($key in $translations.Keys) { $words[$key]=[Text.RegularExpressions.Regex]::Unescape($translations[$key]) }
+        $map=@{tasks='tasks';source='task_date';snapshot='as_of';empty='empty_section';errors='error';next='next';repair='repair';unknown='not_assessed';not_assessed='not_assessed';review_documents='next_accounting'}
+        foreach ($key in $map.Keys) { $words[$key]=$de.de.PSObject.Properties[$map[$key]].Value }
     }
     $messages=ReadJson (Join-Path $kitRoot 'assets/casework-messages.json')
     $words.urgent=$messages.PSObject.Properties[$language].Value.urgent

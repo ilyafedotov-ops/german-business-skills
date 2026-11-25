@@ -122,15 +122,10 @@ def snapshot(source: Path) -> Dict[str, bytes]:
                     raise BuildError(f"Symlink or special resource rejected: {entry}")
                 reviewed_guide_image = entry.relative_to(source).as_posix() in {
                     f"skills/{NAME}/guides/images/entrepreneur-journey.png",
-                    f"skills/{NAME}/guides/images/setup-map.en.svg",
-                    f"skills/{NAME}/guides/images/setup-map.ru.svg",
-                    f"skills/{NAME}/guides/images/how-it-works.en.svg",
-                    f"skills/{NAME}/guides/images/how-it-works.ru.svg",
-                    f"skills/{NAME}/guides/images/assisted-install.en.svg",
-                    f"skills/{NAME}/guides/images/assisted-install.ru.svg",
-                    f"skills/{NAME}/guides/images/first-task.en.svg",
-                    f"skills/{NAME}/guides/images/first-task.ru.svg",
                     f"skills/{NAME}/guides/images/claude-marketplace.jpg",
+                    *(f"skills/{NAME}/guides/images/{image}.{language}.svg"
+                      for image in ("setup-map", "how-it-works", "assisted-install", "first-task")
+                      for language in ("en", "ru", "de")),
                 }
                 if name.startswith(".") or (entry.suffix not in {".md", ".json", ".yaml", ".py"}
                         and not reviewed_guide_image
@@ -152,8 +147,8 @@ def snapshot(source: Path) -> Dict[str, bytes]:
     if not all(prefix + name in files for name in required):
         raise BuildError("The canonical skill is missing a required runtime resource.")
     locales = json.loads(files[prefix + "assets/locales.json"])
-    if set(locales["languages"]) != {"en", "ru"}:
-        raise BuildError("English and Russian locale resources are required.")
+    if set(locales["languages"]) != {"en", "ru", "de"}:
+        raise BuildError("English, Russian and German locale resources are required.")
     for language, locale in locales["languages"].items():
         for template in locale["templates"].values():
             relative = PurePosixPath(template)

@@ -445,75 +445,95 @@ def list_invoices(root, language="en"):
 
 
 def render(row, actions, issues, language):
-    if language not in {"en", "ru"}:
-        raise ws.WorkspaceError("Invoice report language must be en or ru.")
-    ru = language == "ru"
-    labels = {"draft": ("Draft", "Черновик"), "reviewed": ("Reviewed", "Проверено"),
-              "issue_authorized": ("Issue authorized", "Выставление разрешено"),
-              "issue_unconfirmed": ("Issuance outcome unknown — investigate before retry", "Результат выставления неизвестен — проверить до повтора"),
-              "issue_failed": ("Confirmed not issued", "Подтверждено, что не выставлен"),
-              "issued": ("Issued — recorded evidence", "Выставлен — по сохранённым подтверждениям"),
-              "cancelled": ("Local draft cancelled", "Локальный черновик отменён"),
-              "not_prepared": ("Delivery not prepared", "Доставка не подготовлена"),
-              "delivery_reviewed": ("Delivery package reviewed", "Комплект доставки проверен"),
-              "delivery_authorized": ("Delivery authorized", "Отправка разрешена"),
-              "delivery_unconfirmed": ("Dispatch outcome unknown — do not resend", "Результат отправки неизвестен — не повторять"),
-              "dispatched": ("Dispatched — receipt not confirmed", "Отправлено — получение не подтверждено"),
-              "delivered": ("Delivered — recorded receipt evidence", "Доставлено — по подтверждению получения"),
-              "delivery_failed": ("Delivery failed — inspect evidence before retry", "Доставка не удалась — проверить подтверждение до повтора")}
+    st.report_language(language, "Invoice report")
+    i = st.REPORT_LANGUAGES.index(language)
+
+    def t(en, ru, de):
+        return (en, ru, de)[i]
+    labels = {"draft": ("Draft", "Черновик", "Entwurf"), "reviewed": ("Reviewed", "Проверено", "Geprüft"),
+              "issue_authorized": ("Issue authorized", "Выставление разрешено", "Ausstellung freigegeben"),
+              "issue_unconfirmed": ("Issuance outcome unknown — investigate before retry", "Результат выставления неизвестен — проверить до повтора",
+                                    "Ergebnis der Ausstellung unbekannt — vor einem neuen Versuch klären"),
+              "issue_failed": ("Confirmed not issued", "Подтверждено, что не выставлен", "Bestätigt nicht ausgestellt"),
+              "issued": ("Issued — recorded evidence", "Выставлен — по сохранённым подтверждениям", "Ausgestellt — laut gespeichertem Nachweis"),
+              "cancelled": ("Local draft cancelled", "Локальный черновик отменён", "Lokaler Entwurf verworfen"),
+              "not_prepared": ("Delivery not prepared", "Доставка не подготовлена", "Versand nicht vorbereitet"),
+              "delivery_reviewed": ("Delivery package reviewed", "Комплект доставки проверен", "Versandpaket geprüft"),
+              "delivery_authorized": ("Delivery authorized", "Отправка разрешена", "Versand freigegeben"),
+              "delivery_unconfirmed": ("Dispatch outcome unknown — do not resend", "Результат отправки неизвестен — не повторять",
+                                       "Ergebnis des Versands unbekannt — nicht erneut senden"),
+              "dispatched": ("Dispatched — receipt not confirmed", "Отправлено — получение не подтверждено", "Versendet — Empfang nicht bestätigt"),
+              "delivered": ("Delivered — recorded receipt evidence", "Доставлено — по подтверждению получения", "Zugestellt — laut Empfangsnachweis"),
+              "delivery_failed": ("Delivery failed — inspect evidence before retry", "Доставка не удалась — проверить подтверждение до повтора",
+                                  "Zustellung fehlgeschlagen — Nachweis vor einem neuen Versuch prüfen")}
     def safe(value):
         text = str(value).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", " ").replace("\r", " ")
         return re.sub(r"([\\`*_{}\[\]()#!|])", r"\\\1", text)
     action_labels = {
-        "review-issue": ("Review issue/correction scope", "Проверить выставление/исправление"),
-        "authorize-issue": ("Record issue/correction authorization", "Записать разрешение на выставление/исправление"),
-        "begin-issue": ("Record issue/correction attempt before acting", "Записать попытку перед выставлением/исправлением"),
-        "confirm-issued": ("Record observed issue/correction result", "Записать наблюдаемый результат выставления/исправления"),
-        "confirm-not-issued": ("Record confirmed absence of issue", "Записать подтверждение отсутствия выставления"),
-        "adopt-issued": ("Record an already issued document", "Учесть уже выставленный документ"),
-        "cancel": ("Cancel local unissued draft", "Отменить локальный невыставленный черновик"),
-        "review-delivery": ("Review final files and destination", "Проверить итоговые файлы и адрес доставки"),
-        "authorize-delivery": ("Record delivery authorization", "Записать разрешение на отправку"),
-        "begin-delivery": ("Record delivery attempt before sending", "Записать попытку перед отправкой"),
-        "confirm-dispatched": ("Record dispatch evidence", "Записать подтверждение отправки"),
-        "adopt-dispatched": ("Record a dispatch already made outside this workflow", "Учесть отправку, уже выполненную вне этого сценария"),
-        "confirm-delivered": ("Record receipt evidence", "Записать подтверждение получения"),
-        "confirm-delivery-failed": ("Record confirmed delivery failure", "Записать подтверждённую неудачу доставки")}
-    lines = ["# " + ("Счёт: " if ru else "Invoice: ") + safe(row["invoice_id"]), "",
+        "review-issue": ("Review issue/correction scope", "Проверить выставление/исправление", "Umfang der Ausstellung/Korrektur prüfen"),
+        "authorize-issue": ("Record issue/correction authorization", "Записать разрешение на выставление/исправление",
+                            "Freigabe der Ausstellung/Korrektur festhalten"),
+        "begin-issue": ("Record issue/correction attempt before acting", "Записать попытку перед выставлением/исправлением",
+                        "Versuch der Ausstellung/Korrektur vorher festhalten"),
+        "confirm-issued": ("Record observed issue/correction result", "Записать наблюдаемый результат выставления/исправления",
+                           "Beobachtetes Ergebnis der Ausstellung/Korrektur festhalten"),
+        "confirm-not-issued": ("Record confirmed absence of issue", "Записать подтверждение отсутствия выставления",
+                               "Bestätigte Nicht-Ausstellung festhalten"),
+        "adopt-issued": ("Record an already issued document", "Учесть уже выставленный документ", "Bereits ausgestelltes Dokument erfassen"),
+        "cancel": ("Cancel local unissued draft", "Отменить локальный невыставленный черновик", "Lokalen, nicht ausgestellten Entwurf verwerfen"),
+        "review-delivery": ("Review final files and destination", "Проверить итоговые файлы и адрес доставки", "Endgültige Dateien und Empfänger prüfen"),
+        "authorize-delivery": ("Record delivery authorization", "Записать разрешение на отправку", "Freigabe des Versands festhalten"),
+        "begin-delivery": ("Record delivery attempt before sending", "Записать попытку перед отправкой", "Versandversuch vor dem Senden festhalten"),
+        "confirm-dispatched": ("Record dispatch evidence", "Записать подтверждение отправки", "Versandnachweis festhalten"),
+        "adopt-dispatched": ("Record a dispatch already made outside this workflow", "Учесть отправку, уже выполненную вне этого сценария",
+                             "Bereits außerhalb dieses Ablaufs erfolgten Versand erfassen"),
+        "confirm-delivered": ("Record receipt evidence", "Записать подтверждение получения", "Empfangsnachweis festhalten"),
+        "confirm-delivery-failed": ("Record confirmed delivery failure", "Записать подтверждённую неудачу доставки",
+                                    "Bestätigte fehlgeschlagene Zustellung festhalten")}
+    lines = ["# " + t("Invoice: ", "Счёт: ", "Rechnung: ") + safe(row["invoice_id"]), "",
              safe(row["system"]) + " / " + safe(row["account_reference"]), "",
-             labels[row["state"]][ru], labels[row["delivery"]["state"]][ru], "",
-             ("Клиент: " if ru else "Customer: ") + safe(row["customer_reference"]),
-             ("Период: " if ru else "Period: ") + row["period"]]
+             labels[row["state"]][i], labels[row["delivery"]["state"]][i], "",
+             t("Customer: ", "Клиент: ", "Kunde: ") + safe(row["customer_reference"]),
+             t("Period: ", "Период: ", "Zeitraum: ") + row["period"]]
     if row["issued"]:
-        lines += [("Номер: " if ru else "Number: ") + safe(row["issued"]["invoice_number"] or ("новый номер не присвоен" if ru else "no new number assigned")),
-                  ("Выставленный файл: " if ru else "Issued file: ") + safe(row["issued"]["document"]["path"])]
+        lines += [t("Number: ", "Номер: ", "Nummer: ") + safe(row["issued"]["invoice_number"]
+                                                          or t("no new number assigned", "новый номер не присвоен", "keine neue Nummer vergeben")),
+                  t("Issued file: ", "Выставленный файл: ", "Ausgestellte Datei: ") + safe(row["issued"]["document"]["path"])]
     if row["corrects"]:
-        lines += [("Связанное исправление: " if ru else "Correction of: ") + safe(row["corrects"]) + " / " + safe(row["correction_kind"])]
+        lines += [t("Correction of: ", "Связанное исправление: ", "Korrektur zu: ") + safe(row["corrects"]) + " / " + safe(row["correction_kind"])]
     if row.get("provider"):
         p = row["provider"]
         provider_labels = {
-            "prepared": ("Draft request prepared", "Запрос черновика подготовлен"),
-            "authorized": ("Provider draft creation authorized; consumes a number", "Создание черновика разрешено; расходует номер"),
-            "create_unconfirmed": ("Creation outcome unknown; do not repeat", "Результат создания неизвестен; не повторять"),
-            "read_unconfirmed": ("Readback unconfirmed; inspect existing object", "Повторное чтение не подтверждено; проверить существующий объект"),
-            "read_back": ("Readback awaiting review", "Данные провайдера ожидают проверки"),
-            "reviewed": ("Provider readback reviewed", "Данные провайдера проверены"),
-            "discrepancy": ("Provider discrepancy; investigate before continuing", "Расхождение с провайдером; разобраться до продолжения")}
-        lines += [("Маршрут Lexware: " if ru else "Lexware route: ") + provider_labels[p["state"]][ru],
-                  ("Объект провайдера: " if ru else "Provider object: ") + safe(p["external_id"] or "—"),
-                  ("Отличия от запроса (проверить также значения по умолчанию): " if ru else "Differences from request (also inspect provider defaults): ") + "; ".join(safe(x) for x in p["differences"])]
+            "prepared": ("Draft request prepared", "Запрос черновика подготовлен", "Entwurfsanfrage vorbereitet"),
+            "authorized": ("Provider draft creation authorized; consumes a number", "Создание черновика разрешено; расходует номер",
+                           "Anlage des Entwurfs beim Anbieter freigegeben; verbraucht eine Nummer"),
+            "create_unconfirmed": ("Creation outcome unknown; do not repeat", "Результат создания неизвестен; не повторять",
+                                   "Ergebnis der Anlage unbekannt; nicht wiederholen"),
+            "read_unconfirmed": ("Readback unconfirmed; inspect existing object", "Повторное чтение не подтверждено; проверить существующий объект",
+                                 "Rücklesen nicht bestätigt; vorhandenes Objekt prüfen"),
+            "read_back": ("Readback awaiting review", "Данные провайдера ожидают проверки", "Zurückgelesene Daten warten auf Prüfung"),
+            "reviewed": ("Provider readback reviewed", "Данные провайдера проверены", "Zurückgelesene Anbieterdaten geprüft"),
+            "discrepancy": ("Provider discrepancy; investigate before continuing", "Расхождение с провайдером; разобраться до продолжения",
+                            "Abweichung beim Anbieter; vor dem Fortfahren klären")}
+        lines += [t("Lexware route: ", "Маршрут Lexware: ", "Lexware-Weg: ") + provider_labels[p["state"]][i],
+                  t("Provider object: ", "Объект провайдера: ", "Objekt beim Anbieter: ") + safe(p["external_id"] or "—"),
+                  t("Differences from request (also inspect provider defaults): ",
+                    "Отличия от запроса (проверить также значения по умолчанию): ",
+                    "Abweichungen von der Anfrage (auch Standardwerte des Anbieters prüfen): ") + "; ".join(safe(x) for x in p["differences"])]
         if p["readback"]:
-            lines += [("Сохранённые данные провайдера: " if ru else "Preserved provider readback: ") + safe(p["readback"]["path"])]
+            lines += [t("Preserved provider readback: ", "Сохранённые данные провайдера: ", "Gespeicherte Anbieterdaten: ") + safe(p["readback"]["path"])]
     if row["delivery"]["package"]:
         recipient = row["delivery"]["package"]["recipient"]
-        lines += [("Получатель: " if ru else "Destination: ") + safe(recipient["channel"]) + " / " + safe(recipient["address"])]
-    lines += ["", ("Следующие локальные действия: " if ru else "Next local evidence actions: ") + "; ".join(action_labels[a][ru] for a in actions),
-              "", ("Проблемы: " if ru else "Issues: ") + "; ".join(safe(i) for i in issues), "",
-              ("Запись подтверждений, а не отправка, проверка налога или доказательство согласия/оплаты клиента."
-               if ru else "Evidence tracking, not external execution, tax validation or proof of customer agreement/payment.")]
-    lines += ["", "## " + ("История подтверждений" if ru else "Evidence history"), ""]
+        lines += [t("Destination: ", "Получатель: ", "Empfänger: ") + safe(recipient["channel"]) + " / " + safe(recipient["address"])]
+    lines += ["", t("Next local evidence actions: ", "Следующие локальные действия: ", "Nächste lokale Nachweisschritte: ")
+              + "; ".join(action_labels[a][i] for a in actions),
+              "", t("Issues: ", "Проблемы: ", "Probleme: ") + "; ".join(safe(x) for x in issues), "",
+              t("Evidence tracking, not external execution, tax validation or proof of customer agreement/payment.",
+                "Запись подтверждений, а не отправка, проверка налога или доказательство согласия/оплаты клиента.",
+                "Nachweisführung, keine externe Ausführung, steuerliche Prüfung oder Beleg für Zustimmung/Zahlung des Kunden.")]
+    lines += ["", "## " + t("Evidence history", "История подтверждений", "Nachweisverlauf"), ""]
     for event in row["events"]:
-        lines += ["- " + event["occurred_on"] + " — " + action_labels[event["action"]][ru] + "; " + safe(event["actor"]),
+        lines += ["- " + event["occurred_on"] + " — " + action_labels[event["action"]][i] + "; " + safe(event["actor"]),
                   "  " + safe(event["note"]), "  " + safe(event["evidence"]["path"]) + " / SHA-256 " + event["evidence"]["sha256"]]
     return "\n".join(lines) + "\n"
 

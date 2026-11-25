@@ -54,7 +54,7 @@ async function context(browser, issues, { language = 'en', agent = 'mac', width 
 }
 
 // WebKit rejects Playwright's screenshot-only injected stylesheet under the page
-// CSP (also seen in prototype-browser.cjs). Keep the CSP; ignore only that exact
+// CSP. Keep the CSP; ignore only that exact
 // diagnostic while a capture is running and report how often it happened.
 const CAPTURE_DIAGNOSTIC = "Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.";
 const capturing = new WeakSet();
@@ -273,7 +273,6 @@ async function journey(browser, language, assistant, os) {
     await page.getByRole('link', { name: t.demos.back, exact: true }).click();
     await route(page, 'examples');
     await page.locator('article', { has: page.locator('a[href="#demo-invoice"]') }).getByText(t.demos.tried, { exact: true }).waitFor();
-    await page.getByRole('link', { name: t.demos.prototypeLink, exact: true }).waitFor();
     await external(page, LINKS.docs[language].guide);
     await shot('demos');
 

@@ -9,7 +9,8 @@ For maintainers and contributors. Users can go directly to [installation](../ski
 | What works and what remains | [Current status and P1–P7 roadmap](project-status.md) |
 | Components, execution and trust boundaries | [Architecture](architecture.md) |
 | Records, relationships and state transitions | [Ontology](ontology.md) |
-| Local GUI, packaging, separate fictional prototype and guided setup page | [Interface development](gui.md), [guided setup page](gui.md#guided-setup-page) |
+| Guided setup page for beginners (EN/RU/DE) | [Guided setup page](setup-page.md) |
+| Launch carousels, video scripts and their sources | [Launch materials](../presentation/README.md) |
 | Build/install a complete skill bundle | [Distribution](distribution.md) |
 | Publish or verify an immutable release | [Release process](releases.md) |
 | Evidence, test commands and acceptance gaps | [Validation](validation.md) |

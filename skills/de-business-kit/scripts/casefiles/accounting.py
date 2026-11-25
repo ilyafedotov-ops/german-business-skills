@@ -427,16 +427,22 @@ def export_report(root, period):
     root = ws._workspace(root)
     report = period_report(root, period)
     relative = "07_exports/" + period + "/cash-report-" + uuid.uuid4().hex + ".json"
-    language = ws._load(ws._inside(root, ws.MARKER)).get("language", "en")
-    russian = language == "ru"
-    title = "Отчёт о движении денег" if russian else "Cash movement report"
-    boundary = ("Это движения по записанным операциям, не налогооблагаемая прибыль и не готовая декларация. "
-                "Полнота счетов, налоговые корректировки и поля формы требуют отдельной проверки."
-                if russian else "These are recorded cash movements, not taxable profit or a completed return. "
-                "Account coverage, statutory adjustments and form fields require separate review.")
-    labels = {"income": "Поступления" if russian else "Receipts", "expense": "Расходы" if russian else "Expenses",
-              "transfer": "Перемещения" if russian else "Transfers", "unresolved": "Не классифицировано" if russian else "Unclassified",
-              "operating_cash_net": "Разница поступлений и расходов" if russian else "Operating cash difference"}
+    language = st.report_language(ws._load(ws._inside(root, ws.MARKER)).get("language", "en"))
+
+    def t(en, ru, de):
+        return st.phrase(language, en, ru, de)
+    title = t("Cash movement report", "Отчёт о движении денег", "Bericht über Geldbewegungen")
+    boundary = t("These are recorded cash movements, not taxable profit or a completed return. "
+                 "Account coverage, statutory adjustments and form fields require separate review.",
+                 "Это движения по записанным операциям, не налогооблагаемая прибыль и не готовая декларация. "
+                 "Полнота счетов, налоговые корректировки и поля формы требуют отдельной проверки.",
+                 "Dies sind erfasste Geldbewegungen, kein steuerpflichtiger Gewinn und keine fertige Erklärung. "
+                 "Vollständigkeit der Konten, steuerliche Korrekturen und Formularfelder erfordern eine gesonderte Prüfung.")
+    labels = {"income": t("Receipts", "Поступления", "Einnahmen"), "expense": t("Expenses", "Расходы", "Ausgaben"),
+              "transfer": t("Transfers", "Перемещения", "Umbuchungen"),
+              "unresolved": t("Unclassified", "Не классифицировано", "Nicht zugeordnet"),
+              "operating_cash_net": t("Operating cash difference", "Разница поступлений и расходов",
+                                      "Differenz aus Einnahmen und Ausgaben")}
     lines = ["# " + title, "", period, "", boundary, ""]
     for currency, totals in report["totals"].items():
         lines.extend(["## " + currency, ""])
@@ -444,37 +450,45 @@ def export_report(root, period):
         lines.append("")
         stated = [row for row in report["vat"] if row["currency"] == currency]
         if stated:
-            lines.extend(["## " + ("НДС по документам" if russian else "VAT as stated on documents") + " (" + currency + ")", "",
-                          "Суммы, указанные в документах; не декларация по НДС и не решение о налоговом режиме."
-                          if russian else "Amounts as stated on the evidence; not a VAT return or a treatment decision.", ""])
+            lines.extend(["## " + t("VAT as stated on documents", "НДС по документам", "Umsatzsteuer laut Belegen")
+                          + " (" + currency + ")", "",
+                          t("Amounts as stated on the evidence; not a VAT return or a treatment decision.",
+                            "Суммы, указанные в документах; не декларация по НДС и не решение о налоговом режиме.",
+                            "Beträge laut Belegen; keine Umsatzsteuererklärung und keine Entscheidung über die steuerliche Behandlung."), ""])
             for row in stated:
-                rate = row["rate"] + " %" if row["rate"] is not None else ("ставка не указана" if russian else "rate not stated")
-                lines.append("- " + labels[row["kind"]] + " · " + rate + (": нетто " if russian else ": net ") + row["net"]
-                             + (", НДС " if russian else ", VAT ") + row["tax"])
+                rate = row["rate"] + " %" if row["rate"] is not None else t("rate not stated", "ставка не указана", "Steuersatz nicht angegeben")
+                lines.append("- " + labels[row["kind"]] + " · " + rate + t(": net ", ": нетто ", ": netto ") + row["net"]
+                             + t(", VAT ", ", НДС ", ", USt ") + row["tax"])
             lines.append("")
     if "vat_unresolved" in report["open_items"]:
-        lines.extend(["НДС по некоторым строкам ещё не определён; они входят в денежные итоги, но не в суммы НДС по документам." if russian
-                      else "VAT is not yet determined for some lines; they are in the cash totals but not in any stated VAT figures.", ""])
+        lines.extend([t("VAT is not yet determined for some lines; they are in the cash totals but not in any stated VAT figures.",
+                        "НДС по некоторым строкам ещё не определён; они входят в денежные итоги, но не в суммы НДС по документам.",
+                        "Für einige Zeilen ist die Umsatzsteuer noch nicht bestimmt; sie sind in den Geldsummen enthalten, "
+                        "aber nicht in den Umsatzsteuerbeträgen laut Belegen."), ""])
     if not report["entries"]:
-        lines.append("Операции за период отсутствуют." if russian else "No entries supplied for this period.")
+        lines.append(t("No entries supplied for this period.", "Операции за период отсутствуют.",
+                       "Für diesen Zeitraum liegen keine Einträge vor."))
     if report["settlements"]:
-        lines.extend(["", "## " + ("Распределение платежей по счетам" if russian else "Invoice payment allocation"), "",
-                      ("Платежи по дату " if russian else "Payments through ") + report["settlement_through"],
-                      "Сверка записанных сумм; не подтверждение оплаты во внешней системе. Валюты не конвертируются."
-                      if russian else "Reconciles recorded amounts; does not confirm payment in an external system. No currency conversion.", ""])
-        statuses = {"balanced": "Суммы совпадают", "partial": "Частичная оплата", "unpaid": "Нет распределённых платежей",
-                    "overpaid": "Переплата", "needs_review": "Нужна проверка"} if russian else {
-                        "balanced": "Amounts match", "partial": "Partly allocated", "unpaid": "No payments allocated",
-                        "overpaid": "Overallocated", "needs_review": "Needs review"}
+        lines.extend(["", "## " + t("Invoice payment allocation", "Распределение платежей по счетам", "Zuordnung von Zahlungen zu Rechnungen"), "",
+                      t("Payments through ", "Платежи по дату ", "Zahlungen bis ") + report["settlement_through"],
+                      t("Reconciles recorded amounts; does not confirm payment in an external system. No currency conversion.",
+                        "Сверка записанных сумм; не подтверждение оплаты во внешней системе. Валюты не конвертируются.",
+                        "Abgleich erfasster Beträge; keine Bestätigung der Zahlung in einem externen System. Keine Währungsumrechnung."), ""])
+        statuses = {"balanced": t("Amounts match", "Суммы совпадают", "Beträge stimmen überein"),
+                    "partial": t("Partly allocated", "Частичная оплата", "Teilweise zugeordnet"),
+                    "unpaid": t("No payments allocated", "Нет распределённых платежей", "Keine Zahlungen zugeordnet"),
+                    "overpaid": t("Overallocated", "Переплата", "Überzahlung zugeordnet"),
+                    "needs_review": t("Needs review", "Нужна проверка", "Prüfung erforderlich")}
         for row in report["settlements"]:
             lines.append("- " + (row["invoice_number"] or row["proposal_id"]) + " (" + (row["currency"] or "—") + "): "
                          + statuses[row["status"]])
             lines.extend(["  " + label + ": " + (row[key] or "—") for key, label in (
-                              ("gross", "По счёту" if russian else "Invoice"),
-                              ("allocated", "Распределено в валюте счёта" if russian else "Allocated in invoice currency"),
-                              ("remaining", "Остаток" if russian else "Remaining"))])
+                              ("gross", t("Invoice", "По счёту", "Rechnung")),
+                              ("allocated", t("Allocated in invoice currency", "Распределено в валюте счёта",
+                                              "Zugeordnet in Rechnungswährung")),
+                              ("remaining", t("Remaining", "Остаток", "Offen")))])
             if row["issues"]:
-                messages = st.template("casework-messages.json")["ru" if russian else "en"]["codes"]
+                messages = st.template("casework-messages.json")[language]["codes"]
                 lines.extend("  - " + messages.get("settlement_" + issue, issue) for issue in row["issues"])
     markdown = relative[:-5] + ".md"
     ledger_files = {}

@@ -44,11 +44,11 @@ Reports group stated VAT by currency, movement kind and rate (`vat`) and add `va
 
 ## Recorded invoice payment allocation
 
-Period reports and the GUI month view project `settlements` from approved proposals and linked cash lines dated through the end of the selected month, quarter or year. A November view includes October allocations. Income lines use their recorded sign; expense lines invert it for allocation comparison, so refunds reduce allocated payments. Reversed originals and their reversals cancel for this projection; replacements keep their own reviewed links. Superseded proposals remain visible while active allocations refer to them. Nothing moves payments to a corrected proposal automatically.
+Period reports and the workspace overview project `settlements` from approved proposals and linked cash lines dated through the end of the selected month, quarter or year. A November view includes October allocations. Income lines use their recorded sign; expense lines invert it for allocation comparison, so refunds reduce allocated payments. Reversed originals and their reversals cancel for this projection; replacements keep their own reviewed links. Superseded proposals remain visible while active allocations refer to them. Nothing moves payments to a corrected proposal automatically.
 
 `balanced` means recorded allocations equal the reviewed gross amount; it is not an official paid status, complete account coverage or a tax decision. `partial`, `unpaid` and `overpaid` remain visible. Currency differences, transfers, mixed movement directions, negative/unknown invoice totals and excess refunds produce `needs_review` with no inferred remaining balance. No conversion, write-off or credit-note netting is invented. Preserve observed cash movements and obtain reviewed treatment for these differences.
 
-The report fingerprints its cross-period settlement basis. New or changed earlier allocations/proposals invalidate that source report at filing preflight. The EN/RU Markdown explains balances and discrepancies; the GUI expands each invoice to show allocation details. These are projections, not a second ledger or an invoice-issuance engine.
+The report fingerprints its cross-period settlement basis. New or changed earlier allocations/proposals invalidate that source report at filing preflight. The Markdown report explains balances and discrepancies in the workspace language. These are projections, not a second ledger or an invoice-issuance engine.
 
 ## Filing lifecycle for either route
 

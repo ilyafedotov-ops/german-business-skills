@@ -1,13 +1,10 @@
 {
-  "name": "de-business-kit-prototype-checks",
+  "name": "de-business-kit-browser-checks",
   "private": true,
   "scripts": {
     "test:csp": "node tests/browser-csp.cjs",
-    "test": "node --test tests/prototype-state.test.cjs tests/gui-lifecycle.test.cjs",
-    "test:browser": "node tests/prototype-browser.cjs",
     "test:documents": "node tests/document-template-browser.cjs",
     "test:overview": "node tests/overview-browser.cjs",
-    "test:gui": "node tests/gui-browser.cjs",
     "test:installer": "node tests/installer-browser.cjs"
   },
   "devDependencies": {

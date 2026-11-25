@@ -28,7 +28,7 @@ class OverviewTests(CaseFixture):
         ws.save_entry(self.root, "questions", {"schema_version": 1, "id": "vat-question",
                       "title": "Clarify the invoice country", "owner": "owner", "status": "open"})
         before = (ws._path(self.root, ac.STATE)).read_bytes()
-        for language in ("en", "ru"):
+        for language in ("en", "ru", "de"):
             snapshot, html = self.view(language)
             self.assertEqual(snapshot["accounting"]["accounting_system"], "local")
             self.assertEqual(snapshot["accounting"]["period_entry_count"], 1)
@@ -117,7 +117,7 @@ class LifecycleOverviewTests(CaseFixture):
         self.task("launch", "Prepare registration <script>unsafe</script>", note="Read the existing launch plan")
         paths = ["00_admin/tasks.json", "00_admin/questions.json", "01_profile/business.json", ws.EVENTS]
         before = {p: ws._inside(self.root, p).read_bytes() for p in paths}
-        for language in ("en", "ru"):
+        for language in ("en", "ru", "de"):
             snapshot, html = self.view(language)
             self.assertEqual(snapshot["next_action"], "continue_task")
             self.assertEqual(snapshot["next_task_id"], "launch")

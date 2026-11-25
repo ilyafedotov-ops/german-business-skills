@@ -1,6 +1,6 @@
 # Guided start, demonstration and recovery
 
-User-facing help ships inside the skill: [Russian manual](../guides/user-guide.ru.md), [English manual](../guides/user-guide.en.md) and [German start](../guides/start.de.md). The manuals link to installation and task examples. Offer the relevant section when helpful; keep commands and technical references behind the conversation. A simple question does not require a demo or full setup. Existing workspace guides are not overwritten by an update.
+User-facing help ships inside the skill: [English manual](../guides/user-guide.en.md), [Russian manual](../guides/user-guide.ru.md) and [German manual](../guides/user-guide.de.md). The manuals link to installation and task examples. Offer the relevant section when helpful; keep commands and technical references behind the conversation. A simple question does not require a demo or full setup. Existing workspace guides are not overwritten by an update.
 
 For substantial setup/source-intake work, provide a readable outcome and next step under [readable output](readable-output.md). Do not make the user choose a technical format; use an available readable document by default and explain capability gaps only when relevant.
 
@@ -61,7 +61,7 @@ For “how do I use this?” or post-install help, give a short practical introd
   unrelated external changes. Do not request secrets in chat.
 - Explain that a simple question can start immediately. For ongoing work, reuse or
   choose one private business folder and show a request for saving/resuming there.
-  Invite one small useful task; do not impose a GUI, accounting choice or demo.
+  Invite one small useful task; do not impose an extra application, accounting choice or demo.
 
 Only explain the pieces relevant to the request. A user who already gave a concrete
 business task should get that help, not an unsolicited product tour.
@@ -123,4 +123,4 @@ Use the implemented [full backup and restore workflow](recovery.md). Backup veri
 
 ## Folder language during setup
 
-For a new workspace, use the user's chosen English, Russian or German language for physical folders and the start guide. `start` creates the same standard folder structure in both engines, including a procedure documentation draft. Explain the five everyday areas through that guide; do not ask users to classify mixed invoices before inspection. Existing workspace paths and folder language stay fixed on resume, even if conversation preferences change. Before ordinary file reads/writes, obtain `workspace.py folders --root <private-folder>` or native `-Action folders` and resolve stable logical references into actual paths. Never create a parallel English folder tree. German folder/guide support does not imply full German report/prototype translation.
+For a new workspace, use the user's chosen English, Russian or German language for physical folders and the start guide. `start` creates the same standard folder structure in both engines, including a procedure documentation draft. Explain the five everyday areas through that guide; do not ask users to classify mixed invoices before inspection. Existing workspace paths and folder language stay fixed on resume, even if conversation preferences change. Before ordinary file reads/writes, obtain `workspace.py folders --root <private-folder>` or native `-Action folders` and resolve stable logical references into actual paths. Never create a parallel English folder tree.

@@ -16,8 +16,8 @@ Read references with file tools; run each helper script as one plain command,
 without shell variables or chained commands.
 One profile covers the person's activities, decisions and evidence; selecting a
 skill never creates another profile or changes tax facts. Start with the user's
-requested result; no GUI, workspace or accounting choice is required for a simple
-question. English/Russian are supported; keep official German form labels.
+requested result; no extra application, workspace or accounting choice is required for a simple
+question. English, Russian and German are supported; keep official German form labels.
 
 ## Select the task owner
 
@@ -59,7 +59,7 @@ backup/restore and validated shared writers for mutations. No second task regist
 ## Capability boundary
 
 These skills provide guidance, readable preparation and supported local operations.
-The limited cash journal, filing evidence, recovery and GUI are tools for those
+The limited cash journal, filing evidence, recovery and workspace overview are tools for those
 journeys. Existing accounting software remains authoritative when selected.
 There is no complete statutory ledger, embedded tax calculator, production
 provider connector or ELSTER transport. Use actual host capabilities and current

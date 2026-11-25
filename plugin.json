@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "de-business-kit",
-  "version": "0.13.0-preview.2",
-  "description": "Seven skills for the German sole-trader lifecycle: formation, daily operations, accounting, tax preparation, services and business changes, with shared context in English and Russian.",
+  "version": "0.14.0-preview.1",
+  "description": "Seven skills for the German sole-trader lifecycle: formation, daily operations, accounting, tax preparation, services and business changes, with shared context in English, Russian and German.",
   "author": {
     "name": "German Business Kit contributors"
   },

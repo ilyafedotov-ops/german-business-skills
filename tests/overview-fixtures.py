@@ -12,7 +12,7 @@ import workspace as ws
 
 output = Path(sys.argv[1]).resolve()
 output.mkdir(parents=True, exist_ok=True)
-for language in ("en", "ru"):
+for language in ("en", "ru", "de"):
     for scenario in ("empty", "blocked", "corrupt", "lifecycle"):
         case = OverviewTests()
         case.setUp()

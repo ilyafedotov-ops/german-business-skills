@@ -5,7 +5,7 @@ selection on that date; choose the actual form version, business facts, period,
 account edition and permissions before acting. These findings support assisted
 preparation; they are **not** authenticated UI acceptance, a connector, tax
 calculations, successful drafts, exports or submission receipts. Earlier dated
-research remains historical evidence. Shared agent reference; EN/RU explanations
+research remains historical evidence. Shared agent reference; EN/RU/DE explanations
 belong in the affected user guides.
 
 ## ELSTER: initial tax registration

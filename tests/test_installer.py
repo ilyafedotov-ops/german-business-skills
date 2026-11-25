@@ -187,8 +187,7 @@ class InstallerContentTests(unittest.TestCase):
         self.assertTrue(references)
         for reference in references:
             self.assertTrue((INSTALLER / reference).is_file(), reference)
-        for key in ("prototype", "screenshot"):
-            self.assertTrue((INSTALLER / self.links["local"][key]).resolve().is_file(), key)
+        self.assertTrue((INSTALLER / self.links["local"]["screenshot"]).resolve().is_file())
         # Real-app screenshots for every step, assistant and language.
         results = self.links["local"]["results"]
         self.assertEqual(set(results), {"skills", "first"})

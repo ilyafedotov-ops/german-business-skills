@@ -1,0 +1,443 @@
+1
+00:00:04,000 --> 00:00:06,201
+If you work for yourself in Germany,
+
+2
+00:00:06,201 --> 00:00:08,732
+as a Freiberufler or with a small Gewerbe,
+
+3
+00:00:08,732 --> 00:00:10,493
+you know the paperwork.
+
+4
+00:00:10,493 --> 00:00:14,730
+Before your first invoice, there's a tax registration questionnaire.
+
+5
+00:00:14,730 --> 00:00:17,812
+Then come invoices with mandatory details, receipts,
+
+6
+00:00:17,812 --> 00:00:19,628
+bank statements, tax returns,
+
+7
+00:00:19,628 --> 00:00:21,554
+and letters from the Finanzamt,
+
+8
+00:00:21,554 --> 00:00:24,360
+often in a language that isn't your first.
+
+9
+00:00:24,360 --> 00:00:27,222
+I wanted an assistant that helps with all of it,
+
+10
+00:00:27,222 --> 00:00:29,643
+one clear step at a time, without pretending
+
+11
+00:00:29,643 --> 00:00:31,239
+to be a tax adviser.
+
+12
+00:00:31,239 --> 00:00:33,440
+So I built German Business Kit.
+
+13
+00:00:34,440 --> 00:00:38,299
+German Business Kit is a set of seven skills for Claude and Codex.
+
+14
+00:00:38,299 --> 00:00:40,409
+A skill is a package of instructions,
+
+15
+00:00:40,409 --> 00:00:42,930
+references and templates that the assistant loads
+
+16
+00:00:42,930 --> 00:00:44,783
+when your request needs it.
+
+17
+00:00:44,783 --> 00:00:46,841
+So there's no new app to learn.
+
+18
+00:00:46,841 --> 00:00:49,620
+You work in Claude Code, the Claude app, or Codex,
+
+19
+00:00:49,620 --> 00:00:52,553
+and you ask in plain English, German or Russian.
+
+20
+00:00:52,553 --> 00:00:54,920
+Guides and reports come in all three.
+
+21
+00:00:55,920 --> 00:00:58,428
+Every task follows the same rhythm.
+
+22
+00:00:58,428 --> 00:01:00,707
+One: you ask in your own words.
+
+23
+00:01:00,707 --> 00:01:05,096
+For example: help me turn these agreed terms into a German proposal.
+
+24
+00:01:05,096 --> 00:01:07,262
+Two: the assistant clarifies.
+
+25
+00:01:07,262 --> 00:01:09,826
+It reuses facts you've already confirmed,
+
+26
+00:01:09,826 --> 00:01:11,707
+asks only for what's missing,
+
+27
+00:01:11,707 --> 00:01:15,354
+then prepares a readable draft and names the next step.
+
+28
+00:01:15,354 --> 00:01:17,976
+Three: for ongoing work, it saves results,
+
+29
+00:01:17,976 --> 00:01:19,914
+confirmed facts and open questions
+
+30
+00:01:19,914 --> 00:01:22,251
+in your private business folder.
+
+31
+00:01:22,251 --> 00:01:26,240
+Next month, it continues from there instead of starting over.
+
+32
+00:01:27,240 --> 00:01:30,240
+The skills follow the life of a sole trader.
+
+33
+00:01:30,240 --> 00:01:32,673
+Start helps you describe your activity,
+
+34
+00:01:32,673 --> 00:01:35,503
+work out whether it's Freiberufler or Gewerbe,
+
+35
+00:01:35,503 --> 00:01:38,050
+and prepare registration worksheets.
+
+36
+00:01:38,050 --> 00:01:42,578
+Operations handles proposals, invoices, payment follow-ups and letters.
+
+37
+00:01:42,578 --> 00:01:45,465
+Accounting organizes receipts and bank exports,
+
+38
+00:01:45,465 --> 00:01:47,502
+matches them, and prepares the month
+
+39
+00:01:47,502 --> 00:01:51,464
+in the system you choose, including software you already use.
+
+40
+00:01:51,464 --> 00:01:54,011
+Tax researches the rules for your period,
+
+41
+00:01:54,011 --> 00:01:56,331
+makes estimates with recorded checks,
+
+42
+00:01:56,331 --> 00:01:59,274
+and prepares returns and Finanzamt replies.
+
+43
+00:01:59,274 --> 00:02:02,501
+Services compares banks, insurance and software.
+
+44
+00:02:02,501 --> 00:02:06,802
+Changes plans a second activity, a first hire, a pause, or closing.
+
+45
+00:02:06,802 --> 00:02:11,160
+And the main kit skill is the front door that routes mixed requests.
+
+46
+00:02:12,160 --> 00:02:14,930
+Your business folder keeps everything together
+
+47
+00:02:14,930 --> 00:02:18,242
+in five everyday areas: inbox, documents, accounts,
+
+48
+00:02:18,242 --> 00:02:19,928
+taxes and business.
+
+49
+00:02:19,928 --> 00:02:22,698
+Originals are preserved and numbered.
+
+50
+00:02:22,698 --> 00:02:25,889
+One profile covers all your activities and years,
+
+51
+00:02:25,889 --> 00:02:28,900
+and an overview page shows where you are.
+
+52
+00:02:28,900 --> 00:02:31,911
+The kit can also make a full, verified backup,
+
+53
+00:02:31,911 --> 00:02:34,560
+and restore it into a new location.
+
+54
+00:02:35,560 --> 00:02:38,257
+Here's what that looks like in the real apps.
+
+55
+00:02:38,257 --> 00:02:41,403
+In Codex, the kit shows up as seven skills in your project,
+
+56
+00:02:41,403 --> 00:02:44,200
+each with a plain description of what it's for.
+
+57
+00:02:45,200 --> 00:02:47,742
+In Claude, you ask in your own words.
+
+58
+00:02:47,742 --> 00:02:50,726
+In this fictional example, a creator makes videos,
+
+59
+00:02:50,726 --> 00:02:53,600
+and the first brands want to pay for posts.
+
+60
+00:02:54,600 --> 00:02:57,613
+Instead of a lecture, you get one small first step,
+
+61
+00:02:57,613 --> 00:03:00,680
+and only the three questions needed to take it.
+
+62
+00:03:02,280 --> 00:03:06,680
+And it works in German, too: the same skills, the same private folder.
+
+63
+00:03:08,280 --> 00:03:11,237
+Now some real questions, each asked in a fresh session
+
+64
+00:03:11,237 --> 00:03:12,935
+with the released kit.
+
+65
+00:03:12,935 --> 00:03:14,687
+A translator in Berlin asks:
+
+66
+00:03:14,687 --> 00:03:16,494
+Freiberufler or Gewerbe?
+
+67
+00:03:16,494 --> 00:03:19,397
+The answer quotes the law that names translators,
+
+68
+00:03:19,397 --> 00:03:22,190
+explains the one registration needed through ELSTER
+
+69
+00:03:22,190 --> 00:03:23,887
+and its one-month deadline,
+
+70
+00:03:23,887 --> 00:03:26,680
+and links to the official pages it opened.
+
+71
+00:03:28,480 --> 00:03:32,825
+A web designer in Hamburg asks about the small business VAT exemption.
+
+72
+00:03:32,825 --> 00:03:35,300
+The answer explains the first-year limit,
+
+73
+00:03:35,300 --> 00:03:37,665
+what happens when a payment crosses it,
+
+74
+00:03:37,665 --> 00:03:39,700
+and when regular VAT starts.
+
+75
+00:03:39,700 --> 00:03:42,945
+And when the Finance Ministry's guidance wouldn't load,
+
+76
+00:03:42,945 --> 00:03:45,200
+it said so, instead of guessing.
+
+77
+00:03:47,000 --> 00:03:49,885
+A photographer in Munich, whose profit dropped,
+
+78
+00:03:49,885 --> 00:03:52,486
+asks about quarterly tax prepayments.
+
+79
+00:03:52,486 --> 00:03:54,466
+The answer estimates the likely tax
+
+80
+00:03:54,466 --> 00:03:57,860
+with this year's tariff, checks the arithmetic two ways,
+
+81
+00:03:57,860 --> 00:04:00,970
+flags that the next payment is due in fifteen days,
+
+82
+00:04:00,970 --> 00:04:04,760
+and drafts the German letter, marked as a draft, not sent.
+
+83
+00:04:06,760 --> 00:04:11,818
+One principle runs through the whole kit: it prepares, you decide and send.
+
+84
+00:04:11,818 --> 00:04:15,251
+Extraction, proposal, review, booking, authorization,
+
+85
+00:04:15,251 --> 00:04:18,924
+submission and the authority's answer are separate steps,
+
+86
+00:04:18,924 --> 00:04:21,092
+each with its own evidence.
+
+87
+00:04:21,092 --> 00:04:24,765
+A polished draft is never treated as a filed return.
+
+88
+00:04:24,765 --> 00:04:26,692
+You sign in to ELSTER, your bank
+
+89
+00:04:26,692 --> 00:04:29,161
+or your accounting software yourself,
+
+90
+00:04:29,161 --> 00:04:32,232
+you never type passwords or TANs into the chat,
+
+91
+00:04:32,232 --> 00:04:34,520
+and you make the final click.
+
+92
+00:04:35,520 --> 00:04:37,653
+Installing takes a few minutes.
+
+93
+00:04:37,653 --> 00:04:40,427
+In the Claude app, open Customize, then Plugins,
+
+94
+00:04:40,427 --> 00:04:42,347
+add the marketplace from GitHub,
+
+95
+00:04:42,347 --> 00:04:44,533
+and install German Business Kit.
+
+96
+00:04:44,533 --> 00:04:46,827
+In Claude Code, it's two commands.
+
+97
+00:04:46,827 --> 00:04:50,453
+In Codex, the released skills are copied into your project.
+
+98
+00:04:50,453 --> 00:04:53,067
+Or paste the install request from the README,
+
+99
+00:04:53,067 --> 00:04:55,467
+and let your assistant do the setup.
+
+100
+00:04:55,467 --> 00:04:59,040
+Then start a fresh chat, and say: start the welcome setup.
+
+101
+00:05:00,040 --> 00:05:01,636
+A few honest limits.
+
+102
+00:05:01,636 --> 00:05:03,507
+This is an early preview.
+
+103
+00:05:03,507 --> 00:05:06,369
+It's AI assistance, not professional tax advice,
+
+104
+00:05:06,369 --> 00:05:09,506
+and AI can get calculations and deadlines wrong.
+
+105
+00:05:09,506 --> 00:05:13,909
+It doesn't send anything to ELSTER, and it isn't a complete tax engine.
+
+106
+00:05:13,909 --> 00:05:17,486
+Whatever the assistant reads is processed by its AI provider,
+
+107
+00:05:17,486 --> 00:05:19,743
+so start with a made-up example.
+
+108
+00:05:19,743 --> 00:05:22,439
+The kit is open source under the MIT licence,
+
+109
+00:05:22,439 --> 00:05:24,861
+and the link is in the description.
+
+110
+00:05:24,861 --> 00:05:29,484
+If you run a small business in Germany, try it, and tell me what's missing.
+
+111
+00:05:29,484 --> 00:05:31,080
+Danke, and bis bald.

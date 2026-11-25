@@ -1,8 +1,8 @@
-# Local plugin distribution — v0.13.0-preview.2
+# Local plugin distribution — v0.14.0-preview.1
 
-**New users:** follow the [illustrated setup](../skills/de-business-kit/guides/install.en.md). It covers the Claude plugin marketplace (Cowork, chat and Claude Code) and a project-local Codex copy, without terminal commands. The offline EN/RU/DE [guided setup page](gui.md#guided-setup-page) leads beginners through the same two routes, from account creation to first tasks. This page covers the marketplace contract and advanced source, plugin and update routes.
+**New users:** follow the [illustrated setup](../skills/de-business-kit/guides/install.en.md). It covers the Claude plugin marketplace (Cowork, chat and Claude Code) and a project-local Codex copy, without terminal commands. The offline EN/RU/DE [guided setup page](setup-page.md) leads beginners through the same two routes, from account creation to first tasks. This page covers the marketplace contract and advanced source, plugin and update routes.
 
-The [local GUI application](gui.md) bundles its engine for document review, cash entries, filing evidence and recovery on Windows/macOS; users do not install Python. Download availability requires publication and verification of the matching platform archive. Optional [standalone Windows tools](../skills/de-business-kit/guides/user-guide.en.md#check-your-own-environment) cover installation, start/resume, preview, intake, integrity, real overview and full backup/restore; their advanced protected writers still require an existing supported engine.
+The user interface is the assistant app itself: Claude Code, the Claude app with Cowork, or the Codex app. There is no separate desktop application. Optional [standalone Windows tools](../skills/de-business-kit/guides/user-guide.en.md#check-your-own-environment) cover installation, start/resume, preview, intake, integrity, real overview and full backup/restore; their advanced protected writers still require an existing supported engine.
 
 [English](distribution.md) | [Русский](distribution.ru.md)
 
@@ -23,11 +23,10 @@ The marketplace file is read from the default branch; the address works only aft
 
 ## Use a published package
 
-For the standalone application, use [application downloads and instructions](gui.md).
-The rest of this page covers the primary skill/plugin bundle. Users do not need
+This page covers the skill/plugin bundle. Users do not need
 to build the project. Download the named Codex or Claude ZIP from the latest published
-[release 0.13.0-preview.2](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.13.0-preview.2).
-Follow [download verification](releases.md), and extract it into a new folder using
+[release 0.13.0-preview.2](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.13.0-preview.2);
+version 0.14.0-preview.1 is prepared in source and not yet published. Follow [download verification](releases.md), and extract it into a new folder using
 Explorer or Finder. Published filenames include the version, for example
 `de-business-kit-0.13.0-preview.2-codex.zip`.
 
@@ -103,7 +102,7 @@ Avoid enabling both a copied standalone skill and its plugin in one session. Kee
 
 ## Evidence and remaining checks
 
-Package tests extract each archive, resolve its catalog and manifest, compare every skill file with the canonical source, and run the extracted `workspace.py` with English and Russian synthetic workspaces after deleting the source fixture. They also check reproducibility, missing resources, metadata drift, unsafe paths and overwrite refusal. These are offline utility/resource checks.
+Package tests extract each archive, resolve its catalog and manifest, compare every skill file with the canonical source, and run the extracted `workspace.py` with English, Russian and German synthetic workspaces after deleting the source fixture. They also check reproducibility, missing resources, metadata drift, unsafe paths and overwrite refusal. These are offline utility/resource checks.
 
 On 2026-10-25, Claude Code **2.1.310** read-only `plugin validate` passed for a generated local marketplace and its packaged plugin. Both host packages now contain mutually linked EN/RU readmes with a first-run prompt. The separate public-directory check still reports a missing icon; public submission and directory acceptance remain deferred. Codex CLI **0.164.0** exposes marketplace registration, but registration/installation were not run.
 

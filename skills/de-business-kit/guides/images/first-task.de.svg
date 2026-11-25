@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="862" viewBox="0 0 760 862" role="img" aria-labelledby="title desc" xml:lang="de">
+<title id="title">Von der Anfrage zum Ergebnis</title>
+<desc id="desc">Von der Anfrage zum Ergebnis Erfundenes Beispiel • Ein Kundenangebot vorbereiten Sie fragen Nutze de-business-kit. Bereite aus diesen Notizen ein Angebot vor. Frag nach Fehlendem. Der Assistent prüft, was fehlt Leistung und Preis stehen schon in den Notizen. Welchen Liefertermin haben Sie vereinbart? Sie erhalten einen lesbaren Entwurf Prüfen Sie das Angebot. Lücken bleiben sichtbar. Ein gespeicherter Entwurf ist nicht versendet. Nächster Chat: im Ordner weitermachen Nutze de-business-kit. Lies meinen Stand. Der Termin steht. Aktualisiere das Angebot. Illustriertes Beispiel, kein aufgezeichnetes Gespräch.</desc>
+<rect width="760" height="862" rx="24" fill="#f7f5ef"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#173e4b">
+<text x="32" y="47" font-size="19" font-weight="700" fill="#173e4b">GERMAN BUSINESS KIT</text>
+<text x="32" y="92" font-size="34" font-weight="700" fill="#173e4b">Von der Anfrage zum Ergebnis</text>
+<text x="32" y="128" font-size="24" font-weight="400" fill="#173e4b">Erfundenes Beispiel • Ein Kundenangebot vorbereiten</text>
+<rect x="32" y="158" width="696" height="134" rx="16" fill="#ddece8"/>
+<circle cx="66" cy="194" r="18" fill="#173e4b"/>
+<text x="60" y="201" font-size="22" font-weight="700" fill="#ffffff">1</text>
+<text x="100" y="201" font-size="28" font-weight="700" fill="#173e4b">Sie fragen</text>
+<text x="100" y="236" font-size="25" font-weight="400" fill="#173e4b">Nutze de-business-kit. Bereite aus diesen</text>
+<text x="100" y="268" font-size="25" font-weight="400" fill="#173e4b">Notizen ein Angebot vor. Frag nach Fehlendem.</text>
+<path d="M66 298 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="316" width="696" height="134" rx="16" fill="#f6ddcd"/>
+<circle cx="66" cy="352" r="18" fill="#173e4b"/>
+<text x="60" y="359" font-size="22" font-weight="700" fill="#ffffff">2</text>
+<text x="100" y="359" font-size="28" font-weight="700" fill="#173e4b">Der Assistent prüft, was fehlt</text>
+<text x="100" y="394" font-size="25" font-weight="400" fill="#173e4b">Leistung und Preis stehen schon in den Notizen.</text>
+<text x="100" y="426" font-size="25" font-weight="400" fill="#173e4b">Welchen Liefertermin haben Sie vereinbart?</text>
+<path d="M66 456 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="474" width="696" height="134" rx="16" fill="#e1e8ef"/>
+<circle cx="66" cy="510" r="18" fill="#173e4b"/>
+<text x="60" y="517" font-size="22" font-weight="700" fill="#ffffff">3</text>
+<text x="100" y="517" font-size="28" font-weight="700" fill="#173e4b">Sie erhalten einen lesbaren Entwurf</text>
+<text x="100" y="552" font-size="25" font-weight="400" fill="#173e4b">Prüfen Sie das Angebot. Lücken bleiben sichtbar.</text>
+<text x="100" y="584" font-size="25" font-weight="400" fill="#173e4b">Ein gespeicherter Entwurf ist nicht versendet.</text>
+<path d="M66 614 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="632" width="696" height="134" rx="16" fill="#ddece8"/>
+<circle cx="66" cy="668" r="18" fill="#173e4b"/>
+<text x="60" y="675" font-size="22" font-weight="700" fill="#ffffff">4</text>
+<text x="100" y="675" font-size="28" font-weight="700" fill="#173e4b">Nächster Chat: im Ordner weitermachen</text>
+<text x="100" y="710" font-size="25" font-weight="400" fill="#173e4b">Nutze de-business-kit. Lies meinen Stand.</text>
+<text x="100" y="742" font-size="25" font-weight="400" fill="#173e4b">Der Termin steht. Aktualisiere das Angebot.</text>
+<text x="32" y="817" font-size="22" font-weight="400" fill="#173e4b">Illustriertes Beispiel, kein aufgezeichnetes Gespräch.</text>
+</g></svg>

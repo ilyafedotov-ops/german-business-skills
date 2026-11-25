@@ -393,8 +393,6 @@ window.INSTALLER_TEXT = {
       "promptLabel": "Request to paste",
       "answersLabel": "Fictional answers",
       "nextLabel": "Follow-up request",
-      "prototype": "Want to see an example workspace first?",
-      "prototypeLink": "Open the interactive demo with fictional data (English only)",
       "finishTitle": "You are ready",
       "finish": "Next time, describe the result you want in normal words: understand a letter, prepare a form, organize documents or plan a change. Keep using made-up data until you are comfortable.",
       "guideLink": "Open the user guide",
@@ -875,8 +873,6 @@ window.INSTALLER_TEXT = {
       "promptLabel": "Запрос для вставки",
       "answersLabel": "Вымышленные ответы",
       "nextLabel": "Следующий запрос",
-      "prototype": "Хотите сначала посмотреть пример рабочей папки?",
-      "prototypeLink": "Открыть интерактивную демонстрацию с вымышленными данными (только на английском)",
       "finishTitle": "Всё готово",
       "finish": "В следующий раз опишите нужный результат обычными словами: понять письмо, подготовить форму, разобрать документы или спланировать изменение. Пока не освоитесь, используйте вымышленные данные.",
       "guideLink": "Открыть руководство пользователя",
@@ -1015,7 +1011,7 @@ window.INSTALLER_TEXT = {
       "aiTitle": "Gut zu wissen vor dem Start",
       "aiShort": "German Business Kit ist keine Steuerberatung, und KI kann Fehler machen.",
       "ai": "German Business Kit ist KI-gestützte Selbsthilfe-Software und kein Steuerberater. KI kann sich irren, auch bei Beträgen und Fristen. Dateien, die der Assistent liest, werden von Anthropic oder OpenAI verarbeitet. Verwenden Sie erfundene Beispiele, bis Sie die Hinweise zu Ihren Daten gelesen haben.",
-      "aiLink": "KI-Grenzen und Ihre Daten (auf Englisch)"
+      "aiLink": "KI-Grenzen und Ihre Daten"
     },
     "assistant": {
       "title": "Wählen Sie Ihren Assistenten",
@@ -1199,7 +1195,7 @@ window.INSTALLER_TEXT = {
       ],
       "gdprNote": "Diese Seite ist keine Rechtsberatung und keine DSGVO-Konformitätsbescheinigung.",
       "aiActLink": "EU-Kommission: Fragen und Antworten zur KI-Kompetenz (auf Englisch)",
-      "fullLink": "Ausführliche Hinweise: KI-Grenzen und Ihre Daten (auf Englisch)",
+      "fullLink": "Ausführliche Hinweise: KI-Grenzen und Ihre Daten",
       "settingsTitle": "Prüfen Sie Ihre Datenschutz-Einstellungen",
       "settingsLead": "Tun Sie das einmal in der App oder auf der Website. Menünamen stehen hier auf Englisch und können in einer anderen App-Sprache anders heißen. Diese Anleitung kann Ihre Einstellungen weder sehen noch ändern.",
       "claude": {
@@ -1254,7 +1250,7 @@ window.INSTALLER_TEXT = {
       },
       "once": "Installieren Sie das Kit nur einmal pro App. Zwei Kopien derselben Skills führen zu Doppelungen.",
       "stuck": "Sieht etwas anders aus?",
-      "stuckLink": "Abschnitt „If you get stuck“ in der Installationsanleitung (auf Englisch)",
+      "stuckLink": "Abschnitt „Wenn Sie nicht weiterkommen“ in der Installationsanleitung",
       "claude": {
         "title": "Fügen Sie German Business Kit zu Claude hinzu",
         "lead": "Bitten Sie Claude, das Kit für Sie zu installieren. Dafür reicht eine Anfrage.",
@@ -1323,7 +1319,7 @@ window.INSTALLER_TEXT = {
         "manualPromptLabel": "Anfrage mit Dateipfaden",
         "manualPrompt": "Ich richte German Business Kit in diesem lokalen Projekt Business Assistant in Codex ein. Mein ZIP liegt unter [vollständiger ZIP-Pfad] und SHA256SUMS unter [vollständiger Pfad der Prüfsummendatei]. Prüfe das ZIP anhand der Prüfsumme und brich ab, wenn sie nicht übereinstimmt. Entpacke es in einen neuen Ordner und kopiere dann alle sieben vollständigen Skill-Ordner in .agents/skills dieses Projekts. Verwende normale Dateiwerkzeuge, erhalte vorhandene Dateien und brich ab, wenn ein Zielordner bereits existiert. Installiere keine Laufzeitumgebungen und ändere weder Sicherheitseinstellungen noch die globale App-Konfiguration. Nenne mir die sieben installierten Namen und erkläre, wie ich eine neue Sitzung starte.",
         "checksumNote": "Mit der Prüfsummenliste kann Codex prüfen, ob der Download vollständig und unverändert ist. Sie beweist nicht, wer die Datei veröffentlicht hat.",
-        "manual": "Codex konnte die Dateien nicht kopieren? Folgen Sie den manuellen Schritten in der Installationsanleitung (auf Englisch).",
+        "manual": "Codex konnte die Dateien nicht kopieren? Folgen Sie den manuellen Schritten in der Installationsanleitung.",
         "diagram": ["Projektordner", "Anfrage einfügen", "Zugriff erlauben", "Neuer Chat"]
       }
     },
@@ -1357,8 +1353,6 @@ window.INSTALLER_TEXT = {
       "promptLabel": "Anfrage zum Einfügen",
       "answersLabel": "Erfundene Antworten",
       "nextLabel": "Folgeanfrage",
-      "prototype": "Möchten Sie zuerst einen Beispiel-Arbeitsbereich sehen?",
-      "prototypeLink": "Interaktive Demo mit erfundenen Daten öffnen (nur Englisch)",
       "finishTitle": "Sie sind startklar",
       "finish": "Beschreiben Sie beim nächsten Mal das gewünschte Ergebnis in normalen Worten: einen Brief verstehen, ein Formular vorbereiten, Unterlagen ordnen oder eine Änderung planen. Bleiben Sie bei erfundenen Daten, bis Sie sich sicher fühlen.",
       "guideLink": "Deutsche Startanleitung öffnen",

@@ -5,9 +5,9 @@ import synthetic_journey
 
 
 class MonthlyJourneyTests(unittest.TestCase):
-    def test_cli_import_review_resume_and_optional_archive_in_both_languages(self):
+    def test_cli_import_review_resume_and_optional_archive_in_each_language(self):
         with tempfile.TemporaryDirectory() as temporary:
-            for language in ("en", "ru"):
+            for language in ("en", "ru", "de"):
                 with self.subTest(language=language):
                     result = synthetic_journey.run(Path(temporary).resolve() / language, language)
                     self.assertEqual(result["resumed"], "resumed")

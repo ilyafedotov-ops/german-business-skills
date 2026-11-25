@@ -100,7 +100,7 @@ method and missing-information questions; leave the dependent amount unresolved.
 If only the independent check is unavailable, an actually computed provisional
 amount may be shown with that limitation. A pasted user result remains
 user-supplied until checked. Useful preparation continues without compulsory
-software purchases, a GUI or an accountant handoff. A checked component or estimate
+software purchases, an extra application or an accountant handoff. A checked component or estimate
 is not a tax assessment, complete statutory return, posting or submission.
 
 ## VAT timing example and research limits
@@ -113,7 +113,7 @@ The 2026 UStVA public instructions require whole-euro bases and describe signs a
 
 ## Preserve the review trail
 
-Use the existing English/Russian consultation template for input readiness, rule/method/tool references, actual execution, assumptions, independent check evidence and unresolved differences. If a private workspace exists, preserve a new version with source evidence and the actual tool export; do not replace history. No new calculation registry is needed.
+Use the existing English/Russian/German consultation template for input readiness, rule/method/tool references, actual execution, assumptions, independent check evidence and unresolved differences. If a private workspace exists, preserve a new version with source evidence and the actual tool export; do not replace history. No new calculation registry is needed.
 
 For a return, carry checked values into the existing [form preparation](preparation.md) and [filing evidence workflow](accounting-workflow.md). Recheck affected values after source records or settings change. Saved worksheet/source hashes establish local integrity, not legal correctness, current provider state or a successful tax calculation. Keep submission authorization and receipt tracking separate.
 

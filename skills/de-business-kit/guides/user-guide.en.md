@@ -1,8 +1,8 @@
 # User guide
 
-**English** · [Русский](user-guide.ru.md) · [Deutsch: kurzer Einstieg](start.de.md)
+**English** · [Русский](user-guide.ru.md) · [Deutsch](user-guide.de.md)
 
-**Work in Claude or Codex. Keep your business records and progress in one private folder.** German Business Kit helps you manage your own sole-trader business in Germany, from the first idea to everyday work, reporting, changes and closure. A separate records application is optional. Professional help is an option for a specific issue, not a required final step.
+**Work in Claude or Codex. Keep your business records and progress in one private folder.** German Business Kit helps you manage your own sole-trader business in Germany, from the first idea to everyday work, reporting, changes and closure. No separate application is needed. Professional help is an option for a specific issue, not a required final step.
 
 New here? [Install the complete kit](install.en.md). Then try one small task below.
 
@@ -104,8 +104,8 @@ uses an invoice number. It then helps continue the same invoice in the browser
 for finalization and sending. No API access is required for the guided browser
 route. Never paste an API key into chat or a business document.
 
-The protected local commands and optional API adapter need an available Python runtime. The current GUI
-and standalone native Windows tools have no invoice lifecycle controls; without
+The protected local commands and optional API adapter need an available Python runtime. The standalone
+native Windows tools have no invoice lifecycle controls; without
 the writer, the assistant saves a readable continuation and helps with the chosen
 service. One authorized zero-value browser test completed creation, readback,
 finalization, sending and acknowledged receipt in an existing company. The API
@@ -128,7 +128,7 @@ for status/menu checks and the boundary before issuing or cancelling.
 
 For payment follow-up, ask: **“Compare this issued invoice with the identified bank receipts and save a private payment report.”** The optional Python workflow preserves evidence, excludes prepayments already included in the invoice amount, and checks partial receipts/refunds across periods. Uncertain coverage, currency or corrections leave the comparison unresolved. It changes no provider payment status and sends nothing. Before reusing a report, the assistant checks source and invoice freshness. See the [receipt workflow](../references/invoicing-workflow.md#compare-an-issued-invoice-with-customer-receipts).
 
-After reconciliation, ask: **“Prepare a German message asking about the remaining difference, with a separate private review. Do not send it.”** The optional workflow creates the actual customer text and review. If the comparison is unresolved it can prepare an amount-free clarification; stale sources must be refreshed first. Recipient drafts support DE/EN/RU, private reviews EN/RU. See [customer follow-up](../references/invoicing-workflow.md#prepare-a-customer-payment-follow-up).
+After reconciliation, ask: **“Prepare a German message asking about the remaining difference, with a separate private review. Do not send it.”** The optional workflow creates the actual customer text and review. If the comparison is unresolved it can prepare an amount-free clarification; stale sources must be refreshed first. Recipient drafts and private reviews support DE/EN/RU. See [customer follow-up](../references/invoicing-workflow.md#prepare-a-customer-payment-follow-up).
 
 ## Keep your work in one folder
 
@@ -249,7 +249,7 @@ change the Finanzamt's notice. [Workflow details](../references/tax-consultant.m
 
 > Use de-business-kit. Save a readable result with the answer, open questions and next action. Link the file. Keep a document for a recipient separate from my private notes.
 
-**You get:** an ordinary readable document. HTML can open in your browser; PDF, Word or spreadsheet output depends on available tools. English and Russian report templates are included. German recipient documents can have a separate explanation in your language.
+**You get:** an ordinary readable document. HTML can open in your browser; PDF, Word or spreadsheet output depends on available tools. Report templates are included in English, Russian and German. A German recipient document can have a separate explanation in your language.
 
 ## Continue
 
@@ -293,7 +293,7 @@ A complete backup includes original documents, saved progress and internal histo
 
 ## Check your own environment
 
-The normal route is your assistant plus your business folder. The optional records app offers forms for some local operations; you can use the skills without it. Ask for one small fictional trial to check what your actual assistant can do. Installation alone does not connect email, banking or tax services.
+The route is your assistant plus your business folder; there is no separate application to install. Ask for one small fictional trial to check what your actual assistant can do. Installation alone does not connect email, banking or tax services.
 
 > Use de-business-kit. Run the setup check for this folder and explain anything that needs attention.
 

@@ -72,5 +72,42 @@
     "facts": "Записанные факты",
     "fields": "Поля из актуальной формы",
     "field_headers": "| Немецкое название | Предлагаемое значение | Статус проверки | ID подтверждений |"
+  },
+  "de": {
+    "title": "Vorbereitungsbericht",
+    "boundary": "Entwurf mit Nachweisverknüpfung. Keine Buchungen erfasst und kein Formular übermittelt.",
+    "status": "Status",
+    "period": "Zeitraum",
+    "missing": "Offene Prüfungen und fehlende Angaben",
+    "review": "Die Angaben sind erfasst; prüfen Sie vor der Nutzung Anwendbarkeit und Vollständigkeit.",
+    "evidence": "Prüfsummen der Quellen",
+    "detail": "Die zugehörige JSON-Datei enthält die genauen Eingaben, Felder, Berechnungen und Nachweise. Maschinenkennungen bleiben englisch.",
+    "routes": {
+      "classification_review": "Prüfen Sie tatsächliche Tätigkeiten, Qualifikationen und Leistungserbringung anhand von EStG §§ 15/18; dieses Arbeitsblatt legt keine amtliche Einordnung fest.",
+      "person_wide_vat_review": "Halten Sie Rechtsform, Einkunftsart, Umsatzsteuer und Gewinnermittlung getrennt. Prüfen Sie die umsatzsteuerliche Vorgeschichte über alle Tätigkeiten dieser Person.",
+      "mixed_activity_review": "Prüfen Sie, ob gemischte Tätigkeiten getrennt werden können; wenden Sie Regeln für Personengesellschaften nicht automatisch auf eine Einzelperson an.",
+      "form_eligibility_review": "Bestätigen Sie Formular, Jahr, Voraussetzungen, zuständige Behörde, Frist und die genauen aktuellen deutschen Feldbezeichnungen. Aufgeführte Formulare sind Kandidaten, keine Abgabepflichten.",
+      "draft_only": "Dies ist nur eine Vorbereitung. Anmeldung, Freigabe, Übermittlungsbeleg und Antwort der Behörde sind getrennte Schritte.",
+      "place_of_supply_review": "Bestimmen Sie die tatsächlichen Sitze von Leistendem und Empfänger, die Leistungsart und Ausnahmen, bevor Sie eine umsatzsteuerliche Behandlung vorschlagen. Währung und IBAN bestimmen nicht die Zuständigkeit.",
+      "payment_reporting_review": "Prüfen Sie Meldungen an die Bundesbank nach AWV anhand von Ansässigkeit, Zweck, Betrag, Zeitraum und Ausnahmen; Auslandszahlungen sind nicht automatisch meldepflichtig.",
+      "goods_customs_review": "Waren und gemischte Leistungen brauchen eine eigene Prüfung von Ein- und Ausfuhr, innergemeinschaftlichem Erwerb und Zoll. Wenden Sie nicht die allgemeine Regel für Dienstleistungen an.",
+      "reverse_charge_review": "Prüfen Sie den Leistungsort in Deutschland und die Steuerschuldnerschaft des Leistungsempfängers nach § 13b UStG. Der Kleinunternehmerstatus allein beseitigt diese Steuerschuld nicht und begründet keinen Vorsteuerabzug.",
+      "eu_b2b_place_and_zm_review": "Prüfen Sie B2B-Nachweise, Ausnahmen beim Leistungsort, Rechnungsangaben und eine etwaige ZM. Bei Anwendung von § 19 Abs. 1 UStG ist der Ausschluss nach § 18a Abs. 4 UStG zu prüfen.",
+      "consumer_place_oss_review": "Bestimmen Sie die Art der Leistung an Verbraucher und Ausnahmen beim Leistungsort; prüfen Sie OSS oder ein ausländisches Kleinunternehmerverfahren nur, wo es anwendbar ist.",
+      "business_place_review": "Prüfen Sie den Sitz des unternehmerischen Empfängers, Ausnahmen für die Leistung, Rechnungsanforderungen und etwaige ausländische Pflichten.",
+      "vat_id_evidence_review": "Erfassen Sie datierte Nachweise der USt-IdNr.-Abfrage; nicht verfügbar oder nicht geprüft bedeutet nicht ungültig, und ein gültiges Format ist keine Bestätigung.",
+      "payment_review": "Beträge werden nur gegen das vorgelegte Konto bzw. den Auszug abgeglichen. Prüfen Sie Rechnungen, Gebühren, Korrekturen, Rückstellungen, Wechselkurse und den vertraglichen Verkäufer gesondert; keine steuerliche Behandlung ist freigegeben."
+    },
+    "states": {
+      "needs_review": "Zu prüfen",
+      "ready_for_review": "Angaben erfasst; bereit zur Prüfung",
+      "arithmetic_matched": "Rechnung stimmt; Prüfung bleibt offen"
+    },
+    "balances": "Salden laut Auszug",
+    "balance_headers": "| Währung | Anfangssaldo | Endsaldo laut Auszug | Berechneter Endsaldo | Differenz |",
+    "totals_note": "Bewegungen nach Art; Auszahlungen und Umbuchungen sind keine zusätzlichen Einnahmen.",
+    "facts": "Erfasste Angaben",
+    "fields": "Beobachtete Formularfelder",
+    "field_headers": "| Deutsche Bezeichnung | Vorgeschlagener Wert | Prüfstatus | Nachweis-IDs |"
   }
 }

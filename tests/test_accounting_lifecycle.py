@@ -234,12 +234,13 @@ class AccountingTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIsInstance(json.loads(result.stdout), dict)
 
-    def test_report_export_reconciles_real_csv_and_renders_both_languages(self):
+    def test_report_export_reconciles_real_csv_and_renders_each_language(self):
         self.configure()
         ac.post(self.root, self.entry(account="bank"))
         bank_path = "03_banking/synthetic.csv"
         (ws._path(self.root, bank_path)).write_text("transaction_id,booking_date,amount,currency\nsale,2026-10-20,100.00,EUR\n", encoding="utf-8")
-        for language, expected in (("en", "Cash movement report"), ("ru", "Отчёт о движении денег")):
+        for language, expected in (("en", "Cash movement report"), ("ru", "Отчёт о движении денег"),
+                                   ("de", "Bericht über Geldbewegungen")):
             ws.configure_workspace(self.root, language=language)
             exported = ac.export_report(self.root, "2026-10")
             self.assertIn(expected, (ws._path(self.root, exported["markdown_path"])).read_text(encoding="utf-8"))

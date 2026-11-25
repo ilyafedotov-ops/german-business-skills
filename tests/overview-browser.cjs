@@ -15,7 +15,7 @@ const playwright = require('playwright');
   const browser = await playwright[browserName].launch();
   try {
     const kinds = process.platform === 'win32' || process.env.GBK_TEST_DOCKER_IMAGE ? ['', '-native'] : [''];
-    for (const kind of kinds) for (const language of ['en','ru']) for (const scenario of ['empty','blocked','corrupt','lifecycle']) {
+    for (const kind of kinds) for (const language of ['en','ru','de']) for (const scenario of ['empty','blocked','corrupt','lifecycle']) {
       for (const width of [390,1280]) {
         const page = await browser.newPage({viewport:{width,height:900}});
         const issues=[];
@@ -35,8 +35,8 @@ const playwright = require('playwright');
           const tasks=page.locator(kind ? 'body' : '#active-tasks');
           assert((await tasks.innerText()).includes('Prepare registration <script>alert(1)</script>'));
           assert((await tasks.innerText()).includes('Review authority reply'));
-          assert((await tasks.innerText()).includes(language==='en'?'No date recorded':'Дата не задана'));
-          assert((await tasks.innerText()).includes(language==='en'?'Unresolved dependencies':'Незавершённые зависимости'));
+          assert((await tasks.innerText()).includes({en:'No date recorded',ru:'Дата не задана',de:'Kein Datum erfasst'}[language]));
+          assert((await tasks.innerText()).includes({en:'Unresolved dependencies',ru:'Незавершённые зависимости',de:'Offene Abhängigkeiten'}[language]));
           if (!kind) {
             const taskLink=page.locator('nav a[href="#active-tasks"]');
             await taskLink.focus(); await page.keyboard.press('Enter');

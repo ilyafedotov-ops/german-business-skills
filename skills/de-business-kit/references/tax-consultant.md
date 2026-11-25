@@ -2,7 +2,7 @@
 
 Use mode ID `tax-consultant` for sourced tax explanations, comparisons, estimates and proposed treatment of the user's own German sole-trader business. Give a useful answer to the actual question, with a clear conclusion and the facts that could change it. This workflow provides decision support; it does not confer the professional status of a Steuerberater or authority to represent the user.
 
-Use the active English or Russian language for the answer and saved report. Preserve official German legal terms and form labels, explaining them on first use. Switching language or mode changes the workflow preference, never the entrepreneur's tax status, facts or existing decisions.
+Use the active English, Russian or German language for the answer and saved report. Preserve official German legal terms and form labels, explaining them on first use. Switching language or mode changes the workflow preference, never the entrepreneur's tax status, facts or existing decisions.
 
 ## Establish the question and minimum facts
 
@@ -147,7 +147,7 @@ for recipient/private separation and [continuation](continuation.md) for saving.
    without symlinks or overwriting existing files. Save:
    - German recipient draft with period, proposed adjustment, supported reason and
      explicit missing identity/reference fields; no private paths or review notes;
-   - separate EN/RU private review with current versus requested amounts, input and
+   - separate EN/RU/DE private review with current versus requested amounts, input and
      source references, actual arithmetic/check status, missing facts, selected
      route and exact external-action state;
    - calculation evidence and source/input versions needed to reproduce it, plus

@@ -36,17 +36,11 @@ the current preview's named packages for the attested distribution.
 
 On the repository's [Releases page](https://github.com/ilyafedotov-ops/german-business-skills/releases),
 choose [version 0.13.0-preview.2](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.13.0-preview.2) and confirm the **Immutable** marker. Availability requires completed
-publication and verification; an absent platform archive is not ready for use.
-Download the matching GUI archive or optional Codex/Claude ZIP, plus `SHA256SUMS`,
-into a new folder. Application archives are named:
-
-- `de-business-kit-0.13.0-preview.2-gui-windows-x64.zip`
-- `de-business-kit-0.13.0-preview.2-gui-macos-arm64.tar.gz` (Apple Silicon)
-- `de-business-kit-0.13.0-preview.2-gui-macos-x86_64.tar.gz` (Intel)
-
-The examples below verify the optional Codex ZIP; substitute the exact downloaded
-GUI filename to verify an application archive. On Windows, native
-PowerShell can compute the hash without Python:
+publication and verification. Download the Codex or Claude ZIP you need, plus
+`SHA256SUMS`, into a new folder. Releases up to 0.13.0-preview.2 also carried
+Windows/macOS archives of the former local GUI application; it is discontinued
+from 0.14 and those published assets stay unchanged. The examples below verify
+the Codex ZIP. On Windows, native PowerShell can compute the hash without Python:
 
 ```powershell
 Get-FileHash .\de-business-kit-0.13.0-preview.2-codex.zip -Algorithm SHA256
@@ -65,10 +59,9 @@ gh attestation verify de-business-kit-0.13.0-preview.2-codex.zip --repo ilyafedo
 
 For stricter pinning add `--source-digest` with the expected full Git commit from
 the release tag. Do not execute downloaded scripts before verification. Extract
-into a new folder and follow [application instructions](../gui/README.md) for a GUI
-archive or [skill installation guidance](distribution.md) for a Codex/Claude ZIP; preserve
+into a new folder and follow the [skill installation guidance](distribution.md); preserve
 the previous package and back up the private workspace before upgrading. No
-Python installation or automatic update is required for Windows users.
+Python installation or automatic update is required.
 
 ## Maintainer publication
 
@@ -127,8 +120,8 @@ regressions on Ubuntu. Security analysis and PR dependency review run independen
 with their existing triggers and policies.
 
 - **Full:** runtime, skill instructions, tests, tooling, workflows, dependencies,
-  version/build changes and unknown paths retain Windows/macOS Python, browsers,
-  native PowerShell, GUI builds and artifact-transfer checks. Tags and reusable
+  version/build changes and unknown paths retain Windows/macOS Python, browser
+  pages and native PowerShell checks. Tags and reusable
   release calls always select this mode and produce fresh release artifacts.
   Each Windows Python version runs the unit suite as two parallel shards; a
   selector test proves that every discovered test belongs to exactly one shard.
@@ -159,36 +152,3 @@ local regression checks from actual hosted full/reuse/documentation runs.
 
 GitHub behavior checked **2026-10-27**: [PR merge checkout semantics](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#pull_request)
 and [required/skipped status checks](https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/troubleshooting-required-status-checks).
-
-## Native application archives
-
-Each release includes separate Windows x64, macOS arm64 and macOS x86_64 applications.
-The `gui-package` CI matrix builds them with hash-locked build tools and exercises
-the extracted archive with no external Python on `PATH`. Each bundle includes
-`GUI-MANIFEST.json` covering regular files and native library links. The archive
-builder rejects special files and checks actual archived bytes against the manifest.
-Only then is its outer checksum produced. Portable plugin ZIPs stay independent.
-
-Publication waits for every platform build and smoke check. The privileged job
-checks the three downloaded native archives, adds them to `SHA256SUMS`, then signs
-and verifies all assets through the existing release workflow. It executes no
-project code or native binary. Native bundles are not claimed byte-reproducible;
-the existing build-twice check applies to the portable skill packages. GitHub
-provenance does not provide Windows Authenticode or Apple notarization.
-
-Actual results and remaining gates are in [GUI guidance](gui.md) and
-[validation](validation.md). Confirm publication and verification on the exact
-version’s release page; source documentation alone does not establish either.
-
-## Desktop signing
-
-Signing is not implemented. The application archives carry GitHub provenance but
-no Windows Authenticode signature or Apple notarization, so the operating system
-may warn on first launch; follow the device's policy and do not disable
-protections. Business users of the skills need no certificate or signing setup.
-Adding signing needs maintainer-held identities and a packaging change: sign
-before the manifest and checksums are captured, keep signing credentials out of
-ordinary pull-request jobs, keep project code out of the privileged publication
-job, and record only observed signature, notarization and fresh-download launch
-results. The detailed preparation checked on 2026-10-26 is in this page's Git
-history.

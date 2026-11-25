@@ -106,7 +106,7 @@ class PackagingTests(unittest.TestCase):
                                             cwd=self.base, capture_output=True, text=True, encoding="utf-8")
                     self.assertEqual(result.returncode, 0, result.stderr)
                     self.assertEqual(json.loads(result.stdout)["schema_version"], 1)
-                for language in ("en", "ru"):
+                for language in ("en", "ru", "de"):
                     for template in locales["languages"][language]["templates"].values():
                         self.assertTrue((skill / "assets" / template).is_file())
                     private = self.base / (host + "-" + language + "-private")
@@ -173,7 +173,7 @@ class PackagingTests(unittest.TestCase):
                     result = json.loads(prepared.stdout)
                     self.assertEqual(result["status"], "needs_review")
                     report = (private / result["markdown_path"]).read_text(encoding="utf-8")
-                    self.assertIn("Подготовка" if language == "ru" else "Preparation", report)
+                    self.assertIn({"en": "Preparation", "ru": "Подготовка", "de": "Vorbereitung"}[language], report)
 
     def test_archives_are_byte_deterministic_and_include_only_reviewed_resources(self):
         (self.source / ".env").write_text("DO_NOT_SHIP=synthetic\n", encoding="utf-8")
@@ -208,7 +208,7 @@ class PackagingTests(unittest.TestCase):
             with zipfile.ZipFile(output / (host + ".zip")) as archive:
                 archive.extractall(extracted)
             guides = extracted / host / "plugins/de-business-kit/skills/de-business-kit/guides"
-            for language in ("en", "ru"):
+            for language in ("en", "ru", "de"):
                 for name, minimum_images in (("install", 2), ("user-guide", 1)):
                     guide = (guides / (name + "." + language + ".md")).read_text(encoding="utf-8")
                     images = re.findall(r"!\[[^\]]*\]\(([^)]+)\)", guide)

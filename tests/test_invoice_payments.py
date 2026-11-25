@@ -94,8 +94,8 @@ class InvoicePaymentTests(CaseFixture):
         with self.assertRaises(ws.WorkspaceError):
             pay.check(self.root, report["path"])
 
-    def test_both_reports_are_readable_and_tampering_is_rejected(self):
-        for language, phrase in [("en", "Payment comparison"), ("ru", "Сверка оплаты")]:
+    def test_each_language_report_is_readable_and_tampering_is_rejected(self):
+        for language, phrase in [("en", "Payment comparison"), ("ru", "Сверка оплаты"), ("de", "Zahlungsabgleich")]:
             report = self.prepare(language)
             self.assertIn(phrase, ws._inside(self.root, report["markdown_path"]).read_text())
             self.assertTrue(pay.check(self.root, report["path"])["current"])

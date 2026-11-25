@@ -2,7 +2,7 @@
 
 [English](validation.md) · [Русский](validation.ru.md) · [Technical documentation](index.md)
 
-Evidence index updated **2026-11-21**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. It keeps evidence for current behaviour only; superseded runs and per-case details are in this page's Git history. Old results do not validate newer source automatically.
+Evidence index updated **2026-11-25**. Automated tests and public examples use synthetic data; authorized live checks keep account evidence private. [Current status](project-status.md) owns the capability matrix and remaining P1–P7 work; this page records what was checked. It keeps evidence for current behaviour only; superseded runs and per-case details are in this page's Git history. Old results do not validate newer source automatically.
 
 ## Run the relevant checks
 
@@ -14,7 +14,7 @@ python3 -B -m unittest discover -s tests -v
 git diff --check
 ```
 
-Choose additional checks by the changed area in [AGENTS.md](../AGENTS.md#validation-and-delivery): native Windows contracts, overview, recovery, GUI, printable documents, skill trials or packaging. Documentation-only work needs package/link/anchor/parity checks; resource moves also need detached-package verification. Build into a new absolute directory outside the checkout. Node/Playwright and Python development tools are not user prerequisites.
+Choose additional checks by the changed area in [AGENTS.md](../AGENTS.md#validation-and-delivery): native Windows contracts, overview, recovery, guided setup page, printable documents, skill trials or packaging. The former GUI and browser prototype were removed in 0.14; entries below that mention them are historical evidence. Documentation-only work needs package/link/anchor/parity checks; resource moves also need detached-package verification. Build into a new absolute directory outside the checkout. Node/Playwright and Python development tools are not user prerequisites.
 
 Native Windows acceptance requires Windows PowerShell 5.1 on Windows; a macOS/Linux PowerShell run is not equivalent. A fresh-session skill trial must record host/version, actual tools and observable outcomes without exposing evaluation criteria. A successful test, CI upload, health endpoint or polished file is not evidence of an external action.
 
@@ -25,6 +25,7 @@ Native Windows acceptance requires Windows PowerShell 5.1 on Windows; a macOS/Li
 - Complete browser artifact retrieval in the assisted export journey; generation confirmation alone is insufficient.
 - Representative complete accounting/reporting periods and actual selected calculation/form-tool results, beyond local cash arithmetic.
 - The welcome wizard with Claude Code's interactive multiple-choice questions, in the Claude app and in the Codex app, and with a model on the native Windows route.
+- Fresh-session trials of the German guides and report templates; the German text has had no independent native-speaker or tax-professional review.
 - Intermittent local PowerShell timeouts remain unexplained in historical runs. Later successful checks do not establish their cause or universal host reliability.
 
 GitHub provenance does not supply Windows Authenticode or Apple notarization. No hosted production service was deployed. New source/package checks do not alter published archives.
@@ -44,6 +45,25 @@ Each pin of the Claude marketplace moved only after these checks on freshly down
 | [0.8.0-preview.1](https://github.com/ilyafedotov-ops/german-business-skills/releases/tag/v0.8.0-preview.1) | `04bcd80` | 2026-10-26 14:54 | Run 40342363902, 16 jobs; all 8 assets passed |
 
 These are automated platform checks, not ordinary-user desktop acceptance, tax certification or live service operations. GitHub provenance is not Windows Authenticode or Apple notarization.
+
+## GUI removal, German parity and 0.14.0-preview.1 preparation — 2026-11-25
+
+Branch `claude/decommission-gui-german-parity` removes the local GUI application, the fictional
+browser prototype, their tests and their CI/release jobs; adds German guides, illustrations,
+message catalogs, report templates and German output in the Python renderers and the native
+overview; adds the launch materials in `presentation/`; and sets `VERSION` to 0.14.0-preview.1.
+
+- `tools/release.py check` accepted 0.14.0-preview.1; `git diff --check` was clean.
+- The full unit suite passed (500 tests; 12 skipped because they need Windows). Report, overview,
+  journey and packaging tests now also run in German.
+- `tools/check_package.py` passed apart from a local, Git-excluded worktree; it now rejects a missing
+  language for template roles, catalog keys, guides or guide illustrations.
+  `tools/check_doc_links.py` checked 447 links and anchors with no errors.
+- `test:csp`, `test:documents`, `test:overview` (including German pages) and `test:installer` passed
+  in Chromium and WebKit on macOS.
+- The native German overview was generated with PowerShell 7 on macOS; this is not the required
+  Windows PowerShell 5.1 acceptance, which runs in hosted CI.
+- All twelve EN/RU/DE guide illustrations were measured in Chromium with no text overflow.
 
 ## Documentation cleanup and 0.13.0-preview.2 preparation — 2026-11-21
 
@@ -209,12 +229,12 @@ published, and the marketplace still pins 0.11.0-preview.1.
 ## Guided setup data and AI-risk step — 2026-11-20
 
 Local branch work based on `4407107` adds a **Data & risks** step and usability
-changes to the [guided setup page](gui.md#guided-setup-page), after a review of every
+changes to the [guided setup page](setup-page.md), after a review of every
 screen at 1280 and 390 px found the risk notice reduced to one welcome card, no
 prompt to check the provider's training setting, no overall progress count, a phone
 layout that pushed each heading about 410 px down and an unreadable marketplace
 screenshot. Provider privacy and AI Act claims were checked on official pages the
-same day; sources and consequences are in the [GUI scope](gui.md#guided-setup-page).
+same day; sources and consequences are in the [GUI scope](setup-page.md).
 Checks ran on macOS arm64 with Playwright 1.63.0 and Python 3.15.2:
 
 - `tests/test_installer.py` (6 tests) passed, including identical EN/RU/DE structure
@@ -293,7 +313,7 @@ its 45 s timeout in PR #28 attempt 1; that is unrelated to this change and unres
 
 ## Guided setup page — 2026-11-20
 
-Local branch work based on `d89f796` adds the static [guided setup page](gui.md#guided-setup-page).
+Local branch work based on `d89f796` adds the static [guided setup page](setup-page.md).
 Checks ran on macOS arm64 with the existing Playwright 1.63.0 development dependency:
 
 - `tests/test_installer.py` (5 tests) passed: identical EN/RU/DE structure with no

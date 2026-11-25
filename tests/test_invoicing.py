@@ -291,6 +291,9 @@ class InvoicingTests(CaseFixture):
         self.assertIn('Черновик', shown['markdown'])
         report = command('desk.py', 'invoice-report', '--root', self.root, '--id', 'cli-invoice', '--language', 'ru')
         self.assertIn('Черновик', ws._inside(self.root, report['path']).read_text())
+        german = command('desk.py', 'invoice-show', '--root', self.root, '--id', 'cli-invoice', '--language', 'de')
+        self.assertIn('# Rechnung: cli-invoice', german['markdown'])
+        self.assertIn('Entwurf', german['markdown'])
         self.assertEqual(command('desk.py', 'invoice-list', '--root', self.root)['invoices'][0]['invoice_id'], 'cli-invoice')
 
     def test_manual_dispatch_is_recorded_without_inventing_a_past_authorization(self):

@@ -25,7 +25,7 @@ def main(argv=None):
         if name == "payment-followup-prepare":
             followup.add_argument("--input", required=True)
             followup.add_argument("--expected-sha256", required=True)
-            followup.add_argument("--language", choices=["en", "ru"], default="en")
+            followup.add_argument("--language", choices=["en", "ru", "de"], default="en")
         else:
             followup.add_argument("--report", required=True)
     sub.add_parser("invoice-payment-template")
@@ -35,7 +35,7 @@ def main(argv=None):
         if name == "invoice-payment-prepare":
             payment.add_argument("--input", required=True)
             payment.add_argument("--expected-sha256", required=True)
-            payment.add_argument("--language", choices=["en", "ru"], default="en")
+            payment.add_argument("--language", choices=["en", "ru", "de"], default="en")
         else:
             payment.add_argument("--report", required=True)
     sub.add_parser("lexware-template")
@@ -55,7 +55,7 @@ def main(argv=None):
         if name in {"invoice-create", "invoice-action"}:
             part.add_argument("--input", required=True)
         else:
-            part.add_argument("--language", choices=["en", "ru"], default="en")
+            part.add_argument("--language", choices=["en", "ru", "de"], default="en")
         if name in {"invoice-show", "invoice-report"}:
             part.add_argument("--id", required=True)
         if name == "invoice-action":
@@ -112,7 +112,7 @@ def main(argv=None):
     for name in ("overview", "archive"):
         commands[name].add_argument("--period", required=True)
         commands[name].add_argument("--as-of")
-    commands["overview"].add_argument("--language", choices=["en", "ru"])
+    commands["overview"].add_argument("--language", choices=["en", "ru", "de"])
     args = parser.parse_args(argv)
     try:
         command = args.command
