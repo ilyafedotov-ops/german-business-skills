@@ -21,9 +21,17 @@ with the commands below.
 | `post/real-examples.md`, `post/real-examples.de.md` | The three real questions with full, unedited answers |
 | `video/*.srt`, `video/*.chapters.json` | Caption tracks and chapter times from the last render |
 | `video/youtube-thumbnail.png` | YouTube thumbnail, 1280×720 |
+| `video/youtube-avatar.png`, `video/youtube-banner.png` | YouTube channel picture (800×800) and banner (2560×1440, text inside the 1546×423 safe area) |
 
 The LinkedIn video (4:5, about 99 s) and the YouTube walkthrough (16:9, about
 5:38) are rendered to `video/` locally and ignored by Git.
+
+## Published
+
+- YouTube channel [German Business Kit (@GermanBusinessKit)](https://www.youtube.com/@GermanBusinessKit)
+  with the walkthrough [https://youtu.be/TUkzD0C6qio](https://youtu.be/TUkzD0C6qio)
+  (public since 25 November 2026, English captions from `video/german-business-kit-youtube.srt`).
+- The LinkedIn posts in `post/linkedin-post.md` link this video, the slides as PDF and the repository.
 
 ## What the videos show
 
@@ -57,6 +65,7 @@ node render-receipts.cjs de              # carousel-de: PNGs + PDF
 node render-video.cjs linkedin           # video/german-business-kit-linkedin.mp4 + .srt + .chapters.json
 node render-video.cjs youtube            # video/german-business-kit-youtube.mp4 + .srt + .chapters.json
 node render-thumbnail.cjs thumbnail-receipt.html
+node render-channel-art.cjs              # video/youtube-avatar.png + youtube-banner.png
 ```
 
 `render-video.cjs` reads narration text from `post/scripts.md` and audio from

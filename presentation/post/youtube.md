@@ -31,7 +31,7 @@ Chapters
 4:35 Installing in a few minutes
 4:59 Honest limits and how to try it
 
-Important: this is an early preview. It is AI assistance, not professional tax or legal advice, and AI can make mistakes, including in calculations and deadlines. It does not transmit anything to ELSTER and is not a complete tax engine. Content the assistant reads is processed by its AI provider (Anthropic or OpenAI); start with made-up examples. The demo in this video uses fictional data only. Narration is AI-generated.
+Important: this is an early preview. It is AI assistance, not professional tax or legal advice, and AI can make mistakes, including in calculations and deadlines. It does not transmit anything to ELSTER and is not a complete tax engine. Content the assistant reads is processed by its AI provider (Anthropic or OpenAI); start with made-up examples. The Claude and Codex screens show unedited answers to fictional example questions. Narration is AI-generated.
 
 MIT licensed. Claude, Claude Code and Codex are products of their respective companies; this project is independent.
 

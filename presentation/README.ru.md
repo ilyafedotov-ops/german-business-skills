@@ -20,9 +20,17 @@
 | `post/real-examples.md`, `post/real-examples.de.md` | Три настоящих вопроса с полными неотредактированными ответами |
 | `video/*.srt`, `video/*.chapters.json` | Субтитры и время глав из последней сборки |
 | `video/youtube-thumbnail.png` | Обложка YouTube, 1280×720 |
+| `video/youtube-avatar.png`, `video/youtube-banner.png` | Аватар канала YouTube (800×800) и баннер (2560×1440, текст в безопасной зоне 1546×423) |
 
 Видео для LinkedIn (4:5, около 99 с) и обзор для YouTube (16:9, около 5:38)
 собираются локально в `video/` и игнорируются Git.
+
+## Опубликовано
+
+- Канал YouTube [German Business Kit (@GermanBusinessKit)](https://www.youtube.com/@GermanBusinessKit)
+  с обзором [https://youtu.be/TUkzD0C6qio](https://youtu.be/TUkzD0C6qio)
+  (публичный с 25 ноября 2026 года, английские субтитры из `video/german-business-kit-youtube.srt`).
+- Посты LinkedIn в `post/linkedin-post.md` ссылаются на это видео, слайды в PDF и репозиторий.
 
 ## Что показывают видео
 
@@ -56,6 +64,7 @@ node render-receipts.cjs de              # carousel-de: PNG + PDF
 node render-video.cjs linkedin           # video/german-business-kit-linkedin.mp4 + .srt + .chapters.json
 node render-video.cjs youtube            # video/german-business-kit-youtube.mp4 + .srt + .chapters.json
 node render-thumbnail.cjs thumbnail-receipt.html
+node render-channel-art.cjs              # video/youtube-avatar.png + youtube-banner.png
 ```
 
 `render-video.cjs` берёт текст озвучки из `post/scripts.md`, а звук — из

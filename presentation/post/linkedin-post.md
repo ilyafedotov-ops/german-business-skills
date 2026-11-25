@@ -7,7 +7,7 @@ LinkedIn allows one media type per post. Plan:
 3. **Follow-up video post** with `video/german-business-kit-linkedin.mp4` (about 99 s, English, rebuilt locally; optional captions `video/german-business-kit-linkedin.srt`).
 4. **Optional "real questions" post** with three images: `carousel-en/slides/05-r05.png`, `06-r06.png`, `07-r07.png` (or the `carousel-de` versions).
 
-Put the repository link in the first comment rather than in the post body.
+The launch posts link the YouTube walkthrough (https://youtu.be/TUkzD0C6qio), the slides as PDF and the repository in the post body; the first comment repeats the quick start.
 
 ---
 
@@ -35,7 +35,11 @@ Swipe for three real questions from Berlin, Hamburg and Munich: fictional people
 
 Honest status: early preview (0.14). Ask in English, German or Russian; guides and report templates come in all three. AI assistance, not tax advice. No ELSTER transmission, no complete tax engine. What the assistant reads goes to its AI provider, so start with a made-up example.
 
-Feedback very welcome, especially from freelancers and expats in Germany, Steuerberater, and anyone building skills for Claude or Codex. Link in the first comment.
+▶ 6-minute walkthrough on YouTube: https://youtu.be/TUkzD0C6qio
+📄 These slides as PDF: https://github.com/ilyafedotov-ops/german-business-skills/blob/main/presentation/carousel-en/german-business-kit-carousel-en.pdf
+🔗 Repo, install steps and user guide: https://github.com/ilyafedotov-ops/german-business-skills
+
+Feedback very welcome, especially from freelancers and expats in Germany, Steuerberater, and anyone building skills for Claude or Codex.
 
 #Selbstständig #Freiberufler #Germany #AI #OpenSource #SmallBusiness #Claude
 
@@ -54,7 +58,11 @@ Im Karussell: drei echte Fragen aus Berlin, Hamburg und München, auf Deutsch ge
 
 Ehrlicher Stand: Vorschau 0.14. Fragen Sie auf Deutsch, Englisch oder Russisch; Anleitungen und Berichtsvorlagen gibt es in allen drei Sprachen. KI-Unterstützung, keine Steuerberatung. Keine ELSTER-Übermittlung, keine vollständige Steuerberechnung.
 
-Ich freue mich über Feedback, besonders von Selbstständigen, Steuerberaterinnen und Steuerberatern und allen, die Skills für Claude oder Codex bauen. Link im ersten Kommentar.
+▶ Video-Rundgang auf YouTube (Englisch, 6 Min.): https://youtu.be/TUkzD0C6qio
+📄 Die Folien als PDF: https://github.com/ilyafedotov-ops/german-business-skills/blob/main/presentation/carousel-de/german-business-kit-carousel-de.pdf
+🔗 Repo, Installation und Anleitung: https://github.com/ilyafedotov-ops/german-business-skills
+
+Ich freue mich über Feedback, besonders von Selbstständigen, Steuerberaterinnen und Steuerberatern und allen, die Skills für Claude oder Codex bauen.
 
 #Selbstständig #Freiberufler #Steuern #KI #OpenSource
 
@@ -64,7 +72,7 @@ Ich freue mich über Feedback, besonders von Selbstständigen, Steuerberaterinne
 
 **English:** Repo, install steps and user guide: https://github.com/ilyafedotov-ops/german-business-skills
 Quick start: open Claude Code, the Claude app or Codex, paste the install request from the README, then start a new chat with "Use de-business-kit. Start the welcome setup."
-Full walkthrough (about 6 min): <YouTube link once uploaded>
+Full walkthrough (about 6 min): https://youtu.be/TUkzD0C6qio
 
 **Deutsch:** Repo, Installation und Anleitung: https://github.com/ilyafedotov-ops/german-business-skills
 Schnellstart: Claude Code, die Claude-App oder Codex öffnen, die Installationsanfrage aus dem README einfügen, dann in einem neuen Chat: „Use de-business-kit. Starte die Einrichtung.“
@@ -77,7 +85,10 @@ Under two minutes on what German Business Kit does, a real question from Berlin 
 
 7 open-source skills for Claude and Codex that help sole traders in Germany with registration, invoices, receipts, tax prep and Finanzamt letters, saved in one private folder.
 
-Early preview, AI assistance, not tax advice. Try it with a made-up example and tell me what's missing. Link in the comments.
+Early preview, AI assistance, not tax advice. Try it with a made-up example and tell me what's missing.
+
+▶ Full 6-minute walkthrough: https://youtu.be/TUkzD0C6qio
+🔗 Repo: https://github.com/ilyafedotov-ops/german-business-skills
 
 #Freiberufler #Selbstständig #AI #OpenSource #Germany
 
@@ -96,6 +107,8 @@ I asked my German Business Kit three questions people in Germany really ask. Fic
 
 Sources you can check, assumptions stated, limits admitted, and you decide what gets sent.
 
-AI assistance, not tax advice. Repo in the comments.
+AI assistance, not tax advice.
+▶ Walkthrough: https://youtu.be/TUkzD0C6qio
+🔗 Repo: https://github.com/ilyafedotov-ops/german-business-skills
 
 #Freiberufler #Selbstständig #Steuern #AI #OpenSource
