@@ -10,6 +10,7 @@ import workspace as ws
 import workflows as wf
 
 STATE = "00_admin/casework.json"
+REPORT_LANGUAGES = ("en", "ru", "de")
 COLLECTIONS = ("documents", "proposals", "source_checks", "observations", "bank_imports", "inspections")
 
 
@@ -80,3 +81,14 @@ def check_evidence(root, source):
 
 def template(name):
     return ws._load(Path(__file__).resolve().parents[2] / "assets" / name)
+
+
+def report_language(language, what="Report"):
+    if language not in REPORT_LANGUAGES:
+        raise ws.WorkspaceError(what + " language must be en, ru or de.")
+    return language
+
+
+def phrase(language, en, ru, de):
+    """Pick one report phrase in the workspace language."""
+    return {"en": en, "ru": ru, "de": de}[report_language(language)]

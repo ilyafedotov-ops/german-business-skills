@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="704" viewBox="0 0 760 704" role="img" aria-labelledby="title desc" xml:lang="de">
+<title id="title">Ihr Assistent. Ihr Ordner.</title>
+<desc id="desc">Ihr Assistent. Ihr Ordner. In Claude oder Codex. Keine zusätzliche App nötig. Fragen Sie in eigenen Worten Nutze de-business-kit. Bereite ein Angebot nach diesen vereinbarten Bedingungen vor. Klären, dann vorbereiten Bestätigte Angaben nutzen. Fehlendes erfragen. Lesbarer Entwurf und nächster Schritt. Speichern und fortsetzen Laufende Arbeit im privaten Ordner speichern. Ergebnisse, Angaben und offene Fragen bleiben. Ablaufskizze. Eine einfache Frage braucht keinen Ordner.</desc>
+<rect width="760" height="704" rx="24" fill="#f7f5ef"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#173e4b">
+<text x="32" y="47" font-size="19" font-weight="700" fill="#173e4b">GERMAN BUSINESS KIT</text>
+<text x="32" y="92" font-size="34" font-weight="700" fill="#173e4b">Ihr Assistent. Ihr Ordner.</text>
+<text x="32" y="128" font-size="24" font-weight="400" fill="#173e4b">In Claude oder Codex. Keine zusätzliche App nötig.</text>
+<rect x="32" y="158" width="696" height="134" rx="16" fill="#ddece8"/>
+<circle cx="66" cy="194" r="18" fill="#173e4b"/>
+<text x="60" y="201" font-size="22" font-weight="700" fill="#ffffff">1</text>
+<text x="100" y="201" font-size="28" font-weight="700" fill="#173e4b">Fragen Sie in eigenen Worten</text>
+<text x="100" y="236" font-size="25" font-weight="400" fill="#173e4b">Nutze de-business-kit. Bereite ein Angebot</text>
+<text x="100" y="268" font-size="25" font-weight="400" fill="#173e4b">nach diesen vereinbarten Bedingungen vor.</text>
+<path d="M66 298 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="316" width="696" height="134" rx="16" fill="#f6ddcd"/>
+<circle cx="66" cy="352" r="18" fill="#173e4b"/>
+<text x="60" y="359" font-size="22" font-weight="700" fill="#ffffff">2</text>
+<text x="100" y="359" font-size="28" font-weight="700" fill="#173e4b">Klären, dann vorbereiten</text>
+<text x="100" y="394" font-size="25" font-weight="400" fill="#173e4b">Bestätigte Angaben nutzen. Fehlendes erfragen.</text>
+<text x="100" y="426" font-size="25" font-weight="400" fill="#173e4b">Lesbarer Entwurf und nächster Schritt.</text>
+<path d="M66 456 v12 m-5 -5 5 5 5 -5" fill="none" stroke="#173e4b" stroke-width="2"/>
+<rect x="32" y="474" width="696" height="134" rx="16" fill="#e1e8ef"/>
+<circle cx="66" cy="510" r="18" fill="#173e4b"/>
+<text x="60" y="517" font-size="22" font-weight="700" fill="#ffffff">3</text>
+<text x="100" y="517" font-size="28" font-weight="700" fill="#173e4b">Speichern und fortsetzen</text>
+<text x="100" y="552" font-size="25" font-weight="400" fill="#173e4b">Laufende Arbeit im privaten Ordner speichern.</text>
+<text x="100" y="584" font-size="25" font-weight="400" fill="#173e4b">Ergebnisse, Angaben und offene Fragen bleiben.</text>
+<text x="32" y="659" font-size="22" font-weight="400" fill="#173e4b">Ablaufskizze. Eine einfache Frage braucht keinen Ordner.</text>
+</g></svg>

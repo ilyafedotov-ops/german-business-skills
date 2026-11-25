@@ -1,6 +1,6 @@
 # Install German Business Kit
 
-**English** · [Русский](install.ru.md)
+**English** · [Русский](install.ru.md) · [Deutsch](install.de.md)
 
 This guide takes you from installing the kit to your first useful answer in about five minutes. You do not need programming, a terminal, Python or accounting software. Use fictional details for your first try.
 
@@ -27,7 +27,7 @@ then use the supported installation route below. Where a folder choice or plugin
 installation click is yours to make, it should explain that next step. It should
 preserve existing installations and your business files, install the complete
 seven-skill set together, and distinguish files copied from skills discovered in
-a fresh session. The request does not require a separate records app or a new
+a fresh session. The request does not require a separate application or a new
 business workspace. If the assistant cannot access the repository or installation
 controls, use the steps below; it should tell you exactly what remains.
 
@@ -164,7 +164,7 @@ A useful result is one understandable action, with questions only where facts ar
 
 **Done when:** you understand the answer and know the next step. If it is too technical, say: **“Explain this in plain language and give me only the next step.”**
 
-You can continue in English or Russian. To try your own task, describe the result you want: understand a letter, prepare a form, organize documents, compare services or plan a change. See [more example requests](user-guide.en.md#first-task).
+You can continue in English, Russian or German. To try your own task, describe the result you want: understand a letter, prepare a form, organize documents, compare services or plan a change. See [more example requests](user-guide.en.md#first-task).
 
 ## Optional browser and computer access
 
@@ -208,8 +208,6 @@ Open the [0.13.0-preview.2 release](https://github.com/ilyafedotov-ops/german-bu
 
 - **`de-business-kit-0.13.0-preview.2-codex.zip`**
 - **`SHA256SUMS`**, the checksum list that detects a damaged or changed download
-
-The `-gui-` archives are a separate optional application; you do not need them.
 
 ### 3. Ask Codex to install the skills
 

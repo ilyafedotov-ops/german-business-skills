@@ -127,7 +127,7 @@ even when a settlement question prevents a definitive payment request.
    are separate. State included/excluded receipts and the as-of date. No claim of
    complete balance, tax adjustment, default, fees or legal entitlement follows
    from matching arithmetic or XML extraction.
-5. Save the recipient-language reply separately from the user's EN/RU private
+5. Save the recipient-language reply separately from the user's EN/RU/DE private
    review, with the actual source/version links and one concrete next action.
    Inspect the saved output. Keep local paths, internal calculations and unresolved
    alternatives out of the recipient message unless relevant and intentionally

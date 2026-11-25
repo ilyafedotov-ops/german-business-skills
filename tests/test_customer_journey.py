@@ -8,7 +8,7 @@ from customer_journey import run, FIXTURES, ws
 class CustomerJourneyTests(unittest.TestCase):
     def test_credit_note_partial_payment_and_open_task_resume_without_shadow_entries(self):
         with tempfile.TemporaryDirectory() as temporary:
-            for language in ('en', 'ru'):
+            for language in ('en', 'ru', 'de'):
                 with self.subTest(language=language):
                     result = run(Path(temporary).resolve() / language, language)
                     root = Path(result['root'])

@@ -41,8 +41,8 @@ authority or changes the actual books.
 The assistant uses `scripts/desk.py` from the shared core. Resolve the workspace
 with `workspace.py folders`; input/evidence paths are inside that workspace.
 Inspect `invoice-list` without a period filter before creating a case or resuming
-an uncertain attempt. It includes all invoice periods; the general GUI/native
-overview does not display this new lifecycle. Keep a linked open task in the
+an uncertain attempt. It includes all invoice periods; the general workspace
+overview does not display this lifecycle. Keep a linked open task in the
 existing task register, backed by a saved readable status and case note.
 
 | Command | Purpose |
@@ -152,7 +152,7 @@ authorizes a new send or proves customer receipt.
 
 After issue/delivery, use the existing private bank export and invoice evidence
 to prepare a factual payment comparison. Keep Lexware or the user's other chosen
-system authoritative. This route saves an actual EN/RU report and frozen inputs;
+system authoritative. This route saves an actual EN/RU/DE report and frozen inputs;
 it does not allocate a payment, mark an invoice paid or send a reminder.
 
 The optional Python commands in `desk.py` are:
@@ -208,7 +208,7 @@ a runtime installation. This route needs no API key, provider upgrade or bank wr
 
 Use the saved comparison to prepare a neutral customer query, with its private
 review kept separate. This optional Python route writes actual recipient text in
-German, English or Russian, an EN/RU private review, frozen input/review evidence
+German, English or Russian, an EN/RU/DE private review, frozen input/review evidence
 and an audit-bound manifest. It neither sends nor changes provider/payment state.
 
 | Command in `desk.py` | Purpose |
@@ -270,4 +270,4 @@ evidence before acting; a previously exported status can be stale. Retain earlie
 recipient artifacts, reviewed versions, attempts, receipts and corrections.
 If Python/protected writers are unavailable, save a readable continuation without
 editing the register directly or claiming protected status. Standalone native
-Windows and the current GUI have no invoicing controls for this module.
+Windows tools have no invoicing controls for this module.

@@ -12,6 +12,10 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills" / "de-business-kit"
+LANGUAGES = ("en", "ru", "de")
+# User-facing guides ship in every supported language; maintainer docs stay EN/RU.
+LOCALIZED_GUIDES = ("install", "user-guide", "assisted-services")
+LOCALIZED_IMAGES = ("how-it-works", "setup-map", "first-task", "assisted-install")
 
 
 def checked_files(root):
@@ -25,10 +29,19 @@ def checked_files(root):
         yield file
 
 
+def key_paths(value, prefix=""):
+    if not isinstance(value, dict):
+        return set()
+    paths = set()
+    for key, item in value.items():
+        paths |= {prefix + key} | key_paths(item, prefix + key + ".")
+    return paths
+
+
 def main():
     errors = []
     required = [
-        "README.md", "README.ru.md", "LICENSE", "SECURITY.md", "SECURITY.ru.md",
+        "README.md", "README.ru.md", "README.de.md", "LICENSE", "SECURITY.md", "SECURITY.ru.md",
         "CONTRIBUTING.md", "CONTRIBUTING.ru.md",
         "tools/install.py", "docs/architecture.md", "docs/architecture.ru.md",
         "skills/de-business-kit/guides/user-guide.en.md", "skills/de-business-kit/guides/user-guide.ru.md",
@@ -85,8 +98,8 @@ def main():
     try:
         manifest = json.loads((SKILL / "assets/locales.json").read_text(encoding="utf-8"))
         locales = manifest["languages"]
-        if set(locales) != {"en", "ru"}:
-            errors.append("Complete English and Russian locale definitions are required")
+        if set(locales) != set(LANGUAGES):
+            errors.append("Complete English, Russian and German locale definitions are required")
         roles = {"bookkeeping_workflow", "month_close", "form_worksheet", "tax_consultation", "overview", "source_map", "service_comparison", "readable_report", "submission_review",
                  "launch_plan", "customer_case", "annual_readiness", "change_plan", "connection_check"}
         for language, locale in locales.items():
@@ -99,6 +112,21 @@ def main():
                     errors.append("Invalid localized template: " + str(name))
     except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
         errors.append("Invalid locale manifest: " + str(exc))
+    for catalog in ("casework-messages.json", "preparation-messages.json"):
+        try:
+            data = json.loads((SKILL / "assets" / catalog).read_text(encoding="utf-8"))
+            shapes = {frozenset(key_paths(data.get(language))) for language in LANGUAGES}
+            if set(data) != set(LANGUAGES) or len(shapes) != 1:
+                errors.append("Message catalog lacks English/Russian/German key parity: " + catalog)
+        except (OSError, ValueError) as exc:
+            errors.append(f"Invalid message catalog {catalog}: {exc}")
+    for language in LANGUAGES:
+        for guide in LOCALIZED_GUIDES:
+            if not (SKILL / "guides" / f"{guide}.{language}.md").is_file():
+                errors.append(f"Missing localized guide: {guide}.{language}.md")
+        for image in LOCALIZED_IMAGES:
+            if not (SKILL / "guides/images" / f"{image}.{language}.svg").is_file():
+                errors.append(f"Missing localized guide image: {image}.{language}.svg")
     for file in checked_files(ROOT):
         if file.is_symlink():
             errors.append("Symlink in distributable: " + str(file.relative_to(ROOT)))
@@ -123,7 +151,7 @@ def main():
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 1
-    print("Package structure, EN/RU template coverage, local links and JSON: OK (no network/legal/integration validation)")
+    print("Package structure, EN/RU/DE template, catalog and guide coverage, local links and JSON: OK (no network/legal/integration validation)")
     return 0
 
 

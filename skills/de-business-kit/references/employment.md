@@ -1,6 +1,6 @@
 # First employee: prepare a working route
 
-Use with [changes](changes.md) and the EN/RU change-plan worksheet linked there.
+Use with [changes](changes.md) and the EN/RU/DE change-plan worksheet linked there.
 This covers preparation and supported host actions, not a payroll calculator or
 a certification of employment-law compliance. Self-managed work with suitable
 software and an explicitly chosen service are both possible routes.

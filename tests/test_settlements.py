@@ -90,10 +90,11 @@ class SettlementTests(ProposalLinkTests):
         with self.assertRaises(ws.WorkspaceError):
             ac.period_report(self.root, "2026-11")
 
-    def test_export_readable_balances_in_both_languages(self):
+    def test_export_readable_balances_in_each_language(self):
         self.proposal("proposal-1")
         ac.post(self.root, self.paid())
-        for language, title in (("en", "Invoice payment allocation"), ("ru", "Распределение платежей по счетам")):
+        for language, title in (("en", "Invoice payment allocation"), ("ru", "Распределение платежей по счетам"),
+                                ("de", "Zuordnung von Zahlungen zu Rechnungen")):
             ws.configure_workspace(self.root, language=language)
             output = ac.export_report(self.root, "2026-10")
             text = (self.root / output["markdown_path"]).read_text()

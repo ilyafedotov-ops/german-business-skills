@@ -205,7 +205,7 @@ def main(argv=None):
     build = sub.add_parser("prepare")
     build.add_argument("--root", required=True)
     build.add_argument("--input", required=True)
-    build.add_argument("--language", choices=["en", "ru"])
+    build.add_argument("--language", choices=["en", "ru", "de"])
     args = parser.parse_args(argv)
     try:
         result = template() if args.command == "template" else prepare(args.root, args.input, args.language)

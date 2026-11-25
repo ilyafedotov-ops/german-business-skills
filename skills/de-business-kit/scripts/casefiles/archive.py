@@ -188,10 +188,12 @@ def build(root, period, as_of=None):
             add("evidence/" + source["sha256"] + suffix, ws._read_regular(path), "evidence", source)
         for name, rows in records.items():
             add("records/" + name + ".json", st.encoded(rows), "record_snapshot")
-        add("README.txt", ("Personal records archive / Архив собственных записей\n"
+        add("README.txt", ("Personal records archive / Архив собственных записей / Archiv eigener Unterlagen\n"
             "Verify manifest.json and every file before use. Unresolved questions remain in the manifest.\n"
             "This is not a DATEV export, proof of tax correctness, a backup, or a filing receipt.\n"
-            "Проверьте манифест и файлы. Открытые вопросы сохранены. Это не экспорт DATEV, резервная копия или квитанция подачи.\n").encode("utf-8"), "guide")
+            "Проверьте манифест и файлы. Открытые вопросы сохранены. Это не экспорт DATEV, резервная копия или квитанция подачи.\n"
+            "Prüfen Sie manifest.json und jede Datei vor der Nutzung. Offene Fragen bleiben im Manifest. "
+            "Dies ist kein DATEV-Export, kein Nachweis steuerlicher Richtigkeit, keine Sicherung und kein Übermittlungsbeleg.\n").encode("utf-8"), "guide")
         if len(payloads) > MAX_FILES or sum(len(data) for data in payloads.values()) > MAX_TOTAL:
             raise ws.WorkspaceError("Archive exceeds supported limits.")
         manifest = {"schema_version": 1, "format": "generic-records-archive", "period": period, "as_of": snapshot["as_of"],

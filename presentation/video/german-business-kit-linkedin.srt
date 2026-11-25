@@ -1,0 +1,167 @@
+1
+00:00:00,400 --> 00:00:01,824
+Running a small business
+
+2
+00:00:01,824 --> 00:00:03,664
+in Germany means paperwork,
+
+3
+00:00:03,664 --> 00:00:05,503
+often in a second language:
+
+4
+00:00:05,503 --> 00:00:08,055
+registration forms, invoices, receipts,
+
+5
+00:00:08,055 --> 00:00:11,200
+tax returns, and letters from the Finanzamt.
+
+6
+00:00:12,200 --> 00:00:14,224
+So I built German Business Kit:
+
+7
+00:00:14,224 --> 00:00:16,594
+seven open-source skills that turn Claude
+
+8
+00:00:16,594 --> 00:00:18,560
+or Codex into a business assistant
+
+9
+00:00:18,560 --> 00:00:20,699
+for sole traders in Germany.
+
+10
+00:00:20,699 --> 00:00:21,856
+No new app.
+
+11
+00:00:21,856 --> 00:00:24,920
+You just ask, in English, German or Russian.
+
+12
+00:00:25,920 --> 00:00:27,869
+It asks only for what's missing,
+
+13
+00:00:27,869 --> 00:00:29,493
+prepares a readable draft,
+
+14
+00:00:29,493 --> 00:00:30,846
+and saves your facts,
+
+15
+00:00:30,846 --> 00:00:32,145
+documents and next steps
+
+16
+00:00:32,145 --> 00:00:33,823
+in one private folder.
+
+17
+00:00:33,823 --> 00:00:36,800
+So next month, it continues where you stopped.
+
+18
+00:00:37,800 --> 00:00:40,457
+For example, a translator in Berlin asks:
+
+19
+00:00:40,457 --> 00:00:42,406
+Freiberufler or Gewerbe?
+
+20
+00:00:42,406 --> 00:00:44,413
+The real answer names the law,
+
+21
+00:00:44,413 --> 00:00:46,008
+the one registration needed
+
+22
+00:00:46,008 --> 00:00:47,661
+and its deadline, with links
+
+23
+00:00:47,661 --> 00:00:50,200
+to the official sources it opened.
+
+24
+00:00:51,800 --> 00:00:53,750
+It covers the whole journey:
+
+25
+00:00:53,750 --> 00:00:55,396
+starting out, invoices,
+
+26
+00:00:55,396 --> 00:00:57,286
+receipts and bank matching,
+
+27
+00:00:57,286 --> 00:00:59,846
+tax preparation and Finanzamt replies,
+
+28
+00:00:59,846 --> 00:01:03,320
+choosing services, and later changes or closing.
+
+29
+00:01:04,320 --> 00:01:06,335
+Here it is in the real apps.
+
+30
+00:01:06,335 --> 00:01:08,295
+In Claude, you ask in your own words
+
+31
+00:01:08,295 --> 00:01:10,364
+and get one small first step.
+
+32
+00:01:10,364 --> 00:01:12,596
+In Codex, all seven skills are ready,
+
+33
+00:01:12,596 --> 00:01:14,720
+and it answers in German, too.
+
+34
+00:01:15,720 --> 00:01:18,460
+One rule shapes everything: it prepares,
+
+35
+00:01:18,460 --> 00:01:20,266
+you decide and send.
+
+36
+00:01:20,266 --> 00:01:21,574
+You sign in to ELSTER
+
+37
+00:01:21,574 --> 00:01:23,193
+or your bank yourself,
+
+38
+00:01:23,193 --> 00:01:25,560
+and you make the final click.
+
+39
+00:01:26,560 --> 00:01:29,797
+It's an early preview, and AI help, not tax advice.
+
+40
+00:01:29,797 --> 00:01:32,063
+The kit is open source on GitHub.
+
+41
+00:01:32,063 --> 00:01:33,898
+Try it with a made-up example,
+
+42
+00:01:33,898 --> 00:01:35,840
+and tell me what's missing.

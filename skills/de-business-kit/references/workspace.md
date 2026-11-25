@@ -294,7 +294,7 @@ Reports receive unique names under `07_exports/YYYY-MM/`. The CLI prints summary
 
 Copy only needed templates into the private workspace:
 
-- [localized templates](language-and-modes.md): English/Russian form worksheets, bookkeeping agreements, monthly reports and tax consultations; choose using [locales.json](../assets/locales.json).
+- [localized templates](language-and-modes.md): English/Russian/German form worksheets, bookkeeping agreements, monthly reports and tax consultations; choose using [locales.json](../assets/locales.json).
 - [proposal](../assets/proposal.json): extracted facts and unposted treatment.
 - [operation](../assets/operation.json): exact payload, authorization and outcome.
 - [source check](../assets/source-check.json): source, effective dates and applicability.

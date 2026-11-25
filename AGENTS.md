@@ -13,7 +13,7 @@ trader: preparation, formation, setup, daily work, reporting, changes and closur
 Use the [current scope and roadmap](docs/project-status.md) to choose work by user
 outcome. Self-managed accounting and tax reporting are an important part of that
 lifecycle; professional consultation and exports are optional branches. Preserve
-that outcome without requiring a proprietary ledger, GUI or transport for every
+that outcome without requiring a proprietary ledger, separate application or transport for every
 route. Check implementation and [accounting acceptance criteria](docs/project-status.md#accounting-acceptance)
 before claiming support; a plan, template or passing utility test is not an
 implemented integration.
@@ -38,9 +38,8 @@ protected journal/filing writers or full filing preflight.
 | Preparation and payment utilities | [workflows.py](skills/de-business-kit/scripts/workflows.py), [payments.py](skills/de-business-kit/scripts/payments.py) |
 | Templates, languages and folder names | [assets](skills/de-business-kit/assets/), [locale manifest](skills/de-business-kit/assets/locales.json), [folder mapping](skills/de-business-kit/assets/folder-layouts.json) |
 | Readable documents and recipient materials | [Document authoring](skills/de-business-kit/references/document-authoring.md), [readable-output rules](skills/de-business-kit/references/readable-output.md) |
-| Real local GUI and packaged runtime | [GUI](gui/), [scope/security](docs/gui.md), [build](tools/build_gui.py), [adapter tests](tests/test_gui_server.py); use canonical writers, workspace identity and draft version checks |
-| Interactive demonstration | [prototype](prototype/), [prototype scope](docs/gui.md#fictional-prototype); fictional data, not a connected accounting application |
-| Beginner guided setup | [installer](installer/), [scope and provider sources](docs/gui.md#guided-setup-page), [content tests](tests/test_installer.py); static page with official links only, no downloads, host changes or credentials |
+| Beginner guided setup | [installer](installer/), [scope and provider sources](docs/setup-page.md), [content tests](tests/test_installer.py); static page with official links only, no downloads, host changes or credentials |
+| Launch and presentation materials | [presentation](presentation/), [sources and rebuild](presentation/README.md); fictional people only, real answers labelled as such, no MP4 files in Git |
 | Installation and packaging | [tools](tools/), [distribution](docs/distribution.md), [package readmes](packaging/) |
 | Verification and known gaps | [tests](tests/), [behavioral scenarios](evals/scenarios.json), [validation record](docs/validation.md), [CI](.github/workflows/) |
 
@@ -67,9 +66,9 @@ resolve after installation without the source checkout. Shared resources stay in
   `-Action folders`. Do not hardcode legacy paths, rename established folders or
   silently migrate existing workspaces. Folder language and response language
   are separate.
-- Maintain English/Russian parity for user-facing documentation and template
-  roles. Keep shared agent instructions, IDs and enum values stable. EN/RU/DE
-  folder names and a German start guide do not imply full German report support.
+- Maintain English/Russian/German parity for user-facing documentation, guides,
+  message catalogs and template roles. Keep shared agent instructions, IDs and
+  enum values stable. Maintainer documentation under `docs/` stays English/Russian.
 - Prefer native Windows facilities for users without Python. Python utilities
   are an optional existing runtime; Node/Playwright are development tools, not
   user prerequisites. Do not add mandatory runtime installation, execution-policy
@@ -78,8 +77,7 @@ resolve after installation without the source checkout. Shared resources stay in
 - Make substantive results readable without JSON knowledge. Generated views are
   projections of canonical records, not a second task register. Keep private
   review notes separate from recipient documents; inspect actual exported files.
-- Keep the interactive synthetic prototype separate from real workspace views.
-  A view reports state; it never grants review, posting or submission approval.
+- A view reports state; it never grants review, posting or submission approval.
   Keep uncertain attempts visible across periods. Reuse existing preflight rules
   rather than implement weaker copies in a new interface.
 - Recovery must verify the same captured manifest, preserve all workspace bytes
@@ -101,7 +99,7 @@ resolve after installation without the source checkout. Shared resources stay in
 `AGENTS.md` owns repository maintenance rules; `CLAUDE.md` only points here.
 `SKILL.md` owns portable product routing and must remain usable without root docs.
 User documentation lives in the portable `guides/`; `docs/index.md` is the technical index. `docs/project-status.md` owns current scope and remaining work; `docs/validation.md` summarizes relevant checks and their limits. Keep old plans and detailed work logs in Git history; do not create a documentation archive. Update an existing owner instead of adding duplicate status or topic pages. Code and command schemas establish implemented behavior. Keep current status,
-architecture/ontology, affected EN/RU guides and portable references aligned when
+architecture/ontology, affected EN/RU/DE guides and portable references aligned when
 a capability changes. Keep the entry point compact and load detailed references
 only when needed. Do not duplicate complete workflows across rule files.
 
@@ -138,15 +136,13 @@ an instruction to install Python on users' machines.
 | Affected area | Additional verification |
 | --- | --- |
 | Native Windows script or shared filesystem contracts | `powershell.exe -NoProfile -File tests/native/windows-smoke.ps1` on Windows; inspect Windows CI and cross-runtime tests. A Linux PowerShell container is not Windows PowerShell 5.1 acceptance. |
-| Real overview | `npm run test:overview -- --browser=chromium` and `--browser=webkit`; check empty, blocked and corrupt states in EN/RU. Native overview also needs `tests/native/overview-smoke.ps1`. |
+| Real overview | `npm run test:overview -- --browser=chromium` and `--browser=webkit`; check empty, blocked and corrupt states in EN/RU/DE. Native overview also needs `tests/native/overview-smoke.ps1`. |
 | Full backup/restore | `python3 -B -m unittest discover -s tests -p test_recovery.py -v`, native `tests/native/recovery-smoke.ps1`, and cross-runtime verification. Test refusal to overwrite, unsafe paths, corruption, manifest identity and concurrent writers. |
-| Real GUI behavior or packaging | `npm run test:gui` in Chromium/WebKit, `tests/test_gui_server.py`, packaged smoke with empty PATH, native Windows/macOS CI. Never expose the workspace as a static web directory or bypass protected writers. |
-| Prototype behavior or appearance | `npm test` and `npm run test:browser`; inspect affected journeys, screenshots and console/network errors. Use existing development dependencies. |
 | Guided setup page | `tests/test_installer.py`, `npm run test:installer -- --browser=chromium` and `--browser=webkit`; inspect EN/RU/DE screenshots. Recheck changed provider links/plans on official pages and record the new date. |
 | Printable HTML template | `npm run test:documents`; inspect actual rendered/exported artifacts, including long tables and language coverage. |
 | Skill workflow or routing | Relevant fresh-session trials from `evals/scenarios.json`, using synthetic inputs without revealing evaluation criteria; record actual host/version and outcomes. |
 | Packaging or resource layout | Detached-package tests and, when needed, `tools/build_package.py --output` with a new absolute directory outside the checkout. Building is not installation or publishing. |
-| Documentation only | `python3 -B tools/check_package.py`, local Markdown file/anchor checks and `git diff --check`; inspect EN/RU parity. Reuse prior runtime evidence only for unchanged behavior. |
+| Documentation only | `python3 -B tools/check_package.py`, local Markdown file/anchor checks and `git diff --check`; inspect EN/RU/DE parity of user-facing pages. Reuse prior runtime evidence only for unchanged behavior. |
 
 Do not claim desktop usability, tax correctness, live connections, submissions,
 or native Windows compatibility from unit tests alone. Report failed/skipped

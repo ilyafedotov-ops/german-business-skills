@@ -51,6 +51,8 @@ class FollowupTests(CaseFixture):
         for secret in ["PRIVATE-SOURCE-MARKER", "PRIVATE-BANK-ACCOUNT", self.proof, "SHA-256", "invoice-evidence"]:
             self.assertNotIn(secret, text)
         self.assertIn("Не отправлено", ws._inside(self.root, result["review_path"]).read_text())
+        german = self.prepare("de")
+        self.assertIn("Nicht versendet", ws._inside(self.root, german["review_path"]).read_text())
         self.assertEqual(pay.inv.show(self.root, "invoice-1")["sha256"], before)
         self.assertTrue(follow.check(self.root, result["path"])["current"])
 

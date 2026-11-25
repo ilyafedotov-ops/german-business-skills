@@ -42,14 +42,13 @@ window.INSTALLER_LINKS = {
       "guide": "https://github.com/ilyafedotov-ops/german-business-skills/blob/main/skills/de-business-kit/guides/user-guide.ru.md#первая-задача"
     },
     "de": {
-      "risks": "https://github.com/ilyafedotov-ops/german-business-skills/blob/main/skills/de-business-kit/guides/user-guide.en.md#ai-limits-and-your-data",
-      "help": "https://github.com/ilyafedotov-ops/german-business-skills/blob/main/skills/de-business-kit/guides/install.en.md#if-you-get-stuck",
-      "manual": "https://github.com/ilyafedotov-ops/german-business-skills/blob/main/skills/de-business-kit/guides/install.en.md#manual-fallback",
-      "guide": "https://github.com/ilyafedotov-ops/german-business-skills/blob/main/skills/de-business-kit/guides/start.de.md"
+      "risks": "https://github.com/ilyafedotov-ops/german-business-skills/blob/main/skills/de-business-kit/guides/user-guide.de.md#ki-grenzen-und-ihre-daten",
+      "help": "https://github.com/ilyafedotov-ops/german-business-skills/blob/main/skills/de-business-kit/guides/install.de.md#wenn-sie-nicht-weiterkommen",
+      "manual": "https://github.com/ilyafedotov-ops/german-business-skills/blob/main/skills/de-business-kit/guides/install.de.md#manuelle-installation",
+      "guide": "https://github.com/ilyafedotov-ops/german-business-skills/blob/main/skills/de-business-kit/guides/user-guide.de.md#erste-aufgabe"
     }
   },
   "local": {
-    "prototype": "../prototype/index.html",
     "screenshot": "images/claude-add-marketplace.jpg",
     "results": {
       "skills": {"claude": {"en": "images/claude-added.jpg", "ru": "images/claude-added.jpg", "de": "images/claude-added.jpg"}, "openai": {"en": "images/codex-skills-en.jpg", "ru": "images/codex-skills-ru.jpg", "de": "images/codex-skills-de.jpg"}},

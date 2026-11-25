@@ -273,8 +273,8 @@ never guess a private endpoint or replay the send. A standalone composer can rem
 open after sending, so inspect refreshed history before deciding the outcome.
 Native Save dialogs must complete before claiming an original download. See
 [provider source details](assisted-services-sources.md#lexware-api-and-browser-route--2026-10-27).
-Save versioned EN/RU explanations and existing follow-up tasks. The GUI and
-standalone native Windows tools have no controls for this adapter.
+Save versioned explanations in the workspace language and existing follow-up tasks.
+The standalone native Windows tools have no controls for this adapter.
 
 ## First bounded document read
 

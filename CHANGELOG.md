@@ -6,6 +6,15 @@ Versions follow Semantic Versioning. All releases below are previews, not a
 certification of accounting correctness or desktop compatibility. Historical
 milestones are first published on 2026-10-26; their original commits are retained.
 
+## 0.14.0-preview.1
+
+**Breaking:** the local GUI application and the fictional browser prototype are removed. The assistant app (Claude Code, the Claude app with Cowork, or Codex) is the interface; releases now contain only the Codex and Claude skill bundles. Earlier releases keep their published application archives.
+
+- **Full German support.** German joins English and Russian everywhere a user reads: user guides (installation, user guide, help inside ELSTER and accounting software, replacing the short German start guide), a German README, guide illustrations, the overview page in both runtimes, message catalogs and all 14 report templates. Preparation, cash, invoice, payment-comparison and payment follow-up reports are written in German for German workspaces instead of falling back to English. Package checks now reject a missing language for template roles, catalog keys, guides or guide illustrations.
+- **Guided setup page.** The German setup page links to the German guides; its documentation moved to `docs/setup-page.md`.
+- **Launch materials** are in `presentation/`: English and German LinkedIn carousels (PDF and slide images), post copy, narration scripts, the three real example answers and the sources to rebuild everything. The videos show real Claude and Codex screenshots instead of the removed prototype; rendered videos stay out of Git.
+- CI drops the GUI build and artifact-transfer jobs; the browser job checks the setup page, overview and printable documents.
+
 ## 0.13.0-preview.2
 
 A documentation release: skill behaviour, helper programs and record formats are unchanged.

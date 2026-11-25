@@ -29,8 +29,9 @@ def run(root, language='en'):
                   account_reference='synthetic-account', reviewer='synthetic test routine', evidence_file=proof)
     command('desk.py', 'accounting-configure', '--root', root, '--input', input_file('accounting.json', config))
     v1 = write('08_correspondence/customer-v01.md',
-               'Синтетический черновик: исходный счёт; проверка оплаты открыта.\n' if language == 'ru' else
-               'Synthetic draft: original invoice; payment review remains open.\n')
+               {'ru': 'Синтетический черновик: исходный счёт; проверка оплаты открыта.\n',
+                'de': 'Synthetischer Entwurf: ursprüngliche Rechnung; Zahlungsprüfung bleibt offen.\n'}.get(
+                   language, 'Synthetic draft: original invoice; payment review remains open.\n'))
     v1_hash = hashlib.sha256(ws._inside(root, v1).read_bytes()).hexdigest()
     ids = {}
     for name in ('invoice.synthetic.xml', 'payment.synthetic.csv', 'credit-note.synthetic.xml'):
@@ -43,7 +44,8 @@ def run(root, language='en'):
         result = command('desk.py', 'inspect-xml', '--root', root, '--document-id', ids[name])
         inspections[name] = json.loads((root / result['path']).read_text())
     before = command('desk.py', 'catalog', '--root', root, '--document-id', ids['credit-note.synthetic.xml'])
-    title = 'Проверить спор и дальнейший расчёт по счёту' if language == 'ru' else 'Review dispute and remaining settlement'
+    title = {'ru': 'Проверить спор и дальнейший расчёт по счёту',
+             'de': 'Streitfall und weitere Abrechnung zur Rechnung prüfen'}.get(language, 'Review dispute and remaining settlement')
     task = dict(schema_version=1, id='customer-follow-up', title=title, owner='user', status='pending', evidence_file=proof)
     command('workspace.py', 'entry', '--root', root, '--collection', 'tasks', '--input', input_file('task.json', task))
     for name, kind in (('invoice.synthetic.xml', 'invoice'), ('payment.synthetic.csv', 'bank_statement'),
@@ -63,6 +65,11 @@ def run(root, language='en'):
             'Связи документов проверены только на синтетических данных. Спор, возврат и окончательный расчёт остаются открытыми. '
             'Внешняя система остаётся основной; проводки, отправка и налоговый расчёт не выполнялись.\n'
             if language == 'ru' else
+            '# Synthetischer Belegzyklus — Version 2\n\n'
+            'Aufbewahrt: INV-SYN-001, Zahlung SYN-PAY-1 über 50,00 EUR und CreditNote CN-SYN-001. '
+            'Belegverknüpfungen wurden nur mit synthetischen Daten geprüft. Streitfall, Erstattung und Schlussabrechnung bleiben offen. '
+            'Die externe Software bleibt maßgeblich; keine Buchung, kein Versand und keine Steuerberechnung erfolgten.\n'
+            if language == 'de' else
             '# Synthetic document cycle — version 2\n\n'
             'Preserved INV-SYN-001, payment SYN-PAY-1 for EUR 50.00 and CreditNote CN-SYN-001. '
             'Document links were checked only against synthetic inputs. Dispute, refund and final settlement remain open. '

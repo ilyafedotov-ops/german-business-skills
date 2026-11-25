@@ -12,7 +12,7 @@ Version 0.5 provides local tools, reviewed cash-entry recording for an explicitl
 
 Read the saved mode and language in `00_admin/workspace.json` alongside the actual task. Honor an explicit chat language for this task. Persist a language change only when the user requests an ongoing preference or uses `configure`; reuse an already chosen setting without asking again. Use the same entrepreneur profile when moving between `general`, `bookkeeping` and `tax-consultant` modes.
 
-Use the selected English or Russian Markdown templates. Keep JSON keys, status IDs, source text and official German labels stable; write human-readable explanations in the selected language.
+Use the selected English, Russian or German Markdown templates. Keep JSON keys, status IDs, source text and official German labels stable; write human-readable explanations in the selected language.
 
 | Output | English template | Russian template |
 | --- | --- | --- |

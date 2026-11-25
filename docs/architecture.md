@@ -14,7 +14,6 @@ The shared execution contract owns prerequisite checks and reuse/persistence of
 confirmed facts for all seven skills. The tax-estimates reference adds researched,
 bounded calculations and explicit independent-check evidence; the consultation
 template records them without a new register or automated approval transition.
-The GUI remains an optional adapter to the same writers and records.
 
 The [prepayment request workflow](../skills/de-business-kit/references/tax-consultant.md#prepare-or-revise-an-income-tax-prepayment-request)
 uses versioned recipient drafts and private consultation/continuation notes. It
@@ -68,7 +67,7 @@ Confirmed manual submission needs the same evidence discipline as tool execution
 Local synthetic browser trials do not establish real ELSTER/Lexware acceptance.
 
 
-Invoice payment allocation is a derived projection, not a persisted paid flag: approved proposal amounts are compared with linked cash lines through the report end date, across periods. Reversals cancel their originals; corrected allocations retain history. Different currencies and ambiguous directions have no inferred balance. Reports include a settlement-basis fingerprint checked again by filing preflight. The GUI reuses filing checks only within one locked snapshot; mutations still recheck evidence. Native and Python unlock preserve exact lock bytes in audit history.
+Invoice payment allocation is a derived projection, not a persisted paid flag: approved proposal amounts are compared with linked cash lines through the report end date, across periods. Reversals cancel their originals; corrected allocations retain history. Different currencies and ambiguous directions have no inferred balance. Reports include a settlement-basis fingerprint checked again by filing preflight. Native and Python unlock preserve exact lock bytes in audit history.
 
 XML inspection additionally exposes optional invoice-stated prepaid and rounding
 amounts with raw text, exact location and unresolved/absent states. Proposal fields
@@ -85,8 +84,8 @@ unchanged. Draft/source, final issued artifact and event evidence are frozen
 separately. Delivery scope binds final bytes, destination, attachments and the
 correction family; outcome recording targets an exact attempt. A readable status
 is a projection, while follow-up tasks stay in the existing register. The CLI
-records evidence; host/manual provider execution is a separate step. No GUI or
-native-only writer is implied. Mutable invoice state cannot itself be evidence.
+records evidence; host/manual provider execution is a separate step. No native-only
+writer is implied. Mutable invoice state cannot itself be evidence.
 
 The optional Lexware adapter attaches provider request, attempt, UUID, readback
 and artifact evidence to that same invoice row. It commits intent before network
@@ -104,7 +103,7 @@ The optional `casefiles/invoice_payments.py` workflow compares an issued invoice
 
 ## Intended result
 
-An entrepreneur brings a task at any stage: prepare to start, register an activity, choose a service, fill in a form, answer a question, manage daily work or prepare reporting. Changes and closure have journey instructions; real execution needs separate acceptance. The [lifecycle map](../skills/de-business-kit/references/lifecycle.md) defines coverage and priorities. The router or a directly selected domain skill loads relevant modules and available tools; shared facts and decisions support continuation. Local utilities, the GUI and integrations serve these outcomes. Self-managed accounting and filing use the chosen system; a proprietary complete ledger and ELSTER connector are not prerequisites for every route. Consultation and exports remain optional.
+An entrepreneur brings a task at any stage: prepare to start, register an activity, choose a service, fill in a form, answer a question, manage daily work or prepare reporting. Changes and closure have journey instructions; real execution needs separate acceptance. The [lifecycle map](../skills/de-business-kit/references/lifecycle.md) defines coverage and priorities. The router or a directly selected domain skill loads relevant modules and available tools; shared facts and decisions support continuation. Local utilities and integrations serve these outcomes. Self-managed accounting and filing use the chosen system; a proprietary complete ledger and ELSTER connector are not prerequisites for every route. Consultation and exports remain optional.
 
 The supported scope is a natural person operating in Germany: Freiberufler, Einzelunternehmen/Gewerbe and multiple activities of the same person. Corporations, partnerships, payroll, complex international structures and cash-register systems are outside the promised automation scope. The skill can collect facts and prepare a specific specialist handoff for those cases.
 
@@ -147,7 +146,7 @@ The skill cannot create browser tools, API access or permissions. Availability d
 
 The lifecycle worksheets and continuation notes reuse existing tasks, decisions and evidence. They add no state schema or autonomous workflow runner; the assistant prepares and verifies each result through available tools.
 
-The overview and GUI home project active lifecycle tasks from the existing `tasks.json` register across months, including undated work. Readiness checks the task evidence and its full dependency ancestry; cancelled dependencies do not satisfy work. Stale evidence blocks the affected chain while unrelated tasks may continue. Invalid records suppress task suggestions. The projection cannot complete a task, grant authorization or create a reminder.
+The overview projects active lifecycle tasks from the existing `tasks.json` register across months, including undated work. Readiness checks the task evidence and its full dependency ancestry; cancelled dependencies do not satisfy work. Stale evidence blocks the affected chain while unrelated tasks may continue. Invalid records suppress task suggestions. The projection cannot complete a task, grant authorization or create a reminder.
 
 ## Languages and modes
 
@@ -155,7 +154,7 @@ The two named working modes are `bookkeeping` and `tax-consultant`; `general` co
 
 `00_admin/workspace.json` stores the default `language` and `mode`. The `configure` command persists an explicit preference change with history and an audit event; `status` exposes the current values. An explicit one-task request takes priority in the conversation. A request to translate one report does not replace the saved language or rewrite historical records.
 
-User-facing conversations and Markdown reports support **English and Russian**. Agent instructions, JSON keys, enum values, logical path IDs and record IDs remain stable; physical folder names support EN/RU/DE. Exact German terms and form labels are preserved and explained in the chosen language. A translation is a linked rendering of the same evidence and decision, not new verification. German folders and a German start guide are supported; the complete report/template set remains EN/RU. Folder language is pinned at creation and differs from conversation/report language. See [folder mapping](../skills/de-business-kit/references/workspace.md).
+User-facing conversations and Markdown reports support **English, Russian and German**. Agent instructions, JSON keys, enum values, logical path IDs and record IDs remain stable; physical folder names support EN/RU/DE. Exact German terms and form labels are preserved and explained in the chosen language. A translation is a linked rendering of the same evidence and decision, not new verification. Every report template role, message catalog and user guide exists in all three languages; maintainer documentation stays English/Russian. Folder language is pinned at creation and differs from conversation/report language. See [folder mapping](../skills/de-business-kit/references/workspace.md).
 
 The workspace format remains **schema version 1**. The marker must record both language and mode; a marker without them is refused. Changing a language or mode never changes profile facts, `vat_current_regime`, bookkeeping method or authority filings. The same profile and evidence history serve both languages and all modes.
 
@@ -193,7 +192,7 @@ schema is introduced.
 
 ## Component and deployment architecture
 
-The assistant/CLI route uses the seven-skill bundle and an offline filesystem backend. The host runs the conversation and invokes short-lived Python CLI processes; the utilities can generate a static overview. The optional [real GUI](gui.md) instead runs a session-protected loopback service while its launcher is open, using the same records and protected writers. Neither route adds a database service, queue worker or built-in model API client. The diagram below describes the assistant/CLI route; the GUI adapter is described separately below.
+The assistant/CLI route uses the seven-skill bundle and an offline filesystem backend. The host runs the conversation and invokes short-lived Python CLI processes; the utilities can generate a static overview. The host application (Claude Code, the Claude app with Cowork, or the Codex app) is the user interface; there is no separate application. The route adds a database service, queue worker or built-in model API client. The diagram below describes this route.
 
 ```mermaid
 flowchart TB
@@ -218,7 +217,7 @@ flowchart TB
     X -. inspected evidence saved through host workflow .-> FS
 ```
 
-The diagram shows the local execution boundary; the optional Lexware adapter additionally connects to its fixed provider API when explicitly invoked. Public source and the installed skill are separate from the private business workspace. `tools/install.py` copies the complete self-contained skill bundle into host discovery directories; `tools/build_package.py` creates distribution bundles. Standalone CLI use requires an available Python runtime; the GUI application bundles its engine. No production Python dependency beyond the standard library is required.
+The diagram shows the local execution boundary; the optional Lexware adapter additionally connects to its fixed provider API when explicitly invoked. Public source and the installed skill are separate from the private business workspace. `tools/install.py` copies the complete self-contained skill bundle into host discovery directories; `tools/build_package.py` creates distribution bundles. Standalone CLI use requires an available Python runtime. No production Python dependency beyond the standard library is required.
 
 The host chooses a task module and supplies reviewed inputs. Python validates structures and performs deterministic operations. The host interprets business meaning and inspects external sources. This division keeps arithmetic and file operations reproducible while making semantic and authorization responsibilities explicit.
 
@@ -235,7 +234,7 @@ These components describe code present in this source snapshot. `SKILL.md` route
 | [bank.py](../skills/de-business-kit/scripts/casefiles/bank.py) | Explicit CSV mapping, review preview, normalization and overlapping-ID checks | Preview, normalized CSV and bank-import record |
 | [invoice_xml.py](../skills/de-business-kit/scripts/casefiles/invoice_xml.py) | Bounded standalone UBL Invoice / CreditNote / CII header and preceding-reference inspection | Derived report and inspection record |
 | [summary.py](../skills/de-business-kit/scripts/casefiles/summary.py) | Read-only projection of documents, open reviews, deadlines and reconciliation evidence | In-memory snapshot consumed by overview/archive |
-| [overview.py](../skills/de-business-kit/scripts/casefiles/overview.py) | English/Russian static HTML, Markdown and JSON generation | Root overview page (`00_admin/overview.html`), internal Markdown/JSON, initial start guide |
+| [overview.py](../skills/de-business-kit/scripts/casefiles/overview.py) | English/Russian/German static HTML, Markdown and JSON generation | Root overview page (`00_admin/overview.html`), internal Markdown/JSON, initial start guide |
 | [archive.py](../skills/de-business-kit/scripts/casefiles/archive.py) | Select linked records/evidence, build a manifest, verify directory and ZIP | Unique `07_exports/YYYY-MM/archive-*` artifacts |
 | [accounting.py](../skills/de-business-kit/scripts/casefiles/accounting.py) | Accounting choice, reviewed cash movements with stated line VAT and proposal links, filing-evidence lifecycle/preflight | `04_accounting/register.json`, frozen files and history |
 | [windows-overview.ps1](../skills/de-business-kit/scripts/windows-overview.ps1) | Native saved-state and local-evidence inspection under the workspace lock | Separate `00_admin/native-overview.*` projections |
@@ -291,19 +290,9 @@ The [core capability plan](project-status.md#accounting-acceptance) defines the 
 
 [Document authoring](../skills/de-business-kit/references/document-authoring.md) and the shared [readable-output contract](../skills/de-business-kit/references/readable-output.md) route all substantial skill results to user-readable views. EN/RU report/review Markdown, a German recipient-letter template and one static printable HTML asset are packaged with the skill. Rendering/export uses available host/browser tools; no new document runtime or transmission adapter is bundled. Canonical records remain authoritative; readable copies and recipient artifacts do not advance filing states.
 
-## Real view and prototype
+## Real view
 
-`casefiles/overview.py` collects accounting status and filing issues from the existing accounting checks under the shared lock, together with casework and open questions. Uncertain submissions and dated responses remain visible across months. `windows-overview.ps1` produces separate `native-overview.*` projections with local hash/history inspection; it does not implement full filing preflight. The English interactive `prototype/` still uses synthetic browser storage and does not mutate either workspace. [Runtime matrix](project-status.md).
-
-## Real GUI adapter and native delivery
-
-The local application uses `gui/server.py` and the EN/RU/DE browser interface, separately
-from the synthetic prototype. A session-protected loopback API delegates to the
-existing document, accounting and recovery writers. Workspace selection identities
-reject stale tabs, and separate GUI drafts use expected hashes and completed audit
-checkpoints. The browser is not another accounting database. Platform bundles embed
-the engine so end users do not install Python; standalone PowerShell remains its
-existing narrower route. See [GUI scope, trust boundaries and delivery](gui.md).
+`casefiles/overview.py` collects accounting status and filing issues from the existing accounting checks under the shared lock, together with casework and open questions. Uncertain submissions and dated responses remain visible across months. `windows-overview.ps1` produces separate `native-overview.*` projections with local hash/history inspection; it does not implement full filing preflight. [Runtime matrix](project-status.md).
 
 ## Developer evaluation evidence
 

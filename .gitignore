@@ -68,3 +68,9 @@ Desktop.ini
 /03 Buchhaltung/
 /04 Steuern/
 /05 Unternehmen/
+
+# Launch materials: rendered videos, frame stills and generated scene HTML are rebuilt locally.
+/presentation/video/*.mp4
+/presentation/video/stills-*/
+/presentation/build/receipt-*.html
+/presentation/build/scenes-receipt-yt.html

@@ -1,8 +1,8 @@
 # German Business Kit
 
-**English** · [Русский](README.ru.md) · [Deutsche Startanleitung](skills/de-business-kit/guides/start.de.md)
+**English** · [Русский](README.ru.md) · [Deutsch](README.de.md)
 
-**Skills for Claude and Codex that help you start and run your own small business in Germany.** Ask in plain English or Russian: open a Freiberufler or Gewerbe activity, understand a Finanzamt letter, prepare an invoice, organize receipts, get ready for a tax return, or plan a change or closure. You do not need to code.
+**Skills for Claude and Codex that help you start and run your own small business in Germany.** Ask in plain English, Russian or German: open a Freiberufler or Gewerbe activity, understand a Finanzamt letter, prepare an invoice, organize receipts, get ready for a tax return, or plan a change or closure. You do not need to code.
 
 Work in your usual assistant. For ongoing work, it saves documents, confirmed facts,
 open questions and progress in your private business folder. You can manage your
@@ -29,7 +29,7 @@ guides you to **Install**, and Codex copies the released skills into your projec
 or chat and you can try the example below. A chat response alone does not verify
 installation. [Detailed setup and troubleshooting](skills/de-business-kit/guides/install.en.md).
 
-New to Claude and ChatGPT? The offline [guided setup page](docs/gui.md#guided-setup-page)
+New to Claude and ChatGPT? The offline [guided setup page](docs/setup-page.md)
 in English, Russian and German explains accounts, app downloads, kit installation and
 first demos with fictional data. Choose **Code → Download ZIP**, extract it and open
 `installer/index.html` in your browser.
@@ -213,14 +213,14 @@ You do not need to edit JSON or remember these paths.
 - **It prepares; you decide and send.** The assistant drafts forms, letters and records. You sign in to ELSTER, your bank or your accounting software yourself and make the final click.
 - **Research before calculation, checks before reliance.** It clarifies missing facts, researches rules for the relevant period and can calculate bounded estimates with recorded checks. A complete statutory tax engine and direct ELSTER transmission are not included. You can manage your own reporting, with professional help for specific issues.
 - **Your data stays your choice.** Content your assistant reads can be sent to its AI provider; local storage does not mean local-only processing. Try a fictional example first, keep real records in a separate private folder, and never type passwords or TANs into the chat.
-- **This is a preview** (0.13.0-preview.2). See [what works today and what is planned](docs/project-status.md).
+- **This is a preview** (0.14.0-preview.1). See [what works today and what is planned](docs/project-status.md).
 
 ## More
 
 - [Installation guide](skills/de-business-kit/guides/install.en.md): Claude step by step, Codex, updates, troubleshooting
 - [User guide](skills/de-business-kit/guides/user-guide.en.md): tasks, files, continuing work, backups
 - [Help inside ELSTER and accounting software](skills/de-business-kit/guides/assisted-services.en.md)
-- [Optional desktop records app](gui/README.md), not needed to use the kit
+- [Launch materials](presentation/README.md): LinkedIn carousels in English and German, video scripts and real example answers
 - For developers: [technical documentation](docs/index.md), [contributing](CONTRIBUTING.md), [changes](CHANGELOG.md), [security](SECURITY.md)
 
 <details>
@@ -231,8 +231,8 @@ You do not need to edit JSON or remember these paths.
 | `skills/` | The complete seven-skill product. `de-business-kit/` holds shared guides, references, templates and utilities; the other six folders are specialist entry points. Install them together. |
 | `docs/` | Architecture, current scope, research and validation for maintainers. User guides live inside `skills/de-business-kit/guides/`. |
 | `examples/` | Synthetic examples, never real business records. |
-| `gui/` | Optional local records application. |
-| `prototype/` | Fictional interactive demonstration, separate from real records. |
+| `installer/` | Offline guided setup page in English, Russian and German. |
+| `presentation/` | Launch carousels, video scripts and their design sources; fictional people only, never real records. |
 | `tools/`, `packaging/` | Build/install/release utilities and package instructions. |
 | `tests/`, `evals/` | Automated checks and assistant-workflow scenarios. |
 | `.claude-plugin/`, `.github/` | Host distribution metadata and repository automation. |

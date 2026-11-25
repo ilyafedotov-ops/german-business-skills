@@ -18,8 +18,7 @@ SHA = re.compile(r'[0-9a-f]{40}')
 REPOSITORY = re.compile(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+')
 TEST_SELECTION = re.compile(r'([1-9][0-9]*)/([1-9][0-9]*)')
 WORKFLOW = '.github/workflows/checks.yml'
-REQUIRED_JOBS = ('plan', 'quick', 'prototype', 'native-utilities',
-                 'windows-without-python', 'gui-package', 'artifact-transfer')
+REQUIRED_JOBS = ('plan', 'quick', 'browser', 'native-utilities', 'windows-without-python')
 # Windows Python 3.9 seconds per test module (Checks run 44815442989), used only
 # to balance shards. Unlisted modules weigh 1; every module still runs exactly once.
 WINDOWS_TEST_SECONDS = {
@@ -28,7 +27,7 @@ WINDOWS_TEST_SECONDS = {
     'test_native_windows': 15, 'test_accounting_lifecycle': 14, 'test_release': 13,
     'test_native_lock_recovery': 13, 'test_journey': 12, 'test_invoice_payments': 12,
     'test_customer_journey': 10, 'test_preparation_filing': 10, 'test_ci_plan': 8,
-    'test_settlements': 8, 'test_gui_server': 7, 'test_workspace': 7, 'test_invoice_xml': 6,
+    'test_settlements': 8, 'test_workspace': 7, 'test_invoice_xml': 6,
     'test_overview': 6, 'test_cash_vat': 6, 'test_workflows': 4, 'test_archive': 4,
     'test_casework': 3, 'test_casebank': 3, 'test_onboarding': 3, 'test_records': 3,
 }

@@ -1,8 +1,8 @@
-# German Business Kit — local preview 0.13.0-preview.2
+# German Business Kit — local preview 0.14.0-preview.1
 
 **First-time installation:** open `skills/de-business-kit/guides/install.en.md` inside this plugin folder. It explains installing through the Claude plugin marketplace or into a Codex project, and your first fictional task. [Online guide](https://github.com/ilyafedotov-ops/german-business-skills/blob/v0.13.0-preview.2/skills/de-business-kit/guides/install.en.md).
 
-**Start here:** `skills/de-business-kit/guides/user-guide.en.md`. These files ship inside the extracted package; the source checkout is not needed.
+**Start here:** `skills/de-business-kit/guides/user-guide.en.md` (German: `user-guide.de.md`, Russian: `user-guide.ru.md`). These files ship inside the extracted package; the source checkout is not needed.
 
 Windows users can start without Python using native Windows tools (see `skills/de-business-kit/references/native-windows.md`). The native entry point shares the existing workspace and covers installation, start/resume, preview, intake, integrity, real overview and full backup/restore; advanced validated automation remains an optional Python-engine capability.
 
@@ -43,4 +43,4 @@ Published release ZIPs are named `de-business-kit-<version>-codex.zip` and `de-b
 Use synthetic data to verify discovery, guided setup, language, continuation and file operations in your exact app/OS version. This preview cannot submit filings or certify bookkeeping, legal compliance or account readiness. External actions still require the user's authorization and the host's actual capabilities.
 
 
-The installed skill also includes `references/monthly-workflow.md` for local cash records and manual ELSTER, and `references/recovery.md` for verified complete backups. Native overview inspects saved records and local evidence; it does not run full filing preflight or enable protected accounting writes. The separate interactive prototype is not included as a production GUI.
+The installed skill also includes `references/monthly-workflow.md` for local cash records and manual ELSTER, and `references/recovery.md` for verified complete backups. Native overview inspects saved records and local evidence; it does not run full filing preflight or enable protected accounting writes.

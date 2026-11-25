@@ -70,8 +70,8 @@ jobs:
           python -B tools/check_doc_links.py
           git show --format= --check HEAD
 
-  prototype:
-    name: Prototype / ${{ matrix.os }} / ${{ matrix.browser }}
+  browser:
+    name: Browser pages / ${{ matrix.os }} / ${{ matrix.browser }}
     needs: plan
     if: needs.plan.outputs.full == 'true'
     timeout-minutes: 30
@@ -98,21 +98,16 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm audit --audit-level=high
       - run: npx playwright install ${{ matrix.browser }}
-      - run: npm test
       - run: npm run test:csp -- --browser=${{ matrix.browser }}
-      - run: npm run test:browser -- --browser=${{ matrix.browser }}
       - run: npm run test:documents -- --browser=${{ matrix.browser }}
       - run: npm run test:overview -- --browser=${{ matrix.browser }}
-      - run: npm run test:gui -- --browser=${{ matrix.browser }}
       - run: npm run test:installer -- --browser=${{ matrix.browser }}
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
-          name: prototype-${{ matrix.os }}-${{ matrix.browser }}
+          name: browser-${{ matrix.os }}-${{ matrix.browser }}
           path: |
-            output/gui/
             output/installer/
-            output/prototype/
             output/document-template/
             output/overview/
 
@@ -180,80 +175,10 @@ jobs:
           & .\tests\native\overview-smoke.ps1
           & .\tests\native\recovery-smoke.ps1
 
-  gui-package:
-    name: GUI package / ${{ matrix.os }}
-    needs: plan
-    if: needs.plan.outputs.full == 'true'
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, macos-latest, macos-15-intel]
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-        with:
-          persist-credentials: false
-      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version: '3.12'
-      - name: Install locked build tools (not user prerequisites)
-        run: python -m pip install --require-hashes -r tools/gui-build-requirements.txt
-      - name: Build and exercise application without external Python
-        shell: bash
-        run: |
-          python -B tools/build_gui.py --output "$RUNNER_TEMP/gui-app"
-          python -B tools/package_gui.py --bundle "$RUNNER_TEMP/gui-app" --output "$RUNNER_TEMP/gui-archives"
-          shopt -s nullglob
-          archives=("$RUNNER_TEMP/gui-archives/"*.zip "$RUNNER_TEMP/gui-archives/"*.tar.gz)
-          [[ ${#archives[@]} -eq 1 ]]
-          python -B tests/gui-packaged-smoke.py --archive "${archives[0]}"
-      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: gui-release-${{ matrix.os }}
-          path: ${{ runner.temp }}/gui-archives/*
-          if-no-files-found: error
-          retention-days: 7
-
-  artifact-transfer:
-    name: Release artifact transfer
-    needs: gui-package
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      # Exercise the release-only download path on PRs with read-only permissions.
-      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
-        with:
-          pattern: gui-release-*
-          path: gui-assets
-          merge-multiple: true
-          digest-mismatch: error
-      - name: Verify transferred platform archives and layout
-        shell: bash
-        working-directory: gui-assets
-        run: |
-          set -euo pipefail
-          shopt -s nullglob
-          sums=(*.sha256)
-          [[ ${#sums[@]} -eq 3 ]] || exit 1
-          [[ $(find . -mindepth 1 -maxdepth 1 | wc -l) -eq 6 ]] || exit 1
-          for platform in windows-x64.zip macos-arm64.tar.gz macos-x86_64.tar.gz; do
-            files=(de-business-kit-*-gui-"$platform")
-            [[ ${#files[@]} -eq 1 ]] || exit 1
-            file=${files[0]}
-            # Each named payload must have its own matching checksum record.
-            [[ $(wc -l < "$file.sha256") -eq 1 ]] || exit 1
-            record=$(cat "$file.sha256")
-            # Windows writes CRLF; remove only the terminal carriage return.
-            record=${record%$'\r'}
-            [[ ${record:66} == "$file" ]] || exit 1
-            printf '%s\n' "$record" | sha256sum --check --strict -
-          done
-
   gate:
     name: Checks gate
     if: always()
-    needs: [plan, quick, prototype, native-utilities, windows-without-python, gui-package, artifact-transfer]
+    needs: [plan, quick, browser, native-utilities, windows-without-python]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

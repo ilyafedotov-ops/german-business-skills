@@ -15,7 +15,7 @@ evidence and validated writers. A skill switch does not launch another agent.
 | Select services and verify access | [Services](../../de-business-services/SKILL.md) | [Providers](providers.md), [insurance](insurance.md), [connections](connections.md), [existing data](existing-data.md) |
 | Changes, hiring preparation, pause or closure | [Changes](../../de-business-changes/SKILL.md) | [Changes](changes.md), [employment preparation](employment.md), [lifecycle sources](lifecycle-sources.md), [recovery](recovery.md) |
 
-An ordinary question does not require GUI installation, workspace creation or an
+An ordinary question does not require an extra application, workspace creation or an
 accounting choice. Keep several activities in the same entrepreneur profile;
 they can be at different lifecycle stages without adding a new persisted enum.
 
@@ -31,7 +31,7 @@ Changing the bundle does not migrate private workspaces or replace chosen extern
 accounting software. Never invent tax formulas or make accountant handoff the
 mandatory endpoint of self-managed reporting.
 
-For durable results, use the EN/RU launch plan, customer case, annual readiness,
+For durable results, use the EN/RU/DE launch plan, customer case, annual readiness,
 change plan and connection-check worksheets linked from their workflow references.
 They are authoring aids using existing evidence/tasks, not official forms or new
 state registers. User-facing examples are in the [English task guide](../guides/user-guide.en.md#first-task)

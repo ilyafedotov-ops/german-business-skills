@@ -29,11 +29,7 @@ a:focus-visible,summary:focus-visible{outline:3px solid #a65619;outline-offset:4
 
 def language_for(root, language):
     chosen = language or ws._load(ws._inside(root, ws.MARKER)).get("language", "en")
-    if chosen == "de":
-        chosen = "en"
-    if chosen not in {"en", "ru"}:
-        raise ws.WorkspaceError("Overview language must be en or ru.")
-    return chosen
+    return st.report_language(chosen, "Overview")
 
 
 def generate(root, period, as_of=None, language=None):

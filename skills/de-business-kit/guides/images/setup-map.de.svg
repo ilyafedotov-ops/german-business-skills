@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="380" viewBox="0 0 1080 380" role="img" aria-labelledby="title desc" xml:lang="de">
+<title id="title">In drei Schritten installieren</title><desc id="desc">Claude-Desktop-App, Cowork, kostenpflichtiger Claude-Tarif. 1 Plugins öffnen: Cowork, Customize, Plugins. 2 Marketplace hinzufügen: Add, Add marketplace, ilyafedotov-ops/german-business-skills eingeben. 3 German Business Kit installieren, dann eine neue Aufgabe starten. Dann eine Frage mit erfundenem Beispiel stellen. Echte Unterlagen in einem eigenen privaten Ordner.</desc>
+<rect width="1080" height="380" rx="24" fill="#f7f5ef"/>
+<g font-family="Arial, sans-serif" fill="#173e4b">
+<text x="32" y="48" font-size="28" font-weight="700">In drei Schritten installieren</text>
+<text x="32" y="80" font-size="18">Claude-Desktop-App → Cowork. Kostenpflichtiger Claude-Tarif. Etwa fünf Minuten.</text>
+<rect x="32" y="112" width="328" height="180" rx="18" fill="#ddece8"/>
+<circle cx="62" cy="145" r="16" fill="#173e4b"/>
+<text x="62" y="151" text-anchor="middle" fill="white" font-size="17" font-weight="700">1</text>
+<text x="50" y="193" font-size="22" font-weight="700">Plugins öffnen</text>
+<text x="50" y="229" font-size="18">Cowork → Customize</text>
+<text x="50" y="259" font-size="18">→ Plugins</text>
+<rect x="376" y="112" width="328" height="180" rx="18" fill="#f6ddcd"/>
+<circle cx="406" cy="145" r="16" fill="#173e4b"/>
+<text x="406" y="151" text-anchor="middle" fill="white" font-size="17" font-weight="700">2</text>
+<text x="394" y="193" font-size="22" font-weight="700">Marketplace hinzufügen</text>
+<text x="394" y="225" font-size="18">Add → Add marketplace</text>
+<text x="394" y="255" font-family="Menlo, Consolas, monospace" font-size="15">ilyafedotov-ops/</text>
+<text x="394" y="277" font-family="Menlo, Consolas, monospace" font-size="15">german-business-skills</text>
+<rect x="720" y="112" width="328" height="180" rx="18" fill="#e1e8ef"/>
+<circle cx="750" cy="145" r="16" fill="#173e4b"/>
+<text x="750" y="151" text-anchor="middle" fill="white" font-size="17" font-weight="700">3</text>
+<text x="738" y="193" font-size="22" font-weight="700">Installieren</text>
+<text x="738" y="229" font-size="18">German Business Kit</text>
+<text x="738" y="259" font-size="17">Dann neue Aufgabe starten</text>
+<text x="32" y="342" font-size="19">Dann eine Frage mit erfundenem Beispiel stellen. Echte Unterlagen in einem eigenen privaten Ordner.</text>
+</g></svg>

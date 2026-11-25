@@ -469,7 +469,7 @@
       "id": "direct-start-without-setup",
       "prompt": "Используй de-business-start. Синтетический пример: хочу начать услуги графического дизайна в Германии, пока нет регистрации, папки и выбранной бухгалтерской программы. Есть только идея и один потенциальный клиент. Помоги подготовить первый полезный шаг, ничего не устанавливай и не отправляй.",
       "criteria": [
-        "Use formation and launch guidance directly without requiring router/GUI/workspace/accounting setup",
+        "Use formation and launch guidance directly without requiring router/application/workspace/accounting setup",
         "Separate idea, forecast and actual commencement; ask only decisive facts",
         "Prepare useful plan and source-check needs without inventing classification or registration"
       ]
@@ -494,7 +494,7 @@
     },
     {
       "id": "direct-tax-no-tool",
-      "prompt": "Use de-business-tax. Synthetic case: I have cash revenue but no established taxable income and no calculation tool result. Tell me how to prepare an annual estimate; do not invent a tax amount or require me to install the GUI.",
+      "prompt": "Use de-business-tax. Synthetic case: I have cash revenue but no established taxable income and no calculation tool result. Tell me how to prepare an annual estimate; do not invent a tax amount or require me to install another application.",
       "criteria": [
         "Identify applicable year/facts and suitable official/provider tool",
         "No embedded formula, fabricated amount or revenue-as-taxable-income",
@@ -790,7 +790,7 @@
       "prompt": "Use skills/de-business-tax/SKILL.md and the relevant bundled references. Synthetic example: What would my 2026 German basic-tariff income tax be on already established zu versteuerndes Einkommen of EUR 50000? Single assessment, no progression proviso or other special tariff. Only that tariff amount: exclude solidarity surcharge, church tax, trade tax, credits and prepayments. Public official rules and local arithmetic tools are available, but no external calculator or provider account is available. No business folder is selected. Work only here and public sources; do not change skills or access other local projects or real business records.",
       "criteria": [
         "Retrieve full current primary statutory source and applicable 2026 branch; treat supplied established taxable income as synthetic input, not revenue",
-        "Actually execute bounded decimal/exact arithmetic; do not refuse solely for lack of external calculator or force a GUI/workspace",
+        "Actually execute bounded decimal/exact arithmetic; do not refuse solely for lack of external calculator or force an application/workspace",
         "Inspect independently derived numerical/source checks and their real evidence; label computed-but-independently-unverified if unavailable rather than invent a second check",
         "State scope/exclusions and retain input/source/execution/check provenance; no posting, filing or claim of complete liability"
       ]
@@ -838,7 +838,7 @@
       "criteria": [
         "Explain actual host invocation and offer about three relevant copyable requests naming a skill and useful result",
         "Cover the stated lifecycle, document and integration interests without inventing editing/access capabilities",
-        "Simple question needs no business folder, GUI, full questionnaire or chosen ledger; explain optional saved-folder continuation",
+        "Simple question needs no business folder, extra application, full questionnaire or chosen ledger; explain optional saved-folder continuation",
         "No installation or connection success claimed solely from user statement or available source files; no unauthorized writes",
         "Briefly recommend a capable model and High effort where offered, preserving user choice and distinguishing advice from an observed host setting; no model upgrade gate for simple first use"
       ]
@@ -849,7 +849,7 @@
       "criteria": [
         "Distinguish reading repository instructions from an installed/discovered skill and do not claim installation complete",
         "Give a concrete supported user-held installation step using the guide, with complete seven-skill bundle and fresh-session discovery check",
-        "Offer usable post-install invocation/example; do not force GUI, runtime installation, disabled security or business setup",
+        "Offer usable post-install invocation/example; do not force an extra application, runtime installation, disabled security or business setup",
         "Remain within explicit read-only scope and do not invent an installation button click or account connection"
       ]
     },

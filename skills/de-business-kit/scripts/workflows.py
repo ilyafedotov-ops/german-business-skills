@@ -246,10 +246,8 @@ def render(report, language):
 
 def save(root, report, language=None):
     language = language or ws._load(ws._inside(root, ws.MARKER)).get("language", "en")
-    if language == "de":
-        language = "en"
-    if language not in {"en", "ru"}:
-        raise ws.WorkspaceError("Report language must be en or ru.")
+    if language not in {"en", "ru", "de"}:
+        raise ws.WorkspaceError("Report language must be en, ru or de.")
     report.update(schema_version=1, created_at=ws._now(), language=language)
     relative = f"07_exports/{period(report['period'])}/preparation-{uuid.uuid4().hex}"
     markdown = render(report, language)
@@ -315,7 +313,7 @@ def filing_sources(root, report, require_ready=True):
             or report["missing"] != missing or report["status"] != expected_status
             or report["filing_status"] != "not_submitted"
             or report["routes"] != routes(report["kind"], report["input"]["facts"])
-            or not isinstance(report["language"], str) or report["language"] not in {"en", "ru"}):
+            or not isinstance(report["language"], str) or report["language"] not in {"en", "ru", "de"}):
         raise ws.WorkspaceError("Inconsistent preparation report; prepare a new version from its evidence.")
     text(report["created_at"], "preparation creation time")
     text(report["scope"], "preparation scope")
@@ -343,7 +341,7 @@ def main(argv=None):
     build.add_argument("--root", required=True)
     build.add_argument("--kind", required=True, choices=FIELDS)
     build.add_argument("--input", required=True)
-    build.add_argument("--language", choices=["en", "ru"])
+    build.add_argument("--language", choices=["en", "ru", "de"])
     check = sub.add_parser("verify")
     check.add_argument("--root", required=True)
     check.add_argument("--report", required=True)

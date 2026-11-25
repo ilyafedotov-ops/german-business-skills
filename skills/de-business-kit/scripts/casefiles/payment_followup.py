@@ -54,31 +54,40 @@ def _message(value, comparison):
 
 
 def _review(value, comparison, language, recipient_path):
-    ru = language == "ru"
+    def t(en, ru, de):
+        return st.phrase(language, en, ru, de)
     # Keep dynamic private fields literal rather than allowing Markdown links.
     def literal(text):
         return "<pre>" + str(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") + "</pre>"
     return "\n\n".join([
-        "# " + ("Проверка письма об оплате" if ru else "Payment follow-up review"),
-        "Не отправлено. Подготовлен только черновик." if ru else "Not sent. Draft preparation only.",
-        ("Получатель: " if ru else "Destination: ") + literal(value["recipient"]["address"]),
-        ("Текст для клиента: " if ru else "Customer text: ") + literal(recipient_path),
-        ("Основание сверки: " if ru else "Comparison basis: ") + literal(value["comparison_file"]),
-        ("Дата подготовки: " if ru else "Prepared on: ") + value["prepared_on"],
-        ("Сумма не включена: требуется уточнение." if ru else "Amount omitted: clarification is required.")
+        "# " + t("Payment follow-up review", "Проверка письма об оплате", "Prüfung der Zahlungsnachfrage"),
+        t("Not sent. Draft preparation only.", "Не отправлено. Подготовлен только черновик.", "Nicht versendet. Nur ein Entwurf wurde vorbereitet."),
+        t("Destination: ", "Получатель: ", "Empfänger: ") + literal(value["recipient"]["address"]),
+        t("Customer text: ", "Текст для клиента: ", "Text für den Kunden: ") + literal(recipient_path),
+        t("Comparison basis: ", "Основание сверки: ", "Grundlage des Abgleichs: ") + literal(value["comparison_file"]),
+        t("Prepared on: ", "Дата подготовки: ", "Vorbereitet am: ") + value["prepared_on"],
+        t("Amount omitted: clarification is required.", "Сумма не включена: требуется уточнение.",
+          "Betrag weggelassen: Klärung erforderlich.")
         if value["mode"] == "clarification" else
-        ("Указана разница сверки, а не доказанный долг или просрочка." if ru else "The amount is a comparison difference, not an established debt or overdue amount."),
-        ("Проверьте адрес, номер счёта, имя, подпись и факты. Перед отправкой повторите проверку актуальности и используйте разрешённый пользователем маршрут. Не прикладывайте эту записку, банковскую выгрузку или внутренние подтверждения."
-         if ru else "Review destination, invoice number, names, signature and facts. Before sending, recheck freshness and use the user-authorized delivery route. Do not attach this review, the bank export or internal evidence."),
-        ("Проблемы исходной сверки перечислены в её отдельном закрытом отчёте. Нет процентов, штрафов, срока оплаты, вывода о просрочке или обещания возврата."
-         if ru else "Comparison issues are explained in its separate private report. No interest, fees, payment deadline, default claim or refund promise is added.")
+        t("The amount is a comparison difference, not an established debt or overdue amount.",
+          "Указана разница сверки, а не доказанный долг или просрочка.",
+          "Der Betrag ist eine Differenz aus dem Abgleich, keine festgestellte Forderung und kein überfälliger Betrag."),
+        t("Review destination, invoice number, names, signature and facts. Before sending, recheck freshness and use the user-authorized delivery route. "
+          "Do not attach this review, the bank export or internal evidence.",
+          "Проверьте адрес, номер счёта, имя, подпись и факты. Перед отправкой повторите проверку актуальности и используйте разрешённый пользователем маршрут. "
+          "Не прикладывайте эту записку, банковскую выгрузку или внутренние подтверждения.",
+          "Prüfen Sie Empfänger, Rechnungsnummer, Namen, Unterschrift und Fakten. Prüfen Sie vor dem Versand erneut die Aktualität und nutzen Sie den "
+          "vom Nutzer freigegebenen Versandweg. Hängen Sie weder diese Prüfnotiz noch den Bankexport oder interne Nachweise an."),
+        t("Comparison issues are explained in its separate private report. No interest, fees, payment deadline, default claim or refund promise is added.",
+          "Проблемы исходной сверки перечислены в её отдельном закрытом отчёте. Нет процентов, штрафов, срока оплаты, вывода о просрочке или обещания возврата.",
+          "Probleme des Abgleichs stehen in dessen separatem privaten Bericht. Es werden keine Zinsen, Gebühren, Zahlungsfristen, "
+          "Verzugsbehauptungen oder Erstattungszusagen hinzugefügt.")
     ]) + "\n"
 
 
 def prepare(root, input_path, expected, language="en"):
     root = ws._workspace(root)
-    if language not in {"en", "ru"}:
-        raise ws.WorkspaceError("Private review language must be en or ru.")
+    st.report_language(language, "Private review")
     with ws._locked(root):
         state = inv._load(root)
         source = st.evidence(root, input_path)

@@ -50,8 +50,7 @@ In German:
 > Es ist KI-Unterstützung, keine professionelle Steuerberatung; prüfen Sie
 > wichtige Ergebnisse.
 
-Then settle the language: English, Русский or Deutsch (German covers folders and
-the start guide; full reports are English or Russian). When the user's message
+Then settle the language: English, Русский or Deutsch. When the user's message
 already shows the language, do not ask; name it and offer the other two in one line.
 
 ## Step 2 · Setup check

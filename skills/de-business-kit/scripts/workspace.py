@@ -1665,13 +1665,13 @@ def main(argv: Optional[List[str]] = None) -> int:
     init.add_argument("--root", required=True)
     init.add_argument("--year", required=True, type=int)
     init.add_argument("--language", choices=("ru", "en", "de"), default="en",
-                      help="Assistant language preference; German report templates are not yet complete")
+                      help="Assistant and report language preference; folder names stay fixed")
     init.add_argument("--mode", choices=("general", "bookkeeping", "tax-consultant"), default="general",
                       help="Workflow preference only; does not change business facts or tax regime")
     configure = commands.add_parser("configure", help="Persist assistant language/workflow mode without changing business or tax facts")
     configure.add_argument("--root", required=True)
     configure.add_argument("--language", choices=("ru", "en", "de"),
-                           help="Assistant language preference; German report templates are not yet complete")
+                           help="Assistant and report language preference; folder names stay fixed")
     configure.add_argument("--mode", choices=("general", "bookkeeping", "tax-consultant"))
     record = commands.add_parser("record", help="Record one evidence-backed fact; verified means checked evidence, not model confidence")
     record.add_argument("--root", required=True)
