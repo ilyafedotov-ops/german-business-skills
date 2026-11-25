@@ -73,4 +73,4 @@ Desktop.ini
 /presentation/video/*.mp4
 /presentation/video/stills-*/
 /presentation/build/receipt-*.html
-/presentation/build/scenes-receipt-yt.html
+/presentation/build/scenes-receipt-yt-*.html

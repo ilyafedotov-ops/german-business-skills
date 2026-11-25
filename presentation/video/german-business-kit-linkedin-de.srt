@@ -1,0 +1,175 @@
+1
+00:00:00,400 --> 00:00:02,947
+Wer in Deutschland selbstständig ist,
+
+2
+00:00:02,947 --> 00:00:05,619
+kennt den Papierkram: Anmeldeformulare,
+
+3
+00:00:05,619 --> 00:00:07,048
+Rechnungen, Belege,
+
+4
+00:00:07,048 --> 00:00:10,154
+Steuererklärungen und Post vom Finanzamt.
+
+5
+00:00:10,154 --> 00:00:12,080
+Und alles mit Fristen.
+
+6
+00:00:13,080 --> 00:00:15,605
+Deshalb habe ich German Business Kit gebaut:
+
+7
+00:00:15,605 --> 00:00:17,183
+sieben Open-Source-Skills,
+
+8
+00:00:17,183 --> 00:00:19,130
+die Claude oder Codex zum Assistenten
+
+9
+00:00:19,130 --> 00:00:21,760
+für Selbstständige in Deutschland machen.
+
+10
+00:00:21,760 --> 00:00:23,023
+Keine neue App.
+
+11
+00:00:23,023 --> 00:00:24,917
+Sie fragen einfach, auf Deutsch,
+
+12
+00:00:24,917 --> 00:00:26,600
+Englisch oder Russisch.
+
+13
+00:00:27,600 --> 00:00:29,454
+Es fragt nur nach, was fehlt,
+
+14
+00:00:29,454 --> 00:00:31,420
+bereitet einen lesbaren Entwurf vor
+
+15
+00:00:31,420 --> 00:00:33,161
+und speichert Ihre Angaben,
+
+16
+00:00:33,161 --> 00:00:34,902
+Dokumente und nächsten Schritte
+
+17
+00:00:34,902 --> 00:00:36,812
+in einem privaten Ordner.
+
+18
+00:00:36,812 --> 00:00:39,003
+Nächsten Monat geht es dort weiter,
+
+19
+00:00:39,003 --> 00:00:40,800
+wo Sie aufgehört haben.
+
+20
+00:00:41,800 --> 00:00:44,600
+Ein Beispiel: Ein Übersetzer in Berlin fragt,
+
+21
+00:00:44,600 --> 00:00:46,657
+freiberuflich oder Gewerbe?
+
+22
+00:00:46,657 --> 00:00:48,886
+Die echte Antwort nennt das Gesetz,
+
+23
+00:00:48,886 --> 00:00:51,457
+die eine nötige Anmeldung und ihre Frist,
+
+24
+00:00:51,457 --> 00:00:53,743
+mit Links zu den offiziellen Seiten,
+
+25
+00:00:53,743 --> 00:00:55,400
+die geöffnet wurden.
+
+26
+00:00:57,000 --> 00:00:59,700
+Es deckt den ganzen Weg ab: Gründung,
+
+27
+00:00:59,700 --> 00:01:02,335
+Rechnungen, Belege und Bankabgleich,
+
+28
+00:01:02,335 --> 00:01:04,705
+Steuervorbereitung und Antworten ans
+
+29
+00:01:04,705 --> 00:01:06,813
+Finanzamt, die Wahl von Diensten
+
+30
+00:01:06,813 --> 00:01:10,040
+und spätere Änderungen oder die Aufgabe.
+
+31
+00:01:11,040 --> 00:01:13,489
+So sieht es in den echten Apps aus.
+
+32
+00:01:13,489 --> 00:01:15,605
+In Claude fragen Sie in eigenen Worten
+
+33
+00:01:15,605 --> 00:01:18,444
+und bekommen einen kleinen ersten Schritt.
+
+34
+00:01:18,444 --> 00:01:20,726
+In Codex stehen alle sieben Skills bereit
+
+35
+00:01:20,726 --> 00:01:23,120
+und antworten genauso auf Deutsch.
+
+36
+00:01:24,120 --> 00:01:26,795
+Eine Regel prägt alles: Es bereitet vor,
+
+37
+00:01:26,795 --> 00:01:28,984
+Sie entscheiden und senden.
+
+38
+00:01:28,984 --> 00:01:31,538
+Bei ELSTER oder Ihrer Bank melden Sie sich
+
+39
+00:01:31,538 --> 00:01:34,760
+selbst an, und den letzten Klick machen Sie.
+
+40
+00:01:35,760 --> 00:01:37,194
+Es ist eine frühe Vorschau
+
+41
+00:01:37,194 --> 00:01:40,061
+und KI-Unterstützung, keine Steuerberatung.
+
+42
+00:01:40,061 --> 00:01:42,488
+Das Kit ist Open Source auf GitHub.
+
+43
+00:01:42,488 --> 00:01:45,024
+Probieren Sie es mit einem erfundenen Beispiel
+
+44
+00:01:45,024 --> 00:01:47,120
+und sagen Sie mir, was fehlt.

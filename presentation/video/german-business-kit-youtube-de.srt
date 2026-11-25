@@ -1,0 +1,463 @@
+1
+00:00:04,000 --> 00:00:06,352
+Wer in Deutschland selbstständig ist,
+
+2
+00:00:06,352 --> 00:00:09,163
+freiberuflich oder mit einem kleinen Gewerbe,
+
+3
+00:00:09,163 --> 00:00:10,883
+kennt den Papierkram.
+
+4
+00:00:10,883 --> 00:00:15,530
+Vor der ersten Rechnung kommt der Fragebogen zur steuerlichen Erfassung.
+
+5
+00:00:15,530 --> 00:00:19,029
+Dann Rechnungen mit Pflichtangaben, Belege, Kontoauszüge,
+
+6
+00:00:19,029 --> 00:00:23,216
+Steuererklärungen und Post vom Finanzamt, und alles mit Fristen.
+
+7
+00:00:23,216 --> 00:00:26,428
+Ich wollte einen Assistenten, der bei all dem hilft,
+
+8
+00:00:26,428 --> 00:00:28,723
+Schritt für Schritt, ohne so zu tun,
+
+9
+00:00:28,723 --> 00:00:30,960
+als wäre er ein Steuerberater.
+
+10
+00:00:30,960 --> 00:00:34,000
+Deshalb habe ich German Business Kit gebaut.
+
+11
+00:00:35,000 --> 00:00:39,335
+German Business Kit besteht aus sieben Skills für Claude und Codex.
+
+12
+00:00:39,335 --> 00:00:41,845
+Ein Skill ist ein Paket aus Anweisungen,
+
+13
+00:00:41,845 --> 00:00:44,811
+Referenzen und Vorlagen, das der Assistent lädt,
+
+14
+00:00:44,811 --> 00:00:46,978
+wenn Ihre Anfrage es braucht.
+
+15
+00:00:46,978 --> 00:00:49,659
+Es gibt also keine neue App zu lernen.
+
+16
+00:00:49,659 --> 00:00:51,484
+Sie arbeiten in Claude Code,
+
+17
+00:00:51,484 --> 00:00:54,507
+der Claude-App oder Codex und fragen auf Deutsch,
+
+18
+00:00:54,507 --> 00:00:56,332
+Englisch oder Russisch.
+
+19
+00:00:56,332 --> 00:01:00,040
+Anleitungen und Berichte gibt es in allen drei Sprachen.
+
+20
+00:01:01,040 --> 00:01:03,807
+Jede Aufgabe folgt demselben Rhythmus.
+
+21
+00:01:03,807 --> 00:01:07,457
+Erstens: Sie fragen in Ihren eigenen Worten, zum Beispiel:
+
+22
+00:01:07,457 --> 00:01:11,107
+Mach aus diesen vereinbarten Bedingungen ein Angebot.
+
+23
+00:01:11,107 --> 00:01:13,403
+Zweitens: Der Assistent klärt.
+
+24
+00:01:13,403 --> 00:01:17,289
+Er nutzt bereits bestätigte Angaben, fragt nur nach Fehlendem,
+
+25
+00:01:17,289 --> 00:01:19,644
+bereitet dann einen lesbaren Entwurf vor
+
+26
+00:01:19,644 --> 00:01:21,999
+und nennt den nächsten Schritt.
+
+27
+00:01:21,999 --> 00:01:25,472
+Drittens: Bei laufender Arbeit speichert er Ergebnisse,
+
+28
+00:01:25,472 --> 00:01:27,592
+bestätigte Angaben und offene Fragen
+
+29
+00:01:27,592 --> 00:01:30,300
+in Ihrem privaten Unternehmensordner.
+
+30
+00:01:30,300 --> 00:01:34,480
+Nächsten Monat geht es dort weiter, statt von vorn anzufangen.
+
+31
+00:01:35,480 --> 00:01:38,603
+Die Skills folgen dem Weg von Selbstständigen.
+
+32
+00:01:38,603 --> 00:01:41,216
+Start hilft, die Tätigkeit zu beschreiben,
+
+33
+00:01:41,216 --> 00:01:43,260
+freiberuflich oder Gewerbe zu klären
+
+34
+00:01:43,260 --> 00:01:45,589
+und die Anmeldung vorzubereiten.
+
+35
+00:01:45,589 --> 00:01:48,542
+Operations kümmert sich um Angebote, Rechnungen,
+
+36
+00:01:48,542 --> 00:01:50,756
+Zahlungsnachfragen und Briefe.
+
+37
+00:01:50,756 --> 00:01:53,312
+Accounting ordnet Belege und Bankexporte,
+
+38
+00:01:53,312 --> 00:01:57,117
+gleicht sie ab und bereitet den Monat im System Ihrer Wahl vor,
+
+39
+00:01:57,117 --> 00:01:59,843
+auch in Software, die Sie schon nutzen.
+
+40
+00:01:59,843 --> 00:02:02,739
+Tax recherchiert die Regeln für Ihren Zeitraum,
+
+41
+00:02:02,739 --> 00:02:05,465
+rechnet Schätzungen mit festgehaltenen Prüfungen
+
+42
+00:02:05,465 --> 00:02:09,213
+und bereitet Erklärungen und Antworten ans Finanzamt vor.
+
+43
+00:02:09,213 --> 00:02:12,904
+Services vergleicht Banken, Versicherungen und Software.
+
+44
+00:02:12,904 --> 00:02:16,482
+Changes plant eine zweite Tätigkeit, die erste Einstellung,
+
+45
+00:02:16,482 --> 00:02:18,583
+eine Pause oder die Aufgabe.
+
+46
+00:02:18,583 --> 00:02:23,240
+Und der Haupt-Skill ist der Eingang, der gemischte Anfragen weiterleitet.
+
+47
+00:02:24,240 --> 00:02:27,172
+Ihr Unternehmensordner hält alles in fünf Bereichen
+
+48
+00:02:27,172 --> 00:02:30,679
+für den Alltag zusammen: Eingang, Dokumente, Buchhaltung,
+
+49
+00:02:30,679 --> 00:02:32,576
+Steuern und Unternehmen.
+
+50
+00:02:32,576 --> 00:02:35,910
+Originale bleiben erhalten und werden nummeriert.
+
+51
+00:02:35,910 --> 00:02:38,842
+Ein Profil deckt alle Tätigkeiten und Jahre ab,
+
+52
+00:02:38,842 --> 00:02:42,004
+und eine Übersichtsseite zeigt, wo Sie stehen.
+
+53
+00:02:42,004 --> 00:02:44,533
+Das Kit kann außerdem eine vollständige,
+
+54
+00:02:44,533 --> 00:02:46,143
+geprüfte Sicherung erstellen
+
+55
+00:02:46,143 --> 00:02:48,960
+und an einem neuen Ort wiederherstellen.
+
+56
+00:02:49,960 --> 00:02:52,408
+So sieht das in den echten Apps aus.
+
+57
+00:02:52,408 --> 00:02:55,998
+In Codex erscheint das Kit als sieben Skills in Ihrem Projekt,
+
+58
+00:02:55,998 --> 00:02:59,480
+jeweils mit einer klaren Beschreibung, wofür er da ist.
+
+59
+00:03:00,480 --> 00:03:03,360
+In Claude fragen Sie in Ihren eigenen Worten.
+
+60
+00:03:03,360 --> 00:03:06,240
+In diesem erfundenen Beispiel macht jemand Videos,
+
+61
+00:03:06,240 --> 00:03:09,440
+und die ersten Marken wollen für Beiträge bezahlen.
+
+62
+00:03:10,440 --> 00:03:14,055
+Statt eines Vortrags bekommen Sie einen kleinen ersten Schritt
+
+63
+00:03:14,055 --> 00:03:17,320
+und nur die zwei Angaben, die dafür nötig sind.
+
+64
+00:03:18,920 --> 00:03:24,280
+Und in Codex genauso auf Deutsch: dieselben Skills, derselbe private Ordner.
+
+65
+00:03:25,880 --> 00:03:27,583
+Jetzt einige echte Fragen,
+
+66
+00:03:27,583 --> 00:03:29,797
+jede auf Deutsch in einer neuen Sitzung
+
+67
+00:03:29,797 --> 00:03:32,465
+mit dem veröffentlichten Kit gestellt.
+
+68
+00:03:32,465 --> 00:03:36,325
+Ein Übersetzer in Berlin fragt: freiberuflich oder Gewerbe?
+
+69
+00:03:36,325 --> 00:03:38,312
+Die Antwort zitiert das Gesetz,
+
+70
+00:03:38,312 --> 00:03:40,469
+das Übersetzer ausdrücklich nennt,
+
+71
+00:03:40,469 --> 00:03:43,535
+erklärt die eine Anmeldung über ELSTER mit ihrer Frist
+
+72
+00:03:43,535 --> 00:03:46,714
+von einem Monat und verlinkt die offiziellen Seiten,
+
+73
+00:03:46,714 --> 00:03:48,360
+die geöffnet wurden.
+
+74
+00:03:50,160 --> 00:03:54,390
+Ein Webdesigner in Hamburg fragt nach der Kleinunternehmerregelung.
+
+75
+00:03:54,390 --> 00:03:57,283
+Die Antwort erklärt die Grenze im Gründungsjahr,
+
+76
+00:03:57,283 --> 00:04:01,179
+dass der Geldeingang zählt und ab wann die Umsatzsteuer gilt.
+
+77
+00:04:01,179 --> 00:04:04,963
+Und als das Schreiben des Finanzministeriums nicht abrufbar war,
+
+78
+00:04:04,963 --> 00:04:08,080
+stand das offen in der Antwort, statt zu raten.
+
+79
+00:04:09,880 --> 00:04:13,127
+Ein Fotograf in München, dessen Gewinn gesunken ist,
+
+80
+00:04:13,127 --> 00:04:15,446
+fragt nach den Vorauszahlungen.
+
+81
+00:04:15,446 --> 00:04:19,040
+Die Antwort bestätigt, dass eine Herabsetzung möglich ist,
+
+82
+00:04:19,040 --> 00:04:22,228
+warnt, dass bis zur Entscheidung der alte Bescheid gilt
+
+83
+00:04:22,228 --> 00:04:24,837
+und ohne Zahlung Säumniszuschläge drohen,
+
+84
+00:04:24,837 --> 00:04:28,026
+und entwirft den Antrag, als Entwurf markiert.
+
+85
+00:04:28,026 --> 00:04:32,200
+Eine neue Steuer schätzt sie erst, wenn alle Angaben vorliegen.
+
+86
+00:04:34,200 --> 00:04:38,074
+Ein Prinzip zieht sich durch das ganze Kit: Es bereitet vor,
+
+87
+00:04:38,074 --> 00:04:40,253
+Sie entscheiden und senden.
+
+88
+00:04:40,253 --> 00:04:43,401
+Auslesen, Vorschlag, Prüfung, Buchung, Freigabe,
+
+89
+00:04:43,401 --> 00:04:46,730
+Übermittlung und die Antwort der Behörde sind getrennte
+
+90
+00:04:46,730 --> 00:04:49,515
+Schritte, jeder mit eigenem Nachweis.
+
+91
+00:04:49,515 --> 00:04:53,449
+Ein schöner Entwurf gilt nie als eingereichte Erklärung.
+
+92
+00:04:53,449 --> 00:04:57,142
+Bei ELSTER, Ihrer Bank oder Ihrer Buchhaltungssoftware melden
+
+93
+00:04:57,142 --> 00:05:00,471
+Sie sich selbst an, Passwörter oder TANs tippen Sie nie
+
+94
+00:05:00,471 --> 00:05:03,800
+in den Chat, und den letzten Klick machen Sie.
+
+95
+00:05:04,800 --> 00:05:07,595
+Die Installation dauert ein paar Minuten.
+
+96
+00:05:07,595 --> 00:05:10,781
+Öffnen Sie in der Claude-App Customize, dann Plugins,
+
+97
+00:05:10,781 --> 00:05:13,129
+fügen Sie den Marketplace von GitHub hinzu
+
+98
+00:05:13,129 --> 00:05:15,923
+und installieren Sie German Business Kit.
+
+99
+00:05:15,923 --> 00:05:18,439
+In Claude Code sind es zwei Befehle.
+
+100
+00:05:18,439 --> 00:05:22,687
+In Codex werden die veröffentlichten Skills in Ihr Projekt kopiert.
+
+101
+00:05:22,687 --> 00:05:25,929
+Oder fügen Sie die Installationsanfrage aus dem README ein
+
+102
+00:05:25,929 --> 00:05:29,674
+und lassen Sie den Assistenten die Einrichtung übernehmen.
+
+103
+00:05:29,674 --> 00:05:32,581
+Starten Sie dann einen neuen Chat und sagen Sie:
+
+104
+00:05:32,581 --> 00:05:35,040
+Starte die Willkommens-Einrichtung.
+
+105
+00:05:36,040 --> 00:05:37,959
+Ein paar ehrliche Grenzen.
+
+106
+00:05:37,959 --> 00:05:40,043
+Dies ist eine frühe Vorschau.
+
+107
+00:05:40,043 --> 00:05:42,784
+Es ist KI-Unterstützung, keine Steuerberatung,
+
+108
+00:05:42,784 --> 00:05:46,129
+und KI kann sich bei Berechnungen und Fristen irren.
+
+109
+00:05:46,129 --> 00:05:50,790
+Das Kit sendet nichts an ELSTER und ist keine vollständige Steuerberechnung.
+
+110
+00:05:50,790 --> 00:05:53,970
+Was der Assistent liest, verarbeitet sein KI-Anbieter,
+
+111
+00:05:53,970 --> 00:05:57,095
+also beginnen Sie mit einem erfundenen Beispiel.
+
+112
+00:05:57,095 --> 00:05:59,782
+Das Kit ist Open Source unter der MIT-Lizenz,
+
+113
+00:05:59,782 --> 00:06:02,195
+der Link steht in der Beschreibung.
+
+114
+00:06:02,195 --> 00:06:05,430
+Wenn Sie in Deutschland ein kleines Unternehmen führen,
+
+115
+00:06:05,430 --> 00:06:08,665
+probieren Sie es aus und sagen Sie mir, was fehlt.
+
+116
+00:06:08,665 --> 00:06:10,200
+Danke und bis bald.

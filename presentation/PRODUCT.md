@@ -28,7 +28,7 @@ Used inside Claude Code, the Claude app or Codex. The user's world: ELSTER, the 
 
 ## Capabilities and Constraints
 
-- Preview release 0.14.0-preview.1, MIT licensed, on GitHub (ilyafedotov-ops/german-business-skills). The three real answers were produced with 0.13.0-preview.2 and stay labelled with that version.
+- Preview release 0.14.0-preview.2 (same skills as 0.14.0-preview.1), MIT licensed, on GitHub (ilyafedotov-ops/german-business-skills). The English and German real answers were produced with 0.13.0-preview.2 and stay labelled with that version; the Russian ones were asked in Russian with 0.14.0-preview.1 and are labelled 0.14.
 - Conversations, user guides, message catalogs and report templates are supported in English, German and Russian. Letters to German authorities are drafted in German. There is no separate application: the assistant app is the interface.
 - AI assistance, not tax or legal advice. No ELSTER transmission. No complete statutory tax engine. Content the assistant reads is processed by its AI provider.
 

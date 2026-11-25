@@ -15,6 +15,13 @@ PROMPTS_DE = {
     'hamburg': "Use de-business-tax. Ich bin freiberuflicher Webdesigner in Hamburg und habe im Januar 2026 angefangen. Mein Umsatz wird dieses Jahr etwa 22.000 Euro betragen, alles von kleinen deutschen Firmen. Kann ich die Kleinunternehmerregelung nutzen, und was passiert, wenn ich nächstes Jahr über die Grenze komme? Bitte nenne offizielle Quellen. Bitte antworte auf Deutsch.",
     'munich': "Use de-business-tax. Ich bin selbstständiger Fotograf in München. Mein Einkommensteuerbescheid 2025 vom Finanzamt München setzt vierteljährliche Vorauszahlungen von 1.450 Euro fest, die nächste ist am 10. Dezember 2026 fällig. Mein Gewinn ist dieses Jahr von etwa 38.000 auf rund 21.000 Euro gesunken, weil ich einen großen Kunden verloren habe. Was bedeutet das, und kann ich eine Herabsetzung der Vorauszahlungen beantragen? Wenn ja, entwirf mir bitte einen kurzen Brief an das Finanzamt. Bitte antworte auf Deutsch.",
 }
+PROMPTS_RU = {
+    'berlin': "Use de-business-start. Я живу в Берлине и работаю по найму на полную ставку. В свободное время хочу переводить документы с немецкого на русский и обратно для частных клиентов и небольших фирм, примерно 800 евро в месяц. Это Freiberufler или Gewerbe, что именно мне нужно зарегистрировать и где? Пожалуйста, дай ссылки на официальные источники. Пожалуйста, отвечай по-русски.",
+    'hamburg': "Use de-business-tax. Я веб-дизайнер на фрилансе в Гамбурге, начал работать в январе 2026 года. Мой оборот в этом году составит около 22 000 евро, всё от небольших немецких фирм. Могу ли я применять Kleinunternehmerregelung и что будет, если в следующем году я превышу лимит? Пожалуйста, укажи официальные источники. Пожалуйста, отвечай по-русски.",
+    'munich': "Use de-business-tax. Я самозанятый фотограф в Мюнхене. Мой Einkommensteuerbescheid за 2025 год от Finanzamt München устанавливает ежеквартальные авансовые платежи по 1 450 евро, следующий нужно заплатить 10 декабря 2026 года. Моя прибыль в этом году упала примерно с 38 000 до 21 000 евро, потому что я потерял крупного клиента. Что это означает и могу ли я попросить снизить авансовые платежи? Если да, составь короткое письмо в Finanzamt на немецком. Пожалуйста, отвечай по-русски.",
+}
+# The English and German runs used the 0.13.0-preview.2 release; the Russian runs used 0.14.0-preview.1.
+VERSION = '0.14.0-preview.1' if LANG == 'ru' else '0.13.0-preview.2'
 cases = [
     ('berlin', 'Berlin · Freiberufler or Gewerbe?', 'de-business-start'),
     ('hamburg', 'Hamburg · Kleinunternehmerregelung', 'de-business-tax'),
@@ -22,7 +29,7 @@ cases = [
 ]
 lines = ['# Real questions, real answers', '',
          'Three questions from fictional people, each asked in a fresh, isolated Claude Code session with the released',
-         'German Business Kit 0.13.0-preview.2 (Claude Opus 5.5, high effort) on 25 November 2026. No personal settings,',
+         f'German Business Kit {VERSION} (Claude Opus 5.5, high effort) on 25 November 2026. No personal settings,',
          'plugins or MCP servers were loaded; tools allowed: web search/fetch, file reading and Python for arithmetic.',
          'The answers below are unedited. AI-assisted self-help, not tax or legal advice.', '']
 for key, title, skill in cases:
@@ -45,7 +52,7 @@ for key, title, skill in cases:
         elif ev.get('type') == 'result':
             result = ev.get('result')
             meta = ev
-    prompt = (PROMPTS_DE if LANG == 'de' else PROMPTS)[key]
+    prompt = {'de': PROMPTS_DE, 'ru': PROMPTS_RU}.get(LANG, PROMPTS)[key]
     uniq = list(dict.fromkeys(u.split('?')[0] for u in urls if u))
     lines += [f'## {title}', '',
               f'**Question** (skill `{skill}`):', '', '> ' + prompt.replace('\n', '\n> '), '',

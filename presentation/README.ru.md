@@ -13,37 +13,44 @@
 | --- | --- |
 | `carousel-en/german-business-kit-carousel-en.pdf` | Английский документ для LinkedIn: 12 слайдов 1080×1350, три настоящих вопроса с ответами на английском (слайды 5–7) |
 | `carousel-de/german-business-kit-carousel-de.pdf` | Немецкая версия: те же вопросы, заданные и отвеченные по-немецки |
+| `carousel-ru/german-business-kit-carousel-ru.pdf` | Русская версия: те же три ситуации, заданные по-русски выпущенному набору 0.14 |
 | `carousel-*/slides/*.png` | Слайды как изображения 1080×1350 для постов или комментариев |
-| `post/linkedin-post.md` | Английский и немецкий посты, первый комментарий, пост с видео и пост «настоящие вопросы» |
-| `post/youtube.md` | Название, описание с главами и теги для YouTube |
-| `post/scripts.md` | Текст озвучки обоих видео; из него же строятся субтитры |
-| `post/real-examples.md`, `post/real-examples.de.md` | Три настоящих вопроса с полными неотредактированными ответами |
+| `post/linkedin-post.md` | Английский и немецкий посты, первый комментарий (EN · DE · RU), пост с видео и пост «настоящие вопросы» |
+| `post/youtube.md`, `post/youtube.de.md`, `post/youtube.ru.md` | Название, описание с главами и теги YouTube для каждого языка |
+| `post/scripts.md`, `post/scripts.de.md`, `post/scripts.ru.md` | Текст озвучки обоих видео на каждом языке; из него же строятся субтитры |
+| `post/real-examples.md`, `post/real-examples.de.md`, `post/real-examples.ru.md` | Три настоящих вопроса с полными неотредактированными ответами |
 | `video/*.srt`, `video/*.chapters.json` | Субтитры и время глав из последней сборки |
 | `video/youtube-thumbnail.png` | Обложка YouTube, 1280×720 |
 | `video/youtube-avatar.png`, `video/youtube-banner.png` | Аватар канала YouTube (800×800) и баннер (2560×1440, текст в безопасной зоне 1546×423) |
 
-Видео для LinkedIn (4:5, около 99 с) и обзор для YouTube (16:9, около 5:38)
-собираются локально в `video/` и игнорируются Git.
+Видео для LinkedIn (4:5; английское около 99 с, немецкое 1:50, русское 1:47) и
+обзоры для YouTube (16:9; 5:38, 6:17, 6:12) собираются локально в `video/` и
+игнорируются Git. Немецкие и русские файлы оканчиваются на `-de` и `-ru`.
 
 ## Опубликовано
 
 - Канал YouTube [German Business Kit (@GermanBusinessKit)](https://www.youtube.com/@GermanBusinessKit)
   с обзором [https://youtu.be/TUkzD0C6qio](https://youtu.be/TUkzD0C6qio)
   (публичный с 25 ноября 2026 года, английские субтитры из `video/german-business-kit-youtube.srt`).
-- Посты LinkedIn в `post/linkedin-post.md` ссылаются на это видео, слайды в PDF и репозиторий.
+- Немецкий обзор [https://youtu.be/rY_VdGS7mPs](https://youtu.be/rY_VdGS7mPs) и русский обзор
+  [https://youtu.be/sVlPgHtQ6zg](https://youtu.be/sVlPgHtQ6zg) (публичные с 25 ноября 2026 года, субтитры из
+  `video/german-business-kit-youtube-de.srt` и `-ru.srt`). Описания всех трёх видео ссылаются друг на друга.
+- Посты LinkedIn в `post/linkedin-post.md` ссылаются на обзор на своём языке, слайды в PDF и репозиторий.
 
 ## Что показывают видео
 
 - Сцены-чеки с тем же содержанием, что и карусели.
 - **Настоящие приложения:** неотредактированные скриншоты Claude и Codex с
   установленным набором из `installer/images/`: ответ с первым шагом в Claude,
-  семь скиллов в Codex и разговор на немецком в Codex. Разговоры — вымышленные
+  семь скиллов в Codex и разговор в Codex на языке видео (в английском видео —
+  немецкий разговор в Codex). Разговоры — вымышленные
   примеры, ничего не отправляется. Они заменили прежнюю запись удалённого
   вымышленного браузерного прототипа.
 - Три настоящих вопроса (Берлин, Гамбург, Мюнхен), каждый в новом сеансе Claude
-  Code (Opus 5.5, высокое усилие) 25 ноября 2026 года с выпущенным пакетом
-  `v0.13.0-preview.2`. В подписях осталась эта версия: для 0.14 ответы не
-  перезапускались.
+  Code (Opus 5.5, высокое усилие) 25 ноября 2026 года. Английские и немецкие
+  ответы получены с выпущенным пакетом `v0.13.0-preview.2`, и в подписях осталась
+  эта версия; русские вопросы заданы по-русски с выпущенным пакетом
+  `v0.14.0-preview.1` и подписаны 0.14.
 
 ## Дизайн
 
@@ -58,27 +65,31 @@
 `presentation/build/`:
 
 ```sh
-python3 make_receipts.py                 # пишет receipt-en.html, receipt-de.html, scenes-receipt-yt.html
-node render-receipts.cjs en              # carousel-en: PNG + PDF
-node render-receipts.cjs de              # carousel-de: PNG + PDF
+python3 make_receipts.py                 # пишет receipt-{en,de,ru}.html и scenes-receipt-yt-{en,de,ru}.html
+node render-receipts.cjs en              # carousel-en: PNG + PDF (также de, ru)
 node render-video.cjs linkedin           # video/german-business-kit-linkedin.mp4 + .srt + .chapters.json
 node render-video.cjs youtube            # video/german-business-kit-youtube.mp4 + .srt + .chapters.json
+node render-video.cjs youtube --lang de  # video/german-business-kit-youtube-de.mp4 (также linkedin и --lang ru)
 node render-thumbnail.cjs thumbnail-receipt.html
 node render-channel-art.cjs              # video/youtube-avatar.png + youtube-banner.png
 ```
 
-`render-video.cjs` берёт текст озвучки из `post/scripts.md`, а звук — из
-`audio/*.mp3`. Флаг `--stills 3,20,45` сохраняет отдельные кадры для проверки,
+`render-video.cjs` берёт текст озвучки из `post/scripts.md` (с `--lang` — из
+`post/scripts.de.md` или `post/scripts.ru.md`), а звук — из `audio/*.mp3` (или
+`audio/de/`, `audio/ru/`). Кадрирование скриншотов считается по их высоте, так что
+для новых скриншотов не нужно подбирать смещения. Флаг `--stills 3,20,45` сохраняет отдельные кадры для проверки,
 `CAPS=only` печатает таймлайн и разбивку субтитров без сборки. Шрифт Martian Mono
 и библиотеки QR/штрихкода загружаются из Google Fonts и cdnjs во время сборки.
 `swift check-qr.swift <png>` декодирует QR-коды. После пересборки обновите время
-глав в `post/youtube.md` по `video/german-business-kit-youtube.chapters.json`.
+глав в `post/youtube*.md` по соответствующему `video/*.chapters.json`.
 
 ## Озвучка и музыка
 
-Озвучка (голос Runway «Niki») и инструментальная подложка созданы в Runway;
-`audio/tasks.json` содержит ID задачи каждого текущего фрагмента. Если меняется
-строка в `post/scripts.md`, этот фрагмент нужно сгенерировать заново тем же голосом.
+Озвучка и инструментальная подложка созданы в Runway (Eleven v4): английский голос
+«Niki», немецкий «Carla Blum», русский «Angelina». `audio/tasks.json`,
+`audio/de/tasks.json` и `audio/ru/tasks.json` содержат ID задачи каждого текущего
+фрагмента. Если меняется строка в файле озвучки, этот фрагмент нужно сгенерировать
+заново тем же голосом.
 
 ## Новые настоящие вопросы
 
@@ -89,7 +100,7 @@ node render-channel-art.cjs              # video/youtube-avatar.png + youtube-ba
    настроек, плагинов и MCP-серверов; инструменты ограничены веб-поиском,
    чтением и Python для арифметики. Журналы сеансов храните вне Git.
 3. Проверьте запуск через `build/qa/summarize.py <name>/turn1.jsonl`, выгрузите
-   ответы через `build/qa/export.py <work-root> <out.md> [de]` и обновите
+   ответы через `build/qa/export.py <work-root> <out.md> [de|ru]` и обновите
    содержимое слайдов в `build/make_receipts.py`. Каждая строка OK должна
    называть страницу, которую сеанс действительно открыл; недоступные источники
    показывайте красным.
